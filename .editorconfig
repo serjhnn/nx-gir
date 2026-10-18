@@ -1,0 +1,18 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Code fits a phone screen: 60 characters per line.
+[*.{py,sh,toml}]
+indent_style = space
+indent_size = 4
+max_line_length = 60
+
+[nxgir]
+indent_style = space
+indent_size = 4
+max_line_length = 60

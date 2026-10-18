@@ -76,6 +76,18 @@ Tools that help a modern reader through a Classical Armenian text:
 - For OCR: Tesseract with Armenian data
   (`apt install tesseract-ocr tesseract-ocr-hye`)
 
+## Code style
+
+All code is limited to **60 characters per line**, so it
+fits a phone screen. The limit is set in `pyproject.toml`
+(ruff) and `.editorconfig`. Check with:
+
+```sh
+pip install ruff
+ruff format scripts/
+ruff check scripts/
+```
+
 ## Contributing
 
 Grabar texts, glossaries, and lists of abbreviations are especially welcome,

@@ -1,5 +1,6 @@
 #!/bin/sh
-# Launcher for scripts/nxgir-cli.py. Works when called through a symlink too.
+# Launcher for scripts/nxgir-cli.py.
+# Works when called through a symlink too.
 src="$0"
 while [ -h "$src" ]; do
     dir="$(cd -P "$(dirname "$src")" && pwd)"

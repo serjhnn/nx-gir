@@ -1,0 +1,10 @@
+# Code must fit a phone screen: 60 characters per line.
+[tool.ruff]
+line-length = 60
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.ruff.lint.pycodestyle]
+max-line-length = 60
+max-doc-length = 60
