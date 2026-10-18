@@ -51,7 +51,10 @@ Tools that help a modern reader through a Classical Armenian text:
 ## Planned usage
 
 ```sh
-# list files in data/
+# open the interactive nxgir shell (type 'help' for commands, 'exit' to quit)
+./nxgir
+
+# or run a single command directly, e.g. list files in data/
 ./nxgir ls
 
 # read a book
