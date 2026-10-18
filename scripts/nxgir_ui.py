@@ -6,7 +6,11 @@ import sys
 
 # Themes: the colors (256-color numbers) for each one.
 # text/title/help/rule/mark are foregrounds on bg.
-B, U = curses.A_BOLD, curses.A_UNDERLINE
+B, U, R = (
+    curses.A_BOLD,
+    curses.A_UNDERLINE,
+    curses.A_REVERSE,
+)
 PALETTES = {
     # cream paper, brown ink, red rubrics
     "sepia": dict(
@@ -67,8 +71,12 @@ EXTRA = {"title": B, "mark": U}
 
 
 def roles(pal):
-    """{role: (fg, bg, extra attributes)} for a palette."""
-    return {
+    """{role: (fg, bg, extra attributes)} for a palette.
+
+    cursor is the text color reversed; unlike text it
+    is never dimmed, so it stays easy to find.
+    """
+    out = {
         role: (pal[role], pal["bg"], EXTRA.get(role, 0))
         for role in (
             "text",
@@ -78,6 +86,8 @@ def roles(pal):
             "mark",
         )
     }
+    out["cursor"] = (pal["text"], pal["bg"], R)
+    return out
 
 
 THEMES = {n: roles(p) for n, p in PALETTES.items()}
@@ -88,6 +98,7 @@ PLAIN = {
     "help": curses.A_DIM,
     "rule": 0,
     "mark": curses.A_UNDERLINE,
+    "cursor": curses.A_REVERSE,
 }
 THEME_NAMES = {
     "sepia": "sepia: old book",
@@ -100,6 +111,45 @@ THEME_NAMES = {
 }
 
 
+# Dim levels: how far the text color moves toward the
+# page color (0 = normal).
+DIMS = (0.0, 0.35, 0.6)
+DIM_NAMES = ("text: normal", "text: dim", "text: dimmer")
+
+
+def rgb(n):
+    """RGB of a 256-color number (16-255)."""
+    if n >= 232:
+        v = 8 + (n - 232) * 10
+        return v, v, v
+    n -= 16
+    steps = (0, 95, 135, 175, 215, 255)
+    return steps[n // 36], steps[n // 6 % 6], steps[n % 6]
+
+
+def nearest(color):
+    """256-color number closest to an RGB color."""
+
+    def dist(n):
+        return sum(
+            (a - b) ** 2 for a, b in zip(rgb(n), color)
+        )
+
+    return min(range(16, 256), key=dist)
+
+
+def fade(fg, bg, amount):
+    """fg moved amount (0-1) of the way toward bg."""
+    if not amount:
+        return fg
+    mix = [
+        a + (b - a) * amount
+        for a, b in zip(rgb(fg), rgb(bg))
+    ]
+    n = nearest(mix)
+    return fg if n == bg else n
+
+
 class Style:
     """The current theme: style(role) gives curses
     attributes for that role."""
@@ -107,6 +157,7 @@ class Style:
     def __init__(self):
         self.name = "plain"
         self.attrs = dict(PLAIN)
+        self.dim = 0  # index into DIMS
 
     def __call__(self, role):
         return self.attrs[role]
@@ -121,12 +172,16 @@ class Style:
         self.name = name
         if spec is None:
             self.attrs = dict(PLAIN)
-            win.bkgd(" ", 0)
+            if self.dim:
+                self.attrs["text"] = curses.A_DIM
+            win.bkgd(" ", self.attrs["text"])
             return ok
         self.attrs = {}
         for n, (role, (fg, bg, extra)) in enumerate(
             spec.items(), start=1
         ):
+            if role == "text":
+                fg = fade(fg, bg, DIMS[self.dim])
             curses.init_pair(n, fg, bg)
             self.attrs[role] = curses.color_pair(n) | extra
         win.bkgd(" ", self.attrs["text"])
@@ -152,6 +207,12 @@ class Style:
         if not self.use(win, want):
             return "colors need a 256-color terminal"
         return self.describe()
+
+    def next_dim(self, win):
+        """Step to the next dim level; message to show."""
+        self.dim = (self.dim + 1) % len(DIMS)
+        self.use(win, self.name)
+        return DIM_NAMES[self.dim]
 
     def describe(self):
         """'theme 2/7 · night: dark page …'"""

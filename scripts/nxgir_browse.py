@@ -56,6 +56,7 @@ def key_name(ch):
         "l": "enter",
         "q": "quit",
         "T": "theme",
+        "d": "dim",
         "\x1b": "quit",
         curses.KEY_LEFT: "back",
         "h": "back",
@@ -151,9 +152,7 @@ def list_view(win, files, title):
             left = f" {name}"
             gap = w - 1 - len(left) - len(sz) - 1
             line = left + " " * max(gap, 1) + sz + " "
-            attr = (
-                curses.A_REVERSE if idx == pane.pos else 0
-            )
+            attr = style("cursor") if idx == pane.pos else 0
             put(win, 2 + i, 0, line.ljust(w - 1), attr)
         put(
             win,
@@ -172,6 +171,8 @@ def list_view(win, files, title):
             pane.search(win, names, action)
         elif action == "theme":
             pane.msg = style.next(win)
+        elif action == "dim":
+            pane.msg = style.next_dim(win)
         elif action == "enter" and files:
             name, _, path = files[pane.pos]
             nxgir_reader.read(win, path, name)
@@ -180,6 +181,7 @@ def list_view(win, files, title):
             "back",
             "resize",
             "theme",
+            "dim",
         ):
             pane.move(action, rows)
 

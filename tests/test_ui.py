@@ -1,8 +1,10 @@
 from nxgir_ui import (
+    DIMS,
     PALETTES,
     PLAIN,
     THEME_NAMES,
     THEMES,
+    fade,
     fit,
 )
 
@@ -61,3 +63,19 @@ def test_fit_picks_longest_that_fits():
     assert fit(texts, 8) == "short"
     assert fit(texts, 2) == "s"
     assert fit(texts, 1) == "s"
+
+
+def test_fade_none_keeps_color():
+    assert fade(94, 230, 0) == 94
+
+
+def test_dim_levels_differ_and_stay_visible():
+    for name, pal in PALETTES.items():
+        fg, bg = pal["text"], pal["bg"]
+        levels = [fade(fg, bg, d) for d in DIMS]
+        assert len(set(levels)) == len(DIMS), name
+        assert bg not in levels, name
+        # each level is closer to the page than the last
+        ratios = [contrast(c, bg) for c in levels]
+        assert ratios == sorted(ratios, reverse=True), name
+        assert ratios[-1] > 1.3, (name, ratios)

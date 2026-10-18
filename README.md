@@ -108,6 +108,7 @@ word is under the cursor.
 | `p` | panel place: auto, always below, always beside |
 | `c` | lines centered (default) or left-aligned |
 | `T` | choose a theme (`j`/`k` try it on the page, `Enter` keep, `q` cancel) |
+| `d` | dim the text: normal → dim → dimmer (also in `ls`) |
 | `q` | back to the list |
 
 In the references panel, `j`/`k` move through the places

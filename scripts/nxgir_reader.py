@@ -289,6 +289,7 @@ KEYS = {
     "p": "place",
     "c": "align",
     "T": "theme",
+    "d": "dim",
     "\n": "enter",
     "\r": "enter",
     curses.KEY_ENTER: "enter",
@@ -466,7 +467,7 @@ class Reader:
                 continue
             attr = 0
             if k == self.cur:
-                attr = curses.A_REVERSE
+                attr = style("cursor")
             elif self.refs_open() and wd.key == key:
                 attr = style("mark")
             if attr:
@@ -521,7 +522,7 @@ class Reader:
             text, col = snippet(e.text, e.col, e.n, room)
             line = e.label + text
             if p.top + i == p.sel:
-                attr = curses.A_REVERSE
+                attr = style("cursor")
                 put(
                     win,
                     y,
@@ -558,6 +559,9 @@ class Reader:
             return True
         if action == "align":
             self.next_align()
+            return True
+        if action == "dim":
+            self.msg = style.next_dim(self.win)
             return True
         if action == "theme":
             self.panel = theme_panel()
@@ -663,6 +667,9 @@ class Reader:
             self.next_mode()
         elif action == "align":
             self.next_align()
+        elif action == "dim":
+            self.msg = style.next_dim(self.win)
+            return
         elif action == "enter":
             self.panel = None
             if p.kind == "theme":
