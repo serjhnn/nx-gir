@@ -58,8 +58,12 @@ Tools that help a modern reader through a Classical Armenian text:
 # open the interactive nxgir shell (type 'help' for commands, 'exit' to quit)
 ./nxgir
 
-# or run a single command directly, e.g. list files in data/
+# or run a single command directly, e.g. browse the
+# files in data/ (↑↓/jk move, Enter open, / search, q quit)
 ./nxgir ls
+
+# print the file list instead of browsing it
+./nxgir ls --plain
 
 # print the logo: hy (default), hy-upright, hy-block, en
 ./nxgir banner en

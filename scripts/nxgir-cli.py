@@ -56,6 +56,17 @@ def banner(lang=None):
     print()
 
 
+def data_files():
+    """[(name, size, path)] for every file in data/."""
+    files = sorted(
+        p for p in DATA_DIR.rglob("*") if p.is_file()
+    )
+    return [
+        (str(p.relative_to(DATA_DIR)), p.stat().st_size, p)
+        for p in files
+    ]
+
+
 def cmd_ls(args):
     """List files in the data folder."""
     if not DATA_DIR.is_dir():
@@ -64,15 +75,17 @@ def cmd_ls(args):
             file=sys.stderr,
         )
         return 1
-    files = sorted(
-        p for p in DATA_DIR.rglob("*") if p.is_file()
-    )
+    files = data_files()
+    tty = sys.stdin.isatty() and sys.stdout.isatty()
+    if tty and not args.plain:
+        import nxgir_browse
+
+        nxgir_browse.browse(files, "data/")
+        return 0
     if not files:
         print("no files in data folder")
         return 0
-    for path in files:
-        size = path.stat().st_size
-        name = path.relative_to(DATA_DIR)
+    for name, size, _ in files:
         print(f"{size:>8}  {name}")
     return 0
 
@@ -92,9 +105,15 @@ def build_parser():
         ),
     )
     sub = parser.add_subparsers(dest="command")
-    sub.add_parser(
-        "ls", help="list files in the data folder"
-    ).set_defaults(func=cmd_ls)
+    p = sub.add_parser(
+        "ls", help="browse files in the data folder"
+    )
+    p.add_argument(
+        "--plain",
+        action="store_true",
+        help="print the list instead of browsing",
+    )
+    p.set_defaults(func=cmd_ls)
     p = sub.add_parser("banner", help="print the logo")
     p.add_argument(
         "lang",
