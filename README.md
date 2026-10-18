@@ -82,6 +82,14 @@ Tools that help a modern reader through a Classical Armenian text:
 
 ## Reader keys
 
+<p align="center">
+  <img src="docs/screen-list.png" width="340"
+       alt="The ls book list in the sepia theme">
+  <img src="docs/screen-reader.png" width="340"
+       alt="The reader on a phone-size screen, with the
+            references panel for the word եւ open below">
+</p>
+
 Pressing Enter on a book in `ls` opens it in the reader.
 The text wraps to the screen and re-wraps when the
 window size changes. Lines are centered, in a column at
@@ -110,6 +118,12 @@ and moves when the window is resized or the phone is
 rotated. Matching ignores case and the marks
 `՛ ՜ ՞`, and treats `և` and `եւ` as the same.
 
+<p align="center">
+  <img src="docs/screen-wide.png"
+       alt="The reader on a wide screen, with the
+            references panel beside the text">
+</p>
+
 Themes:
 
 | Theme | Look |
@@ -121,6 +135,12 @@ Themes:
 | tuff | pink Armenian tuff stone |
 | ink | pale letters on deep blue |
 | plain | the terminal's own colors |
+
+<p align="center">
+  <img src="docs/screen-themes.png"
+       alt="The reader in the sepia, night, gold, paper,
+            tuff and ink themes, with the theme list open">
+</p>
 
 The colored themes need a 256-color terminal, which
 Termux and most terminals are; otherwise plain is used.
@@ -161,6 +181,15 @@ regenerate it:
 
 ```sh
 scripts/render-logo.py
+```
+
+The screenshots in this README are made by running
+nxgir in a simulated terminal. After changing the
+screens, regenerate them (needs `pip install pyte
+pillow`):
+
+```sh
+scripts/render-screens.py
 ```
 
 ## Contributing

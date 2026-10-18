@@ -28,4 +28,7 @@
 - `scripts/nxgir_ui.py`: shared curses helpers; read
   keys with `key()`, it handles terminal resizes
 - `scripts/nxgir_logo.py`: logos and gradient colors
+- `scripts/render-logo.py`, `scripts/render-screens.py`:
+  regenerate the README images in `docs/` after
+  changing the logo or the screens
 - Linux and Termux only, no Windows support for now.
