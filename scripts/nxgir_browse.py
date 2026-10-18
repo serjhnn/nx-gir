@@ -5,9 +5,10 @@ Vim-style keys. Linux and Termux only.
 
 import curses
 import locale
+import os
 
 import nxgir_reader
-from nxgir_ui import cursor, fit, key, prompt, put
+from nxgir_ui import cursor, fit, key, prompt, put, style
 
 LIST_HELP = (
     "↑↓/jk move · g/G ends · / search · "
@@ -54,6 +55,7 @@ def key_name(ch):
         curses.KEY_RIGHT: "enter",
         "l": "enter",
         "q": "quit",
+        "T": "theme",
         "\x1b": "quit",
         curses.KEY_LEFT: "back",
         "h": "back",
@@ -137,9 +139,9 @@ def list_view(win, files, title):
         win.erase()
         head = f" {title}"
         count = f"{len(files)} files "
-        put(win, 0, 0, head, curses.A_BOLD)
+        put(win, 0, 0, head, style("title"))
         put(win, 0, max(w - len(count) - 1, 0), count)
-        put(win, 1, 0, "─" * (w - 1))
+        put(win, 1, 0, "─" * (w - 1), style("rule"))
         if not files:
             put(win, 2, 1, "no files")
         shown = files[pane.top : pane.top + rows]
@@ -158,7 +160,7 @@ def list_view(win, files, title):
             h - 1,
             0,
             pane.msg or fit(LIST_HELP, w),
-            curses.A_DIM,
+            style("help"),
         )
         pane.msg = ""
         win.refresh()
@@ -168,10 +170,17 @@ def list_view(win, files, title):
             return
         if action in ("search", "next", "prev"):
             pane.search(win, names, action)
+        elif action == "theme":
+            pane.msg = style.next(win)
         elif action == "enter" and files:
             name, _, path = files[pane.pos]
             nxgir_reader.read(win, path, name)
-        elif action not in (None, "back", "resize"):
+        elif action not in (
+            None,
+            "back",
+            "resize",
+            "theme",
+        ):
             pane.move(action, rows)
 
 
@@ -183,6 +192,9 @@ def browse(files, title):
         curses.set_escdelay(25)
         cursor(False)
         win.keypad(True)
+        style.use(
+            win, os.environ.get("NXGIR_THEME", "sepia")
+        )
         list_view(win, files, title)
 
     curses.wrapper(main)

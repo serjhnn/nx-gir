@@ -99,6 +99,7 @@ word is under the cursor.
 | `s` | references: every place the word appears |
 | `p` | panel place: auto, always below, always beside |
 | `c` | lines centered (default) or left-aligned |
+| `T` | theme: sepia old book (default) or plain terminal colors |
 | `q` | back to the list |
 
 In the references panel, `j`/`k` move through the places
@@ -108,6 +109,19 @@ wide screens (90+ columns) and below it on narrow ones,
 and moves when the window is resized or the phone is
 rotated. Matching ignores case and the marks
 `՛ ՜ ՞`, and treats `և` and `եւ` as the same.
+
+The sepia theme (cream paper, brown ink, red headings)
+needs a 256-color terminal, which Termux and most
+terminals are; otherwise the plain theme is used. `T`
+also works in the `ls` list. To start in the plain
+theme, set `NXGIR_THEME=plain`.
+
+The font is chosen by the terminal, not by nx-gir. In
+Termux, use the Termux:Styling add-on (long-press →
+More → Style → Choose font) or copy a monospace `.ttf`
+to `~/.termux/font.ttf` and run `termux-reload-settings`.
+Pick a font that has Armenian letters, such as DejaVu
+Sans Mono.
 
 ## Requirements (planned)
 

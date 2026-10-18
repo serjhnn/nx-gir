@@ -10,7 +10,7 @@ import textwrap
 from bisect import bisect_left, bisect_right
 from typing import NamedTuple
 
-from nxgir_ui import fit, key, prompt, put
+from nxgir_ui import fit, key, prompt, put, style
 
 # Armenian marks written inside a word: emphasis ՛,
 # exclamation ՜, question ՞ and abbreviation ՟.
@@ -275,6 +275,7 @@ KEYS = {
     "s": "refs",
     "p": "place",
     "c": "align",
+    "T": "theme",
     "\n": "enter",
     "\r": "enter",
     curses.KEY_ENTER: "enter",
@@ -387,20 +388,20 @@ class Reader:
         words = self.lay.words
         win.erase()
 
-        put(win, 0, 0, f" {self.title}", curses.A_BOLD)
+        put(win, 0, 0, f" {self.title}", style("title"))
         if words:
             info = (
                 f"line {words[self.cur].line + 1}"
                 f"/{len(self.lay.lines)} "
             )
             put(win, 0, max(w - len(info) - 1, 0), info)
-        put(win, 1, 0, "─" * (w - 1))
+        put(win, 1, 0, "─" * (w - 1), style("rule"))
         self.draw_text(tb)
         if pb:
             if side:
-                put(win, 1, tb.w, "┬")
+                put(win, 1, tb.w, "┬", style("rule"))
                 for y in range(pb.y, pb.y + pb.h):
-                    put(win, y, tb.w, "│")
+                    put(win, y, tb.w, "│", style("rule"))
             self.draw_panel(pb, side)
 
         help_ = PANEL_HELP if self.panel else READ_HELP
@@ -409,7 +410,7 @@ class Reader:
             h - 1,
             0,
             self.msg or fit(help_, w),
-            curses.A_DIM,
+            style("help"),
         )
         self.msg = ""
         win.refresh()
@@ -438,7 +439,7 @@ class Reader:
             if k == self.cur:
                 attr = curses.A_REVERSE
             elif self.panel and wd.key == key:
-                attr = curses.A_UNDERLINE
+                attr = style("mark")
             if attr:
                 y = box.y + wd.row - self.top
                 x = box.x + self.indent(wd.row) + wd.col
@@ -456,11 +457,22 @@ class Reader:
         x = box.x + 1
         if side:
             put(
-                win, box.y, x, p.title, curses.A_BOLD, right
+                win,
+                box.y,
+                x,
+                p.title,
+                style("title"),
+                right,
             )
         else:
             head = f"─ {p.title} "
-            put(win, box.y, box.x, head.ljust(box.w, "─"))
+            put(
+                win,
+                box.y,
+                box.x,
+                head.ljust(box.w, "─"),
+                style("title"),
+            )
         rows = box.h - 1
         if p.sel < p.top:
             p.top = p.sel
@@ -494,7 +506,7 @@ class Reader:
                         y,
                         wx,
                         word,
-                        curses.A_UNDERLINE,
+                        style("mark"),
                         right,
                     )
 
@@ -512,6 +524,9 @@ class Reader:
             return True
         if action == "align":
             self.next_align()
+            return True
+        if action == "theme":
+            self.msg = style.next(self.win)
             return True
         if not words:
             step = {"down": 1, "up": -1}.get(action, 0)
@@ -613,6 +628,8 @@ class Reader:
             self.next_mode()
         elif action == "align":
             self.next_align()
+        elif action == "theme":
+            self.msg = style.next(self.win)
         elif action == "enter":
             self.panel = None
             return
