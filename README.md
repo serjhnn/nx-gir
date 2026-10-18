@@ -61,7 +61,7 @@ Tools that help a modern reader through a Classical Armenian text:
 # or run a single command directly, e.g. list files in data/
 ./nxgir ls
 
-# print the logo: hy (default), hy-slant, hy-block, en
+# print the logo: hy (default), hy-upright, hy-block, en
 ./nxgir banner en
 
 # read a book

@@ -1,12 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="510" height="160" viewBox="0 0 510 160">
+<svg xmlns="http://www.w3.org/2000/svg" width="462" height="160" viewBox="0 0 462 160">
 <title>նղ֊գիր</title>
-<rect width="510" height="160" rx="8" fill="#1e1e24"/>
+<rect width="462" height="160" rx="8" fill="#1e1e24"/>
 <g font-family="DejaVu Sans Mono,Menlo,Consolas,monospace" font-size="16" xml:space="preserve">
-<text x="20" y="36.0" fill="#ffc400"> ____                              _</text>
-<text x="20" y="56.0" fill="#f4a009">|__  |  _   _ __           __ _   | |__    _ __</text>
-<text x="20" y="76.0" fill="#e97c12">   | | | | | &#x27;_ \   ___   / _` |  | &#x27;_ \  | &#x27;_ \</text>
-<text x="20" y="96.0" fill="#de581c">   | |_| | | | | | |___| | (_| |  | | | | | | | |</text>
-<text x="20" y="116.0" fill="#d33425">    \__,_| |_| | |__      \__, |_ | | |_| | | |_|</text>
-<text x="20" y="136.0" fill="#c8102e">               |____|        |_|  |_|     |_|</text>
+<text x="20" y="36.0" fill="#ffc400"> ____                           __</text>
+<text x="20" y="56.0" fill="#f4a009">/_/ / __  ____         ____ _  / /_    ____</text>
+<text x="20" y="76.0" fill="#e97c12"> / / / / / __ \  ____ / __ `/ / __ \  / __ \</text>
+<text x="20" y="96.0" fill="#de581c">/ /_/ / / / / / /___// /_/ / / / / / / / / /</text>
+<text x="20" y="116.0" fill="#d33425">\__,_/ /_/ / /__     \__, _ / / /_/ / / /_/</text>
+<text x="20" y="136.0" fill="#c8102e">          /____/       /_/ /_/     /_/</text>
 </g>
 </svg>

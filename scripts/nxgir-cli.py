@@ -12,6 +12,8 @@ import shlex
 import sys
 from pathlib import Path
 
+import nxgir_logo as logo
+
 try:
     # enables line editing and history in input()
     import readline  # noqa: F401
@@ -21,59 +23,6 @@ except ImportError:
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 PROMPT = "nxgir> "
-
-LOGO_HY = r"""
- ____                              _
-|__  |  _   _ __           __ _   | |__    _ __
-   | | | | | '_ \   ___   / _` |  | '_ \  | '_ \
-   | |_| | | | | | |___| | (_| |  | | | | | | | |
-    \__,_| |_| | |__      \__, |_ | | |_| | | |_|
-               |____|        |_|  |_|     |_|
-""".strip("\n").splitlines()
-
-LOGO_HY_SLANT = r"""
- ____                           __
-/_/ / __  ____         ____ _  / /_    ____
- / / / / / __ \  ____ / __ `/ / __ \  / __ \
-/ /_/ / / / / / /___// /_/ / / / / / / / / /
-\__,_/ /_/ / /__     \__, _ / / /_/ / / /_/
-          /____/       /_/ /_/     /_/
-""".strip("\n").splitlines()
-
-LOGO_HY_BLOCK = r"""
-  ▄▄▄                              ▄▄
- ▀███                              ██
-   ██   ▄▄  ▄▄ ▄▄▄        ▄▄▄ ▄▄   ██ ▄▄▄  ▄▄ ▄▄▄
-   ██   ██  ███▀██▄      ▄██▀███   ███▀███ ███████
-   ██   ██  ██▀  ██ ▄▄▄▄ ██   ██   ██▀  ██ ███  ██
-   ██  ▄██  ██   ██ ▀██▀ ██   ██   ██   ██ ███  ██
-   ███▄███  ██   ██      ▀██▄███▄▄ ██   ██ ███  ██
-    ▀▀▀▀▀▀  ▀▀   ██       ▀▀▀▀██▀▀ ██   ▀▀ ███  ▀▀
-                 ███▄         ██   ██      ███
-                 ▀▀▀          ▀▀   ▀▀      ▀▀
-""".strip("\n").splitlines()
-
-LOGO_EN = r"""
-         _  __            _
-   ____ | |/ /     ____ _(_)____
-  / __ \|   /_____/ __ `/ / ___/
- / / / /   /_____/ /_/ / / /
-/_/ /_/_/|_|     \__, /_/_/
-                /____/
-""".strip("\n").splitlines()
-
-LOGOS = {
-    "hy": LOGO_HY,
-    "hy-slant": LOGO_HY_SLANT,
-    "hy-block": LOGO_HY_BLOCK,
-    "en": LOGO_EN,
-}
-DEFAULT_LOGO = "hy"
-
-# Gradient colors (RGB).
-RED = (200, 16, 46)
-GOLD = (255, 196, 0)
-TOP, BOTTOM = GOLD, RED
 
 
 def use_color():
@@ -85,28 +34,24 @@ def use_color():
     return sys.stdout.isatty()
 
 
-def gradient(lines, start, end):
-    """Color lines row by row, start to end."""
-    span = max(len(lines) - 1, 1)
-    out = []
-    for row, line in enumerate(lines):
-        t = row / span
-        r, g, b = (
-            round(a + (b - a) * t)
-            for a, b in zip(start, end)
-        )
-        color = f"\033[38;2;{r};{g};{b}m"
-        out.append(f"{color}{line}\033[0m")
-    return out
+def gradient(lines):
+    """Color lines row by row, top to bottom."""
+    colors = logo.row_colors(len(lines))
+    return [
+        f"\033[38;2;{r};{g};{b}m{line}\033[0m"
+        for line, (r, g, b) in zip(lines, colors)
+    ]
 
 
 def banner(lang=None):
-    """Print the logo (a key of LOGOS)."""
+    """Print the logo (a key of logo.LOGOS)."""
     if lang is None:
         lang = os.environ.get("NXGIR_BANNER", "")
-    lines = LOGOS.get(lang, LOGOS[DEFAULT_LOGO])
+    lines = logo.LOGOS.get(
+        lang, logo.LOGOS[logo.DEFAULT_LOGO]
+    )
     if use_color():
-        lines = gradient(lines, TOP, BOTTOM)
+        lines = gradient(lines)
     print("\n".join(lines))
     print()
 
@@ -154,13 +99,11 @@ def build_parser():
     p.add_argument(
         "lang",
         nargs="?",
-        default="hy",
-        choices=sorted(LOGOS),
-        help=(
-            "hy = Armenian (default),"
-            " hy-slant = Armenian slanted,"
-            " hy-block = Armenian blocks,"
-            " en = Latin"
+        default=logo.DEFAULT_LOGO,
+        choices=list(logo.LOGOS),
+        help=", ".join(
+            f"{k} = {v}"
+            for k, v in logo.DESCRIPTIONS.items()
         ),
     )
     p.set_defaults(func=cmd_banner)

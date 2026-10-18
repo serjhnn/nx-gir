@@ -4,13 +4,16 @@
 Uses the same logo and gold-to-red gradient as the
 shell. Run again after changing the logo:
 
-    scripts/render-logo.py [hy|hy-block|en] [out.svg]
+    scripts/render-logo.py [LOGO] [out.svg]
+
+LOGO is a key of nxgir_logo.LOGOS (default: hy).
 """
 
-import importlib.util
 import sys
 from html import escape
 from pathlib import Path
+
+import nxgir_logo as logo
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
@@ -23,32 +26,14 @@ BG = "#1e1e24"
 NBSP = "\u00a0"
 
 
-def load_cli():
-    path = HERE / "nxgir-cli.py"
-    spec = importlib.util.spec_from_file_location(
-        "nxgir_cli", path
-    )
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
-
-
-def row_colors(n, start, end):
-    span = max(n - 1, 1)
-    for row in range(n):
-        t = row / span
-        r, g, b = (
-            round(a + (b - a) * t)
-            for a, b in zip(start, end)
-        )
-        yield f"#{r:02x}{g:02x}{b:02x}"
-
-
-def render(lines, start, end, title):
+def render(lines, title):
     cols = max(len(line) for line in lines)
     w = round(cols * CHAR_W + 2 * PAD)
     h = round(len(lines) * LINE_H + 2 * PAD)
-    colors = row_colors(len(lines), start, end)
+    colors = [
+        "#%02x%02x%02x" % rgb
+        for rgb in logo.row_colors(len(lines))
+    ]
     out = [
         '<svg xmlns="http://www.w3.org/2000/svg"'
         f' width="{w}" height="{h}"'
@@ -74,14 +59,11 @@ def render(lines, start, end, title):
 
 
 def main(argv):
-    cli = load_cli()
-    name = argv[0] if argv else "hy"
+    name = argv[0] if argv else logo.DEFAULT_LOGO
     default = ROOT / "docs" / f"logo-{name}.svg"
     out = Path(argv[1]) if len(argv) > 1 else default
     title = "նղ֊գիր" if name.startswith("hy") else "nX-gir"
-    svg = render(
-        cli.LOGOS[name], cli.TOP, cli.BOTTOM, title
-    )
+    svg = render(logo.LOGOS[name], title)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(svg, encoding="utf-8")
     print(
