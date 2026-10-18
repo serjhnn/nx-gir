@@ -109,6 +109,8 @@ word is under the cursor.
 | `c` | lines centered (default) or left-aligned |
 | `T` | choose a theme (`j`/`k` try it on the page, `Enter` keep, `q` cancel) |
 | `d` | dim the text: normal → dim → dimmer (also in `ls`) |
+| `m` | bookmark the word (again to remove); `*` in the top line marks it |
+| `M` | list bookmarks (`j`/`k` preview, `Enter` go, `x` delete, `q` close) |
 | `q` | back to the list |
 
 In the references panel, `j`/`k` move through the places
@@ -124,6 +126,15 @@ rotated. Matching ignores case and the marks
        alt="The reader on a wide screen, with the
             references panel beside the text">
 </p>
+
+The reader remembers where you stopped in each book and
+opens it there next time; the `ls` list shows how far
+you've read (`37%`). Bookmarks, the theme, the dim level,
+centering and the panel place are remembered too. All of
+it is kept in `~/.local/state/nxgir/state.json` on your
+device (not in the repo); set `NXGIR_STATE` to use
+another file. If the file is damaged, nxgir starts fresh
+and keeps the old one as `state.bad`.
 
 Themes:
 

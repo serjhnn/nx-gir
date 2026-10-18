@@ -21,6 +21,7 @@ import signal
 import struct
 import subprocess
 import sys
+import tempfile
 import termios
 import time
 from pathlib import Path
@@ -70,7 +71,10 @@ def run(keys, cols, rows, env=None):
     stream = pyte.ByteStream(screen)
     pid, fd = pty.fork()
     if pid == 0:
+        # a fresh state file: never the reader's own
+        state = tempfile.mkdtemp(prefix="nxgir-shot-")
         os.environ.update(
+            NXGIR_STATE=os.path.join(state, "state.json"),
             TERM="screen-256color",
             LANG="C.UTF-8",
             LC_ALL="C.UTF-8",

@@ -145,6 +145,32 @@ def vertical(words, i, step, indent=None):
     return min(range(lo, hi), key=dist)
 
 
+def pos_of(words, i):
+    """Saved position of word i: [line, n], the n-th
+    word of its line in the file."""
+    line = words[i].line
+    n = 0
+    while i - n - 1 >= 0 and words[i - n - 1].line == line:
+        n += 1
+    return [line, n]
+
+
+def word_at(words, pos):
+    """Index of the word at a saved [line, n]. If the
+    file changed, the nearest word that still exists."""
+    if not words:
+        return 0
+    line, n = pos
+    lines = [w.line for w in words]
+    lo = bisect_left(lines, line)
+    if lo == len(words):
+        return len(words) - 1
+    if words[lo].line != line:
+        return lo  # line gone or empty: next word
+    hi = bisect_right(lines, line)
+    return min(lo + max(n, 0), hi - 1)
+
+
 def first_from(words, row):
     """First word on row or after it."""
     rows = [w.row for w in words]
@@ -248,7 +274,16 @@ PANEL_HELP = (
     "j/k pick · Enter go · q close",
     "j/k Enter p q",
 )
-PANEL_HELPS = {"refs": PANEL_HELP, "theme": THEME_HELP}
+MARKS_HELP = (
+    "j/k pick · Enter go · x delete · q close",
+    "j/k pick · Enter go · x del · q",
+    "j/k Enter x q",
+)
+PANEL_HELPS = {
+    "refs": PANEL_HELP,
+    "theme": THEME_HELP,
+    "marks": MARKS_HELP,
+}
 ALIGN_NAMES = {
     "center": "text: lines centered",
     "left": "text: lines left-aligned",
@@ -290,6 +325,9 @@ KEYS = {
     "c": "align",
     "T": "theme",
     "d": "dim",
+    "m": "mark",
+    "M": "marks",
+    "x": "delete",
     "\n": "enter",
     "\r": "enter",
     curses.KEY_ENTER: "enter",
@@ -335,6 +373,30 @@ def theme_panel():
     return Panel("themes", entries, sel, kind="theme")
 
 
+def marks_panel(lay, marks, cur):
+    """Panel listing bookmarks ([line, n] each); the
+    one at or before word cur is selected."""
+    words = lay.words
+    idx = [word_at(words, m) for m in marks]
+    entries = [
+        Entry(
+            f"{words[k].line + 1:>4} ",
+            lay.lines[words[k].line],
+            words[k].lcol,
+            len(words[k].text),
+            k,
+        )
+        for k in idx
+    ]
+    sel = 0
+    for n, k in enumerate(idx):
+        if k <= cur:
+            sel = n
+    n = len(idx)
+    title = f"bookmarks · {n}"
+    return Panel(title, entries, sel, kind="marks")
+
+
 def refs_panel(lay, i):
     """Panel listing every place word i appears."""
     words = lay.words
@@ -355,10 +417,14 @@ def refs_panel(lay, i):
 
 
 class Reader:
-    def __init__(self, win, text, title):
+    def __init__(self, win, text, title, state=None):
         self.win = win
         self.text = text
         self.title = title
+        self.state = state  # nxgir_state.State or None
+        self.start = None  # saved [line, n] to open at
+        if state:
+            self.start = state.position(title)
         self.wrap = None  # width the text is wrapped to
         self.lay = None
         self.cur = 0  # word index under the cursor
@@ -369,6 +435,12 @@ class Reader:
         self.saved = 0  # cursor before the panel
         self.mode = "auto"  # panel place, see MODES
         self.align = "center"  # see ALIGNS
+        if state:
+            st = state.settings
+            if st.get("mode") in MODES:
+                self.mode = st["mode"]
+            if st.get("align") in ALIGNS:
+                self.align = st["align"]
         self.saved_theme = style.name  # before T
         self.box_w = 0  # width of the text box
 
@@ -389,6 +461,11 @@ class Reader:
             self.wrap = width
             self.lay = layout(self.text, width)
             n = len(self.lay.words)
+            if self.start is not None:
+                self.cur = word_at(
+                    self.lay.words, self.start
+                )
+                self.start = None
             self.cur = min(self.cur, max(n - 1, 0))
 
     def follow(self, rows):
@@ -418,8 +495,9 @@ class Reader:
 
         put(win, 0, 0, f" {self.title}", style("title"))
         if words:
+            star = "* " if self.marked() else ""
             info = (
-                f"line {words[self.cur].line + 1}"
+                f"{star}line {words[self.cur].line + 1}"
                 f"/{len(self.lay.lines)} "
             )
             put(win, 0, max(w - len(info) - 1, 0), info)
@@ -553,7 +631,14 @@ class Reader:
         rows = self.boxes()[0].h
         total = len(self.lay.rows)
         if action == "quit":
+            self.remember()
             return False
+        if action == "mark":
+            self.toggle_mark()
+            return True
+        if action == "marks":
+            self.open_marks()
+            return True
         if action == "place":
             self.next_mode()
             return True
@@ -670,12 +755,15 @@ class Reader:
         elif action == "dim":
             self.msg = style.next_dim(self.win)
             return
+        elif action == "delete" and p.kind == "marks":
+            self.delete_mark()
+            return
         elif action == "enter":
             self.panel = None
             if p.kind == "theme":
                 self.msg = style.describe()
             return
-        elif action in ("quit", "refs", "theme"):
+        elif action in ("quit", "refs", "theme", "marks"):
             if p.kind == "theme":
                 style.use(self.win, self.saved_theme)
             else:
@@ -694,6 +782,78 @@ class Reader:
         target = p.entries[p.sel].target
         if target >= 0:
             self.cur = target
+
+    # -- saved state --
+
+    def remember(self):
+        """Save position and settings (if saving)."""
+        st = self.state
+        if not st or not self.lay:
+            return
+        words = self.lay.words
+        if words:
+            pos = pos_of(words, self.cur)
+            st.set_position(
+                self.title, pos, len(self.lay.lines)
+            )
+        st.settings.update(
+            mode=self.mode,
+            align=self.align,
+            theme=style.wanted,
+            dim=style.dim,
+        )
+        st.save()
+
+    def marked(self):
+        """True if the word under the cursor is
+        bookmarked."""
+        if not self.state:
+            return False
+        pos = pos_of(self.lay.words, self.cur)
+        return pos in self.state.marks(self.title)
+
+    def toggle_mark(self):
+        words = self.lay.words
+        if not self.state or not words:
+            return
+        pos = pos_of(words, self.cur)
+        added = self.state.toggle_mark(self.title, pos)
+        self.state.save()
+        word = words[self.cur].text
+        what = "added" if added else "removed"
+        self.msg = (
+            f"bookmark {what} · {word}, line {pos[0] + 1}"
+        )
+
+    def open_marks(self):
+        marks = (
+            self.state.marks(self.title)
+            if self.state
+            else []
+        )
+        if not marks:
+            self.msg = "no bookmarks yet · m adds one"
+            return
+        self.panel = marks_panel(self.lay, marks, self.cur)
+        self.saved = self.cur
+        self.cur = self.panel.entries[self.panel.sel].target
+
+    def delete_mark(self):
+        p = self.panel
+        marks = self.state.marks(self.title)
+        self.state.toggle_mark(self.title, marks[p.sel])
+        self.state.save()
+        marks = self.state.marks(self.title)
+        if not marks:
+            self.cur = self.saved
+            self.panel = None
+            self.msg = "bookmark deleted · none left"
+            return
+        sel = min(p.sel, len(marks) - 1)
+        self.panel = marks_panel(self.lay, marks, self.cur)
+        self.panel.sel = sel
+        self.cur = self.panel.entries[sel].target
+        self.msg = "bookmark deleted"
 
     def run(self):
         while True:
@@ -719,6 +879,7 @@ def read_text(path):
         return f"cannot open file: {e}"
 
 
-def read(win, path, title):
-    """Open path in the reader until q."""
-    Reader(win, read_text(path), title).run()
+def read(win, path, title, state=None):
+    """Open path in the reader until q. With a State,
+    the position, bookmarks and settings are saved."""
+    Reader(win, read_text(path), title, state).run()

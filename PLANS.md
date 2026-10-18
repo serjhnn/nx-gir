@@ -108,7 +108,8 @@ Progress:
 - [x] `s`: references panel (same word form for now)
 - [x] Panel beside the text on wide screens (`p` to
       choose: auto, below, beside)
-- [ ] Remember the last position, bookmarks
+- [x] Remember the last position, bookmarks (`m`,
+      `M`), settings and reading progress
 - [ ] `t` and `e` with a starter glossary
 - [ ] `s` across different forms of the same word
 

@@ -8,7 +8,17 @@ import locale
 import os
 
 import nxgir_reader
-from nxgir_ui import cursor, fit, key, prompt, put, style
+from nxgir_state import State
+from nxgir_ui import (
+    DIMS,
+    THEMES,
+    cursor,
+    fit,
+    key,
+    prompt,
+    put,
+    style,
+)
 
 LIST_HELP = (
     "↑↓/jk move · g/G ends · / search · "
@@ -129,7 +139,7 @@ class Pane:
             self.pos = hit
 
 
-def list_view(win, files, title):
+def list_view(win, files, title, state):
     """Pick a file from files: [(name, size, path)]."""
     pane = Pane(len(files))
     names = [name for name, _, _ in files]
@@ -149,6 +159,9 @@ def list_view(win, files, title):
         for i, (name, size, _) in enumerate(shown):
             idx = pane.top + i
             sz = human_size(size)
+            pct = state.progress(name)
+            if pct is not None:
+                sz = f"{pct:>3}%  {sz:>8}"
             left = f" {name}"
             gap = w - 1 - len(left) - len(sz) - 1
             line = left + " " * max(gap, 1) + sz + " "
@@ -166,6 +179,10 @@ def list_view(win, files, title):
 
         action = key_name(key(win))
         if action == "quit":
+            state.settings.update(
+                theme=style.wanted, dim=style.dim
+            )
+            state.save()
             return
         if action in ("search", "next", "prev"):
             pane.search(win, names, action)
@@ -175,7 +192,7 @@ def list_view(win, files, title):
             pane.msg = style.next_dim(win)
         elif action == "enter" and files:
             name, _, path = files[pane.pos]
-            nxgir_reader.read(win, path, name)
+            nxgir_reader.read(win, path, name, state)
         elif action not in (
             None,
             "back",
@@ -194,9 +211,14 @@ def browse(files, title):
         curses.set_escdelay(25)
         cursor(False)
         win.keypad(True)
-        style.use(
-            win, os.environ.get("NXGIR_THEME", "sepia")
-        )
-        list_view(win, files, title)
+        state = State.load()
+        st = state.settings
+        if st.get("dim") in range(len(DIMS)):
+            style.dim = st["dim"]
+        theme = os.environ.get("NXGIR_THEME") or st["theme"]
+        if theme not in THEMES:
+            theme = "sepia"
+        style.use(win, theme)
+        list_view(win, files, title, state)
 
     curses.wrapper(main)

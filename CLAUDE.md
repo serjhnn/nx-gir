@@ -25,6 +25,9 @@
 - `scripts/nxgir_browse.py`: `ls` file list (curses)
 - `scripts/nxgir_reader.py`: the reader; text model at
   the top (tested in `tests/`), curses screen below
+- `scripts/nxgir_state.py`: saved positions,
+  bookmarks and settings (JSON in
+  `~/.local/state/nxgir/`; tests use `NXGIR_STATE`)
 - `scripts/nxgir_ui.py`: shared curses helpers; read
   keys with `key()`, it handles terminal resizes
 - `scripts/nxgir_logo.py`: logos and gradient colors

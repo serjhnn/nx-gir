@@ -156,6 +156,7 @@ class Style:
 
     def __init__(self):
         self.name = "plain"
+        self.wanted = "plain"  # chosen, even if not shown
         self.attrs = dict(PLAIN)
         self.dim = 0  # index into DIMS
 
@@ -166,6 +167,7 @@ class Style:
         """Switch to theme name; False if the terminal
         lacks the colors (then plain is used)."""
         spec = THEMES.get(name)
+        self.wanted = name
         ok = spec is None or self.colors()
         if not ok:
             spec, name = None, "plain"
