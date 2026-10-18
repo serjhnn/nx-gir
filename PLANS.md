@@ -107,7 +107,7 @@ What it needs:
   bookmarks, remembering the last position
 - A Grabar dictionary to look words up in (starter
   glossary first, larger dictionaries later)
-- Finding the dictionary form of a word: grabar words
+- Finding the dictionary form of a word: Grabar words
   change their endings (`-ոյ`, `-աց`, `-ոց`, `-աւ`,
   `-ս`, `-դ`, `-ն`, …), so the reader needs to strip them
   to find the word
