@@ -6,6 +6,7 @@ from nxgir_ui import (
     THEMES,
     fade,
     fit,
+    shorten,
 )
 
 
@@ -79,3 +80,14 @@ def test_dim_levels_differ_and_stay_visible():
         ratios = [contrast(c, bg) for c in levels]
         assert ratios == sorted(ratios, reverse=True), name
         assert ratios[-1] > 1.3, (name, ratios)
+
+
+def test_shorten_keeps_file_name():
+    p = "grabar/bible/new-testament/2-mark.txt"
+    assert shorten(p, 60) == p
+    assert shorten(p, 30) == "…/new-testament/2-mark.txt"
+    assert shorten(p, 20) == "…/2-mark.txt"
+    assert len(shorten(p, 8)) <= 8
+    assert shorten(p, 8).endswith("txt")
+    for w in range(1, 45):
+        assert len(shorten(p, w)) <= w

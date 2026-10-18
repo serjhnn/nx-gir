@@ -17,6 +17,7 @@ from nxgir_ui import (
     key,
     prompt,
     put,
+    shorten,
     style,
 )
 
@@ -520,7 +521,6 @@ class Reader:
         words = self.lay.words
         win.erase()
 
-        put(win, 0, 0, f" {self.title}", style("title"))
         if words:
             star = "* " if self.marked() else ""
             info = (
@@ -528,6 +528,9 @@ class Reader:
                 f"/{len(self.lay.lines)} "
             )
             put(win, 0, max(w - len(info) - 1, 0), info)
+        room = w - len(info) - 3 if words else w - 2
+        title = shorten(self.title, room)
+        put(win, 0, 0, f" {title}", style("title"))
         put(win, 1, 0, "─" * (w - 1), style("rule"))
         self.draw_text(tb)
         if pb:

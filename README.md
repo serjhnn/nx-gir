@@ -60,10 +60,11 @@ Tools that help a modern reader through a Classical Armenian text:
 ./nxgir
 
 # or run a single command directly, e.g. browse the
-# books in data/ (↑↓/jk move, Enter read, / search, q quit)
+# books in books/ and data/ (↑↓/jk move, Enter read,
+# / search, q quit)
 ./nxgir bookshelf
 
-# print the file list instead of browsing it
+# print the book list instead of browsing it
 ./nxgir bookshelf --plain
 
 # print the logo: hy (default), hy-upright, hy-block, en
@@ -81,6 +82,19 @@ Tools that help a modern reader through a Classical Armenian text:
 ./nxgir grabar numeral ՌՄԾ
 ```
 
+## Books
+
+The bookshelf shows the texts in two folders:
+
+- `books/`: the library. It has the four Gospels in
+  Grabar (`books/grabar/bible/new-testament/`), from the
+  Venice 1895 Bible; see `books/SOURCES.md`.
+- `data/`: short test texts; see `data/SOURCES.md`.
+
+More books of the 1895 Bible can be added with
+`scripts/fetch-bible.py` (see its help and
+`books/SOURCES.md` for the commands used).
+
 ## Reader keys
 
 <p align="center">
@@ -88,7 +102,7 @@ Tools that help a modern reader through a Classical Armenian text:
        alt="The bookshelf in the sepia theme">
   <img src="docs/screen-reader.png" width="340"
        alt="The reader on a phone-size screen, with the
-            references panel for the word եւ open below">
+            references panel for the word էր open below">
 </p>
 
 Pressing Enter on a book in the bookshelf opens it in

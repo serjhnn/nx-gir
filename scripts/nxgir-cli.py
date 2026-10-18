@@ -22,6 +22,11 @@ except ImportError:
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
+BOOKS_DIR = ROOT / "books"
+# folders shown in the bookshelf, in this order
+SHELVES = (BOOKS_DIR, DATA_DIR)
+# notes about a shelf, not books: left off the list
+NOT_BOOKS = {"SOURCES.md", "README.md"}
 PROMPT = "nxgir> "
 
 
@@ -56,26 +61,34 @@ def banner(lang=None):
     print()
 
 
-def data_files():
-    """[(name, size, path)] for every file in data/."""
-    files = sorted(
-        p for p in DATA_DIR.rglob("*") if p.is_file()
-    )
-    return [
-        (str(p.relative_to(DATA_DIR)), p.stat().st_size, p)
-        for p in files
-    ]
+def shelf_files():
+    """[(name, size, path)] for every file in books/
+    and data/; name is the path inside its folder."""
+    out = []
+    for root in SHELVES:
+        if not root.is_dir():
+            continue
+        files = sorted(
+            p
+            for p in root.rglob("*")
+            if p.is_file() and p.name not in NOT_BOOKS
+        )
+        out += [
+            (str(p.relative_to(root)), p.stat().st_size, p)
+            for p in files
+        ]
+    return out
 
 
 def cmd_bookshelf(args):
-    """Browse the books in the data folder."""
-    if not DATA_DIR.is_dir():
+    """Browse the books in books/ and data/."""
+    if not any(root.is_dir() for root in SHELVES):
         print(
-            f"data folder not found: {DATA_DIR}",
+            f"no books/ or data/ folder in {ROOT}",
             file=sys.stderr,
         )
         return 1
-    files = data_files()
+    files = shelf_files()
     tty = sys.stdin.isatty() and sys.stdout.isatty()
     if tty and not args.plain:
         import nxgir_browse
@@ -83,7 +96,7 @@ def cmd_bookshelf(args):
         nxgir_browse.browse(files, "bookshelf")
         return 0
     if not files:
-        print("no files in data folder")
+        print("no books found")
         return 0
     for name, size, _ in files:
         print(f"{size:>8}  {name}")
@@ -106,7 +119,7 @@ def build_parser():
     )
     sub = parser.add_subparsers(dest="command")
     p = sub.add_parser(
-        "bookshelf", help="browse the books in data/"
+        "bookshelf", help="browse books/ and data/"
     )
     p.add_argument(
         "--plain",

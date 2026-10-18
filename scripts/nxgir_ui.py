@@ -240,6 +240,20 @@ def put(win, y, x, text, attr=0, right=None):
         pass
 
 
+def shorten(path, width):
+    """path cut to width from the left, keeping the
+    file name: …/new-testament/2-mark.txt."""
+    if len(path) <= width:
+        return path
+    if width < 2:
+        return path[:width]
+    tail = path[-(width - 1) :]
+    cut = tail.find("/")
+    if 0 < cut < len(tail) - 1:
+        tail = tail[cut:]  # start at a folder
+    return "…" + tail
+
+
 def fit(texts, width):
     """First text that fits width (longest first)."""
     for t in texts:

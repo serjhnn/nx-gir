@@ -31,6 +31,10 @@
 - `scripts/nxgir_ui.py`: shared curses helpers; read
   keys with `key()`, it handles terminal resizes
 - `scripts/nxgir_logo.py`: logos and gradient colors
+- `scripts/fetch-bible.py`: downloads a book of the
+  1895 Grabar Bible into `books/` (see
+  `books/SOURCES.md`)
+- `books/`: the library; `data/`: test texts
 - `scripts/render-logo.py`, `scripts/render-screens.py`:
   regenerate the README images in `docs/` after
   changing the logo or the screens

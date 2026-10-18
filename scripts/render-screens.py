@@ -175,7 +175,7 @@ def save(img, path):
 
 
 # keys to open test/grabar_john.txt from the list
-OPEN_JOHN = ["jj", "\r"]
+OPEN_JOHN = ["/grabar_john.txt\r", "\r"]
 THEMES = ["sepia", "night", "gold", "paper", "tuff", "ink"]
 
 

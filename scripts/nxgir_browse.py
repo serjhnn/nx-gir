@@ -17,6 +17,7 @@ from nxgir_ui import (
     key,
     prompt,
     put,
+    shorten,
     style,
 )
 
@@ -162,7 +163,8 @@ def list_view(win, files, title, state):
             pct = state.progress(name)
             if pct is not None:
                 sz = f"{pct:>3}%  {sz:>8}"
-            left = f" {name}"
+            room = w - len(sz) - 4
+            left = f" {shorten(name, room)}"
             gap = w - 1 - len(left) - len(sz) - 1
             line = left + " " * max(gap, 1) + sz + " "
             attr = style("cursor") if idx == pane.pos else 0

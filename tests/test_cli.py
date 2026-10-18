@@ -33,3 +33,10 @@ def test_bookshelf_replaces_ls(capsys):
     out = capsys.readouterr().out
     assert "test/grabar_john.txt" in out
     assert cli.run(["ls"]) != 0
+
+
+def test_bookshelf_lists_books_not_notes(capsys):
+    cli.run(["bookshelf", "--plain"])
+    out = capsys.readouterr().out
+    assert "new-testament/1-matthew.txt" in out
+    assert "SOURCES.md" not in out
