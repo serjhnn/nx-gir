@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Render the nx-gir logo to an SVG image.
 
-Uses the same logo and red-to-gold gradient as the
+Uses the same logo and gold-to-red gradient as the
 shell. Run again after changing the logo:
 
     scripts/render-logo.py [hy|hy-block|en] [out.svg]
@@ -79,7 +79,9 @@ def main(argv):
     default = ROOT / "docs" / f"logo-{name}.svg"
     out = Path(argv[1]) if len(argv) > 1 else default
     title = "նղ֊գիր" if name.startswith("hy") else "nX-gir"
-    svg = render(cli.LOGOS[name], cli.RED, cli.GOLD, title)
+    svg = render(
+        cli.LOGOS[name], cli.TOP, cli.BOTTOM, title
+    )
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(svg, encoding="utf-8")
     print(

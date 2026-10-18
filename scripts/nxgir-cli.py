@@ -60,9 +60,10 @@ LOGOS = {
 }
 DEFAULT_LOGO = "hy"
 
-# Gradient endpoints (RGB), top to bottom.
+# Gradient colors (RGB).
 RED = (200, 16, 46)
 GOLD = (255, 196, 0)
+TOP, BOTTOM = GOLD, RED
 
 
 def use_color():
@@ -95,7 +96,7 @@ def banner(lang=None):
         lang = os.environ.get("NXGIR_BANNER", "")
     lines = LOGOS.get(lang, LOGOS[DEFAULT_LOGO])
     if use_color():
-        lines = gradient(lines, RED, GOLD)
+        lines = gradient(lines, TOP, BOTTOM)
     print("\n".join(lines))
     print()
 
