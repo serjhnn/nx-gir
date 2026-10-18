@@ -1,0 +1,5 @@
+Sample text
+
+This is a plain English test file for the nx-gir reader.
+It is used to check basic reading, paging and search
+with text that is not Armenian.
