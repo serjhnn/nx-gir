@@ -57,6 +57,9 @@ Tools that help a modern reader through a Classical Armenian text:
 # or run a single command directly, e.g. list files in data/
 ./nxgir ls
 
+# print the logo: hy = Armenian (default), en = Latin
+./nxgir banner en
+
 # read a book
 ./nxgir read book.txt
 

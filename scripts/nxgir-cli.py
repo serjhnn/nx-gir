@@ -22,7 +22,20 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 PROMPT = "nxgir> "
 
-LOGO = r"""
+LOGO_HY = r"""
+  ▄▄▄                              ▄▄
+ ▀███                              ██
+   ██   ▄▄  ▄▄ ▄▄▄        ▄▄▄ ▄▄   ██ ▄▄▄  ▄▄ ▄▄▄
+   ██   ██  ███▀██▄      ▄██▀███   ███▀███ ███████
+   ██   ██  ██▀  ██ ▄▄▄▄ ██   ██   ██▀  ██ ███  ██
+   ██  ▄██  ██   ██ ▀██▀ ██   ██   ██   ██ ███  ██
+   ███▄███  ██   ██      ▀██▄███▄▄ ██   ██ ███  ██
+    ▀▀▀▀▀▀  ▀▀   ██       ▀▀▀▀██▀▀ ██   ▀▀ ███  ▀▀
+                 ███▄         ██   ██      ███
+                 ▀▀▀          ▀▀   ▀▀      ▀▀
+""".strip("\n").splitlines()
+
+LOGO_EN = r"""
          _  __            _
    ____ | |/ /     ____ _(_)____
   / __ \|   /_____/ __ `/ / ___/
@@ -31,7 +44,10 @@ LOGO = r"""
                 /____/
 """.strip("\n").splitlines()
 
-# Gradient endpoints (RGB), left to right.
+LOGOS = {"hy": LOGO_HY, "en": LOGO_EN}
+DEFAULT_LOGO = "hy"
+
+# Gradient endpoints (RGB), top to bottom.
 RED = (200, 16, 46)
 GOLD = (255, 196, 0)
 
@@ -46,28 +62,27 @@ def use_color():
 
 
 def gradient(lines, start, end):
-    """Color lines column by column, start to end."""
-    width = max(len(line) for line in lines)
-    span = max(width - 1, 1)
+    """Color lines row by row, start to end."""
+    span = max(len(lines) - 1, 1)
     out = []
-    for line in lines:
-        parts = []
-        for i, ch in enumerate(line):
-            t = i / span
-            r, g, b = (
-                round(a + (b - a) * t)
-                for a, b in zip(start, end)
-            )
-            parts.append(f"\033[38;2;{r};{g};{b}m{ch}")
-        out.append("".join(parts) + "\033[0m")
+    for row, line in enumerate(lines):
+        t = row / span
+        r, g, b = (
+            round(a + (b - a) * t)
+            for a, b in zip(start, end)
+        )
+        color = f"\033[38;2;{r};{g};{b}m"
+        out.append(f"{color}{line}\033[0m")
     return out
 
 
-def banner():
-    """Print the nX-gir logo."""
-    lines = LOGO
+def banner(lang=None):
+    """Print the logo: 'hy' (Armenian) or 'en'."""
+    if lang is None:
+        lang = os.environ.get("NXGIR_BANNER", "")
+    lines = LOGOS.get(lang, LOGOS[DEFAULT_LOGO])
     if use_color():
-        lines = gradient(LOGO, RED, GOLD)
+        lines = gradient(lines, RED, GOLD)
     print("\n".join(lines))
     print()
 
@@ -93,6 +108,12 @@ def cmd_ls(args):
     return 0
 
 
+def cmd_banner(args):
+    """Print the logo."""
+    banner(args.lang)
+    return 0
+
+
 def build_parser():
     parser = argparse.ArgumentParser(
         prog="nxgir",
@@ -105,6 +126,15 @@ def build_parser():
     sub.add_parser(
         "ls", help="list files in the data folder"
     ).set_defaults(func=cmd_ls)
+    p = sub.add_parser("banner", help="print the logo")
+    p.add_argument(
+        "lang",
+        nargs="?",
+        default="hy",
+        choices=sorted(LOGOS),
+        help="hy = Armenian (default), en = Latin",
+    )
+    p.set_defaults(func=cmd_banner)
     return parser
 
 
