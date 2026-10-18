@@ -22,7 +22,9 @@
 ## Layout
 
 - `scripts/nxgir-cli.py`: commands and the `nxgir>` shell
-- `scripts/nxgir_browse.py`: `bookshelf` book list (curses)
+- `scripts/nxgir_browse.py`: `bookshelf`, a folder
+  view of `books/` and `data/` (curses); folder logic
+  is tested in `tests/test_browse.py`
 - `scripts/nxgir_reader.py`: the reader; text model at
   the top (tested in `tests/`), curses screen below
 - `scripts/nxgir_state.py`: saved positions,

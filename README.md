@@ -60,8 +60,8 @@ Tools that help a modern reader through a Classical Armenian text:
 ./nxgir
 
 # or run a single command directly, e.g. browse the
-# books in books/ and data/ (↑↓/jk move, Enter read,
-# / search, q quit)
+# books in books/ and data/ by folder (Enter opens,
+# h goes up, / searches, q quits)
 ./nxgir bookshelf
 
 # print the book list instead of browsing it
@@ -90,6 +90,23 @@ The bookshelf shows the texts in two folders:
   Grabar (`books/grabar/bible/new-testament/`), from the
   Venice 1895 Bible; see `books/SOURCES.md`.
 - `data/`: short test texts; see `data/SOURCES.md`.
+
+The bookshelf shows them as folders (`grabar/`,
+`test/`, …), with the number of books in each:
+
+| Key | Action |
+|-----|--------|
+| `j` `k` / `↓` `↑`, `g` `G`, `PgUp` `PgDn` | move |
+| `Enter` / `l` / `→` | open the folder or book |
+| `h` / `←` / `Backspace`, or `..` | up one folder |
+| `/` then `n` `N` | find a book by name in any folder |
+| `T`, `d` | theme, dim (as in the reader) |
+| `q` | quit |
+
+Going up puts the cursor back on the folder you came
+from, and the bookshelf reopens in the folder you were
+last in. `./nxgir bookshelf --plain` prints every book
+with its full path.
 
 More books of the 1895 Bible can be added with
 `scripts/fetch-bible.py` (see its help and

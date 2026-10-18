@@ -182,7 +182,7 @@ THEMES = ["sepia", "night", "gold", "paper", "tuff", "ink"]
 def main():
     DOCS.mkdir(exist_ok=True)
     shots = {
-        "screen-list.png": run([], 46, 12),
+        "screen-list.png": run(["\r\r\r"], 46, 12),
         "screen-reader.png": run(
             OPEN_JOHN + ["jjjjjjjww", "s"], 42, 22
         ),
