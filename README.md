@@ -97,7 +97,9 @@ The text wraps to the screen and re-wraps when the
 window size changes. Lines are centered, in a column at
 most 70 characters wide in the middle of the screen, with
 an empty margin of 10% of the width on the left and right.
-One word is under the cursor.
+Lines are double-spaced (an empty row between them),
+since a terminal can't change its own line height. One
+word is under the cursor.
 
 | Key | Action |
 |-----|--------|
@@ -110,6 +112,7 @@ One word is under the cursor.
 | `s` | references: every place the word appears |
 | `p` | panel place: auto, always below, always beside |
 | `c` | lines centered (default) or left-aligned |
+| `L` | line spacing: double (default) → triple → single |
 | `T` | choose a theme (`j`/`k` try it on the page, `Enter` keep, `q` cancel) |
 | `d` | dim the text: normal → dim → dimmer (also in the bookshelf) |
 | `m` | bookmark the word (again to remove); `*` in the top line marks it |
@@ -133,7 +136,8 @@ rotated. Matching ignores case and the marks
 The reader remembers where you stopped in each book and
 opens it there next time; the bookshelf shows how far
 you've read (`37%`). Bookmarks, the theme, the dim level,
-centering and the panel place are remembered too. All of
+centering, line spacing and the panel place are
+remembered too. All of
 it is kept in `~/.local/state/nxgir/state.json` on your
 device (not in the repo); set `NXGIR_STATE` to use
 another file. If the file is damaged, nxgir starts fresh

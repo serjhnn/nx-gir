@@ -180,6 +180,21 @@ def first_from(words, row):
 TEXT_MAX = 70  # widest text column, for easy reading
 MARGIN = 0.10  # empty space left and right of the text
 ALIGNS = ("center", "left")
+# empty screen rows between lines of text, in the
+# order L steps through them (first = default)
+SPACINGS = (1, 2, 0)
+SPACING_NAMES = {
+    0: "line spacing: single",
+    1: "line spacing: double",
+    2: "line spacing: triple",
+}
+
+
+def visible_rows(height, gap):
+    """Text rows that fit in height screen rows when
+    each is followed by gap empty rows (the last
+    row's gap may be cut off)."""
+    return max((height + gap) // (gap + 1), 1)
 
 
 def margin(box_w):
@@ -331,6 +346,7 @@ KEYS = {
     "s": "refs",
     "p": "place",
     "c": "align",
+    "L": "spacing",
     "T": "theme",
     "d": "dim",
     "m": "mark",
@@ -443,12 +459,15 @@ class Reader:
         self.saved = 0  # cursor before the panel
         self.mode = "auto"  # panel place, see MODES
         self.align = "center"  # see ALIGNS
+        self.spacing = SPACINGS[0]  # empty rows per line
         if state:
             st = state.settings
             if st.get("mode") in MODES:
                 self.mode = st["mode"]
             if st.get("align") in ALIGNS:
                 self.align = st["align"]
+            if st.get("spacing") in SPACINGS:
+                self.spacing = st["spacing"]
         self.saved_theme = style.name  # before T
         self.box_w = 0  # width of the text box
 
@@ -497,7 +516,7 @@ class Reader:
         tb, pb, side = self.boxes()
         self.box_w = tb.w
         self.relayout(tb.w)
-        self.follow(tb.h)
+        self.follow(self.rows(tb))
         words = self.lay.words
         win.erase()
 
@@ -531,15 +550,20 @@ class Reader:
         self.msg = ""
         win.refresh()
 
+    def rows(self, box):
+        """Text rows that fit in the text box."""
+        return visible_rows(box.h, self.spacing)
+
     def draw_text(self, box):
         win = self.win
         right = box.x + box.w
-        bottom = self.top + box.h
+        step = self.spacing + 1  # screen rows per line
+        bottom = self.top + self.rows(box)
         for i, text in enumerate(
             self.lay.rows[self.top : bottom]
         ):
             x = box.x + self.indent(self.top + i)
-            put(win, box.y + i, x, text, 0, right)
+            put(win, box.y + i * step, x, text, 0, right)
         words = self.lay.words
         if not words:
             return
@@ -557,7 +581,7 @@ class Reader:
             elif self.refs_open() and wd.key == key:
                 attr = style("mark")
             if attr:
-                y = box.y + wd.row - self.top
+                y = box.y + (wd.row - self.top) * step
                 x = box.x + self.indent(wd.row) + wd.col
                 put(win, y, x, wd.text, attr, right)
 
@@ -636,7 +660,7 @@ class Reader:
     def key_text(self, action):
         """Handle a key while reading. False = leave."""
         words = self.lay.words
-        rows = self.boxes()[0].h
+        rows = self.rows(self.boxes()[0])
         total = len(self.lay.rows)
         if action == "quit":
             self.remember()
@@ -652,6 +676,9 @@ class Reader:
             return True
         if action == "align":
             self.next_align()
+            return True
+        if action == "spacing":
+            self.next_spacing()
             return True
         if action == "dim":
             self.msg = style.next_dim(self.win)
@@ -709,6 +736,11 @@ class Reader:
             self.saved = self.cur
         return True
 
+    def next_spacing(self):
+        i = SPACINGS.index(self.spacing)
+        self.spacing = SPACINGS[(i + 1) % len(SPACINGS)]
+        self.msg = SPACING_NAMES[self.spacing]
+
     def next_align(self):
         i = ALIGNS.index(self.align)
         self.align = ALIGNS[(i + 1) % len(ALIGNS)]
@@ -760,6 +792,8 @@ class Reader:
             self.next_mode()
         elif action == "align":
             self.next_align()
+        elif action == "spacing":
+            self.next_spacing()
         elif action == "dim":
             self.msg = style.next_dim(self.win)
             return
@@ -807,6 +841,7 @@ class Reader:
         st.settings.update(
             mode=self.mode,
             align=self.align,
+            spacing=self.spacing,
             theme=style.wanted,
             dim=style.dim,
         )

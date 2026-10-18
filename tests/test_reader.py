@@ -12,6 +12,7 @@ from nxgir_reader import (
     split,
     text_width,
     vertical,
+    visible_rows,
 )
 
 JOHN = (
@@ -221,3 +222,15 @@ def test_vertical_uses_screen_columns():
     assert words[j].text == "բբբ"
     # left-aligned: "դ" is under the first word
     assert words[vertical(words, 3, -1)].text == "աաա"
+
+
+def test_visible_rows():
+    # single spacing: one text row per screen row
+    assert visible_rows(10, 0) == 10
+    # double: rows 0, 2, 4, 6, 8 (the last gap is cut)
+    assert visible_rows(10, 1) == 5
+    assert visible_rows(9, 1) == 5
+    # triple: rows 0, 3, 6, 9
+    assert visible_rows(10, 2) == 4
+    assert visible_rows(1, 2) == 1
+    assert visible_rows(0, 1) == 1

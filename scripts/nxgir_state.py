@@ -19,6 +19,7 @@ SETTINGS = {
     "dim": 0,
     "align": "center",
     "mode": "auto",
+    "spacing": 1,
 }
 
 
