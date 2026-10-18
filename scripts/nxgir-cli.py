@@ -23,6 +23,15 @@ DATA_DIR = ROOT / "data"
 PROMPT = "nxgir> "
 
 LOGO_HY = r"""
+ ____                           __
+/_/ / __  ____         ____ _  / /_    ____
+ / / / / / __ \  ____ / __ `/ / __ \  / __ \
+/ /_/ / / / / / /___// /_/ / / / / / / / / /
+\__,_/ /_/ / /__     \__, / /_/ /_/ / / /_/
+          /____/       /_/         /_/
+""".strip("\n").splitlines()
+
+LOGO_HY_BLOCK = r"""
   ▄▄▄                              ▄▄
  ▀███                              ██
    ██   ▄▄  ▄▄ ▄▄▄        ▄▄▄ ▄▄   ██ ▄▄▄  ▄▄ ▄▄▄
@@ -44,7 +53,11 @@ LOGO_EN = r"""
                 /____/
 """.strip("\n").splitlines()
 
-LOGOS = {"hy": LOGO_HY, "en": LOGO_EN}
+LOGOS = {
+    "hy": LOGO_HY,
+    "hy-block": LOGO_HY_BLOCK,
+    "en": LOGO_EN,
+}
 DEFAULT_LOGO = "hy"
 
 # Gradient endpoints (RGB), top to bottom.
@@ -77,7 +90,7 @@ def gradient(lines, start, end):
 
 
 def banner(lang=None):
-    """Print the logo: 'hy' (Armenian) or 'en'."""
+    """Print the logo: 'hy', 'hy-block' or 'en'."""
     if lang is None:
         lang = os.environ.get("NXGIR_BANNER", "")
     lines = LOGOS.get(lang, LOGOS[DEFAULT_LOGO])
@@ -132,7 +145,11 @@ def build_parser():
         nargs="?",
         default="hy",
         choices=sorted(LOGOS),
-        help="hy = Armenian (default), en = Latin",
+        help=(
+            "hy = Armenian (default),"
+            " hy-block = Armenian blocks,"
+            " en = Latin"
+        ),
     )
     p.set_defaults(func=cmd_banner)
     return parser
