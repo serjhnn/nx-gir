@@ -99,7 +99,7 @@ word is under the cursor.
 | `s` | references: every place the word appears |
 | `p` | panel place: auto, always below, always beside |
 | `c` | lines centered (default) or left-aligned |
-| `T` | theme: sepia old book (default) or plain terminal colors |
+| `T` | choose a theme (`j`/`k` try it on the page, `Enter` keep, `q` cancel) |
 | `q` | back to the list |
 
 In the references panel, `j`/`k` move through the places
@@ -110,11 +110,23 @@ and moves when the window is resized or the phone is
 rotated. Matching ignores case and the marks
 `՛ ՜ ՞`, and treats `և` and `եւ` as the same.
 
-The sepia theme (cream paper, brown ink, red headings)
-needs a 256-color terminal, which Termux and most
-terminals are; otherwise the plain theme is used. `T`
-also works in the `ls` list. To start in the plain
-theme, set `NXGIR_THEME=plain`.
+Themes:
+
+| Theme | Look |
+|-------|------|
+| sepia (default) | old book: cream paper, brown ink, red headings |
+| night | dark page for the evening |
+| gold | gold on deep red, like the logo |
+| paper | black ink on white |
+| tuff | pink Armenian tuff stone |
+| ink | pale letters on deep blue |
+| plain | the terminal's own colors |
+
+The colored themes need a 256-color terminal, which
+Termux and most terminals are; otherwise plain is used.
+In the `ls` list, `T` steps to the next theme. To start
+in another theme, set `NXGIR_THEME`, e.g.
+`NXGIR_THEME=night ./nxgir`.
 
 The font is chosen by the terminal, not by nx-gir. In
 Termux, use the Termux:Styling add-on (long-press →

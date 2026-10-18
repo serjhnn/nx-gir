@@ -10,7 +10,15 @@ import textwrap
 from bisect import bisect_left, bisect_right
 from typing import NamedTuple
 
-from nxgir_ui import fit, key, prompt, put, style
+from nxgir_ui import (
+    THEME_NAMES,
+    THEMES,
+    fit,
+    key,
+    prompt,
+    put,
+    style,
+)
 
 # Armenian marks written inside a word: emphasis ՛,
 # exclamation ՜, question ՞ and abbreviation ՟.
@@ -231,11 +239,16 @@ READ_HELP = (
     "w/b word · j/k line · s refs · q back",
     "w/b j/k s / q",
 )
+THEME_HELP = (
+    "j/k try · Enter keep · q cancel",
+    "j/k Enter q",
+)
 PANEL_HELP = (
     "j/k pick · Enter go · p place · q close",
     "j/k pick · Enter go · q close",
     "j/k Enter p q",
 )
+PANEL_HELPS = {"refs": PANEL_HELP, "theme": THEME_HELP}
 ALIGN_NAMES = {
     "center": "text: lines centered",
     "left": "text: lines left-aligned",
@@ -298,14 +311,27 @@ class Entry(NamedTuple):
 class Panel:
     """Information shown beside or below the text.
 
-    Opened by an info key (s now; t and e later).
+    Opened by a key: s (references) or T (themes);
+    t and e later. kind says which.
     """
 
-    def __init__(self, title, entries, sel=0):
+    def __init__(self, title, entries, sel=0, kind="refs"):
+        self.kind = kind
         self.title = title
         self.entries = entries
         self.sel = sel  # selected entry
         self.top = 0  # first visible entry
+
+
+def theme_panel():
+    """Panel listing the themes, current one selected."""
+    names = list(THEMES)
+    entries = [
+        Entry(f"{n:>2} ", THEME_NAMES[name])
+        for n, name in enumerate(names, start=1)
+    ]
+    sel = names.index(style.name)
+    return Panel("themes", entries, sel, kind="theme")
 
 
 def refs_panel(lay, i):
@@ -342,6 +368,7 @@ class Reader:
         self.saved = 0  # cursor before the panel
         self.mode = "auto"  # panel place, see MODES
         self.align = "center"  # see ALIGNS
+        self.saved_theme = style.name  # before T
         self.box_w = 0  # width of the text box
 
     # -- layout --
@@ -404,7 +431,9 @@ class Reader:
                     put(win, y, tb.w, "│", style("rule"))
             self.draw_panel(pb, side)
 
-        help_ = PANEL_HELP if self.panel else READ_HELP
+        help_ = READ_HELP
+        if self.panel:
+            help_ = PANEL_HELPS[self.panel.kind]
         put(
             win,
             h - 1,
@@ -438,7 +467,7 @@ class Reader:
             attr = 0
             if k == self.cur:
                 attr = curses.A_REVERSE
-            elif self.panel and wd.key == key:
+            elif self.refs_open() and wd.key == key:
                 attr = style("mark")
             if attr:
                 y = box.y + wd.row - self.top
@@ -449,6 +478,11 @@ class Reader:
         """Where a row of text starts in the text box."""
         n = len(self.lay.rows[row])
         return row_x(self.box_w, n, self.align)
+
+    def refs_open(self):
+        return (
+            bool(self.panel) and self.panel.kind == "refs"
+        )
 
     def draw_panel(self, box, side):
         win = self.win
@@ -526,7 +560,8 @@ class Reader:
             self.next_align()
             return True
         if action == "theme":
-            self.msg = style.next(self.win)
+            self.panel = theme_panel()
+            self.saved_theme = style.name
             return True
         if not words:
             step = {"down": 1, "up": -1}.get(action, 0)
@@ -628,16 +663,27 @@ class Reader:
             self.next_mode()
         elif action == "align":
             self.next_align()
-        elif action == "theme":
-            self.msg = style.next(self.win)
         elif action == "enter":
             self.panel = None
+            if p.kind == "theme":
+                self.msg = style.describe()
             return
-        elif action in ("quit", "refs"):
-            self.cur = self.saved
+        elif action in ("quit", "refs", "theme"):
+            if p.kind == "theme":
+                style.use(self.win, self.saved_theme)
+            else:
+                self.cur = self.saved
             self.panel = None
             return
         p.sel = max(0, min(p.sel, n - 1))
+        if p.kind == "theme":
+            # try the selected theme on the page
+            name = list(THEMES)[p.sel]
+            if not style.use(self.win, name):
+                self.msg = (
+                    "colors need a 256-color terminal"
+                )
+            return
         target = p.entries[p.sel].target
         if target >= 0:
             self.cur = target

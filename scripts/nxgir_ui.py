@@ -4,20 +4,84 @@ import curses
 import os
 import sys
 
-# Themes. Each maps a role to (foreground, background,
-# extra attributes); colors are 256-color numbers.
-# "plain" uses the terminal's own colors.
-PAPER, INK, RUBRIC, FADED, NOTE = 230, 94, 88, 137, 95
-THEMES = {
-    "sepia": {
-        "text": (INK, PAPER, 0),
-        "title": (RUBRIC, PAPER, curses.A_BOLD),
-        "help": (NOTE, PAPER, 0),
-        "rule": (FADED, PAPER, 0),
-        "mark": (RUBRIC, PAPER, curses.A_UNDERLINE),
-    },
-    "plain": None,
+# Themes: the colors (256-color numbers) for each one.
+# text/title/help/rule/mark are foregrounds on bg.
+B, U = curses.A_BOLD, curses.A_UNDERLINE
+PALETTES = {
+    # cream paper, brown ink, red rubrics
+    "sepia": dict(
+        bg=230,
+        text=94,
+        title=88,
+        help=95,
+        rule=137,
+        mark=88,
+    ),
+    # dark brown-black page for reading at night
+    "night": dict(
+        bg=234,
+        text=223,
+        title=179,
+        help=137,
+        rule=95,
+        mark=216,
+    ),
+    # gold on deep red, like the logo
+    "gold": dict(
+        bg=52,
+        text=222,
+        title=220,
+        help=180,
+        rule=136,
+        mark=214,
+    ),
+    # black ink on white paper
+    "paper": dict(
+        bg=231,
+        text=235,
+        title=88,
+        help=242,
+        rule=248,
+        mark=124,
+    ),
+    # pink Armenian tuff stone
+    "tuff": dict(
+        bg=181,
+        text=52,
+        title=88,
+        help=238,
+        rule=138,
+        mark=53,
+    ),
+    # pale letters on deep blue ink
+    "ink": dict(
+        bg=17,
+        text=189,
+        title=222,
+        help=146,
+        rule=60,
+        mark=117,
+    ),
 }
+EXTRA = {"title": B, "mark": U}
+
+
+def roles(pal):
+    """{role: (fg, bg, extra attributes)} for a palette."""
+    return {
+        role: (pal[role], pal["bg"], EXTRA.get(role, 0))
+        for role in (
+            "text",
+            "title",
+            "help",
+            "rule",
+            "mark",
+        )
+    }
+
+
+THEMES = {n: roles(p) for n, p in PALETTES.items()}
+THEMES["plain"] = None
 PLAIN = {
     "text": 0,
     "title": curses.A_BOLD,
@@ -26,8 +90,13 @@ PLAIN = {
     "mark": curses.A_UNDERLINE,
 }
 THEME_NAMES = {
-    "sepia": "theme: sepia (old book)",
-    "plain": "theme: plain (terminal colors)",
+    "sepia": "sepia: old book",
+    "night": "night: dark page for the evening",
+    "gold": "gold: gold on deep red",
+    "paper": "paper: black ink on white",
+    "tuff": "tuff: pink Armenian stone",
+    "ink": "ink: pale letters on deep blue",
+    "plain": "plain: the terminal's colors",
 }
 
 
@@ -81,8 +150,15 @@ class Style:
         i = names.index(self.name)
         want = names[(i + 1) % len(names)]
         if not self.use(win, want):
-            return "sepia needs a 256-color terminal"
-        return THEME_NAMES[self.name]
+            return "colors need a 256-color terminal"
+        return self.describe()
+
+    def describe(self):
+        """'theme 2/7 · night: dark page …'"""
+        names = list(THEMES)
+        n = names.index(self.name) + 1
+        what = THEME_NAMES[self.name]
+        return f"theme {n}/{len(names)} · {what}"
 
 
 style = Style()
