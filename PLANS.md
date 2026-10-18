@@ -69,8 +69,9 @@ tools made for it are the same tools the platform needs:
 
 ## Rough stages
 
-1. **Reader and tools.** nx-gir in the terminal: OCR,
-   Grabar helpers, test texts.
+1. **Interactive reader.** A terminal app for reading a
+   book and understanding unknown words (details below).
+   OCR and other Grabar helpers grow around it.
 2. **First collection.** A small set of manuscripts
    (scans, text, descriptions) in one simple data format.
 3. **Online platform.** A website to browse, read, and
@@ -80,6 +81,38 @@ tools made for it are the same tools the platform needs:
 5. **Knots.** Start the knot collection.
 6. **Growing.** More manuscripts, more collections,
    translations, and help from volunteers and experts.
+
+## Stage 1: interactive reader
+
+A terminal reader that helps with words you don't know.
+
+How it works:
+
+1. Open a book and read it page by page.
+2. Move the cursor to a word you want to know more about.
+3. Press a key to get information about that word:
+
+| Key | Shows |
+|-----|-------|
+| `t` | **Translation**: the word's meaning in modern Armenian (later other languages too) |
+| `e` | **Explanation**: dictionary form, grammar (case, number, tense), and notes on old words and abbreviations |
+| `s` | **References**: other places in the book where the word appears, so you can jump to them |
+
+The information shows in a panel next to or below the
+text, and the reader keeps your place in the book.
+
+What it needs:
+
+- A reader screen: paging, moving between words,
+  bookmarks, remembering the last position
+- A Grabar dictionary to look words up in (starter
+  glossary first, larger dictionaries later)
+- Finding the dictionary form of a word: grabar words
+  change their endings (`-ոյ`, `-աց`, `-ոց`, `-աւ`,
+  `-ս`, `-դ`, `-ն`, …), so the reader needs to strip them
+  to find the word
+- An index of every word in the book for `s`, matching
+  different forms of the same word
 
 ## Open questions
 
