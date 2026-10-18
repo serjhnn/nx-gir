@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/logo-hy.svg" alt="նղ֊գիր logo">
+</p>
+
 # nx-gir
 
 **A terminal book reader built for Grabar (Classical Armenian) texts.**
@@ -89,6 +93,14 @@ fits a phone screen. The limit is set in `pyproject.toml`
 pip install ruff
 ruff format scripts/
 ruff check scripts/
+```
+
+The logo image at the top of this README is generated
+from the logo in the CLI. After changing the logo,
+regenerate it:
+
+```sh
+scripts/render-logo.py
 ```
 
 ## Contributing
