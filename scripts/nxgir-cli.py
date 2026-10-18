@@ -7,6 +7,7 @@ nxgir shell.
 """
 
 import argparse
+import os
 import shlex
 import sys
 from pathlib import Path
@@ -20,6 +21,55 @@ except ImportError:
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 PROMPT = "nxgir> "
+
+LOGO = r"""
+         _  __            _
+   ____ | |/ /     ____ _(_)____
+  / __ \|   /_____/ __ `/ / ___/
+ / / / /   /_____/ /_/ / / /
+/_/ /_/_/|_|     \__, /_/_/
+                /____/
+""".strip("\n").splitlines()
+
+# Gradient endpoints (RGB), left to right.
+RED = (200, 16, 46)
+GOLD = (255, 196, 0)
+
+
+def use_color():
+    """True when stdout is a terminal that wants color."""
+    if os.environ.get("NO_COLOR"):
+        return False
+    if os.environ.get("TERM") == "dumb":
+        return False
+    return sys.stdout.isatty()
+
+
+def gradient(lines, start, end):
+    """Color lines column by column, start to end."""
+    width = max(len(line) for line in lines)
+    span = max(width - 1, 1)
+    out = []
+    for line in lines:
+        parts = []
+        for i, ch in enumerate(line):
+            t = i / span
+            r, g, b = (
+                round(a + (b - a) * t)
+                for a, b in zip(start, end)
+            )
+            parts.append(f"\033[38;2;{r};{g};{b}m{ch}")
+        out.append("".join(parts) + "\033[0m")
+    return out
+
+
+def banner():
+    """Print the nX-gir logo."""
+    lines = LOGO
+    if use_color():
+        lines = gradient(LOGO, RED, GOLD)
+    print("\n".join(lines))
+    print()
 
 
 def cmd_ls(args):
@@ -77,6 +127,7 @@ def run(argv):
 
 def shell():
     """Interactive nxgir shell."""
+    banner()
     print(
         "nx-gir shell. Type 'help' for commands,"
         " 'exit' to quit."
