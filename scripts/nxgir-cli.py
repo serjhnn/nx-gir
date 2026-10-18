@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """nx-gir command-line interface.
 
-Run with a command (e.g. `nxgir ls`) to execute it
+Run with a command (e.g. `nxgir bookshelf`) to run it
 once, or with no arguments to open the interactive
-nxgir shell.
+nxgir shell, where Tab completes commands.
 """
 
 import argparse
@@ -15,10 +15,10 @@ from pathlib import Path
 import nxgir_logo as logo
 
 try:
-    # enables line editing and history in input()
-    import readline  # noqa: F401
+    # line editing, history and Tab in input()
+    import readline
 except ImportError:
-    pass
+    readline = None
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
@@ -67,8 +67,8 @@ def data_files():
     ]
 
 
-def cmd_ls(args):
-    """List files in the data folder."""
+def cmd_bookshelf(args):
+    """Browse the books in the data folder."""
     if not DATA_DIR.is_dir():
         print(
             f"data folder not found: {DATA_DIR}",
@@ -80,7 +80,7 @@ def cmd_ls(args):
     if tty and not args.plain:
         import nxgir_browse
 
-        nxgir_browse.browse(files, "data/")
+        nxgir_browse.browse(files, "bookshelf")
         return 0
     if not files:
         print("no files in data folder")
@@ -106,14 +106,14 @@ def build_parser():
     )
     sub = parser.add_subparsers(dest="command")
     p = sub.add_parser(
-        "ls", help="browse files in the data folder"
+        "bookshelf", help="browse the books in data/"
     )
     p.add_argument(
         "--plain",
         action="store_true",
         help="print the list instead of browsing",
     )
-    p.set_defaults(func=cmd_ls)
+    p.set_defaults(func=cmd_bookshelf)
     p = sub.add_parser("banner", help="print the logo")
     p.add_argument(
         "lang",
@@ -127,6 +127,67 @@ def build_parser():
     )
     p.set_defaults(func=cmd_banner)
     return parser
+
+
+SHELL_WORDS = ["help", "exit", "quit"]
+
+
+def arguments(parser):
+    """{command: [words it takes]} from the parser."""
+    sub = next(
+        a
+        for a in parser._actions
+        if isinstance(a, argparse._SubParsersAction)
+    )
+    table = {}
+    for name, p in sub.choices.items():
+        words = []
+        for a in p._actions:
+            if a.option_strings:
+                words += [
+                    o
+                    for o in a.option_strings
+                    if o.startswith("--") and o != "--help"
+                ]
+            elif a.choices:
+                words += list(a.choices)
+        table[name] = words
+    return table
+
+
+def completions(before, text):
+    """Words completing text; before is the line in
+    front of it (e.g. "banner " and "hy")."""
+    table = arguments(build_parser())
+    done = before.split()
+    if not done:
+        options = sorted(table) + SHELL_WORDS
+    elif done[0] in table and len(done) == 1:
+        options = table[done[0]]
+    else:
+        options = []
+    return [o for o in options if o.startswith(text)]
+
+
+def setup_completion():
+    """Tab completion in the shell (needs readline)."""
+    if readline is None:
+        return
+
+    def complete(text, state):
+        line = readline.get_line_buffer()
+        before = line[: readline.get_begidx()]
+        options = completions(before, text)
+        if state < len(options):
+            return options[state] + " "
+        return None
+
+    readline.set_completer(complete)
+    readline.set_completer_delims(" ")
+    if "libedit" in (readline.__doc__ or ""):
+        readline.parse_and_bind("bind ^I rl_complete")
+    else:
+        readline.parse_and_bind("tab: complete")
 
 
 def run(argv):
@@ -148,10 +209,11 @@ def run(argv):
 
 def shell():
     """Interactive nxgir shell."""
+    setup_completion()
     banner()
     print(
         "nx-gir shell. Type 'help' for commands,"
-        " 'exit' to quit."
+        " Tab to complete, 'exit' to quit."
     )
     while True:
         try:

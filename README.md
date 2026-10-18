@@ -55,15 +55,16 @@ Tools that help a modern reader through a Classical Armenian text:
 ## Planned usage
 
 ```sh
-# open the interactive nxgir shell (type 'help' for commands, 'exit' to quit)
+# open the interactive nxgir shell ('help' lists the
+# commands, Tab completes them, 'exit' quits)
 ./nxgir
 
 # or run a single command directly, e.g. browse the
-# files in data/ (↑↓/jk move, Enter read, / search, q quit)
-./nxgir ls
+# books in data/ (↑↓/jk move, Enter read, / search, q quit)
+./nxgir bookshelf
 
 # print the file list instead of browsing it
-./nxgir ls --plain
+./nxgir bookshelf --plain
 
 # print the logo: hy (default), hy-upright, hy-block, en
 ./nxgir banner en
@@ -84,13 +85,14 @@ Tools that help a modern reader through a Classical Armenian text:
 
 <p align="center">
   <img src="docs/screen-list.png" width="340"
-       alt="The ls book list in the sepia theme">
+       alt="The bookshelf in the sepia theme">
   <img src="docs/screen-reader.png" width="340"
        alt="The reader on a phone-size screen, with the
             references panel for the word եւ open below">
 </p>
 
-Pressing Enter on a book in `ls` opens it in the reader.
+Pressing Enter on a book in the bookshelf opens it in
+the reader.
 The text wraps to the screen and re-wraps when the
 window size changes. Lines are centered, in a column at
 most 70 characters wide in the middle of the screen. One
@@ -108,7 +110,7 @@ word is under the cursor.
 | `p` | panel place: auto, always below, always beside |
 | `c` | lines centered (default) or left-aligned |
 | `T` | choose a theme (`j`/`k` try it on the page, `Enter` keep, `q` cancel) |
-| `d` | dim the text: normal → dim → dimmer (also in `ls`) |
+| `d` | dim the text: normal → dim → dimmer (also in the bookshelf) |
 | `m` | bookmark the word (again to remove); `*` in the top line marks it |
 | `M` | list bookmarks (`j`/`k` preview, `Enter` go, `x` delete, `q` close) |
 | `q` | back to the list |
@@ -128,7 +130,7 @@ rotated. Matching ignores case and the marks
 </p>
 
 The reader remembers where you stopped in each book and
-opens it there next time; the `ls` list shows how far
+opens it there next time; the bookshelf shows how far
 you've read (`37%`). Bookmarks, the theme, the dim level,
 centering and the panel place are remembered too. All of
 it is kept in `~/.local/state/nxgir/state.json` on your
@@ -156,7 +158,7 @@ Themes:
 
 The colored themes need a 256-color terminal, which
 Termux and most terminals are; otherwise plain is used.
-In the `ls` list, `T` steps to the next theme. To start
+In the bookshelf, `T` steps to the next theme. To start
 in another theme, set `NXGIR_THEME`, e.g.
 `NXGIR_THEME=night ./nxgir`.
 

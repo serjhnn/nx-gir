@@ -66,7 +66,8 @@ def font(bold=False):
 
 
 def run(keys, cols, rows, env=None):
-    """Start nxgir ls, press keys, return the screen."""
+    """Start nxgir bookshelf, press keys, return the
+    screen."""
     screen = pyte.Screen(cols, rows)
     stream = pyte.ByteStream(screen)
     pid, fd = pty.fork()
@@ -83,7 +84,7 @@ def run(keys, cols, rows, env=None):
         size = struct.pack("HHHH", rows, cols, 0, 0)
         fcntl.ioctl(0, termios.TIOCSWINSZ, size)
         os.chdir(ROOT)
-        os.execv("./nxgir", ["./nxgir", "ls"])
+        os.execv("./nxgir", ["./nxgir", "bookshelf"])
 
     def pump(wait):
         end = time.time() + wait
