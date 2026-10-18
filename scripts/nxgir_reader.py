@@ -100,9 +100,18 @@ def find(words, query, start, step=1):
     return None
 
 
-def vertical(words, i, step):
+def vertical(words, i, step, indent=None):
     """Word on the next (step=1) or previous (-1) row
-    that has words, nearest to the current column."""
+    that has words, nearest to the current column.
+
+    indent(row) is where that row starts on screen
+    (rows move when lines are centered).
+    """
+    if indent is None:
+
+        def indent(row):
+            return 0
+
     rows = [w.row for w in words]
     here = words[i]
     if step > 0:
@@ -117,10 +126,13 @@ def vertical(words, i, step):
     lo = bisect_left(rows, row)
     hi = bisect_right(rows, row)
 
+    x = indent(here.row) + here.col
+
     def dist(k):
         w = words[k]
-        end = w.col + len(w.text) - 1
-        return max(0, w.col - here.col, here.col - end)
+        start = indent(w.row) + w.col
+        end = start + len(w.text) - 1
+        return max(0, start - x, x - end)
 
     return min(range(lo, hi), key=dist)
 
@@ -129,6 +141,28 @@ def first_from(words, row):
     """First word on row or after it."""
     rows = [w.row for w in words]
     return min(bisect_left(rows, row), len(words) - 1)
+
+
+TEXT_MAX = 70  # widest text column, for easy reading
+ALIGNS = ("center", "left")
+
+
+def text_width(box_w):
+    """Width to wrap the text to inside a box."""
+    return max(min(box_w - 2, TEXT_MAX), 10)
+
+
+def row_x(box_w, row_len, align):
+    """Screen column (in the box) where a row starts.
+
+    The text column is centered in the box; with
+    align "center" each row is also centered in it.
+    """
+    cw = text_width(box_w)
+    left = max((box_w - cw) // 2, 1)
+    if align == "center":
+        return left + max((cw - row_len) // 2, 0)
+    return left
 
 
 def snippet(text, col, n, width):
@@ -202,6 +236,10 @@ PANEL_HELP = (
     "j/k pick · Enter go · q close",
     "j/k Enter p q",
 )
+ALIGN_NAMES = {
+    "center": "text: lines centered",
+    "left": "text: lines left-aligned",
+}
 MODE_NAMES = {
     "auto": f"panel: auto (beside from {SIDE_MIN} columns)",
     "below": "panel: always below",
@@ -236,6 +274,7 @@ KEYS = {
     "N": "hit_back",
     "s": "refs",
     "p": "place",
+    "c": "align",
     "\n": "enter",
     "\r": "enter",
     curses.KEY_ENTER: "enter",
@@ -301,6 +340,8 @@ class Reader:
         self.panel = None  # Panel while one is open
         self.saved = 0  # cursor before the panel
         self.mode = "auto"  # panel place, see MODES
+        self.align = "center"  # see ALIGNS
+        self.box_w = 0  # width of the text box
 
     # -- layout --
 
@@ -312,9 +353,9 @@ class Reader:
             want = len(self.panel.entries) + 1
         return split(h, w, self.mode, want)
 
-    def relayout(self, width):
+    def relayout(self, box_w):
         """Wrap the text again if the width changed."""
-        width = max(width - 2, 10)
+        width = text_width(box_w)
         if width != self.wrap:
             self.wrap = width
             self.lay = layout(self.text, width)
@@ -340,6 +381,7 @@ class Reader:
         win = self.win
         h, w = win.getmaxyx()
         tb, pb, side = self.boxes()
+        self.box_w = tb.w
         self.relayout(tb.w)
         self.follow(tb.h)
         words = self.lay.words
@@ -379,7 +421,8 @@ class Reader:
         for i, text in enumerate(
             self.lay.rows[self.top : bottom]
         ):
-            put(win, box.y + i, box.x + 1, text, 0, right)
+            x = box.x + self.indent(self.top + i)
+            put(win, box.y + i, x, text, 0, right)
         words = self.lay.words
         if not words:
             return
@@ -398,8 +441,13 @@ class Reader:
                 attr = curses.A_UNDERLINE
             if attr:
                 y = box.y + wd.row - self.top
-                x = box.x + 1 + wd.col
+                x = box.x + self.indent(wd.row) + wd.col
                 put(win, y, x, wd.text, attr, right)
+
+    def indent(self, row):
+        """Where a row of text starts in the text box."""
+        n = len(self.lay.rows[row])
+        return row_x(self.box_w, n, self.align)
 
     def draw_panel(self, box, side):
         win = self.win
@@ -462,6 +510,9 @@ class Reader:
         if action == "place":
             self.next_mode()
             return True
+        if action == "align":
+            self.next_align()
+            return True
         if not words:
             step = {"down": 1, "up": -1}.get(action, 0)
             if action == "pgdn":
@@ -480,7 +531,9 @@ class Reader:
             self.cur = max(self.cur - 1, 0)
         elif action in ("down", "up"):
             step = 1 if action == "down" else -1
-            self.cur = vertical(words, self.cur, step)
+            self.cur = vertical(
+                words, self.cur, step, self.indent
+            )
         elif action == "first":
             self.cur = 0
         elif action == "last":
@@ -508,6 +561,11 @@ class Reader:
             self.panel = refs_panel(self.lay, self.cur)
             self.saved = self.cur
         return True
+
+    def next_align(self):
+        i = ALIGNS.index(self.align)
+        self.align = ALIGNS[(i + 1) % len(ALIGNS)]
+        self.msg = ALIGN_NAMES[self.align]
 
     def next_mode(self):
         i = MODES.index(self.mode)
@@ -553,6 +611,8 @@ class Reader:
             p.sel = n - 1
         elif action == "place":
             self.next_mode()
+        elif action == "align":
+            self.next_align()
         elif action == "enter":
             self.panel = None
             return

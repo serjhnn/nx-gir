@@ -1,10 +1,12 @@
 from nxgir_reader import (
     SIDE_MIN,
+    TEXT_MAX,
     WORD_RE,
     find,
     layout,
     normalize,
     references,
+    row_x,
     snippet,
     split,
     vertical,
@@ -173,3 +175,35 @@ def test_split_modes():
     assert split(30, 70, "side", 4)[2]
     # too narrow for a side panel: falls back to below
     assert not split(30, 50, "side", 4)[2]
+
+
+def test_row_x_narrow_screen():
+    # phone: the column fills the box, 1 column margin
+    assert row_x(40, 10, "left") == 1
+    assert row_x(40, 10, "center") == 1 + (38 - 10) // 2
+    assert row_x(40, 38, "center") == 1
+
+
+def test_row_x_wide_screen_centers_column():
+    left = row_x(100, 10, "left")
+    assert left == (100 - TEXT_MAX) // 2
+    full = row_x(100, TEXT_MAX, "center")
+    assert full == left
+
+
+def test_vertical_uses_screen_columns():
+    # with centered rows, "գ" (short row) sits under
+    # the middle of the long row above it
+    lay = layout("աաա բբբ գգգ\nդ", 80)
+    words = lay.words
+    rows = lay.rows
+
+    def centered(row):
+        return row_x(40, len(rows[row]), "center")
+
+    i = [w.text for w in words].index("բբբ")
+    assert vertical(words, i, 1, centered) == 3
+    j = vertical(words, 3, -1, centered)
+    assert words[j].text == "բբբ"
+    # left-aligned: "դ" is under the first word
+    assert words[vertical(words, 3, -1)].text == "աաա"

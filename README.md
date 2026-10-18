@@ -84,7 +84,9 @@ Tools that help a modern reader through a Classical Armenian text:
 
 Pressing Enter on a book in `ls` opens it in the reader.
 The text wraps to the screen and re-wraps when the
-window size changes. One word is under the cursor.
+window size changes. Lines are centered, in a column at
+most 70 characters wide in the middle of the screen. One
+word is under the cursor.
 
 | Key | Action |
 |-----|--------|
@@ -96,6 +98,7 @@ window size changes. One word is under the cursor.
 | `/` then `n` `N` | find a word, next / previous match |
 | `s` | references: every place the word appears |
 | `p` | panel place: auto, always below, always beside |
+| `c` | lines centered (default) or left-aligned |
 | `q` | back to the list |
 
 In the references panel, `j`/`k` move through the places
