@@ -178,22 +178,30 @@ def first_from(words, row):
 
 
 TEXT_MAX = 70  # widest text column, for easy reading
+MARGIN = 0.10  # empty space left and right of the text
 ALIGNS = ("center", "left")
+
+
+def margin(box_w):
+    """Columns kept empty at each side of the text."""
+    return max(round(box_w * MARGIN), 1)
 
 
 def text_width(box_w):
     """Width to wrap the text to inside a box."""
-    return max(min(box_w - 2, TEXT_MAX), 10)
+    room = box_w - 2 * margin(box_w)
+    return max(min(room, TEXT_MAX), 10)
 
 
 def row_x(box_w, row_len, align):
     """Screen column (in the box) where a row starts.
 
-    The text column is centered in the box; with
-    align "center" each row is also centered in it.
+    The text column is centered in the box, with at
+    least margin() free on each side; with align
+    "center" each row is also centered in it.
     """
     cw = text_width(box_w)
-    left = max((box_w - cw) // 2, 1)
+    left = max((box_w - cw) // 2, margin(box_w))
     if align == "center":
         return left + max((cw - row_len) // 2, 0)
     return left

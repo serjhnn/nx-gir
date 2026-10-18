@@ -4,11 +4,13 @@ from nxgir_reader import (
     WORD_RE,
     find,
     layout,
+    margin,
     normalize,
     references,
     row_x,
     snippet,
     split,
+    text_width,
     vertical,
 )
 
@@ -178,10 +180,22 @@ def test_split_modes():
 
 
 def test_row_x_narrow_screen():
-    # phone: the column fills the box, 1 column margin
-    assert row_x(40, 10, "left") == 1
-    assert row_x(40, 10, "center") == 1 + (38 - 10) // 2
-    assert row_x(40, 38, "center") == 1
+    # phone: 10% margin (4 columns) at each side
+    assert margin(40) == 4
+    assert text_width(40) == 32
+    assert row_x(40, 10, "left") == 4
+    assert row_x(40, 10, "center") == 4 + (32 - 10) // 2
+    assert row_x(40, 32, "center") == 4
+
+
+def test_margins_on_both_sides():
+    for w in (20, 34, 42, 60, 80, 100, 160):
+        cw = text_width(w)
+        left = row_x(w, cw, "left")
+        right = w - left - cw
+        assert left >= margin(w), w
+        assert right >= margin(w), w
+        assert margin(w) >= 1
 
 
 def test_row_x_wide_screen_centers_column():

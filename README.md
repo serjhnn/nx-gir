@@ -95,8 +95,9 @@ Pressing Enter on a book in the bookshelf opens it in
 the reader.
 The text wraps to the screen and re-wraps when the
 window size changes. Lines are centered, in a column at
-most 70 characters wide in the middle of the screen. One
-word is under the cursor.
+most 70 characters wide in the middle of the screen, with
+an empty margin of 10% of the width on the left and right.
+One word is under the cursor.
 
 | Key | Action |
 |-----|--------|
