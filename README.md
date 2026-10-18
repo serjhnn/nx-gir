@@ -95,11 +95,15 @@ window size changes. One word is under the cursor.
 | `space` / `Ctrl-f` `Ctrl-b` / `PgDn` `PgUp` | page down / up |
 | `/` then `n` `N` | find a word, next / previous match |
 | `s` | references: every place the word appears |
+| `p` | panel place: auto, always below, always beside |
 | `q` | back to the list |
 
 In the references panel, `j`/`k` move through the places
 (the text follows), `Enter` goes there, and `q` returns
-to where you were. Matching ignores case and the marks
+to where you were. The panel opens beside the text on
+wide screens (90+ columns) and below it on narrow ones,
+and moves when the window is resized or the phone is
+rotated. Matching ignores case and the marks
 `՛ ՜ ՞`, and treats `և` and `եւ` as the same.
 
 ## Requirements (planned)

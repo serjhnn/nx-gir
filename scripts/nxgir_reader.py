@@ -39,12 +39,13 @@ class Word(NamedTuple):
     text: str
     key: str  # normalize(text)
     line: int  # line in the file, from 0
+    lcol: int  # column in that line
 
 
 class Layout(NamedTuple):
     rows: list  # wrapped rows of text
     words: list  # every Word, in reading order
-    lines: int  # line count of the file
+    lines: list  # lines of the file
 
 
 def layout(text, width):
@@ -53,21 +54,33 @@ def layout(text, width):
     lines = text.splitlines()
     rows, words = [], []
     for n, line in enumerate(lines):
+        # wrapping never splits words, so the words of
+        # the line come out of the rows in the same order
+        lcols = [m.start() for m in WORD_RE.finditer(line)]
         parts = textwrap.wrap(
             line,
             width,
             break_long_words=False,
             break_on_hyphens=False,
         )
+        k = 0
         for part in parts or [""]:
             r = len(rows)
             rows.append(part)
             for m in WORD_RE.finditer(part):
                 t = m.group()
                 words.append(
-                    Word(r, m.start(), t, normalize(t), n)
+                    Word(
+                        r,
+                        m.start(),
+                        t,
+                        normalize(t),
+                        n,
+                        lcols[k],
+                    )
                 )
-    return Layout(rows, words, len(lines))
+                k += 1
+    return Layout(rows, words, lines)
 
 
 def references(words, i):
@@ -118,6 +131,65 @@ def first_from(words, row):
     return min(bisect_left(rows, row), len(words) - 1)
 
 
+def snippet(text, col, n, width):
+    """Cut text to width, keeping text[col:col+n] in view.
+
+    Returns (piece, column of the word in piece). Cut
+    ends are marked with ….
+    """
+    if len(text) <= width:
+        return text, col
+    if n >= width - 2:
+        return text[col : col + width], 0
+    start = col - (width - n) // 2
+    start = max(0, min(start, len(text) - width))
+    piece = list(text[start : start + width])
+    if start > 0:
+        piece[0] = "…"
+    if start + width < len(text):
+        piece[-1] = "…"
+    return "".join(piece), col - start
+
+
+SIDE_MIN = 90  # auto: panel beside text from this width
+MIN_TEXT = 30  # narrowest text column beside a panel
+MODES = ("auto", "below", "side")
+
+
+class Box(NamedTuple):
+    y: int
+    x: int
+    h: int
+    w: int
+
+
+def split(h, w, mode, want):
+    """Place the text and the panel on an h x w screen.
+
+    Row 0 is the title, row 1 a rule, the last row help.
+    want is the number of rows the panel could fill
+    (0 = no panel). Returns (text, panel, side), where
+    panel is None without a panel.
+    """
+    body = max(h - 3, 1)
+    if not want:
+        return Box(2, 0, body, w), None, False
+    pw = max(30, min(w * 2 // 5, 50))
+    fits = w - pw - 1 >= MIN_TEXT
+    side = fits and (
+        mode == "side" or (mode == "auto" and w >= SIDE_MIN)
+    )
+    if side:
+        tw = w - pw - 1  # one column for the │ line
+        text = Box(2, 0, body, tw)
+        return text, Box(2, tw + 1, body, pw), True
+    ph = min(want, max(body // 2, 3), body - 1)
+    if ph < 2:
+        return Box(2, 0, body, w), None, False
+    th = body - ph
+    return Box(2, 0, th, w), Box(2 + th, 0, ph, w), False
+
+
 # ---- screen -------------------------------------------
 
 READ_HELP = (
@@ -125,10 +197,16 @@ READ_HELP = (
     "w/b word · j/k line · s refs · q back",
     "w/b j/k s / q",
 )
-REFS_HELP = (
+PANEL_HELP = (
+    "j/k pick · Enter go · p place · q close",
     "j/k pick · Enter go · q close",
-    "j/k Enter q",
+    "j/k Enter p q",
 )
+MODE_NAMES = {
+    "auto": f"panel: auto (beside from {SIDE_MIN} columns)",
+    "below": "panel: always below",
+    "side": "panel: always beside (if it fits)",
+}
 
 KEYS = {
     "w": "next",
@@ -157,6 +235,7 @@ KEYS = {
     "n": "hit",
     "N": "hit_back",
     "s": "refs",
+    "p": "place",
     "\n": "enter",
     "\r": "enter",
     curses.KEY_ENTER: "enter",
@@ -165,33 +244,82 @@ KEYS = {
 }
 
 
+class Entry(NamedTuple):
+    """One panel row: label, then text with a word
+    (text[col:col+n]) kept in view and underlined."""
+
+    label: str
+    text: str
+    col: int = 0
+    n: int = 0
+    target: int = -1  # word index to jump to, or -1
+
+
+class Panel:
+    """Information shown beside or below the text.
+
+    Opened by an info key (s now; t and e later).
+    """
+
+    def __init__(self, title, entries, sel=0):
+        self.title = title
+        self.entries = entries
+        self.sel = sel  # selected entry
+        self.top = 0  # first visible entry
+
+
+def refs_panel(lay, i):
+    """Panel listing every place word i appears."""
+    words = lay.words
+    idx = references(words, i)
+    entries = [
+        Entry(
+            f"{words[k].line + 1:>4} ",
+            lay.lines[words[k].line],
+            words[k].lcol,
+            len(words[k].text),
+            k,
+        )
+        for k in idx
+    ]
+    n = len(idx)
+    title = f"{words[i].text} · {n} place{'s' * (n != 1)}"
+    return Panel(title, entries, idx.index(i))
+
+
 class Reader:
     def __init__(self, win, text, title):
         self.win = win
         self.text = text
         self.title = title
-        self.width = None
+        self.wrap = None  # width the text is wrapped to
         self.lay = None
         self.cur = 0  # word index under the cursor
         self.top = 0  # first visible row
         self.query = ""
         self.msg = ""
-        self.refs = None  # word indexes, panel open
-        self.sel = 0  # selected reference
-        self.ptop = 0  # first visible reference
+        self.panel = None  # Panel while one is open
         self.saved = 0  # cursor before the panel
+        self.mode = "auto"  # panel place, see MODES
 
     # -- layout --
 
-    def sizes(self):
-        """(text rows, panel rows) for this screen."""
-        h, _ = self.win.getmaxyx()
-        body = max(h - 3, 1)
-        if self.refs is None:
-            return body, 0
-        panel = min(len(self.refs) + 1, body * 2 // 5)
-        panel = max(panel, min(3, body - 1))
-        return max(body - panel, 1), panel
+    def boxes(self):
+        """(text box, panel box or None, side?)."""
+        h, w = self.win.getmaxyx()
+        want = 0
+        if self.panel:
+            want = len(self.panel.entries) + 1
+        return split(h, w, self.mode, want)
+
+    def relayout(self, width):
+        """Wrap the text again if the width changed."""
+        width = max(width - 2, 10)
+        if width != self.wrap:
+            self.wrap = width
+            self.lay = layout(self.text, width)
+            n = len(self.lay.words)
+            self.cur = min(self.cur, max(n - 1, 0))
 
     def follow(self, rows):
         """Scroll so the cursor row is visible."""
@@ -211,13 +339,9 @@ class Reader:
     def draw(self):
         win = self.win
         h, w = win.getmaxyx()
-        if w != self.width:
-            self.width = w
-            self.lay = layout(self.text, w - 2)
-            n = len(self.lay.words)
-            self.cur = min(self.cur, max(n - 1, 0))
-        rows, panel = self.sizes()
-        self.follow(rows)
+        tb, pb, side = self.boxes()
+        self.relayout(tb.w)
+        self.follow(tb.h)
         words = self.lay.words
         win.erase()
 
@@ -225,90 +349,119 @@ class Reader:
         if words:
             info = (
                 f"line {words[self.cur].line + 1}"
-                f"/{self.lay.lines} "
+                f"/{len(self.lay.lines)} "
             )
             put(win, 0, max(w - len(info) - 1, 0), info)
         put(win, 1, 0, "─" * (w - 1))
+        self.draw_text(tb)
+        if pb:
+            if side:
+                put(win, 1, tb.w, "┬")
+                for y in range(pb.y, pb.y + pb.h):
+                    put(win, y, tb.w, "│")
+            self.draw_panel(pb, side)
 
-        bottom = self.top + rows
-        for i, text in enumerate(
-            self.lay.rows[self.top : bottom]
-        ):
-            put(win, 2 + i, 1, text)
-        if words:
-            key = words[self.cur].key
-            lo = first_from(words, self.top)
-            for k in range(lo, len(words)):
-                wd = words[k]
-                if wd.row >= bottom:
-                    break
-                if wd.row < self.top:
-                    continue
-                attr = 0
-                if k == self.cur:
-                    attr = curses.A_REVERSE
-                elif (
-                    self.refs is not None and wd.key == key
-                ):
-                    attr = curses.A_UNDERLINE
-                if attr:
-                    y = 2 + wd.row - self.top
-                    put(win, y, 1 + wd.col, wd.text, attr)
-
-        if panel:
-            self.draw_panel(2 + rows, panel, w)
-        help_ = fit(
-            REFS_HELP if self.refs else READ_HELP, w
+        help_ = PANEL_HELP if self.panel else READ_HELP
+        put(
+            win,
+            h - 1,
+            0,
+            self.msg or fit(help_, w),
+            curses.A_DIM,
         )
-        put(win, h - 1, 0, self.msg or help_, curses.A_DIM)
         self.msg = ""
         win.refresh()
 
-    def draw_panel(self, y, height, w):
+    def draw_text(self, box):
+        win = self.win
+        right = box.x + box.w
+        bottom = self.top + box.h
+        for i, text in enumerate(
+            self.lay.rows[self.top : bottom]
+        ):
+            put(win, box.y + i, box.x + 1, text, 0, right)
         words = self.lay.words
-        word = words[self.saved].text
-        n = len(self.refs)
-        head = f"─ {word} · {n} place{'s' * (n != 1)} "
-        put(self.win, y, 0, head.ljust(w - 1, "─"))
-        rows = height - 1
-        if self.sel < self.ptop:
-            self.ptop = self.sel
-        elif self.sel >= self.ptop + rows:
-            self.ptop = self.sel - rows + 1
-        shown = self.refs[self.ptop : self.ptop + rows]
-        for i, k in enumerate(shown):
+        if not words:
+            return
+        key = words[self.cur].key
+        lo = first_from(words, self.top)
+        for k in range(lo, len(words)):
             wd = words[k]
-            num = f"{wd.line + 1:>4}  "
-            line = num + self.lay.rows[wd.row]
-            yy = y + 1 + i
-            if self.ptop + i == self.sel:
+            if wd.row >= bottom:
+                break
+            if wd.row < self.top:
+                continue
+            attr = 0
+            if k == self.cur:
+                attr = curses.A_REVERSE
+            elif self.panel and wd.key == key:
+                attr = curses.A_UNDERLINE
+            if attr:
+                y = box.y + wd.row - self.top
+                x = box.x + 1 + wd.col
+                put(win, y, x, wd.text, attr, right)
+
+    def draw_panel(self, box, side):
+        win = self.win
+        p = self.panel
+        right = box.x + box.w
+        x = box.x + 1
+        if side:
+            put(
+                win, box.y, x, p.title, curses.A_BOLD, right
+            )
+        else:
+            head = f"─ {p.title} "
+            put(win, box.y, box.x, head.ljust(box.w, "─"))
+        rows = box.h - 1
+        if p.sel < p.top:
+            p.top = p.sel
+        elif p.sel >= p.top + rows:
+            p.top = p.sel - rows + 1
+        width = box.w - 2
+        for i, e in enumerate(
+            p.entries[p.top : p.top + rows]
+        ):
+            y = box.y + 1 + i
+            room = max(width - len(e.label), 1)
+            text, col = snippet(e.text, e.col, e.n, room)
+            line = e.label + text
+            if p.top + i == p.sel:
+                attr = curses.A_REVERSE
                 put(
-                    self.win,
-                    yy,
-                    1,
-                    line.ljust(w - 2),
-                    curses.A_REVERSE,
+                    win,
+                    y,
+                    x,
+                    line.ljust(width),
+                    attr,
+                    right,
                 )
             else:
-                put(self.win, yy, 1, line)
-                x = 1 + len(num) + wd.col
-                put(
-                    self.win,
-                    yy,
-                    x,
-                    wd.text,
-                    curses.A_UNDERLINE,
-                )
+                put(win, y, x, line, 0, right)
+                if e.n:
+                    wx = x + len(e.label) + col
+                    word = text[col : col + e.n]
+                    put(
+                        win,
+                        y,
+                        wx,
+                        word,
+                        curses.A_UNDERLINE,
+                        right,
+                    )
 
     # -- keys --
 
     def key_text(self, action):
         """Handle a key while reading. False = leave."""
         words = self.lay.words
-        rows, _ = self.sizes()
+        rows = self.boxes()[0].h
         total = len(self.lay.rows)
         if action == "quit":
             return False
+        if action == "place":
+            self.next_mode()
+            return True
         if not words:
             step = {"down": 1, "up": -1}.get(action, 0)
             if action == "pgdn":
@@ -352,11 +505,14 @@ class Reader:
         elif action in ("search", "hit", "hit_back"):
             self.search(action)
         elif action == "refs":
-            self.refs = references(words, self.cur)
-            self.sel = self.refs.index(self.cur)
-            self.ptop = 0
+            self.panel = refs_panel(self.lay, self.cur)
             self.saved = self.cur
         return True
+
+    def next_mode(self):
+        i = MODES.index(self.mode)
+        self.mode = MODES[(i + 1) % len(MODES)]
+        self.msg = MODE_NAMES[self.mode]
 
     def search(self, action):
         if action == "search":
@@ -376,10 +532,11 @@ class Reader:
             self.cur = hit
 
     def key_panel(self, action):
-        """Handle a key in the references panel."""
-        n = len(self.refs)
-        _, panel = self.sizes()
-        page = max(panel - 2, 1)
+        """Handle a key while a panel is open."""
+        p = self.panel
+        n = len(p.entries)
+        pb = self.boxes()[1]
+        page = max(pb.h - 2, 1) if pb else 1
         moves = {
             "down": 1,
             "next": 1,
@@ -389,20 +546,24 @@ class Reader:
             "pgup": -page,
         }
         if action in moves:
-            self.sel += moves[action]
+            p.sel += moves[action]
         elif action == "first":
-            self.sel = 0
+            p.sel = 0
         elif action == "last":
-            self.sel = n - 1
+            p.sel = n - 1
+        elif action == "place":
+            self.next_mode()
         elif action == "enter":
-            self.refs = None
+            self.panel = None
             return
         elif action in ("quit", "refs"):
             self.cur = self.saved
-            self.refs = None
+            self.panel = None
             return
-        self.sel = max(0, min(self.sel, n - 1))
-        self.cur = self.refs[self.sel]
+        p.sel = max(0, min(p.sel, n - 1))
+        target = p.entries[p.sel].target
+        if target >= 0:
+            self.cur = target
 
     def run(self):
         while True:
@@ -410,7 +571,7 @@ class Reader:
             action = KEYS.get(key(self.win))
             if action is None:
                 continue
-            if self.refs is not None:
+            if self.panel is not None:
                 self.key_panel(action)
             elif not self.key_text(action):
                 return

@@ -5,13 +5,15 @@ import os
 import sys
 
 
-def put(win, y, x, text, attr=0):
-    """Write text clipped to the window, ignore errors."""
+def put(win, y, x, text, attr=0, right=None):
+    """Write text clipped to the window (or to column
+    right, exclusive); ignore errors."""
     h, w = win.getmaxyx()
-    if not (0 <= y < h) or not (0 <= x < w - 1):
+    end = w - 1 if right is None else min(right, w - 1)
+    if not (0 <= y < h) or not (0 <= x < end):
         return
     try:
-        win.addnstr(y, x, text, w - x - 1, attr)
+        win.addnstr(y, x, text, end - x, attr)
     except curses.error:
         pass
 

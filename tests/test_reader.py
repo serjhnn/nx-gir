@@ -1,9 +1,12 @@
 from nxgir_reader import (
+    SIDE_MIN,
     WORD_RE,
     find,
     layout,
     normalize,
     references,
+    snippet,
+    split,
     vertical,
 )
 
@@ -42,7 +45,7 @@ def test_normalize():
 
 def test_layout_fits_width():
     lay = layout(JOHN, 20)
-    assert lay.lines == 3
+    assert len(lay.lines) == 3
     assert all(len(r) <= 20 for r in lay.rows)
 
 
@@ -102,3 +105,71 @@ def test_vertical_nearest_column():
     last = len(words) - 1
     assert vertical(words, last, 1) == last
     assert vertical(words, 0, -1) == 0
+
+
+def test_line_columns():
+    lay = layout(JOHN, 12)
+    for w in lay.words:
+        line = lay.lines[w.line]
+        assert line[w.lcol : w.lcol + len(w.text)] == w.text
+
+
+def test_snippet_short_text_unchanged():
+    assert snippet("ա բ գ", 2, 1, 20) == ("ա բ գ", 2)
+
+
+def test_snippet_keeps_word_in_view():
+    text = "ա" * 30 + " Բանն " + "բ" * 30
+    col = text.index("Բանն")
+    for width in (8, 12, 20, 40):
+        piece, c = snippet(text, col, 4, width)
+        assert len(piece) == width
+        assert piece[c : c + 4] == "Բանն"
+        assert piece[0] == "…" and piece[-1] == "…"
+
+
+def test_snippet_at_ends():
+    text = "Բանն " + "բ" * 40
+    piece, c = snippet(text, 0, 4, 10)
+    assert c == 0 and piece.startswith("Բանն")
+    assert piece.endswith("…")
+    text = "բ" * 40 + " Բանն"
+    piece, c = snippet(text, 41, 4, 10)
+    assert piece.endswith("Բանն") and piece[0] == "…"
+    assert piece[c : c + 4] == "Բանն"
+
+
+def test_split_no_panel():
+    text, panel, side = split(20, 60, "auto", 0)
+    assert panel is None and not side
+    assert (text.h, text.w) == (17, 60)
+
+
+def test_split_auto_narrow_below():
+    text, panel, side = split(30, 50, "auto", 4)
+    assert not side
+    assert panel.h == 4 and panel.w == 50
+    assert text.h + panel.h == 27
+    assert panel.y == text.y + text.h
+
+
+def test_split_below_is_capped():
+    text, panel, side = split(30, 50, "auto", 100)
+    assert panel.h == 27 // 2
+    assert text.h == 27 - panel.h
+
+
+def test_split_auto_wide_side():
+    text, panel, side = split(30, SIDE_MIN, "auto", 4)
+    assert side
+    assert panel.h == text.h == 27
+    assert text.w + 1 + panel.w == SIDE_MIN
+    assert 30 <= panel.w <= 50
+    assert panel.x == text.w + 1
+
+
+def test_split_modes():
+    assert not split(30, 120, "below", 4)[2]
+    assert split(30, 70, "side", 4)[2]
+    # too narrow for a side panel: falls back to below
+    assert not split(30, 50, "side", 4)[2]

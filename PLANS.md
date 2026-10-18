@@ -106,7 +106,8 @@ Progress:
 - [x] Reader screen that fits the window, paging
 - [x] Word cursor (`w`/`b`, `j`/`k`, `0`/`$`, `g`/`G`)
 - [x] `s`: references panel (same word form for now)
-- [ ] Panel beside the text on wide screens
+- [x] Panel beside the text on wide screens (`p` to
+      choose: auto, below, beside)
 - [ ] Remember the last position, bookmarks
 - [ ] `t` and `e` with a starter glossary
 - [ ] `s` across different forms of the same word
