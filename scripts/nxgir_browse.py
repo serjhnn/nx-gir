@@ -1,18 +1,19 @@
-"""Full-screen file list and text viewer (curses).
+"""Full-screen file list (curses).
 
 Vim-style keys. Linux and Termux only.
 """
 
 import curses
 import locale
-import textwrap
+
+import nxgir_reader
+from nxgir_ui import cursor, fit, key, prompt, put
 
 LIST_HELP = (
-    "↑↓/jk move · g/G ends · / search · Enter open · q quit"
-)
-VIEW_HELP = (
-    "↑↓/jk scroll · space/b page · g/G ends · "
-    "/ search · q back"
+    "↑↓/jk move · g/G ends · / search · "
+    "Enter open · q quit",
+    "j/k move · / search · Enter open · q quit",
+    "j/k / Enter q",
 )
 
 
@@ -27,48 +28,8 @@ def human_size(n):
     return f"{n:.1f} GB"
 
 
-def put(win, y, x, text, attr=0):
-    """Write text clipped to the window, ignore errors."""
-    h, w = win.getmaxyx()
-    if not (0 <= y < h) or x >= w:
-        return
-    try:
-        win.addnstr(y, x, text, w - x - 1, attr)
-    except curses.error:
-        pass
-
-
-def prompt(win, label):
-    """Read a line at the bottom. None on Esc."""
-    h, w = win.getmaxyx()
-    text = ""
-    curses.curs_set(1)
-    try:
-        while True:
-            line = label + text
-            win.move(h - 1, 0)
-            win.clrtoeol()
-            put(win, h - 1, 0, line)
-            win.move(h - 1, min(len(line), w - 2))
-            ch = win.get_wch()
-            if ch in ("\n", "\r", curses.KEY_ENTER):
-                return text
-            if ch == "\x1b":
-                return None
-            if ch in (
-                curses.KEY_BACKSPACE,
-                "\x7f",
-                "\b",
-            ):
-                text = text[:-1]
-            elif isinstance(ch, str) and ch.isprintable():
-                text += ch
-    finally:
-        curses.curs_set(0)
-
-
 def key_name(ch):
-    """Map a get_wch() result to one action name."""
+    """Map a key press to one action name."""
     keys = {
         curses.KEY_UP: "up",
         "k": "up",
@@ -196,89 +157,21 @@ def list_view(win, files, title):
             win,
             h - 1,
             0,
-            pane.msg or LIST_HELP,
+            pane.msg or fit(LIST_HELP, w),
             curses.A_DIM,
         )
         pane.msg = ""
         win.refresh()
 
-        action = key_name(win.get_wch())
+        action = key_name(key(win))
         if action == "quit":
             return
         if action in ("search", "next", "prev"):
             pane.search(win, names, action)
         elif action == "enter" and files:
             name, _, path = files[pane.pos]
-            text_view(win, path, name)
+            nxgir_reader.read(win, path, name)
         elif action not in (None, "back", "resize"):
-            pane.move(action, rows)
-
-
-def wrap(text, width):
-    """Wrap text to width, keeping blank lines."""
-    width = max(width, 10)
-    out = []
-    for para in text.splitlines():
-        out.extend(textwrap.wrap(para, width) or [""])
-    return out
-
-
-def text_view(win, path, title):
-    """Scroll through a text file."""
-    try:
-        text = path.read_text(encoding="utf-8")
-    except UnicodeDecodeError:
-        text = path.read_text(
-            encoding="utf-8", errors="replace"
-        )
-    except OSError as e:
-        text = f"cannot open file: {e}"
-    pane = Pane(0)
-    width = None
-    while True:
-        h, w = win.getmaxyx()
-        rows = max(h - 3, 1)
-        if w != width:
-            width = w
-            lines = wrap(text, w - 2)
-            pane.count = len(lines)
-        # pos is the first visible line in this view
-        pane.pos = min(pane.pos, max(len(lines) - rows, 0))
-        win.erase()
-        pct = 100
-        if len(lines) > rows:
-            pct = 100 * pane.pos // (len(lines) - rows)
-        info = f"{pct}% "
-        put(win, 0, 0, f" {title}", curses.A_BOLD)
-        put(win, 0, max(w - len(info) - 1, 0), info)
-        put(win, 1, 0, "─" * (w - 1))
-        for i in range(rows):
-            n = pane.pos + i
-            if n >= len(lines):
-                break
-            attr = 0
-            q = pane.query.casefold()
-            if q and q in lines[n].casefold():
-                attr = curses.A_BOLD
-            put(win, 2 + i, 1, lines[n], attr)
-        put(
-            win,
-            h - 1,
-            0,
-            pane.msg or VIEW_HELP,
-            curses.A_DIM,
-        )
-        pane.msg = ""
-        win.refresh()
-
-        action = key_name(win.get_wch())
-        if action in ("quit", "back"):
-            return
-        if action in ("search", "next", "prev"):
-            pane.search(win, lines, action)
-        elif action == "bottom":
-            pane.pos = max(len(lines) - rows, 0)
-        elif action not in (None, "enter", "resize"):
             pane.move(action, rows)
 
 
@@ -288,10 +181,7 @@ def browse(files, title):
 
     def main(win):
         curses.set_escdelay(25)
-        try:
-            curses.curs_set(0)
-        except curses.error:
-            pass
+        cursor(False)
         win.keypad(True)
         list_view(win, files, title)
 

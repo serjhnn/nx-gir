@@ -9,11 +9,23 @@
 - Before committing, run:
 
   ```sh
-  ruff format scripts/
-  ruff check scripts/
+  ruff format scripts/ tests/
+  ruff check scripts/ tests/
+  python3 -m pytest
   ```
 
 - `ruff format` cannot split long strings, comments or
   docstrings; shorten or wrap those by hand.
 - Text files in `data/` are content, not code, and are
   exempt.
+
+## Layout
+
+- `scripts/nxgir-cli.py`: commands and the `nxgir>` shell
+- `scripts/nxgir_browse.py`: `ls` file list (curses)
+- `scripts/nxgir_reader.py`: the reader; text model at
+  the top (tested in `tests/`), curses screen below
+- `scripts/nxgir_ui.py`: shared curses helpers; read
+  keys with `key()`, it handles terminal resizes
+- `scripts/nxgir_logo.py`: logos and gradient colors
+- Linux and Termux only, no Windows support for now.

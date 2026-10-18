@@ -8,3 +8,7 @@ select = ["E", "F", "W", "I"]
 [tool.ruff.lint.pycodestyle]
 max-line-length = 60
 max-doc-length = 60
+
+[tool.pytest.ini_options]
+pythonpath = ["scripts"]
+testpaths = ["tests"]

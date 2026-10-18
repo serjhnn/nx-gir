@@ -59,7 +59,7 @@ Tools that help a modern reader through a Classical Armenian text:
 ./nxgir
 
 # or run a single command directly, e.g. browse the
-# files in data/ (↑↓/jk move, Enter open, / search, q quit)
+# files in data/ (↑↓/jk move, Enter read, / search, q quit)
 ./nxgir ls
 
 # print the file list instead of browsing it
@@ -80,6 +80,28 @@ Tools that help a modern reader through a Classical Armenian text:
 ./nxgir grabar numeral ՌՄԾ
 ```
 
+## Reader keys
+
+Pressing Enter on a book in `ls` opens it in the reader.
+The text wraps to the screen and re-wraps when the
+window size changes. One word is under the cursor.
+
+| Key | Action |
+|-----|--------|
+| `w` `b` / `l` `h` / `→` `←` | next / previous word |
+| `j` `k` / `↓` `↑` | word on the next / previous line |
+| `0` `$` | first / last word on the line |
+| `g` `G` | first / last word of the book |
+| `space` / `Ctrl-f` `Ctrl-b` / `PgDn` `PgUp` | page down / up |
+| `/` then `n` `N` | find a word, next / previous match |
+| `s` | references: every place the word appears |
+| `q` | back to the list |
+
+In the references panel, `j`/`k` move through the places
+(the text follows), `Enter` goes there, and `q` returns
+to where you were. Matching ignores case and the marks
+`՛ ՜ ՞`, and treats `և` and `եւ` as the same.
+
 ## Requirements (planned)
 
 - Python 3.10+
@@ -94,9 +116,10 @@ fits a phone screen. The limit is set in `pyproject.toml`
 (ruff) and `.editorconfig`. Check with:
 
 ```sh
-pip install ruff
-ruff format scripts/
-ruff check scripts/
+pip install ruff pytest
+ruff format scripts/ tests/
+ruff check scripts/ tests/
+python3 -m pytest
 ```
 
 The logo image at the top of this README is generated

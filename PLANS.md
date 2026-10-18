@@ -101,6 +101,16 @@ How it works:
 The information shows in a panel next to or below the
 text, and the reader keeps your place in the book.
 
+Progress:
+
+- [x] Reader screen that fits the window, paging
+- [x] Word cursor (`w`/`b`, `j`/`k`, `0`/`$`, `g`/`G`)
+- [x] `s`: references panel (same word form for now)
+- [ ] Panel beside the text on wide screens
+- [ ] Remember the last position, bookmarks
+- [ ] `t` and `e` with a starter glossary
+- [ ] `s` across different forms of the same word
+
 What it needs:
 
 - A reader screen: paging, moving between words,
