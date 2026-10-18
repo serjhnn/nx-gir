@@ -51,16 +51,19 @@ Tools that help a modern reader through a Classical Armenian text:
 ## Planned usage
 
 ```sh
+# list files in data/
+./nxgir ls
+
 # read a book
-nx-gir read book.txt
+./nxgir read book.txt
 
 # OCR a scanned PDF or image into a text file
-nx-gir ocr scan.pdf -o scan.txt --lang hye
+./nxgir ocr scan.pdf -o scan.txt --lang hye
 
 # Grabar helpers
-nx-gir grabar modernize text.txt
-nx-gir grabar translit text.txt
-nx-gir grabar numeral ՌՄԾ
+./nxgir grabar modernize text.txt
+./nxgir grabar translit text.txt
+./nxgir grabar numeral ՌՄԾ
 ```
 
 ## Requirements (planned)

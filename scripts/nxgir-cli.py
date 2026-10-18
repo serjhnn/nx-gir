@@ -5,7 +5,7 @@ import argparse
 import sys
 from pathlib import Path
 
-DATA_DIR = Path(__file__).resolve().parent / "data"
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 
 def cmd_ls(args):
