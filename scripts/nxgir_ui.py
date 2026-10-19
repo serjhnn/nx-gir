@@ -66,6 +66,16 @@ PALETTES = {
         rule=60,
         mark=117,
     ),
+    # black volcanic glass: pure black (saves battery
+    # on OLED phone screens), soft grey text
+    "obsidian": dict(
+        bg=16,
+        text=250,
+        title=173,
+        help=244,
+        rule=238,
+        mark=179,
+    ),
 }
 EXTRA = {"title": B, "mark": U}
 
@@ -107,6 +117,7 @@ THEME_NAMES = {
     "paper": "paper: black ink on white",
     "tuff": "tuff: pink Armenian stone",
     "ink": "ink: pale letters on deep blue",
+    "obsidian": "obsidian: grey on pure black",
     "plain": "plain: the terminal's colors",
 }
 
