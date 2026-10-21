@@ -40,3 +40,14 @@ def test_bookshelf_lists_books_not_notes(capsys):
     out = capsys.readouterr().out
     assert "new-testament/1-matthew.txt" in out
     assert "SOURCES.md" not in out
+
+
+def test_grabar_abbr(capsys):
+    assert cli.run(["grabar", "abbr", "ա՟ծ"]) == 0
+    assert "Աստուած" in capsys.readouterr().out
+    assert cli.run(["grabar", "abbr"]) == 0
+    out = capsys.readouterr().out
+    assert "Sources:" in out
+    assert cli.run(["grabar", "abbr", "zzz"]) == 1
+    assert cli.completions("", "gr") == ["grabar"]
+    assert cli.completions("grabar ", "") == ["abbr"]

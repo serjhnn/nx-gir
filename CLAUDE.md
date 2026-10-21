@@ -16,8 +16,8 @@
 
 - `ruff format` cannot split long strings, comments or
   docstrings; shorten or wrap those by hand.
-- Text files in `data/` are content, not code, and are
-  exempt.
+- Text files in `data/` and `grabar/` are content, not
+  code, and are exempt.
 
 ## Layout
 
@@ -32,6 +32,10 @@
   `~/.local/state/nxgir/`; tests use `NXGIR_STATE`)
 - `scripts/nxgir_ui.py`: shared curses helpers; read
   keys with `key()`, it handles terminal resizes
+- `scripts/nxgir_grabar.py`: Grabar helpers
+  (`nxgir grabar abbr`); the data is in `grabar/`
+  (`abbreviations.tsv` names its sources in the
+  header; add only entries from a source)
 - `scripts/nxgir_logo.py`: logos and gradient colors
 - `scripts/fetch-bible.py`: downloads a book of the
   1895 Grabar Bible into `books/` (see

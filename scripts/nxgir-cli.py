@@ -109,6 +109,32 @@ def cmd_banner(args):
     return 0
 
 
+def cmd_abbr(args):
+    """List manuscript abbreviations, or expand one."""
+    import shutil
+
+    import nxgir_grabar as grabar
+
+    table = grabar.load()
+    width = shutil.get_terminal_size().columns
+    if not args.word:
+        print("\n".join(grabar.lines(table, width)))
+        print()
+        print(grabar.sources_line())
+        return 0
+    hits = grabar.expand(args.word, table)
+    for full, a in hits:
+        print(f"{args.word} → {full}  · {a.meaning}")
+    if hits:
+        return 0
+    found = grabar.search(args.word, table)
+    if not found:
+        print(f"no abbreviation found: {args.word}")
+        return 1
+    print("\n".join(grabar.lines(found, width)))
+    return 0
+
+
 def build_parser():
     parser = argparse.ArgumentParser(
         prog="nxgir",
@@ -139,6 +165,19 @@ def build_parser():
         ),
     )
     p.set_defaults(func=cmd_banner)
+    p = sub.add_parser("grabar", help="Grabar helpers")
+    tools = p.add_subparsers(dest="tool", required=True)
+    p = tools.add_parser(
+        "abbr",
+        help="manuscript abbreviations (expand a word,"
+        " or list them all)",
+    )
+    p.add_argument(
+        "word",
+        nargs="?",
+        help="a short form (ած, ԱԾ, ա՟ծ) or any text",
+    )
+    p.set_defaults(func=cmd_abbr)
     return parser
 
 

@@ -76,7 +76,10 @@ Tools that help a modern reader through a Classical Armenian text:
 # OCR a scanned PDF or image into a text file
 ./nxgir ocr scan.pdf -o scan.txt --lang hye
 
-# Grabar helpers
+# Grabar helpers: list the abbreviations of old
+# manuscripts, or expand one (ած, ԱԾ and ա՟ծ all work)
+./nxgir grabar abbr
+./nxgir grabar abbr ա՟ծ
 ./nxgir grabar modernize text.txt
 ./nxgir grabar translit text.txt
 ./nxgir grabar numeral ՌՄԾ

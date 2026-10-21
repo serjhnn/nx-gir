@@ -1,0 +1,140 @@
+# Abbreviations in Old Armenian manuscripts and old printed books.
+# In the text they are marked with the pativ sign ՟ (U+055F) above
+# the letters; it is left out here.
+#
+# Columns: short, full, meaning, kind, source
+# kind: sacred = sacred names (nomina sacra), word, part (one letter
+# standing for part of a word), name, ending (word endings)
+# source: A = Ա. Գ. Աբրահամյան, «Հայ գրի և գրչության պատմություն»,
+#   Երևան, 1959, pp. 111-114 (archive.org/details/Abrahamyan)
+#   W = Wiktionary, entry «՟» (cites Tumanyan, p. 19)
+#
+# short	full	meaning	kind	source
+ած	Աստուած	God	sacred	A W
+այ	Աստուծոյ	of God	sacred	A W
+յայ	յԱստուծոյ	from God	sacred	W
+ավ	Աստուծով	by God	sacred	W
+յս	Յիսուս	Jesus	sacred	A
+յի	Յիսուսի	of Jesus	sacred	A
+քս	Քրիստոս	Christ	sacred	A
+քի	Քրիստոսի	of Christ	sacred	A
+սբ	սուրբ	holy	sacred	A W
+սբյ	սրբոյ	of the holy	sacred	A
+տր	տէր	Lord	sacred	A
+տն	տեառն	of the Lord	sacred	A
+իէղ	Իսրայէղ	Israel (later spelled Իսրայէլ)	sacred	A
+իղի	Իսրայէղի	of Israel	sacred	A
+եղմ	Երուսաղէմ	Jerusalem	sacred	A
+եղի	Երուսաղէմի	of Jerusalem	sacred	A
+թւ	թուական	year, date (before a year)	word	A
+թվ	թուական	year, date (before a year)	word	A
+հց	հարց	question	word	A
+յղ	յաղագս	about, concerning	word	A
+վս	վասն	for, because of	word	A
+նխ	նախ	first	word	A
+վր	վերայ	on, upon	word	A
+քհ	քահանայ	priest	word	A
+ամ	ամենայն	all, every	word	A W
+սս	սապէս	thus, so (also այսպէս)	word	A
+ոպ	որպէս	as, like	word	A
+կմ	կամ	or	word	A
+մդ	մարդ	man, person	word	A
+խճ	խոճայ	khoja (title of merchants)	word	A
+գլ	գլուխ	head; chapter	word	A
+պտ	պատասխան	answer (W: պատասխանի)	word	A W
+թգր	թագաւոր	king	word	A
+ճշտ	ճշմարիտ	true	word	A
+պկս	պակաս	lacking, less	word	A
+շւղ	շաւիղ	path	word	A
+ահլ	աւրհնեալ	blessed (also օրհնեալ)	word	A
+բլր	բոլոր	all, whole	word	A
+վսյ	վասնորոյ	therefore	word	A
+նհջ	նահանջ	retreat	word	A
+սհպ	սահիպ	sahib, master	word	A
+զւր	զինուոր	soldier	word	A
+վրդ	վարդապետ	vardapet, teacher (also Վարդան)	word	A
+բրր	բարերար	benefactor	word	A
+բզմ	բազում	many	word	A
+ժմկ	ժամանակ	time	word	A
+կմւ	կամաւ	willingly	word	A
+յրժմ	յորժամ	when	word	A
+չրչր	չարաչար	cruelly, badly	word	A
+չրդ	չորրորդ	fourth	word	A
+երկդ	երկրորդ	second	word	A
+երդ	երրորդ	third	word	A
+հզր	հազար	thousand	word	A
+քղք	քաղաք	city	word	A
+ամի	ամենայնի	of all	word	A
+յռջ	յառաջ	forward, before	word	A
+կթղկս	կաթողիկոս	catholicos	word	A
+եպկս	եպիսկոպոս	bishop	word	A
+վսկ	վասն այսորիկ	because of this	word	A
+պ	պէս	-պէս (as, like) inside a word	part	A
+պպ	պէսպէս	various	part	A
+այսպ	այսպէս	thus	part	A
+այնպ	այնպէս	so, in that way	part	A
+որպ	որպէս	as, like	part	A
+իսկապ	իսկապէս	truly	part	A
+նոյնպ	նոյնպէս	likewise	part	A
+ընդհանրապ	ընդհանրապէս	generally	part	A
+յայտնապ	յայտնապէս	openly	part	A
+ք	քան	-քան (than; how much) inside a word	part	A
+քզի	քանզի	because	part	A
+որք	որքան	how much	part	A
+այսք	այսքան	this much	part	A
+այնք	այնքան	that much	part	A
+նոյնք	նոյնքան	as much	part	A
+քար	քանքար	talent (a coin); not քար, stone	part	A
+ը	ընդ	ընդ- inside a word	part	A
+ըունայն	ընդունայն	vain	part	A
+ըարձակ	ընդարձակ	wide	part	A
+ըդէմ	ընդդէմ	against	part	A
+ըգրկել	ընդգրկել	to embrace	part	A
+ըէր	ընդէր	why	part	A
+ըհանուր	ընդհանուր	common, general	part	A
+ըունելութիւն	ընդունելութիւն	acceptance	part	A
+ըիմաբան	ընդդիմաբան	opponent	part	A
+ըօրինակել	ընդօրինակել	to copy	part	A
+ըունակ	ընդունակ	capable	part	A
+կ	կամ	կամ- inside a word	part	A
+կակոր	կամակոր	stubborn	part	A
+ակայ	ակամայ	unwillingly	part	A
+կաւոր	կամաւոր	willing	part	A
+կակից	կամակից	like-minded	part	A
+Գ	Գէորգ	George	name	A
+Զ	Զաքարիա	Zechariah	name	A
+Է	Էմմանուէլ	Emmanuel	name	A
+Թ	Թէոդորոս	Theodore	name	A
+Կ	Կոստանդնուպոլիս	Constantinople	name	A
+Մ	Մխիթար	Mkhitar	name	A
+Յ	Յովհաննէս	John	name	A
+Պ	Պետրոս	Peter	name	A
+Տ	Տրդատ	Trdat	name	A
+Ղ	Ղուկաս	Luke	name	A
+Եգս	Եգիպտոս	Egypt	name	A
+Սհկ	Սահակ	Sahak (Isaac)	name	A
+Մվս	Մովսէս	Moses	name	A
+Սրգս	Սարգիս	Sargis (Sergius)	name	A
+Վրդ	Վարդան	Vardan (also վարդապետ)	name	A
+Շպհ	Շապուհ	Shapuh (Shapur)	name	A
+Դւթ	Դաւիթ	David	name	A
+Յհս	Յովհաննէս	John	name	A
+Կրկ	Կիրակոս	Kirakos (Cyriacus)	name	A
+Գրգր	Գրիգոր	Gregory	name	A
+Հրկլ	Հերակլ	Heraclius	name	A
+Գգիկ	Գագիկ	Gagik	name	A
+Թրս	Թորոս	Toros	name	A
+Լւն	Լեւոն	Levon (Leo)	name	A
+-ութի	-ութիւն	-ness, -tion (noun ending)	ending	A W
+-ուի	-ութիւն	-ness, -tion (noun ending)	ending	A
+-ւի	-ութիւն	-ness, -tion (noun ending)	ending	A
+-ութին	-ութիւնն	the ...-ness	ending	A
+-ութե	-ութեան	of ...-ness	ending	A W
+-ուե	-ութեան	of ...-ness	ending	A
+-ւե	-ութեան	of ...-ness	ending	A
+-ութեն	-ութեանն	of the ...-ness	ending	A
+-ուեն	-ութեանն	of the ...-ness	ending	A
+-ւեն	-ութեանն	of the ...-ness	ending	A
+-ութեբ	-ութեամբ	by ...-ness	ending	A
+-ւեբ	-ութեամբ	by ...-ness	ending	A
+-ութէ	-ութենէ	from ...-ness	ending	W
