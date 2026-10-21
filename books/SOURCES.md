@@ -48,3 +48,46 @@ How this edition differs from the usual verse list:
 - Luke has 1153 verses against the usual 1151 because
   of different verse division.
 - John 14:14 is not in the edition.
+
+## grabar/grigor-tatevatsi/
+
+Three works of Grigor Tatevatsi (Գրիգոր Տաթեւացի,
+1346–1409) in Grabar, from Digilib, the digital library
+of Armenian literature of the American University of
+Armenia (<https://www.digilib.am>). Digilib typed the
+texts from old printed editions; the texts themselves
+are centuries old and in the public domain. Digilib
+does not state a license for its typed copies.
+
+| Folder | Work | Digilib | Sections | Parts |
+|--------|------|---------|---------:|------:|
+| `1-girk-harcmanc/` | Գիրք հարցմանց (Book of Questions) | [1477](https://www.digilib.am/book/1477/) | 511 | 12 |
+| `2-dzmeran-hator/` | Գիրք քարոզութեան որ կոչի Ձմեռան հատոր (winter sermons) | [1476](https://www.digilib.am/book/1476/) | 164 | 18 |
+| `3-amaran-hator/` | Գիրք քարոզութեան որ կոչի Ամառան հատոր (summer sermons) | [3409](https://www.digilib.am/book/3409/) | 38 | 24 |
+
+Downloaded on 2026-10-21 with `scripts/fetch-digilib.py`:
+
+```sh
+D=books/grabar/grigor-tatevatsi
+scripts/fetch-digilib.py 1477 "Գիրք հարցմանց" $D/1-girk-harcmanc
+scripts/fetch-digilib.py 1476 "Գիրք քարոզութեան որ կոչի Ձմեռան հատոր" $D/2-dzmeran-hator
+scripts/fetch-digilib.py 3409 "Գիրք քարոզութեան որ կոչի Ամառան հատոր" $D/3-amaran-hator
+```
+
+How the files are made:
+
+- Each Digilib section becomes a heading line followed
+  by its paragraphs, one per line. Runs of spaces
+  become one space, and a heading repeated as the
+  first paragraph is kept once; otherwise spelling,
+  punctuation and the stress marks (՛) are as on
+  Digilib.
+- Each work is cut into parts of about 150,000
+  characters (`01.txt`, `02.txt`, …) between sections,
+  so the reader stays quick on a phone. The first line
+  of a part is the title and `n/total`.
+- In Գիրք հարցմանց, 42 sections are only group headings
+  (e.g. `Գլուխ Ա ի մեծ ցանկէն`, `Երկրորդ Հատոր`) and
+  have no text of their own.
+- Some paragraphs are very long (a whole sermon in the
+  summer volume can be one paragraph), as on Digilib.

@@ -89,9 +89,12 @@ Tools that help a modern reader through a Classical Armenian text:
 
 The bookshelf shows the texts in two folders:
 
-- `books/`: the library. It has the four Gospels in
-  Grabar (`books/grabar/bible/new-testament/`), from the
-  Venice 1895 Bible; see `books/SOURCES.md`.
+- `books/`: the library, in Grabar: the four Gospels
+  from the Venice 1895 Bible
+  (`books/grabar/bible/new-testament/`) and three works
+  of Grigor Tatevatsi from Digilib
+  (`books/grabar/grigor-tatevatsi/`, in parts); see
+  `books/SOURCES.md`.
 - `data/`: short test texts; see `data/SOURCES.md`.
 
 The bookshelf shows them as folders (`grabar/`,

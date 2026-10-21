@@ -43,6 +43,8 @@
 - `scripts/fetch-bible.py`: downloads a book of the
   1895 Grabar Bible into `books/` (see
   `books/SOURCES.md`)
+- `scripts/fetch-digilib.py`: downloads a book from
+  digilib.am into `books/`, cut into parts
 - `books/`: the library; `data/`: test texts
 - `scripts/render-logo.py`, `scripts/render-screens.py`:
   regenerate the README images in `docs/` after
