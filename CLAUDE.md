@@ -36,6 +36,9 @@
   (`nxgir grabar abbr`); the data is in `grabar/`
   (`abbreviations.tsv` names its sources in the
   header; add only entries from a source)
+- `sources/`: copies of the sources (page scans, entry
+  texts) behind the `grabar/` data; add the copy and a
+  note in `sources/README.md` with every new source
 - `scripts/nxgir_logo.py`: logos and gradient colors
 - `scripts/fetch-bible.py`: downloads a book of the
   1895 Grabar Bible into `books/` (see

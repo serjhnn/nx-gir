@@ -1,0 +1,29 @@
+{{also|◌҃}}
+{{character info}}
+==Armenian==
+[[Image:Ած՟.svg|thumb|The word {{m|xcl|աստուած|Աստուած|God}} abbreviated. Only first and last letters are written.]]
+[[Image:Սբ՟.svg|thumb|The word {{m|xcl|սուրբ|Սուրբ|Holy}} abbreviated. Only first and last letters are written.]]
+
+===Punctuation mark===
+{{head|hy|punctuation mark}}
+
+# [[Armenian]] [[abbreviation]] mark. It was placed on top of the part of the word to indicate that it was abbreviated. Called {{m|hy|պատիվ|}} in Armenian.
+
+====Usage notes====
+* Not used in modern Armenian.
+* The sign should be placed on top of a letter, but most current fonts do not do that: they show it following a letter, e.g. {{m|xcl||Ած՟}}.
+* The most common abbreviations were:
+*: {{m|xcl||Ած՟}} = {{m|xcl|աստուած|Աստուած}}
+*: {{m|xcl||Այ՟}} = {{m|xcl|աստուածոյ|Աստուածոյ}}
+*: {{m|xcl||յԱյ՟}} = {{m|xcl|յաստուածոյ|յԱստուածոյ}}
+*: {{m|xcl||Ավ՟}} = {{m|xcl|աստուած|Աստուածով}}
+*: {{m|xcl||ամ՟}} = {{m|xcl|ամենայն}}
+*: {{m|xcl||պտ՟}} = {{m|xcl|պատասխանի}}
+*: {{m|xcl||սբ՟}} = {{m|xcl|սուրբ}}
+*: {{m|xcl||-ութի՟}} = {{m|xcl|-ութիւն}}, {{m|xcl||-ութե՟}} = {{m|xcl||-ութեան}}, {{m|xcl||-ութէ՟}} = {{m|xcl||-ութենէ}}
+
+===See also===
+* {{Armn-script}}
+
+===References===
+* {{R:xcl:Tumanyan|page=19}}
