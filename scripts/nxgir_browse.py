@@ -23,9 +23,9 @@ from nxgir_ui import (
 )
 
 LIST_HELP = (
-    "j/k move · Enter open · h back · / search · q quit",
-    "j/k move · Enter open · h back · q quit",
-    "j/k Enter h / q",
+    "j/k move · Enter/l open · h back · / search · q quit",
+    "j/k move · Enter/l open · h back · q quit",
+    "j/k Enter/l h / q",
 )
 
 
