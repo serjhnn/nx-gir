@@ -22,16 +22,20 @@ SOURCES = {
     "A": "Abrahamyan 1959, pp. 111-114",
     "W": "Wiktionary «՟»",
 }
-# prepositions written joined to the next word; յ only
-# before a vowel (before a consonant it is ի). They are
-# not abbreviated, so a short word may carry one:
-# յա՟մ = յ + ամենայն. This is a grammar rule, not an
-# entry of the sources.
+# prepositions written joined to the next word. They
+# are not abbreviated, so a short word may carry one:
+# յա՟մ = յ + ամենայն, իվ՟ր = ի վերայ. ի and յ are one
+# word: յ before a vowel, ի (printed apart) before a
+# consonant. This is a grammar rule, not an entry of
+# the sources.
 PREFIXES = {
-    "յ": "in, into, from",
+    "յ": "in, into, from (before a vowel)",
+    "ի": "in, into, from (before a consonant)",
     "զ": "marks a definite object",
     "ց": "to, up to, until",
 }
+# printed as a word of its own
+APART = {"ի"}
 VOWELS = set("աեէըիոօ")
 # the pativ mark ՟ and the stress, exclamation and
 # question marks are not part of the letters
@@ -103,7 +107,8 @@ class Prefixed(NamedTuple):
 def expand_prefix(word, table=None):
     """[Prefixed] for a short word that is a joined
     preposition and a whole-word abbreviation:
-    յամ -> յամենայն (յ + ամ). Rests of one letter
+    յամ -> յամենայն (յ + ամ), իվր -> ի վերայ
+    (ի + վր). Rests of one letter
     are skipped, they match too much."""
     table = load() if table is None else table
     plain = word.translate(MARKS)
@@ -119,7 +124,10 @@ def expand_prefix(word, table=None):
             first = a.full[0].casefold()
             if pre == "յ" and first not in VOWELS:
                 continue
-            full = plain[: len(pre)] + a.full
+            if pre == "ի" and first in VOWELS:
+                continue
+            space = " " if pre in APART else ""
+            full = plain[: len(pre)] + space + a.full
             out.append(Prefixed(full, pre, a))
     return out
 

@@ -78,10 +78,12 @@ Tools that help a modern reader through a Classical Armenian text:
 
 # Grabar helpers: list the abbreviations of old
 # manuscripts, or expand one (ած, ԱԾ and ա՟ծ all work);
-# a joined յ-, զ- or ց- is split off: յա՟մ → յամենայն
+# a joined յ-, ի-, զ- or ց- is split off: յա՟մ →
+# յամենայն, իվ՟ր → ի վերայ
 ./nxgir grabar abbr
 ./nxgir grabar abbr ա՟ծ
 ./nxgir grabar abbr յա՟մ
+./nxgir grabar abbr իվ՟ր
 ./nxgir grabar modernize text.txt
 ./nxgir grabar translit text.txt
 ./nxgir grabar numeral ՌՄԾ

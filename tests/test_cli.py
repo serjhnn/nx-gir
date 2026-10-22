@@ -52,6 +52,8 @@ def test_grabar_abbr(capsys):
     out = capsys.readouterr().out
     assert "յամ → յամենայն" in out
     assert "+ ամ = ամենայն" in out
+    assert cli.run(["grabar", "abbr", "իվր"]) == 0
+    assert "իվր → ի վերայ" in capsys.readouterr().out
     assert cli.run(["grabar", "abbr", "zzz"]) == 1
     assert cli.completions("", "gr") == ["grabar"]
     assert cli.completions("grabar ", "") == ["abbr"]

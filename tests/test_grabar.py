@@ -53,8 +53,14 @@ def test_expand_prefix():
     assert fulls("յա՟մ") == [("յամենայն", "յ")]
     assert fulls("զամ") == [("զամենայն", "զ")]
     assert fulls("ցած") == [("ցԱստուած", "ց")]
-    # յ is not written before a consonant
+    assert fulls("իվ՟ր") == [("ի վերայ", "ի")]
+    assert fulls("իքս") == [("ի Քրիստոս", "ի")]
+    # յ is not written before a consonant, ի before
+    # a vowel
     assert fulls("յսբ") == []
+    assert fulls("իամ") == []
+    # a whole entry starting with ի is not split
+    assert grabar.expand("իղի", TABLE)
     # a one-letter rest matches too much
     assert fulls("զգ") == []
     assert grabar.expand("յամ", TABLE) == []
