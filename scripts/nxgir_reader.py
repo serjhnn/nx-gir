@@ -286,7 +286,7 @@ def split(h, w, mode, want):
 # ---- screen -------------------------------------------
 
 READ_HELP = (
-    "w/b word · j/k line · s refs · a abbr · / find"
+    "w/b word · j/k line · s refs · a meaning · / find"
     " · q back",
     "w/b word · j/k line · s refs · / find · q back",
     "w/b word · j/k line · s refs · q back",
@@ -386,8 +386,10 @@ class Panel:
     """Information shown beside or below the text.
 
     Opened by a key: s (references), a
-    (abbreviations), T (themes) or M (bookmarks);
-    t and e later. kind says which.
+    (abbreviation or meaning), T (themes) or M
+    (bookmarks); t and e later. kind says which.
+    A panel of text has its lines in text; they are
+    wrapped to the panel's width when drawn.
     """
 
     def __init__(self, title, entries, sel=0, kind="refs"):
@@ -396,6 +398,17 @@ class Panel:
         self.entries = entries
         self.sel = sel  # selected entry
         self.top = 0  # first visible entry
+        self.text = None  # lines to wrap, or None
+        self.wrapped = 0  # width they are wrapped to
+
+    def wrap(self, width):
+        """Wrap text to width, if it is not yet."""
+        if self.text is None or self.wrapped == width:
+            return
+        lines = wrap_lines(self.text, width)
+        self.entries = [Entry("", x) for x in lines]
+        self.wrapped = width
+        self.sel = min(self.sel, len(lines) - 1)
 
 
 def theme_panel():
@@ -452,14 +465,35 @@ def refs_panel(lay, i):
     return Panel(title, entries, idx.index(i))
 
 
-def abbr_panel(word, table=None):
-    """Panel with what word may abbreviate, or None
-    if it is not in the list."""
+def wrap_lines(lines, width):
+    """lines cut at spaces to fit width; the rest of
+    a line keeps its indent, two more."""
+    out = []
+    for line in lines:
+        body = line.lstrip(" ")
+        pad = " " * (len(line) - len(body) + 2)
+        out += textwrap.wrap(
+            line,
+            max(width, 8),
+            subsequent_indent=pad,
+            break_on_hyphens=False,
+        ) or [""]
+    return out
+
+
+def abbr_panel(word, table=None, vocab=None):
+    """Panel with what word may abbreviate or, if it
+    is no abbreviation, what it means; None if it is
+    in neither list."""
     lines = grabar.explain(word, table)
+    if not lines:
+        lines = grabar.define(word, vocab)
     if not lines:
         return None
     entries = [Entry("", line) for line in lines]
-    return Panel(word, entries, kind="abbr")
+    p = Panel(word, entries, kind="abbr")
+    p.text = lines
+    return p
 
 
 class Reader:
@@ -643,6 +677,7 @@ class Reader:
                 style("title"),
             )
         rows = box.h - 1
+        p.wrap(box.w - 2)
         if p.sel < p.top:
             p.top = p.sel
         elif p.sel >= p.top + rows:
@@ -782,7 +817,7 @@ class Reader:
         self.panel = abbr_panel(word)
         self.saved = self.cur
         if not self.panel:
-            self.msg = f"no abbreviation found: {word}"
+            self.msg = f"not found: {word}"
 
     def search(self, action):
         if action == "search":

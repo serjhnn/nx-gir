@@ -33,10 +33,13 @@
 - `scripts/nxgir_ui.py`: shared curses helpers; read
   keys with `key()`, it handles terminal resizes
 - `scripts/nxgir_grabar.py`: Grabar helpers
-  (`nxgir grabar abbr`); the data is in `grabar/`
-  (`abbreviations.tsv` names its sources in the
-  header; add only entries from a source, or, when
-  the user asks, readings of our own marked `N`)
+  (`nxgir grabar abbr`, `nxgir grabar word`); the
+  data is in `grabar/` (`abbreviations.tsv` names its
+  sources in the header; add only entries from a
+  source, or, when the user asks, readings of our own
+  marked `N`; `vocabulary.tsv` and `forms.tsv` are
+  built from Wiktionary by
+  `scripts/fetch-vocabulary.py`, not edited by hand)
 - `sources/`: copies of the sources (page scans, entry
   texts) behind the `grabar/` data; add the copy and a
   note in `sources/README.md` with every new source

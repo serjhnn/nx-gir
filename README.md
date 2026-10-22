@@ -84,6 +84,11 @@ Tools that help a modern reader through a Classical Armenian text:
 ./nxgir grabar abbr ա՟ծ
 ./nxgir grabar abbr յա՟մ
 ./nxgir grabar abbr իվ՟ր
+
+# what a word means, from the Old Armenian entries of
+# Wiktionary; inflected forms, a joined զ-, յ-, ց- and
+# the articles -ս, -դ, -ն work: լուսնի → լուսին
+./nxgir grabar word զլուսինն
 ./nxgir grabar modernize text.txt
 ./nxgir grabar translit text.txt
 ./nxgir grabar numeral ՌՄԾ
@@ -151,7 +156,7 @@ word is under the cursor.
 | `space` / `Ctrl-f` `Ctrl-b` / `PgDn` `PgUp` | page down / up |
 | `/` then `n` `N` | find a word, next / previous match |
 | `s` | references: every place the word appears |
-| `a` | abbreviation: what the word may stand for (as `nxgir grabar abbr`) |
+| `a` | abbreviation: what the word may stand for (as `nxgir grabar abbr`); if it is none, what the word means (as `nxgir grabar word`) |
 | `p` | panel place: auto, always below, always beside |
 | `c` | lines centered (default) or left-aligned |
 | `L` | line spacing: double (default) → triple → single |

@@ -153,6 +153,18 @@ def cmd_abbr(args):
     return 0
 
 
+def cmd_word(args):
+    """Say what a Grabar word means."""
+    import nxgir_grabar as grabar
+
+    lines = grabar.define(args.word)
+    if not lines:
+        print(f"not in the vocabulary: {args.word}")
+        return 1
+    print("\n".join(lines))
+    return 0
+
+
 def build_parser():
     parser = argparse.ArgumentParser(
         prog="nxgir",
@@ -196,6 +208,13 @@ def build_parser():
         help="a short form (ած, ԱԾ, ա՟ծ) or any text",
     )
     p.set_defaults(func=cmd_abbr)
+    p = tools.add_parser(
+        "word",
+        help="what a word means (from Wiktionary;"
+        " inflected forms work too)",
+    )
+    p.add_argument("word", help="e.g. լուսնի, զլուսինն")
+    p.set_defaults(func=cmd_word)
     return parser
 
 

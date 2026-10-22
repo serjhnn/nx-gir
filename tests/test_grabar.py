@@ -109,3 +109,74 @@ def test_explain():
     assert out[0] == "յա՟մ → յամենայն"
     assert out[1].startswith("  յ- ")
     assert grabar.explain("բառ", TABLE) == []
+
+
+def small_vocab(tmp_path):
+    words = tmp_path / "vocabulary.tsv"
+    words.write_text(
+        "# test\n"
+        "լուսին\tnoun\tmoon | month\n"
+        "եւ\tconj\tand\n"
+        "ես\tpron\tI\n"
+        "ես\tverb\tyou are\n",
+        encoding="utf-8",
+    )
+    forms = tmp_path / "forms.tsv"
+    forms.write_text(
+        "# test\nլուսնի\tլուսին\n", encoding="utf-8"
+    )
+    return grabar.vocabulary(words, forms)
+
+
+def test_vocabulary_files_are_well_formed():
+    for path, cols in (
+        (grabar.VOCABULARY, 3),
+        (grabar.FORMS, 2),
+    ):
+        for row in grabar.tsv(path):
+            assert len(row) == cols and all(row), row
+    heads, forms = grabar.vocabulary()
+    for words in forms.values():
+        for w in words:
+            assert grabar.key(w) in heads, w
+
+
+def test_lookup(tmp_path):
+    vocab = small_vocab(tmp_path)
+
+    def heads(word):
+        return [
+            (w.word, notes)
+            for w, notes in grabar.lookup(word, vocab)
+        ]
+
+    assert heads("Լուսին") == [("լուսին", ())]
+    # an inflected form
+    assert heads("լուսնի") == [("լուսին", ())]
+    # every entry of a word
+    assert [w for w, _ in heads("ես")] == ["ես", "ես"]
+    # the ligature և is եւ
+    assert heads("և") == [("եւ", ())]
+    # a joined preposition and the article
+    (w, notes), *_ = heads("զլուսինն")
+    assert w == "լուսին"
+    assert notes[0].startswith("զ- ")
+    assert notes[1].startswith("-ն ")
+    assert heads("բառ") == []
+
+
+def test_define(tmp_path):
+    vocab = small_vocab(tmp_path)
+    out = grabar.define("լուսնի", vocab)
+    assert out[:3] == ["լուսին · noun", "  moon", "  month"]
+    assert out[-1].startswith("Source: Wiktionary")
+    out = grabar.define("զլուսին", vocab)
+    assert "զլուսին:" in out
+    assert grabar.define("բառ", vocab) == []
+
+
+def test_define_real_words():
+    out = grabar.define("սիրեաց")
+    assert out[0] == "սիրեմ · verb"
+    out = grabar.define("յերկինս")
+    assert "երկինք · noun" in out

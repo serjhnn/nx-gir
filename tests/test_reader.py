@@ -14,6 +14,7 @@ from nxgir_reader import (
     text_width,
     vertical,
     visible_rows,
+    wrap_lines,
 )
 
 JOHN = (
@@ -242,4 +243,23 @@ def test_abbr_panel():
     assert p.kind == "abbr" and p.title == "ա՟ծ"
     assert p.entries[0].text == "ա՟ծ → Աստուած"
     assert all(e.target == -1 for e in p.entries)
-    assert abbr_panel("բառ") is None
+    # no abbreviation: what the word means
+    p = abbr_panel("լուսնի")
+    assert p.entries[0].text == "լուսին · noun"
+    assert abbr_panel("քքքք") is None
+
+
+def test_abbr_panel_wraps():
+    p = abbr_panel("սէր")
+    p.wrap(20)
+    texts = [e.text for e in p.entries]
+    assert all(len(t) <= 20 for t in texts)
+    assert len(texts) > len(p.text)
+    p.sel = len(texts) - 1
+    p.wrap(200)
+    assert p.sel == len(p.entries) - 1
+
+
+def test_wrap_lines():
+    out = wrap_lines(["a b c", "  dd ee ff gg"], 8)
+    assert out == ["a b c", "  dd ee", "    ff", "    gg"]

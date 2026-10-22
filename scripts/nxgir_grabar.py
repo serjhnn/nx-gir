@@ -1,14 +1,18 @@
-"""Grabar helpers: abbreviations of old manuscripts.
+"""Grabar helpers: abbreviations of old manuscripts
+and a vocabulary.
 
-The list is grabar/abbreviations.tsv; see the notes at
-its top for the sources.
+The lists are in grabar/; see the notes at the top of
+each file for the sources.
 """
 
+import functools
 from pathlib import Path
 from typing import NamedTuple
 
 ROOT = Path(__file__).resolve().parent.parent
 ABBREVIATIONS = ROOT / "grabar" / "abbreviations.tsv"
+VOCABULARY = ROOT / "grabar" / "vocabulary.tsv"
+FORMS = ROOT / "grabar" / "forms.tsv"
 
 # kind -> heading, in the order they are listed
 KINDS = {
@@ -199,7 +203,8 @@ def sources_line():
 
 def explain(word, table=None):
     """Lines saying what a short word may stand for:
-    readings, then joined prepositions; [] if none."""
+    readings, then joined prepositions; [] if none.
+    For the meaning of a word see define()."""
     table = load() if table is None else table
     out = []
     for full, a in expand(word, table):
@@ -215,4 +220,93 @@ def explain(word, table=None):
         out.append(f"  {pre}- {PREFIXES[pre]}")
         out.append(f"  + {a.short} = {a.full}")
         out.append(f"    {a.meaning}")
+    return out
+
+
+# the article joined to the end of a word: a grammar
+# rule, like PREFIXES
+ARTICLES = {
+    "ս": "the article: this (by me)",
+    "դ": "the article: that (by you)",
+    "ն": "the article: the, that",
+}
+
+
+class Word(NamedTuple):
+    word: str
+    pos: str
+    meanings: tuple
+
+
+def tsv(path):
+    """Rows of a TSV file, without comments."""
+    text = Path(path).read_text(encoding="utf-8")
+    for line in text.splitlines():
+        if line.strip() and not line.startswith("#"):
+            yield line.split("\t")
+
+
+@functools.cache
+def vocabulary(words=VOCABULARY, forms=FORMS):
+    """({key: [Word]}, {form key: [headword]})."""
+    heads, inflected = {}, {}
+    for word, pos, meanings in tsv(words):
+        w = Word(word, pos, tuple(meanings.split(" | ")))
+        heads.setdefault(key(word), []).append(w)
+    for form, word in tsv(forms):
+        inflected.setdefault(key(form), []).append(word)
+    return heads, inflected
+
+
+def readings(k):
+    """Ways to read the letters k: (rest, notes) with
+    a joined preposition or article taken off; as is
+    first."""
+    out = [(k, ())]
+    ends = [(k, ())]
+    if len(k) > 2 and k[-1] in ARTICLES:
+        a = k[-1]
+        ends.append((k[:-1], (f"-{a} {ARTICLES[a]}",)))
+        out.append(ends[-1])
+    for pre in PREFIXES:
+        if pre in APART:
+            continue
+        for rest, notes in ends:
+            if rest.startswith(pre) and len(rest) > 2:
+                note = f"{pre}- {PREFIXES[pre]}"
+                out.append((rest[1:], (note, *notes)))
+    return out
+
+
+def lookup(word, vocab=None):
+    """[(Word, notes)] for word: the headword, the
+    headword of an inflected form, then the same with
+    a joined preposition or article taken off."""
+    heads, inflected = vocab or vocabulary()
+    for k, notes in readings(key(word)):
+        found = list(heads.get(k, []))
+        for head in inflected.get(k, []):
+            for w in heads.get(key(head), []):
+                if w not in found:
+                    found.append(w)
+        if found:
+            return [(w, notes) for w in found]
+    return []
+
+
+def define(word, vocab=None):
+    """Lines saying what word means; [] if it is not
+    in the vocabulary."""
+    found = lookup(word, vocab)
+    if not found:
+        return []
+    out = []
+    for w, _ in found:
+        out.append(f"{w.word} · {w.pos}")
+        out += [f"  {m}" for m in w.meanings]
+    notes = found[0][1]
+    if notes:
+        out.append(f"{word}:")
+        out += [f"  {n}" for n in notes]
+    out.append("Source: Wiktionary (CC BY-SA)")
     return out

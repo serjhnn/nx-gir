@@ -42,6 +42,12 @@ def test_bookshelf_lists_books_not_notes(capsys):
     assert "SOURCES.md" not in out
 
 
+def test_grabar_word(capsys):
+    assert cli.run(["grabar", "word", "լուսնի"]) == 0
+    assert "moon" in capsys.readouterr().out
+    assert cli.run(["grabar", "word", "zzz"]) == 1
+
+
 def test_grabar_abbr(capsys):
     assert cli.run(["grabar", "abbr", "ա՟ծ"]) == 0
     assert "Աստուած" in capsys.readouterr().out
@@ -56,4 +62,7 @@ def test_grabar_abbr(capsys):
     assert "իվր → ի վերայ" in capsys.readouterr().out
     assert cli.run(["grabar", "abbr", "zzz"]) == 1
     assert cli.completions("", "gr") == ["grabar"]
-    assert cli.completions("grabar ", "") == ["abbr"]
+    assert cli.completions("grabar ", "") == [
+        "abbr",
+        "word",
+    ]

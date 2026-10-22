@@ -46,6 +46,24 @@ and as a second source for ած, այ, ամ, սբ, պտ, -ութի and
 Note: it gives Այ = Աստուածոյ, while Abrahamyan gives
 աստուծոյ; the list uses Աստուծոյ.
 
+## Vocabulary: Wiktionary via kaikki.org
+
+`grabar/vocabulary.tsv` and `grabar/forms.tsv` are
+built by `scripts/fetch-vocabulary.py` from the Old
+Armenian entries of the English Wiktionary, as
+extracted by kaikki.org (wiktextract):
+<https://kaikki.org/dictionary/Old%20Armenian/>.
+The extract is 48 MB, so no copy of it is kept here:
+the TSV files keep the headword, part of speech and
+glosses of every entry, and each one can be checked at
+`https://en.wiktionary.org/wiki/<word>#Old_Armenian`.
+The download date is at the top of both files. Their
+text is under CC BY-SA 4.0
+(<https://creativecommons.org/licenses/by-sa/4.0/>).
+
+To update, run `scripts/fetch-vocabulary.py`; do not
+edit the files by hand.
+
 ## N: no source yet
 
 Entries marked `N` in `abbreviations.tsv` were read from
