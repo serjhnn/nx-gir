@@ -151,6 +151,7 @@ word is under the cursor.
 | `space` / `Ctrl-f` `Ctrl-b` / `PgDn` `PgUp` | page down / up |
 | `/` then `n` `N` | find a word, next / previous match |
 | `s` | references: every place the word appears |
+| `a` | abbreviation: what the word may stand for (as `nxgir grabar abbr`) |
 | `p` | panel place: auto, always below, always beside |
 | `c` | lines centered (default) or left-aligned |
 | `L` | line spacing: double (default) → triple → single |

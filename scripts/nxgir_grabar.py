@@ -195,3 +195,24 @@ def sources_line():
     return "Sources: " + "; ".join(
         f"{k} = {v}" for k, v in SOURCES.items()
     )
+
+
+def explain(word, table=None):
+    """Lines saying what a short word may stand for:
+    readings, then joined prepositions; [] if none."""
+    table = load() if table is None else table
+    out = []
+    for full, a in expand(word, table):
+        out.append(f"{word} → {full}")
+        out.append(f"  {a.meaning}")
+        out += example_lines(a, "  ")
+        if "N" in a.sources:
+            out.append("  not in a published source yet")
+    if out:
+        return out
+    for full, pre, a in expand_prefix(word, table):
+        out.append(f"{word} → {full}")
+        out.append(f"  {pre}- {PREFIXES[pre]}")
+        out.append(f"  + {a.short} = {a.full}")
+        out.append(f"    {a.meaning}")
+    return out

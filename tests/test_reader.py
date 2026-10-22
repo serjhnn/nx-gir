@@ -2,6 +2,7 @@ from nxgir_reader import (
     SIDE_MIN,
     TEXT_MAX,
     WORD_RE,
+    abbr_panel,
     find,
     layout,
     margin,
@@ -234,3 +235,11 @@ def test_visible_rows():
     assert visible_rows(10, 2) == 4
     assert visible_rows(1, 2) == 1
     assert visible_rows(0, 1) == 1
+
+
+def test_abbr_panel():
+    p = abbr_panel("ա՟ծ")
+    assert p.kind == "abbr" and p.title == "ա՟ծ"
+    assert p.entries[0].text == "ա՟ծ → Աստուած"
+    assert all(e.target == -1 for e in p.entries)
+    assert abbr_panel("բառ") is None

@@ -10,6 +10,7 @@ import textwrap
 from bisect import bisect_left, bisect_right
 from typing import NamedTuple
 
+import nxgir_grabar as grabar
 from nxgir_ui import (
     THEME_NAMES,
     THEMES,
@@ -285,9 +286,11 @@ def split(h, w, mode, want):
 # ---- screen -------------------------------------------
 
 READ_HELP = (
+    "w/b word · j/k line · s refs · a abbr · / find"
+    " · q back",
     "w/b word · j/k line · s refs · / find · q back",
     "w/b word · j/k line · s refs · q back",
-    "w/b j/k s / q",
+    "w/b j/k s a / q",
 )
 THEME_HELP = (
     "j/k try · Enter keep · q cancel",
@@ -303,8 +306,14 @@ MARKS_HELP = (
     "j/k pick · Enter go · x del · q",
     "j/k Enter x q",
 )
+ABBR_HELP = (
+    "j/k scroll · p place · q close",
+    "j/k scroll · q close",
+    "j/k p q",
+)
 PANEL_HELPS = {
     "refs": PANEL_HELP,
+    "abbr": ABBR_HELP,
     "theme": THEME_HELP,
     "marks": MARKS_HELP,
 }
@@ -345,6 +354,7 @@ KEYS = {
     "n": "hit",
     "N": "hit_back",
     "s": "refs",
+    "a": "abbr",
     "p": "place",
     "c": "align",
     "L": "spacing",
@@ -375,7 +385,8 @@ class Entry(NamedTuple):
 class Panel:
     """Information shown beside or below the text.
 
-    Opened by a key: s (references) or T (themes);
+    Opened by a key: s (references), a
+    (abbreviations), T (themes) or M (bookmarks);
     t and e later. kind says which.
     """
 
@@ -439,6 +450,16 @@ def refs_panel(lay, i):
     n = len(idx)
     title = f"{words[i].text} · {n} place{'s' * (n != 1)}"
     return Panel(title, entries, idx.index(i))
+
+
+def abbr_panel(word, table=None):
+    """Panel with what word may abbreviate, or None
+    if it is not in the list."""
+    lines = grabar.explain(word, table)
+    if not lines:
+        return None
+    entries = [Entry("", line) for line in lines]
+    return Panel(word, entries, kind="abbr")
 
 
 class Reader:
@@ -737,6 +758,8 @@ class Reader:
         elif action == "refs":
             self.panel = refs_panel(self.lay, self.cur)
             self.saved = self.cur
+        elif action == "abbr":
+            self.open_abbr()
         return True
 
     def next_spacing(self):
@@ -753,6 +776,13 @@ class Reader:
         i = MODES.index(self.mode)
         self.mode = MODES[(i + 1) % len(MODES)]
         self.msg = MODE_NAMES[self.mode]
+
+    def open_abbr(self):
+        word = self.lay.words[self.cur].text
+        self.panel = abbr_panel(word)
+        self.saved = self.cur
+        if not self.panel:
+            self.msg = f"no abbreviation found: {word}"
 
     def search(self, action):
         if action == "search":
@@ -808,7 +838,13 @@ class Reader:
             if p.kind == "theme":
                 self.msg = style.describe()
             return
-        elif action in ("quit", "refs", "theme", "marks"):
+        elif action in (
+            "quit",
+            "refs",
+            "abbr",
+            "theme",
+            "marks",
+        ):
             if p.kind == "theme":
                 style.use(self.win, self.saved_theme)
             else:

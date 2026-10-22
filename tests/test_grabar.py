@@ -100,3 +100,12 @@ def test_lines_fit_a_phone():
     # only rows whose two forms alone are wider
     for line in wrapped:
         assert "·" not in line
+
+
+def test_explain():
+    out = grabar.explain("ա՟ծ", TABLE)
+    assert out[:2] == ["ա՟ծ → Աստուած", "  God"]
+    out = grabar.explain("յա՟մ", TABLE)
+    assert out[0] == "յա՟մ → յամենայն"
+    assert out[1].startswith("  յ- ")
+    assert grabar.explain("բառ", TABLE) == []
