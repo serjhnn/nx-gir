@@ -35,7 +35,8 @@
 - `scripts/nxgir_grabar.py`: Grabar helpers
   (`nxgir grabar abbr`); the data is in `grabar/`
   (`abbreviations.tsv` names its sources in the
-  header; add only entries from a source)
+  header; add only entries from a source, or, when
+  the user asks, readings of our own marked `N`)
 - `sources/`: copies of the sources (page scans, entry
   texts) behind the `grabar/` data; add the copy and a
   note in `sources/README.md` with every new source

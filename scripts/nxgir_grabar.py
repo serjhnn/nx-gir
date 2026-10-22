@@ -21,6 +21,7 @@ KINDS = {
 SOURCES = {
     "A": "Abrahamyan 1959, pp. 111-114",
     "W": "Wiktionary «՟»",
+    "N": "nx-gir, not in a published source",
 }
 # prepositions written joined to the next word. They
 # are not abbreviated, so a short word may carry one:
@@ -48,6 +49,15 @@ class Abbr(NamedTuple):
     meaning: str
     kind: str
     sources: tuple
+    example: str = ""
+
+    def examples(self):
+        """[(phrase, meaning)] from the example column."""
+        out = []
+        for ex in filter(None, self.example.split("; ")):
+            text, _, meaning = ex.partition(": ")
+            out.append((text, meaning))
+        return out
 
 
 def key(word):
@@ -62,7 +72,9 @@ def load(path=ABBREVIATIONS):
     for line in text.splitlines():
         if not line.strip() or line.startswith("#"):
             continue
-        short, full, meaning, kind, src = line.split("\t")
+        short, full, meaning, kind, src, *ex = line.split(
+            "\t"
+        )
         out.append(
             Abbr(
                 short,
@@ -70,6 +82,7 @@ def load(path=ABBREVIATIONS):
                 meaning,
                 kind,
                 tuple(src.split()),
+                *ex,
             )
         )
     return out
@@ -165,7 +178,16 @@ def lines(table, width=80):
                 out.append(line + more)
             else:
                 out += [line, f"    {more.strip()}"]
+            out += example_lines(a, "    ")
     return out
+
+
+def example_lines(a, indent="  "):
+    """Lines of a's examples: e.g. text: "meaning"."""
+    return [
+        f'{indent}e.g. {text}: "{meaning}"'
+        for text, meaning in a.examples()
+    ]
 
 
 def sources_line():

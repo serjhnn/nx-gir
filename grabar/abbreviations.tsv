@@ -2,16 +2,20 @@
 # In the text they are marked with the pativ sign ՟ (U+055F) above
 # the letters; it is left out here.
 #
-# Columns: short, full, meaning, kind, source
+# Columns: short, full, meaning, kind, source, example
+# (example is optional: phrases as "text: meaning", split by "; ")
 # kind: sacred = sacred names (nomina sacra), word, part (one letter
 # standing for part of a word), name, ending (word endings)
 # source: A = Ա. Գ. Աբրահամյան, «Հայ գրի և գրչության պատմություն»,
 #   Երևան, 1959, pp. 111-114 (archive.org/details/Abrahamyan)
 #   W = Wiktionary, entry «՟» (cites Tumanyan, p. 19)
-# Copies of both (page scans, entry text) are in sources/,
+#   N = nx-gir: read from the letters and the grammar, not found
+#   in a published source yet; check against a source when one
+#   turns up
+# Copies of A and W (page scans, entry text) are in sources/,
 # see sources/README.md.
 #
-# short	full	meaning	kind	source
+# short	full	meaning	kind	source	example
 ած	Աստուած	God	sacred	A W
 այ	Աստուծոյ	of God	sacred	A W
 յայ	յԱստուծոյ	from God	sacred	W
@@ -67,6 +71,7 @@
 հզր	հազար	thousand	word	A
 քղք	քաղաք	city	word	A
 ամի	ամենայնի	of all	word	A
+ամցն	ամենեցուն	of all, to all (plural of ամենայն)	word	N	տէր ամենեցուն: Lord of all; ամենեցուն տալ: to give to all
 յռջ	յառաջ	forward, before	word	A
 կթղկս	կաթողիկոս	catholicos	word	A
 եպկս	եպիսկոպոս	bishop	word	A

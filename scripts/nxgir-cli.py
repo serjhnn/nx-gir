@@ -124,7 +124,16 @@ def cmd_abbr(args):
         return 0
     hits = grabar.expand(args.word, table)
     for full, a in hits:
-        print(f"{args.word} → {full}  · {a.meaning}")
+        line = f"{args.word} → {full}"
+        more = f"  · {a.meaning}"
+        if len(line + more) < width:
+            print(line + more)
+        else:
+            print(f"{line}\n{more}")
+        for line in grabar.example_lines(a):
+            print(line)
+        if "N" in a.sources:
+            print("  not in a published source yet")
     if hits:
         return 0
     joined = grabar.expand_prefix(args.word, table)

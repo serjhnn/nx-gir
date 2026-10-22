@@ -37,6 +37,20 @@ def test_expand_endings():
     assert full("քաջւեբ") == "քաջութեամբ"
 
 
+def test_examples():
+    ((full, a),) = grabar.expand("ա՟մցն", TABLE)
+    assert full == "ամենեցուն"
+    assert a.sources == ("N",)
+    assert a.examples()[0] == (
+        "տէր ամենեցուն",
+        "Lord of all",
+    )
+    assert grabar.example_lines(a)[0] == (
+        '  e.g. տէր ամենեցուն: "Lord of all"'
+    )
+    assert grabar.expand("ամ", TABLE)[0][1].example == ""
+
+
 def test_expand_unknown():
     assert grabar.expand("բան", TABLE) == []
     # an ending alone is not a word

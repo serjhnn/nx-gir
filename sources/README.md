@@ -45,3 +45,11 @@ and as a second source for ած, այ, ամ, սբ, պտ, -ութի and
 (<https://creativecommons.org/licenses/by-sa/4.0/>).
 Note: it gives Այ = Աստուածոյ, while Abrahamyan gives
 աստուծոյ; the list uses Աստուծոյ.
+
+## N: no source yet
+
+Entries marked `N` in `abbreviations.tsv` were read from
+the letters and the grammar in nx-gir (e.g. ամցն =
+ամենեցուն) and are not from a published source, so there
+is no copy here. When a source turns up, add its copy
+here and change the mark.
