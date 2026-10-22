@@ -22,6 +22,17 @@ SOURCES = {
     "A": "Abrahamyan 1959, pp. 111-114",
     "W": "Wiktionary «՟»",
 }
+# prepositions written joined to the next word; յ only
+# before a vowel (before a consonant it is ի). They are
+# not abbreviated, so a short word may carry one:
+# յա՟մ = յ + ամենայն. This is a grammar rule, not an
+# entry of the sources.
+PREFIXES = {
+    "յ": "in, into, from",
+    "զ": "marks a definite object",
+    "ց": "to, up to, until",
+}
+VOWELS = set("աեէըիոօ")
 # the pativ mark ՟ and the stress, exclamation and
 # question marks are not part of the letters
 MARKS = str.maketrans("", "", "՟՛՜՞")
@@ -80,6 +91,36 @@ def expand(word, table=None):
             stem = word.translate(MARKS)[: -len(end)]
             out.append((stem + a.full.lstrip("-"), a))
             break  # the longest ending only
+    return out
+
+
+class Prefixed(NamedTuple):
+    full: str
+    prefix: str
+    abbr: Abbr
+
+
+def expand_prefix(word, table=None):
+    """[Prefixed] for a short word that is a joined
+    preposition and a whole-word abbreviation:
+    յամ -> յամենայն (յ + ամ). Rests of one letter
+    are skipped, they match too much."""
+    table = load() if table is None else table
+    plain = word.translate(MARKS)
+    k = key(plain)
+    out = []
+    for pre in PREFIXES:
+        rest = k[len(pre) :]
+        if not k.startswith(pre) or len(rest) < 2:
+            continue
+        for a in table:
+            if a.kind == "ending" or key(a.short) != rest:
+                continue
+            first = a.full[0].casefold()
+            if pre == "յ" and first not in VOWELS:
+                continue
+            full = plain[: len(pre)] + a.full
+            out.append(Prefixed(full, pre, a))
     return out
 
 

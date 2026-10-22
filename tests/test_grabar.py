@@ -43,6 +43,23 @@ def test_expand_unknown():
     assert grabar.expand("ութի", TABLE) == []
 
 
+def test_expand_prefix():
+    def fulls(word):
+        return [
+            (h.full, h.prefix)
+            for h in grabar.expand_prefix(word, TABLE)
+        ]
+
+    assert fulls("յա՟մ") == [("յամենայն", "յ")]
+    assert fulls("զամ") == [("զամենայն", "զ")]
+    assert fulls("ցած") == [("ցԱստուած", "ց")]
+    # յ is not written before a consonant
+    assert fulls("յսբ") == []
+    # a one-letter rest matches too much
+    assert fulls("զգ") == []
+    assert grabar.expand("յամ", TABLE) == []
+
+
 def test_search():
     shorts = [
         a.short for a in grabar.search("bishop", TABLE)

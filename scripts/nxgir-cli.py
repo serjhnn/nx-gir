@@ -127,6 +127,15 @@ def cmd_abbr(args):
         print(f"{args.word} → {full}  · {a.meaning}")
     if hits:
         return 0
+    joined = grabar.expand_prefix(args.word, table)
+    for full, pre, a in joined:
+        print(f"{args.word} → {full}")
+        print(f"  {pre}- {grabar.PREFIXES[pre]}")
+        print(f"  + {a.short} = {a.full} · {a.meaning}")
+    if joined:
+        print("joined preposition: a grammar rule,")
+        print("not an entry of the sources")
+        return 0
     found = grabar.search(args.word, table)
     if not found:
         print(f"no abbreviation found: {args.word}")
