@@ -126,6 +126,74 @@ What it needs:
 - An index of every word in the book for `s`, matching
   different forms of the same word
 
+## Plan: pictures of places with their locations
+
+Collect many pictures of places (churches, khachkars,
+monasteries, inscriptions, carved knots) together with
+where they are, for the picture library and the knots.
+Google Maps is the starting point for finding places.
+
+The rule from Google: the Maps terms do not allow
+scraping, bulk downloading, or keeping Google's photos
+and map data in our own collection. Photos from the
+Places API may only be shown live, with their author
+credits, not saved. So Google Maps is used to *find*
+places; the pictures we keep come from sources that
+allow it.
+
+Where the pictures come from:
+
+- Our own photos, and photos people send us with
+  permission; the GPS location is read from the photo
+  (EXIF)
+- Our own Google Maps photos and saved places, through
+  Google Takeout (they are ours to keep)
+- Wikimedia Commons: many geotagged photos of Armenian
+  churches and khachkars, under free licenses
+- Wikidata: places with coordinates and a picture
+  (for example "instance of: khachkar" or "church
+  building" in Armenia and Artsakh)
+- Mapillary: street-level photos under CC BY-SA
+- Flickr: only photos with a free license and a
+  location
+- Monument lists (the Armenian state list of
+  monuments, Wiki Loves Monuments Armenia) for the
+  names and ids of places
+
+For every picture we keep:
+
+- the file, and a small preview
+- place name (Armenian and Latin), latitude and
+  longitude, and how exact the location is
+- what it shows (church, khachkar, knot, inscription)
+- the source, link, author, license and date
+- the place id in the monument list or Wikidata, if
+  there is one
+
+TODO:
+
+- [ ] Choose the data format: a `places.tsv` and a
+      `pictures.tsv`, the pictures in a folder by
+      place
+- [ ] Find the places: a list made by hand in Google
+      Maps (saved list → Takeout), plus the monument
+      lists and Wikidata
+- [ ] A script to read our own photos: GPS and date
+      from EXIF, matched to the nearest known place
+- [ ] A script to fetch Wikimedia Commons pictures by
+      category or by area, with their licenses
+- [ ] A script to fetch Wikidata places with
+      coordinates and pictures (SPARQL)
+- [ ] Mapillary and Flickr, after the first two work
+- [ ] Find and drop duplicates (same picture from two
+      sources)
+- [ ] Check every license; keep only free ones, and
+      keep the credits with the picture
+- [ ] A map view to see what is collected and where
+      the gaps are
+- [ ] Decide where the pictures are stored (they will
+      not fit in git; see the hosting question below)
+
 ## Open questions
 
 - Permissions: which scans and texts can be published,
