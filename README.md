@@ -94,6 +94,11 @@ Tools that help a modern reader through a Classical Armenian text:
 # (modern Armenian entries, matched to the Grabar
 # spelling): աստուած (աստված) · գոյական
 ./nxgir grabar word --hy Աստուծոյ
+
+# print the notes written in the reader (all books, or
+# those whose path has the text given)
+./nxgir notes
+./nxgir notes matthew
 ./nxgir grabar modernize text.txt
 ./nxgir grabar translit text.txt
 ./nxgir grabar numeral ՌՄԾ
@@ -172,7 +177,16 @@ word is under the cursor.
 | `d` | dim the text: normal → dim → dimmer (also in the bookshelf) |
 | `m` | bookmark the word (again to remove); `*` in the top line marks it |
 | `M` | list bookmarks (`j`/`k` preview, `Enter` go, `x` delete, `q` close) |
+| `O` | add a note to the sentence under the cursor (the sentence is underlined; `Enter` saves, `Esc` cancels); `•` in the margin and the top line marks a sentence with notes |
+| `o` | list the notes of the book (`j`/`k` preview, `Enter` go, `e` edit, `x` delete, `q` close) |
 | `q` | back to the list |
+
+A sentence ends at `։` (not at the middle stop `.`)
+or at an empty line, so a heading is a sentence of its
+own, and a sentence may run over several lines. A note
+keeps the place of its sentence and its first words;
+if the book file is changed later, the note finds its
+sentence again by those words.
 
 In the references panel, `j`/`k` move through the places
 (the text follows), `Enter` goes there, and `q` returns
@@ -190,7 +204,7 @@ rotated. Matching ignores case and the marks
 
 The reader remembers where you stopped in each book and
 opens it there next time; the bookshelf shows how far
-you've read (`37%`). Bookmarks, the theme, the dim level,
+you've read (`37%`). Bookmarks, notes, the theme, the dim level,
 centering, line spacing, margins and the panel place
 are remembered too. All of
 it is kept in `~/.local/state/nxgir/state.json` on your

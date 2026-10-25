@@ -8,6 +8,7 @@ from nxgir_ui import (
     fit,
     help_line,
     shorten,
+    tail,
 )
 
 
@@ -124,3 +125,9 @@ def test_shorten_keeps_file_name():
     assert shorten(p, 8).endswith("txt")
     for w in range(1, 45):
         assert len(shorten(p, w)) <= w
+
+
+def test_tail_shows_end():
+    assert tail("note: abc", 20) == "note: abc"
+    assert tail("note: abcdef", 6) == "…bcdef"
+    assert len(tail("x" * 50, 10)) == 10

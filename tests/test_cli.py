@@ -72,3 +72,23 @@ def test_grabar_abbr(capsys):
         "abbr",
         "word",
     ]
+
+
+def test_notes(capsys, tmp_path, monkeypatch):
+    from nxgir_state import State
+
+    path = tmp_path / "state.json"
+    monkeypatch.setenv("NXGIR_STATE", str(path))
+    assert cli.run(["notes"]) == 0
+    assert "no notes yet" in capsys.readouterr().out
+    st = State(path)
+    st.add_note(
+        "grabar/john.txt", [2, 0], "Ի սկզբանէ…", "Բանն"
+    )
+    st.save()
+    assert cli.run(["notes"]) == 0
+    out = capsys.readouterr().out
+    assert out.startswith("grabar/john.txt\n  line 3")
+    assert "  «Ի սկզբանէ…»\n    Բանն\n" in out
+    assert cli.run(["notes", "john"]) == 0
+    assert cli.run(["notes", "matthew"]) == 1

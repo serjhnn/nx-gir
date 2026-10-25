@@ -1,4 +1,5 @@
-"""Saved reading state: positions, bookmarks, settings.
+"""Saved reading state: positions, bookmarks, notes
+and settings.
 
 Stored as JSON in $NXGIR_STATE, else
 $XDG_STATE_HOME/nxgir/state.json, else
@@ -35,6 +36,17 @@ def default_path():
     return root / "nxgir" / "state.json"
 
 
+def is_note(n):
+    """True for a well-formed note (see add_note)."""
+    return (
+        isinstance(n, dict)
+        and isinstance(n.get("pos"), list)
+        and len(n["pos"]) == 2
+        and isinstance(n.get("text"), str)
+        and isinstance(n.get("quote", ""), str)
+    )
+
+
 class State:
     def __init__(self, path=None):
         self.path = Path(path or default_path())
@@ -53,6 +65,11 @@ class State:
             )
             st.settings.update(data.get("settings", {}))
             st.books = dict(data.get("books", {}))
+            for b in st.books.values():
+                if "notes" in b:
+                    b["notes"] = [
+                        n for n in b["notes"] if is_note(n)
+                    ]
         except FileNotFoundError:
             pass
         except (OSError, ValueError, AttributeError):
@@ -141,3 +158,31 @@ class State:
             marks.remove(pos)
         self.book(key)["marks"] = sorted(marks)
         return added
+
+    def notes(self, key):
+        """Notes of a book, sorted by place: [{"pos":
+        [line, n] of the sentence's first word,
+        "quote": its first words, "text", "date"}]."""
+        return self.books.get(key, {}).get("notes", [])
+
+    def add_note(self, key, pos, quote, text):
+        """Add a note to the sentence at pos; its index
+        in notes()."""
+        note = {
+            "pos": list(pos),
+            "quote": quote,
+            "text": text,
+            "date": time.strftime("%Y-%m-%d"),
+        }
+        notes = self.book(key).setdefault("notes", [])
+        notes.append(note)
+        # stable: notes of one sentence stay in the
+        # order they were written
+        notes.sort(key=lambda n: n["pos"])
+        return notes.index(note)
+
+    def edit_note(self, key, i, text):
+        self.book(key)["notes"][i]["text"] = text
+
+    def delete_note(self, key, i):
+        del self.book(key)["notes"][i]

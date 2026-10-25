@@ -173,6 +173,93 @@ def word_at(words, pos):
     return min(lo + max(n, 0), hi - 1)
 
 
+# the end of a sentence: the full stop ։ (: is often
+# typed for it); in Grabar . is a middle stop
+SENTENCE_END = "։:"
+
+
+def sentence_starts(lay):
+    """Index of the first word of every sentence.
+
+    A sentence ends at ։, and at a line with no words
+    (an empty line after a heading); it may run over
+    several lines. Word indexes do not depend on the
+    width, so neither do these.
+    """
+    words, lines = lay.words, lay.lines
+    out = []
+    for i, w in enumerate(words):
+        if i == 0:
+            out.append(0)
+            continue
+        p = words[i - 1]
+        end = p.lcol + len(p.text)
+        if w.line == p.line:
+            gap = lines[w.line][end : w.lcol]
+        elif w.line - p.line > 1:
+            out.append(i)
+            continue
+        else:
+            gap = (
+                lines[p.line][end:]
+                + lines[w.line][: w.lcol]
+            )
+        if any(c in gap for c in SENTENCE_END):
+            out.append(i)
+    return out
+
+
+def sentence_of(starts, i, n):
+    """(first, last + 1): the words of the sentence
+    with word i, of n words."""
+    k = bisect_right(starts, i) - 1
+    hi = starts[k + 1] if k + 1 < len(starts) else n
+    return starts[k], hi
+
+
+def sentence_text(lay, lo, hi):
+    """The text of words lo..hi-1, lines joined."""
+    a, b = lay.words[lo], lay.words[hi - 1]
+    parts = []
+    for n in range(a.line, b.line + 1):
+        line = lay.lines[n]
+        start = a.lcol if n == a.line else 0
+        end = b.lcol + len(b.text) if n == b.line else None
+        parts.append(line[start:end].strip())
+    return " ".join(p for p in parts if p)
+
+
+def quote(text, width=50):
+    """The start of text, cut at a space with …"""
+    if len(text) <= width:
+        return text
+    cut = text[: width - 1]
+    if " " in cut:
+        cut = cut[: cut.rindex(" ")]
+    return cut.rstrip(" ,.") + "…"
+
+
+def note_start(lay, starts, note):
+    """First word of the sentence a note belongs to.
+
+    Found by its saved position; if the book changed
+    and that sentence no longer starts with the note's
+    quote, the sentence that does (else the one at
+    the position)."""
+    words = lay.words
+    n = len(words)
+    i = word_at(words, note["pos"])
+    lo, hi = sentence_of(starts, i, n)
+    stem = note.get("quote", "").removesuffix("…")
+    if sentence_text(lay, lo, hi).startswith(stem):
+        return lo
+    ends = starts[1:] + [n]
+    for s, e in zip(starts, ends):
+        if sentence_text(lay, s, e).startswith(stem):
+            return s
+    return lo
+
+
 def first_from(words, row):
     """First word on row or after it."""
     rows = [w.row for w in words]
@@ -323,6 +410,7 @@ READ_HELP = (
     ("c", "align", 3),
     ("m", "mark", 4),
     ("M", "marks", 4),
+    ("o/O", "notes", 4),
     ("T", "theme", 4),
     ("d", "dim", 4),
     ("p", "place", 5),
@@ -348,6 +436,15 @@ MARKS_HELP = (
     *LOOKS,
     ("q", "close", 0),
 )
+NOTES_HELP = (
+    ("j/k", "pick", 0),
+    ("Enter", "go", 0),
+    ("e", "edit", 1),
+    ("x", "delete", 0),
+    ("p", "place", 1),
+    *LOOKS,
+    ("q", "close", 0),
+)
 ABBR_HELP = (
     ("j/k", "scroll", 0),
     ("a/A", "en/hy", 1),
@@ -360,6 +457,7 @@ PANEL_HELPS = {
     "abbr": ABBR_HELP,
     "theme": THEME_HELP,
     "marks": MARKS_HELP,
+    "notes": NOTES_HELP,
 }
 # the language of the meaning a key shows
 LANGS = {"abbr": "en", "abbr_hy": "hy"}
@@ -411,6 +509,9 @@ KEYS = {
     "m": "mark",
     "M": "marks",
     "x": "delete",
+    "o": "notes",
+    "O": "note_add",
+    "e": "edit",
     "\n": "enter",
     "\r": "enter",
     curses.KEY_ENTER: "enter",
@@ -428,6 +529,7 @@ class Entry(NamedTuple):
     col: int = 0
     n: int = 0
     target: int = -1  # word index to jump to, or -1
+    item: int = -1  # the note of a notes panel row
 
 
 class Panel:
@@ -435,10 +537,12 @@ class Panel:
 
     Opened by a key: s (references), a or A
     (abbreviation or meaning, in English or
-    Armenian), T (themes) or M (bookmarks); t and e
-    later. kind says which.
+    Armenian), T (themes), M (bookmarks) or o
+    (notes); t and e later. kind says which.
     A panel of text has its lines in text; they are
-    wrapped to the panel's width when drawn.
+    wrapped to the panel's width when drawn. A panel
+    with build makes its entries for a width with
+    build(width).
     """
 
     def __init__(self, title, entries, sel=0, kind="refs"):
@@ -449,16 +553,60 @@ class Panel:
         self.sel = sel  # selected entry
         self.top = 0  # first visible entry
         self.text = None  # lines to wrap, or None
+        self.build = None  # entries for a width, or None
         self.wrapped = 0  # width they are wrapped to
 
     def wrap(self, width):
         """Wrap text to width, if it is not yet."""
-        if self.text is None or self.wrapped == width:
+        if self.wrapped == width:
+            return
+        if self.build:
+            item = self.entries[self.sel].item
+            self.entries = self.build(width)
+            self.wrapped = width
+            self.sel = self.first(item)
+            return
+        if self.text is None:
             return
         lines = wrap_lines(self.text, width)
         self.entries = [Entry("", x) for x in lines]
         self.wrapped = width
         self.sel = min(self.sel, len(lines) - 1)
+
+    def first(self, item):
+        """First entry of a note (rows of one note share
+        an item)."""
+        for k, e in enumerate(self.entries):
+            if e.item == item:
+                return k
+        return 0
+
+    def rows_of(self, k):
+        """(first, last + 1) entries of entry k's note."""
+        item = self.entries[k].item
+        if item < 0:
+            return k, k + 1
+        lo = self.first(item)
+        hi = lo
+        while (
+            hi < len(self.entries)
+            and self.entries[hi].item == item
+        ):
+            hi += 1
+        return lo, hi
+
+    def step(self, n):
+        """Move the selection n rows, or n notes in a
+        notes panel."""
+        if self.build is None:
+            self.sel += n
+            return
+        for _ in range(abs(n)):
+            lo, hi = self.rows_of(self.sel)
+            if n > 0 and hi < len(self.entries):
+                self.sel = hi
+            elif n < 0 and lo > 0:
+                self.sel = self.rows_of(lo - 1)[0]
 
 
 def theme_panel():
@@ -494,6 +642,40 @@ def marks_panel(lay, marks, cur):
     n = len(idx)
     title = f"bookmarks · {n}"
     return Panel(title, entries, sel, kind="marks")
+
+
+def notes_panel(lay, starts, notes, cur, width=40):
+    """Panel listing the notes of a book: for each, the
+    line and its sentence, then the note. The last
+    note at or before word cur is selected."""
+    words = lay.words
+    n = len(words)
+    at = [note_start(lay, starts, x) for x in notes]
+
+    def build(width):
+        out = []
+        for k, (note, s) in enumerate(zip(notes, at)):
+            lo, hi = sentence_of(starts, s, n)
+            label = f"{words[s].line + 1:>4} "
+            text = sentence_text(lay, lo, hi)
+            out.append(Entry(label, text, 0, 0, s, k))
+            for t in textwrap.wrap(
+                note["text"], max(width - 5, 8)
+            ) or [""]:
+                out.append(Entry("     ", t, 0, 0, s, k))
+        return out
+
+    here = sentence_of(starts, cur, n)[0] if n else 0
+    item = 0
+    for k, s in enumerate(at):
+        if s <= here:
+            item = k
+    title = f"notes · {len(notes)}"
+    p = Panel(title, build(width), kind="notes")
+    p.build = build
+    p.wrapped = width
+    p.sel = p.first(item)
+    return p
 
 
 def refs_panel(lay, i):
@@ -586,6 +768,9 @@ class Reader:
                 self.margin = st["margin"]
         self.saved_theme = style.name  # before T
         self.box_w = 0  # width of the text box
+        self.starts = None  # see sentence_starts()
+        self.noted = set()  # sentences with notes
+        self.adding = None  # sentence getting a note
 
     # -- layout --
 
@@ -610,6 +795,9 @@ class Reader:
                 )
                 self.start = None
             self.cur = min(self.cur, max(n - 1, 0))
+            if self.starts is None:
+                self.starts = sentence_starts(self.lay)
+                self.load_notes()
 
     def follow(self, rows):
         """Scroll so the cursor row is visible."""
@@ -638,6 +826,8 @@ class Reader:
 
         if words:
             star = "* " if self.marked() else ""
+            if self.sentence()[0] in self.noted:
+                star = "• " + star
             info = (
                 f"{star}line {words[self.cur].line + 1}"
                 f"/{len(self.lay.lines)} "
@@ -685,7 +875,14 @@ class Reader:
         words = self.lay.words
         if not words:
             return
+        for k in self.noted:
+            row = words[k].row
+            if self.top <= row < bottom:
+                y = box.y + (row - self.top) * step
+                x = box.x + max(self.indent(row) - 2, 0)
+                put(win, y, x, "•", style("mark"), right)
         key = words[self.cur].key
+        lit = self.lit()
         lo = first_from(words, self.top)
         for k in range(lo, len(words)):
             wd = words[k]
@@ -698,6 +895,8 @@ class Reader:
                 attr = style("cursor")
             elif self.refs_open() and wd.key == key:
                 attr = style("mark")
+            elif lit[0] <= k < lit[1]:
+                attr = style("mark")
             if attr:
                 y = box.y + (wd.row - self.top) * step
                 x = box.x + self.indent(wd.row) + wd.col
@@ -707,6 +906,24 @@ class Reader:
         """Where a row of text starts in the text box."""
         n = len(self.lay.rows[row])
         return row_x(self.box_w, n, self.align, self.margin)
+
+    def sentence(self, i=None):
+        """(first, last + 1) words of the sentence with
+        word i (default: the cursor)."""
+        i = self.cur if i is None else i
+        return sentence_of(
+            self.starts, i, len(self.lay.words)
+        )
+
+    def lit(self):
+        """Words to underline as one sentence: the one
+        getting a note, or the selected note's."""
+        if self.adding:
+            return self.adding
+        p = self.panel
+        if p and p.kind == "notes":
+            return self.sentence(p.entries[p.sel].target)
+        return 0, 0
 
     def refs_open(self):
         return (
@@ -738,10 +955,12 @@ class Reader:
             )
         rows = box.h - 1
         p.wrap(box.w - 2)
-        if p.sel < p.top:
-            p.top = p.sel
-        elif p.sel >= p.top + rows:
-            p.top = p.sel - rows + 1
+        # all rows of the selected note are shown
+        lo, hi = p.rows_of(p.sel)
+        if lo < p.top:
+            p.top = lo
+        elif hi > p.top + rows:
+            p.top = min(lo, hi - rows)
         width = box.w - 2
         for i, e in enumerate(
             p.entries[p.top : p.top + rows]
@@ -750,7 +969,7 @@ class Reader:
             room = max(width - len(e.label), 1)
             text, col = snippet(e.text, e.col, e.n, room)
             line = e.label + text
-            if p.top + i == p.sel:
+            if lo <= p.top + i < hi:
                 attr = style("cursor")
                 put(
                     win,
@@ -789,6 +1008,12 @@ class Reader:
             return True
         if action == "marks":
             self.open_marks()
+            return True
+        if action == "notes":
+            self.open_notes()
+            return True
+        if action == "note_add":
+            self.add_note()
             return True
         if action == "place":
             self.next_mode()
@@ -890,7 +1115,7 @@ class Reader:
 
     def search(self, action):
         if action == "search":
-            q = prompt(self.win, "/")
+            q = prompt(self.win, "/", redraw=self.draw)
             if not q:
                 return
             self.query = q
@@ -920,11 +1145,11 @@ class Reader:
             "pgup": -page,
         }
         if action in moves:
-            p.sel += moves[action]
+            p.step(moves[action])
         elif action == "first":
             p.sel = 0
         elif action == "last":
-            p.sel = n - 1
+            p.sel = p.rows_of(n - 1)[0]
         elif action == "place":
             self.next_mode()
         elif action == "align":
@@ -938,6 +1163,12 @@ class Reader:
             return
         elif action == "delete" and p.kind == "marks":
             self.delete_mark()
+            return
+        elif action == "delete" and p.kind == "notes":
+            self.delete_note()
+            return
+        elif action == "edit" and p.kind == "notes":
+            self.edit_note()
             return
         elif (
             p.kind == "abbr"
@@ -961,6 +1192,7 @@ class Reader:
             "abbr_hy",
             "theme",
             "marks",
+            "notes",
         ):
             if p.kind == "theme":
                 style.use(self.win, self.saved_theme)
@@ -1054,6 +1286,90 @@ class Reader:
         self.panel.sel = sel
         self.cur = self.panel.entries[sel].target
         self.msg = "bookmark deleted"
+
+    # -- notes --
+
+    def notes(self):
+        if not self.state:
+            return []
+        return self.state.notes(self.title)
+
+    def load_notes(self):
+        """Find the sentences that have notes."""
+        self.noted = {
+            note_start(self.lay, self.starts, x)
+            for x in self.notes()
+        }
+
+    def add_note(self):
+        words = self.lay.words
+        if not self.state or not words:
+            self.msg = "notes need a saved state"
+            return
+        lo, hi = self.sentence()
+        self.adding = (lo, hi)
+        self.draw()
+        text = prompt(self.win, "note: ", redraw=self.draw)
+        self.adding = None
+        text = (text or "").strip()
+        if not text:
+            self.msg = "no note added"
+            return
+        q = quote(sentence_text(self.lay, lo, hi))
+        pos = pos_of(words, lo)
+        self.state.add_note(self.title, pos, q, text)
+        self.state.save()
+        self.load_notes()
+        self.msg = f"note added · line {pos[0] + 1}"
+
+    def show_notes(self, item=None):
+        """Open (or rebuild) the notes panel; None if
+        there are no notes."""
+        notes = self.notes()
+        if not notes:
+            return None
+        pb = self.boxes()[1]
+        width = pb.w - 2 if pb else 40
+        p = notes_panel(
+            self.lay, self.starts, notes, self.cur, width
+        )
+        if item is not None:
+            p.sel = p.first(min(item, len(notes) - 1))
+        self.panel = p
+        self.cur = p.entries[p.sel].target
+        return p
+
+    def open_notes(self):
+        self.saved = self.cur
+        if not self.show_notes():
+            self.msg = "no notes yet · O adds one"
+
+    def edit_note(self):
+        p = self.panel
+        item = p.entries[p.sel].item
+        old = self.notes()[item]["text"]
+        text = prompt(self.win, "note: ", old, self.draw)
+        text = (text or "").strip()
+        if not text or text == old:
+            self.msg = "note not changed"
+            return
+        self.state.edit_note(self.title, item, text)
+        self.state.save()
+        self.show_notes(item)
+        self.msg = "note changed"
+
+    def delete_note(self):
+        p = self.panel
+        item = p.entries[p.sel].item
+        self.state.delete_note(self.title, item)
+        self.state.save()
+        self.load_notes()
+        if not self.show_notes(item):
+            self.cur = self.saved
+            self.panel = None
+            self.msg = "note deleted · none left"
+            return
+        self.msg = "note deleted"
 
     def run(self):
         while True:

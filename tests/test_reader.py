@@ -12,8 +12,14 @@ from nxgir_reader import (
     layout,
     margin,
     normalize,
+    note_start,
+    notes_panel,
+    quote,
     references,
     row_x,
+    sentence_of,
+    sentence_starts,
+    sentence_text,
     snippet,
     split,
     text_width,
@@ -338,3 +344,108 @@ def test_abbr_panel_hy_falls_back_to_english():
 def test_wrap_lines():
     out = wrap_lines(["a b c", "  dd ee ff gg"], 8)
     assert out == ["a b c", "  dd ee", "    ff", "    gg"]
+
+
+SENTENCES = (
+    "Գլուխ Ա\n"
+    "\n"
+    "Ի սկզբանէ էր Բանն. եւ Բանն էր։ Նա էր\n"
+    "ի սկզբանէ առ Աստուած։\n"
+    "Վերջ"
+)
+
+
+def sentences(text, width=12):
+    lay = layout(text, width)
+    starts = sentence_starts(lay)
+    n = len(lay.words)
+    ends = starts[1:] + [n]
+    return (
+        lay,
+        starts,
+        [
+            sentence_text(lay, a, b)
+            for a, b in zip(starts, ends)
+        ],
+    )
+
+
+def test_sentences():
+    _, _, texts = sentences(SENTENCES)
+    # a heading, then ։ ends a sentence (not .); one
+    # runs over two lines; the last needs no ։
+    assert texts == [
+        "Գլուխ Ա",
+        "Ի սկզբանէ էր Բանն. եւ Բանն էր",
+        "Նա էր ի սկզբանէ առ Աստուած",
+        "Վերջ",
+    ]
+    # the same at any width
+    assert sentences(SENTENCES, 80)[2] == texts
+
+
+def test_sentence_of():
+    lay, starts, _ = sentences(SENTENCES)
+    n = len(lay.words)
+    i = [w.text for w in lay.words].index("Աստուած")
+    assert sentence_of(starts, i, n) == (
+        starts[2],
+        starts[3],
+    )
+    assert sentence_of(starts, n - 1, n) == (n - 1, n)
+
+
+def test_quote():
+    assert quote("կարճ") == "կարճ"
+    q = quote("Ի սկզբանէ էր Բանն, եւ Բանն էր", 20)
+    assert q == "Ի սկզբանէ էր Բանն…"
+    assert len(q) <= 20
+
+
+def test_note_start_follows_its_sentence():
+    lay, starts, _ = sentences(SENTENCES)
+    note = {"pos": [2, 7], "quote": "Նա էր ի…"}
+    assert note_start(lay, starts, note) == starts[2]
+    # a line added above: the position is off by one,
+    # the quote finds the sentence again
+    lay2, starts2, _ = sentences("Նոր։\n" + SENTENCES)
+    assert note_start(lay2, starts2, note) == starts2[3]
+
+
+def test_notes_panel():
+    lay, starts, _ = sentences(SENTENCES)
+    notes = [
+        {
+            "pos": [2, 0],
+            "quote": "Ի…",
+            "text": "a b c d e f",
+        },
+        {"pos": [4, 0], "quote": "Վերջ", "text": "end"},
+    ]
+    p = notes_panel(lay, starts, notes, starts[2], 14)
+    # the last note at or before the cursor
+    assert p.entries[p.sel].item == 0
+    first = p.entries[0]
+    assert (
+        first.label == "   3 " and first.target == starts[1]
+    )
+    assert first.text.startswith("Ի սկզբանէ")
+    # the note text is wrapped under it
+    assert [e.text for e in p.entries if e.item == 0][
+        1:
+    ] == [
+        "a b c d e",
+        "f",
+    ]
+    # j moves to the next note, not the next row
+    p.step(1)
+    assert p.entries[p.sel].text.startswith("Վերջ")
+    p.step(1)
+    assert p.entries[p.sel].item == 1
+    p.step(-1)
+    assert p.sel == 0
+    # wider: wrapped again, the same note selected
+    p.step(1)
+    p.wrap(60)
+    assert p.entries[p.sel].item == 1
+    assert len(p.entries) == 4

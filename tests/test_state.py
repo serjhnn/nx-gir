@@ -91,3 +91,39 @@ def test_position_after_file_changed():
     # line past the end of the file: last word
     assert word_at(words, [99, 0]) == len(words) - 1
     assert word_at([], [0, 0]) == 0
+
+
+def test_notes_sorted_and_saved(tmp_path):
+    path = tmp_path / "state.json"
+    st = State(path)
+    assert st.notes("b") == []
+    assert st.add_note("b", [5, 0], "Եւ…", "second") == 0
+    assert st.add_note("b", [1, 2], "Ի…", "first") == 0
+    # a second note on the same sentence comes after
+    assert st.add_note("b", [1, 2], "Ի…", "again") == 1
+    assert [n["text"] for n in st.notes("b")] == [
+        "first",
+        "again",
+        "second",
+    ]
+    st.edit_note("b", 1, "changed")
+    st.delete_note("b", 0)
+    st.save()
+    notes = State.load(path).notes("b")
+    assert [n["text"] for n in notes] == [
+        "changed",
+        "second",
+    ]
+    assert notes[0]["pos"] == [1, 2]
+    assert notes[0]["quote"] == "Ի…"
+    assert len(notes[0]["date"]) == 10
+
+
+def test_bad_notes_are_dropped(tmp_path):
+    path = tmp_path / "state.json"
+    good = {"pos": [0, 0], "text": "x", "quote": ""}
+    data = {
+        "books": {"b": {"notes": [good, {"pos": 1}, 3]}}
+    }
+    path.write_text(json.dumps(data), encoding="utf-8")
+    assert State.load(path).notes("b") == [good]

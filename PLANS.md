@@ -110,6 +110,9 @@ Progress:
       choose: auto, below, beside)
 - [x] Remember the last position, bookmarks (`m`,
       `M`), settings and reading progress
+- [x] Notes on sentences (`O` adds, `o` lists, `•`
+      marks a sentence with notes; `nxgir notes`
+      prints them)
 - [ ] `t` and `e` with a starter glossary
 - [ ] `s` across different forms of the same word
 

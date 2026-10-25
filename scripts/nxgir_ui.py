@@ -337,14 +337,22 @@ def cursor(visible):
         pass
 
 
-def prompt(win, label):
-    """Read a line at the bottom. None on Esc."""
-    h, w = win.getmaxyx()
-    text = ""
+def tail(line, width):
+    """line, or …and its end if longer than width."""
+    if len(line) <= width:
+        return line
+    return "…" + line[-(width - 1) :]
+
+
+def prompt(win, label, text="", redraw=None):
+    """Read a line at the bottom, starting with text.
+    None on Esc. A long line shows its end. After a
+    resize, redraw() (if given) repaints the screen."""
     cursor(True)
     try:
         while True:
-            line = label + text
+            h, w = win.getmaxyx()
+            line = tail(label + text, w - 2)
             win.move(h - 1, 0)
             win.clrtoeol()
             put(win, h - 1, 0, line)
@@ -354,6 +362,8 @@ def prompt(win, label):
                 return text
             if ch == "\x1b":
                 return None
+            if ch == curses.KEY_RESIZE and redraw:
+                redraw()
             if ch in (
                 curses.KEY_BACKSPACE,
                 "\x7f",

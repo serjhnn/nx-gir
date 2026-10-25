@@ -166,6 +166,46 @@ def cmd_word(args):
     return 0
 
 
+def cmd_notes(args):
+    """Print the notes written in the reader."""
+    import shutil
+    import textwrap
+
+    from nxgir_state import State
+
+    st = State.load()
+    books = sorted(
+        k
+        for k, b in st.books.items()
+        if st.notes(k) and (args.book or "") in k
+    )
+    if not books:
+        if args.book:
+            print(f"no notes for: {args.book}")
+            return 1
+        print("no notes yet (O in the reader adds one)")
+        return 0
+    width = min(shutil.get_terminal_size().columns, 80)
+    for n, book in enumerate(books):
+        if n:
+            print()
+        print(book)
+        for note in st.notes(book):
+            line = note["pos"][0] + 1
+            date = note.get("date", "")
+            print(
+                f"  line {line}"
+                + (f" · {date}" * bool(date))
+            )
+            if note.get("quote"):
+                print(f"  «{note['quote']}»")
+            for t in textwrap.wrap(
+                note["text"], max(width - 4, 20)
+            ):
+                print(f"    {t}")
+    return 0
+
+
 def build_parser():
     parser = argparse.ArgumentParser(
         prog="nxgir",
@@ -196,6 +236,16 @@ def build_parser():
         ),
     )
     p.set_defaults(func=cmd_banner)
+    p = sub.add_parser(
+        "notes",
+        help="print the notes written in the reader",
+    )
+    p.add_argument(
+        "book",
+        nargs="?",
+        help="only books whose path has this text",
+    )
+    p.set_defaults(func=cmd_notes)
     p = sub.add_parser("grabar", help="Grabar helpers")
     tools = p.add_subparsers(dest="tool", required=True)
     p = tools.add_parser(
