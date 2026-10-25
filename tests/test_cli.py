@@ -48,6 +48,12 @@ def test_grabar_word(capsys):
     assert cli.run(["grabar", "word", "zzz"]) == 1
 
 
+def test_grabar_word_hy(capsys):
+    args = ["grabar", "word", "--hy", "լուսնի"]
+    assert cli.run(args) == 0
+    assert "լուսին · գոյական" in capsys.readouterr().out
+
+
 def test_grabar_abbr(capsys):
     assert cli.run(["grabar", "abbr", "ա՟ծ"]) == 0
     assert "Աստուած" in capsys.readouterr().out

@@ -89,6 +89,11 @@ Tools that help a modern reader through a Classical Armenian text:
 # Wiktionary; inflected forms, a joined զ-, յ-, ց- and
 # the articles -ս, -դ, -ն work: լուսնի → լուսին
 ./nxgir grabar word զլուսինն
+
+# the same in Armenian, from the Armenian Wiktionary
+# (modern Armenian entries, matched to the Grabar
+# spelling): աստուած (աստված) · գոյական
+./nxgir grabar word --hy Աստուծոյ
 ./nxgir grabar modernize text.txt
 ./nxgir grabar translit text.txt
 ./nxgir grabar numeral ՌՄԾ
@@ -158,6 +163,7 @@ word is under the cursor.
 | `/` then `n` `N` | find a word, next / previous match |
 | `s` | references: every place the word appears |
 | `a` | abbreviation: what the word may stand for (as `nxgir grabar abbr`); if it is none, what the word means (as `nxgir grabar word`) |
+| `A` | the same, with the meaning in Armenian (as `nxgir grabar word --hy`); if there is no Armenian one, the English one. In the panel, `a` and `A` switch between English and Armenian |
 | `p` | panel place: auto, always below, always beside |
 | `c` | lines centered (default) or left-aligned |
 | `L` | line spacing: double (default) → triple → single |

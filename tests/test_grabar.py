@@ -180,3 +180,40 @@ def test_define_real_words():
     assert out[0] == "սիրեմ · verb"
     out = grabar.define("յերկինս")
     assert "երկինք · noun" in out
+
+
+def test_vocabulary_hy_is_well_formed():
+    rows = list(grabar.tsv(grabar.VOCABULARY_HY))
+    assert len(rows) > 5000
+    for word, entry, _pos, meanings in rows:
+        assert word and entry and meanings
+        assert "" not in meanings.split(" | ")
+
+
+def test_define_hy(tmp_path):
+    words = tmp_path / "vocabulary-hy.tsv"
+    words.write_text(
+        "# test\n"
+        "լուսին\tլուսին\tգոյական\tերկնային մարմին\n"
+        "աստուած\tաստված\tգոյական\tէակ\n",
+        encoding="utf-8",
+    )
+    vocab = grabar.vocabulary_hy(words)
+    out = grabar.define("լուսին", vocab, "hy")
+    assert out[:2] == [
+        "լուսին · գոյական",
+        "  երկնային մարմին",
+    ]
+    assert out[-1].startswith("Source: Armenian")
+    # the modern spelling of the entry is shown
+    out = grabar.define("Աստուած", vocab, "hy")
+    assert out[0] == "աստուած (աստված) · գոյական"
+    assert grabar.define("բառ", vocab, "hy") == []
+
+
+def test_define_hy_real_words():
+    # an inflected form, through forms.tsv
+    out = grabar.define("սիրեաց", lang="hy")
+    assert out[0] == "սիրեմ (սիրել) · բայ"
+    out = grabar.define("զլուսինն", lang="hy")
+    assert out[0] == "լուսին · գոյական"

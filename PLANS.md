@@ -198,7 +198,9 @@ TODO:
 
 `a` in the reader shows what a word means in English
 (the Old Armenian entries of the English Wiktionary).
-`A` will show the meaning in Armenian.
+`A` shows the meaning in Armenian (done: built by
+`scripts/fetch-vocabulary-hy.py` into
+`grabar/vocabulary-hy.tsv`).
 
 Chosen source: the Armenian Wiktionary
 (hy.wiktionary.org), from its dump on
@@ -214,9 +216,12 @@ dump ourselves. What we found (dump of 2026-10-01):
 - 3,982 of our 7,679 Grabar headwords match an entry
   by title or by `{{why}}`; with simple spelling rules
   (իւ → յու, եա → յա, է → ե, -եմ → -ել, -ամ → -ալ, …)
-  it is 4,799 (62%).
+  it was about 4,800 (62%) in the first count; in
+  the built file it is 4,565 of 7,702 (59%).
 - In the books in `books/`, 81% of the words get an
-  English meaning; 73% would get an Armenian one.
+  English meaning; 75% get an Armenian one (71% from
+  our headwords, the rest from the classical spellings
+  of entries that have no English Grabar entry).
 - The meanings are modern Armenian senses, not always
   the Grabar one; the `{{հնց}}` senses come closest.
 

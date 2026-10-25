@@ -39,7 +39,11 @@
   source, or, when the user asks, readings of our own
   marked `N`; `vocabulary.tsv` and `forms.tsv` are
   built from Wiktionary by
-  `scripts/fetch-vocabulary.py`, not edited by hand)
+  `scripts/fetch-vocabulary.py`, and
+  `vocabulary-hy.tsv` (Armenian meanings) from the
+  Armenian Wiktionary by
+  `scripts/fetch-vocabulary-hy.py`; none of them is
+  edited by hand)
 - `sources/`: copies of the sources (page scans, entry
   texts) behind the `grabar/` data; add the copy and a
   note in `sources/README.md` with every new source

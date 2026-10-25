@@ -157,7 +157,8 @@ def cmd_word(args):
     """Say what a Grabar word means."""
     import nxgir_grabar as grabar
 
-    lines = grabar.define(args.word)
+    lang = "hy" if args.hy else "en"
+    lines = grabar.define(args.word, lang=lang)
     if not lines:
         print(f"not in the vocabulary: {args.word}")
         return 1
@@ -214,6 +215,12 @@ def build_parser():
         " inflected forms work too)",
     )
     p.add_argument("word", help="e.g. լուսնի, զլուսինն")
+    p.add_argument(
+        "--hy",
+        action="store_true",
+        help="the meaning in Armenian (from the"
+        " Armenian Wiktionary)",
+    )
     p.set_defaults(func=cmd_word)
     return parser
 

@@ -1,3 +1,4 @@
+import nxgir_grabar as grabar
 from nxgir_reader import (
     MARGIN_NAMES,
     MARGINS,
@@ -309,6 +310,29 @@ def test_abbr_panel_wraps():
     p.sel = len(texts) - 1
     p.wrap(200)
     assert p.sel == len(p.entries) - 1
+
+
+def test_abbr_panel_hy():
+    p = abbr_panel("լուսնի", lang="hy")
+    assert p.lang == "hy" and p.title == "լուսնի · hy"
+    assert p.entries[0].text == "լուսին · գոյական"
+    # an abbreviation is the same in both
+    p = abbr_panel("ա՟ծ", lang="hy")
+    assert p.entries[0].text == "ա՟ծ → Աստուած"
+    assert abbr_panel("քքքք", lang="hy") is None
+
+
+def test_abbr_panel_hy_falls_back_to_english():
+    word = next(
+        w
+        for k, ws in grabar.vocabulary()[0].items()
+        for w in ws
+        if not grabar.define(w.word, lang="hy")
+    ).word
+    p = abbr_panel(word, lang="hy")
+    texts = [e.text for e in p.entries]
+    assert texts[0] == "no Armenian meaning; English:"
+    assert texts[-1].startswith("Source: Wiktionary")
 
 
 def test_wrap_lines():

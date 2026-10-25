@@ -64,6 +64,31 @@ text is under CC BY-SA 4.0
 To update, run `scripts/fetch-vocabulary.py`; do not
 edit the files by hand.
 
+## Armenian meanings: the Armenian Wiktionary
+
+`grabar/vocabulary-hy.tsv` is built by
+`scripts/fetch-vocabulary-hy.py` from the dump of the
+Armenian Wiktionary
+(<https://dumps.wikimedia.org/hywiktionary/latest/>,
+`pages-articles.xml.bz2`, 40 MB, so no copy is kept
+here). The download date is at the top of the file.
+Its text is under CC BY-SA 4.0
+(<https://creativecommons.org/licenses/by-sa/4.0/>);
+each row can be checked at
+`https://hy.wiktionary.org/wiki/<entry>`.
+
+The entries are modern Armenian, in the reformed
+spelling. `wiktionary/hy-astvats.wikitext` is one of
+them, as of the dump of 2026-10-01: the page աստված,
+with its classical spelling in `{{why|աստուած}}`, the
+part of speech `{{-hy-գո-}}` and the meanings on the
+`#` lines. The script matches our Grabar headwords to
+the entries by that spelling, by the title, or by
+simple spelling rules (`reform()` in the script).
+
+To update, run `scripts/fetch-vocabulary-hy.py`; do
+not edit the file by hand.
+
 ## N: no source yet
 
 Entries marked `N` in `abbreviations.tsv` were read from

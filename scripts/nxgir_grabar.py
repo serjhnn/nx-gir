@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 ABBREVIATIONS = ROOT / "grabar" / "abbreviations.tsv"
 VOCABULARY = ROOT / "grabar" / "vocabulary.tsv"
 FORMS = ROOT / "grabar" / "forms.tsv"
+VOCABULARY_HY = ROOT / "grabar" / "vocabulary-hy.tsv"
 
 # kind -> heading, in the order they are listed
 KINDS = {
@@ -236,6 +237,7 @@ class Word(NamedTuple):
     word: str
     pos: str
     meanings: tuple
+    entry: str = ""  # the Armenian Wiktionary title
 
 
 def tsv(path):
@@ -256,6 +258,34 @@ def vocabulary(words=VOCABULARY, forms=FORMS):
     for form, word in tsv(forms):
         inflected.setdefault(key(form), []).append(word)
     return heads, inflected
+
+
+@functools.cache
+def vocabulary_hy(words=VOCABULARY_HY, forms=FORMS):
+    """Like vocabulary(), with the Armenian meanings.
+    The forms are the same: a Grabar headword has its
+    Armenian entry under the same spelling."""
+    heads = {}
+    for word, entry, pos, meanings in tsv(words):
+        ms = tuple(meanings.split(" | "))
+        w = Word(word, pos, ms, entry)
+        heads.setdefault(key(word), []).append(w)
+    return heads, vocabulary(VOCABULARY, forms)[1]
+
+
+SOURCE = {
+    "en": "Source: Wiktionary (CC BY-SA)",
+    "hy": "Source: Armenian Wiktionary (CC BY-SA)",
+}
+
+
+def head_line(w):
+    """'լուսին · noun'; with the modern spelling of an
+    Armenian entry: 'աստուած (աստված) · գոյական'."""
+    name = w.word
+    if w.entry and key(w.entry) != key(w.word):
+        name += f" ({w.entry})"
+    return f"{name} · {w.pos}" if w.pos else name
 
 
 def readings(k):
@@ -294,19 +324,23 @@ def lookup(word, vocab=None):
     return []
 
 
-def define(word, vocab=None):
-    """Lines saying what word means; [] if it is not
-    in the vocabulary."""
+def define(word, vocab=None, lang="en"):
+    """Lines saying what word means, in English or
+    (lang "hy") Armenian; [] if it is not in the
+    vocabulary."""
+    if vocab is None:
+        hy = lang == "hy"
+        vocab = vocabulary_hy() if hy else vocabulary()
     found = lookup(word, vocab)
     if not found:
         return []
     out = []
     for w, _ in found:
-        out.append(f"{w.word} · {w.pos}")
+        out.append(head_line(w))
         out += [f"  {m}" for m in w.meanings]
     notes = found[0][1]
     if notes:
         out.append(f"{word}:")
         out += [f"  {n}" for n in notes]
-    out.append("Source: Wiktionary (CC BY-SA)")
+    out.append(SOURCE[lang])
     return out

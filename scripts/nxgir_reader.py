@@ -316,6 +316,7 @@ READ_HELP = (
     ("j/k", "line", 0),
     ("s", "refs", 0),
     ("a", "meaning", 2),
+    ("A", "hy meaning", 2),
     ("/", "find", 1),
     ("z", "margins", 3),
     ("L", "spacing", 3),
@@ -349,6 +350,7 @@ MARKS_HELP = (
 )
 ABBR_HELP = (
     ("j/k", "scroll", 0),
+    ("a/A", "en/hy", 1),
     ("p", "place", 1),
     *LOOKS,
     ("q", "close", 0),
@@ -359,6 +361,8 @@ PANEL_HELPS = {
     "theme": THEME_HELP,
     "marks": MARKS_HELP,
 }
+# the language of the meaning a key shows
+LANGS = {"abbr": "en", "abbr_hy": "hy"}
 ALIGN_NAMES = {
     "center": "text: lines centered",
     "left": "text: lines left-aligned",
@@ -397,6 +401,7 @@ KEYS = {
     "N": "hit_back",
     "s": "refs",
     "a": "abbr",
+    "A": "abbr_hy",
     "p": "place",
     "c": "align",
     "L": "spacing",
@@ -428,15 +433,17 @@ class Entry(NamedTuple):
 class Panel:
     """Information shown beside or below the text.
 
-    Opened by a key: s (references), a
-    (abbreviation or meaning), T (themes) or M
-    (bookmarks); t and e later. kind says which.
+    Opened by a key: s (references), a or A
+    (abbreviation or meaning, in English or
+    Armenian), T (themes) or M (bookmarks); t and e
+    later. kind says which.
     A panel of text has its lines in text; they are
     wrapped to the panel's width when drawn.
     """
 
     def __init__(self, title, entries, sel=0, kind="refs"):
         self.kind = kind
+        self.lang = "en"  # of a meaning panel
         self.title = title
         self.entries = entries
         self.sel = sel  # selected entry
@@ -524,17 +531,24 @@ def wrap_lines(lines, width):
     return out
 
 
-def abbr_panel(word, table=None, vocab=None):
+def abbr_panel(word, table=None, vocab=None, lang="en"):
     """Panel with what word may abbreviate or, if it
-    is no abbreviation, what it means; None if it is
-    in neither list."""
+    is no abbreviation, what it means in English or
+    (lang "hy") Armenian; None if it is in no list.
+    With no Armenian meaning, the English one."""
     lines = grabar.explain(word, table)
     if not lines:
-        lines = grabar.define(word, vocab)
+        lines = grabar.define(word, vocab, lang)
+    if not lines and lang == "hy":
+        en = grabar.define(word)
+        if en:
+            lines = ["no Armenian meaning; English:", *en]
     if not lines:
         return None
     entries = [Entry("", line) for line in lines]
-    p = Panel(word, entries, kind="abbr")
+    title = word if lang == "en" else f"{word} · hy"
+    p = Panel(title, entries, kind="abbr")
+    p.lang = lang
     p.text = lines
     return p
 
@@ -842,8 +856,9 @@ class Reader:
         elif action == "refs":
             self.panel = refs_panel(self.lay, self.cur)
             self.saved = self.cur
-        elif action == "abbr":
-            self.open_abbr()
+        elif action in ("abbr", "abbr_hy"):
+            self.saved = self.cur
+            self.open_abbr(LANGS[action])
         return True
 
     def next_spacing(self):
@@ -866,10 +881,10 @@ class Reader:
         self.mode = MODES[(i + 1) % len(MODES)]
         self.msg = MODE_NAMES[self.mode]
 
-    def open_abbr(self):
-        word = self.lay.words[self.cur].text
-        self.panel = abbr_panel(word)
-        self.saved = self.cur
+    def open_abbr(self, lang):
+        """Meaning panel for the word at self.saved."""
+        word = self.lay.words[self.saved].text
+        self.panel = abbr_panel(word, lang=lang)
         if not self.panel:
             self.msg = f"not found: {word}"
 
@@ -924,6 +939,16 @@ class Reader:
         elif action == "delete" and p.kind == "marks":
             self.delete_mark()
             return
+        elif (
+            p.kind == "abbr"
+            and action in LANGS
+            and LANGS[action] != p.lang
+        ):
+            # the same word in the other language
+            self.open_abbr(LANGS[action])
+            if not self.panel:
+                self.panel = p
+            return
         elif action == "enter":
             self.panel = None
             if p.kind == "theme":
@@ -933,6 +958,7 @@ class Reader:
             "quit",
             "refs",
             "abbr",
+            "abbr_hy",
             "theme",
             "marks",
         ):
