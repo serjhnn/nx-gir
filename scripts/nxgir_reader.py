@@ -14,7 +14,7 @@ import nxgir_grabar as grabar
 from nxgir_ui import (
     THEME_NAMES,
     THEMES,
-    fit,
+    help_line,
     key,
     prompt,
     put,
@@ -180,7 +180,17 @@ def first_from(words, row):
 
 
 TEXT_MAX = 70  # widest text column, for easy reading
-MARGIN = 0.10  # empty space left and right of the text
+# empty space left and right of the text, as a part
+# of the width, in the order z steps through them
+# (first = default)
+MARGINS = (0.10, 0.15, 0.20, 0.05, 0.0)
+MARGIN_NAMES = {
+    0.10: "margins: normal",
+    0.15: "margins: wide",
+    0.20: "margins: widest",
+    0.05: "margins: narrow",
+    0.0: "margins: none",
+}
 ALIGNS = ("center", "left")
 # empty screen rows between lines of text, in the
 # order L steps through them (first = default)
@@ -199,26 +209,34 @@ def visible_rows(height, gap):
     return max((height + gap) // (gap + 1), 1)
 
 
-def margin(box_w):
+def margin(box_w, size=MARGINS[0]):
     """Columns kept empty at each side of the text."""
-    return max(round(box_w * MARGIN), 1)
+    return max(round(box_w * size), 1)
 
 
-def text_width(box_w):
+def text_max(size=MARGINS[0]):
+    """Widest text column: TEXT_MAX at the default
+    margins, narrower with wider margins and wider
+    with narrower ones, so z shows on wide screens."""
+    part = (1 - 2 * size) / (1 - 2 * MARGINS[0])
+    return round(TEXT_MAX * part)
+
+
+def text_width(box_w, size=MARGINS[0]):
     """Width to wrap the text to inside a box."""
-    room = box_w - 2 * margin(box_w)
-    return max(min(room, TEXT_MAX), 10)
+    room = box_w - 2 * margin(box_w, size)
+    return max(min(room, text_max(size)), 10)
 
 
-def row_x(box_w, row_len, align):
+def row_x(box_w, row_len, align, size=MARGINS[0]):
     """Screen column (in the box) where a row starts.
 
     The text column is centered in the box, with at
     least margin() free on each side; with align
     "center" each row is also centered in it.
     """
-    cw = text_width(box_w)
-    left = max((box_w - cw) // 2, margin(box_w))
+    cw = text_width(box_w, size)
+    left = max((box_w - cw) // 2, margin(box_w, size))
     if align == "center":
         return left + max((cw - row_len) // 2, 0)
     return left
@@ -285,31 +303,55 @@ def split(h, w, mode, want):
 
 # ---- screen -------------------------------------------
 
+# help lines: (keys, what, priority), in the order
+# shown; help_line() shows as many as fit, lowest
+# priority number first (0 = always)
+LOOKS = (
+    ("z", "margins", 2),
+    ("L", "spacing", 2),
+    ("c", "align", 2),
+)
 READ_HELP = (
-    "w/b word · j/k line · s refs · a meaning · / find"
-    " · q back",
-    "w/b word · j/k line · s refs · / find · q back",
-    "w/b word · j/k line · s refs · q back",
-    "w/b j/k s a / q",
+    ("w/b", "word", 0),
+    ("j/k", "line", 0),
+    ("s", "refs", 0),
+    ("a", "meaning", 2),
+    ("/", "find", 1),
+    ("z", "margins", 3),
+    ("L", "spacing", 3),
+    ("c", "align", 3),
+    ("m", "mark", 4),
+    ("M", "marks", 4),
+    ("T", "theme", 4),
+    ("d", "dim", 4),
+    ("p", "place", 5),
+    ("q", "back", 0),
 )
 THEME_HELP = (
-    "j/k try · Enter keep · q cancel",
-    "j/k Enter q",
+    ("j/k", "try", 0),
+    ("Enter", "keep", 0),
+    ("q", "cancel", 0),
 )
 PANEL_HELP = (
-    "j/k pick · Enter go · p place · q close",
-    "j/k pick · Enter go · q close",
-    "j/k Enter p q",
+    ("j/k", "pick", 0),
+    ("Enter", "go", 0),
+    ("p", "place", 1),
+    *LOOKS,
+    ("q", "close", 0),
 )
 MARKS_HELP = (
-    "j/k pick · Enter go · x delete · q close",
-    "j/k pick · Enter go · x del · q",
-    "j/k Enter x q",
+    ("j/k", "pick", 0),
+    ("Enter", "go", 0),
+    ("x", "delete", 0),
+    ("p", "place", 1),
+    *LOOKS,
+    ("q", "close", 0),
 )
 ABBR_HELP = (
-    "j/k scroll · p place · q close",
-    "j/k scroll · q close",
-    "j/k p q",
+    ("j/k", "scroll", 0),
+    ("p", "place", 1),
+    *LOOKS,
+    ("q", "close", 0),
 )
 PANEL_HELPS = {
     "refs": PANEL_HELP,
@@ -358,6 +400,7 @@ KEYS = {
     "p": "place",
     "c": "align",
     "L": "spacing",
+    "z": "margin",
     "T": "theme",
     "d": "dim",
     "m": "mark",
@@ -516,6 +559,7 @@ class Reader:
         self.mode = "auto"  # panel place, see MODES
         self.align = "center"  # see ALIGNS
         self.spacing = SPACINGS[0]  # empty rows per line
+        self.margin = MARGINS[0]  # see MARGINS
         if state:
             st = state.settings
             if st.get("mode") in MODES:
@@ -524,6 +568,8 @@ class Reader:
                 self.align = st["align"]
             if st.get("spacing") in SPACINGS:
                 self.spacing = st["spacing"]
+            if st.get("margin") in MARGINS:
+                self.margin = st["margin"]
         self.saved_theme = style.name  # before T
         self.box_w = 0  # width of the text box
 
@@ -539,7 +585,7 @@ class Reader:
 
     def relayout(self, box_w):
         """Wrap the text again if the width changed."""
-        width = text_width(box_w)
+        width = text_width(box_w, self.margin)
         if width != self.wrap:
             self.wrap = width
             self.lay = layout(self.text, width)
@@ -602,7 +648,7 @@ class Reader:
             win,
             h - 1,
             0,
-            self.msg or fit(help_, w),
+            self.msg or help_line(help_, w),
             style("help"),
         )
         self.msg = ""
@@ -646,7 +692,7 @@ class Reader:
     def indent(self, row):
         """Where a row of text starts in the text box."""
         n = len(self.lay.rows[row])
-        return row_x(self.box_w, n, self.align)
+        return row_x(self.box_w, n, self.align, self.margin)
 
     def refs_open(self):
         return (
@@ -739,6 +785,9 @@ class Reader:
         if action == "spacing":
             self.next_spacing()
             return True
+        if action == "margin":
+            self.next_margin()
+            return True
         if action == "dim":
             self.msg = style.next_dim(self.win)
             return True
@@ -802,6 +851,11 @@ class Reader:
         self.spacing = SPACINGS[(i + 1) % len(SPACINGS)]
         self.msg = SPACING_NAMES[self.spacing]
 
+    def next_margin(self):
+        i = MARGINS.index(self.margin)
+        self.margin = MARGINS[(i + 1) % len(MARGINS)]
+        self.msg = MARGIN_NAMES[self.margin]
+
     def next_align(self):
         i = ALIGNS.index(self.align)
         self.align = ALIGNS[(i + 1) % len(ALIGNS)]
@@ -862,6 +916,8 @@ class Reader:
             self.next_align()
         elif action == "spacing":
             self.next_spacing()
+        elif action == "margin":
+            self.next_margin()
         elif action == "dim":
             self.msg = style.next_dim(self.win)
             return
@@ -916,6 +972,7 @@ class Reader:
             mode=self.mode,
             align=self.align,
             spacing=self.spacing,
+            margin=self.margin,
             theme=style.wanted,
             dim=style.dim,
         )

@@ -6,6 +6,7 @@ from nxgir_ui import (
     THEMES,
     fade,
     fit,
+    help_line,
     shorten,
 )
 
@@ -64,6 +65,38 @@ def test_fit_picks_longest_that_fits():
     assert fit(texts, 8) == "short"
     assert fit(texts, 2) == "s"
     assert fit(texts, 1) == "s"
+
+
+ITEMS = (
+    ("w/b", "word", 0),
+    ("/", "find", 1),
+    ("z", "margins", 2),
+    ("L", "spacing", 2),
+    ("q", "back", 0),
+)
+
+
+def test_help_line_adds_items_by_priority():
+    assert help_line(ITEMS, 200) == (
+        "w/b word · / find · z margins · L spacing · q back"
+    )
+    # "/ find" comes before z, but stays in its place
+    find = "w/b word · / find · q back"
+    assert help_line(ITEMS, 27) == find
+    assert help_line(ITEMS, 26) == "w/b word · q back"
+    assert help_line(ITEMS, 20) == "w/b word · q back"
+
+
+def test_help_line_falls_back_to_keys():
+    assert help_line(ITEMS, 12) == "w/b / z L q"
+    assert help_line(ITEMS, 8) == "w/b / q"
+    # too narrow even for the keys: they are kept
+    assert help_line(ITEMS, 3) == "w/b q"
+
+
+def test_help_line_fits():
+    for w in range(6, 80):
+        assert len(help_line(ITEMS, w)) < w
 
 
 def test_fade_none_keeps_color():

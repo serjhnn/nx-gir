@@ -273,6 +273,39 @@ def fit(texts, width):
     return texts[-1]
 
 
+def help_line(items, width):
+    """A help line from (keys, what, priority) items.
+
+    Takes items by priority (lowest number first) while
+    the line still fits width, and shows them in the
+    order given. Priority 0 items are always shown;
+    when they don't fit with their words, the keys
+    alone are shown.
+    """
+    ranked = sorted(
+        range(len(items)), key=lambda i: items[i][2]
+    )
+    need = [i for i in ranked if items[i][2] == 0]
+    rest = [i for i in ranked if items[i][2] != 0]
+
+    def line(chosen, words):
+        parts = []
+        for i in sorted(chosen):
+            k, what, _ = items[i]
+            parts.append(f"{k} {what}" if words else k)
+        return (" · " if words else " ").join(parts)
+
+    for words in (True, False):
+        chosen = set(need)
+        if len(line(chosen, words)) >= width and words:
+            continue
+        for i in rest:
+            if len(line(chosen | {i}, words)) >= width:
+                break
+            chosen.add(i)
+        return line(chosen, words)
+
+
 def key(win):
     """Next key press, or KEY_RESIZE after a resize.
 

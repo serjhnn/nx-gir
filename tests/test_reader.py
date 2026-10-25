@@ -1,4 +1,8 @@
 from nxgir_reader import (
+    MARGIN_NAMES,
+    MARGINS,
+    PANEL_HELPS,
+    READ_HELP,
     SIDE_MIN,
     TEXT_MAX,
     WORD_RE,
@@ -16,6 +20,7 @@ from nxgir_reader import (
     visible_rows,
     wrap_lines,
 )
+from nxgir_ui import help_line
 
 JOHN = (
     "Ի սկզբանէ էր Բանն, եւ Բանն էր առ Աստուած, "
@@ -199,6 +204,52 @@ def test_margins_on_both_sides():
         assert left >= margin(w), w
         assert right >= margin(w), w
         assert margin(w) >= 1
+
+
+def test_every_margin_keeps_both_sides():
+    for size in MARGINS:
+        assert size in MARGIN_NAMES
+        for w in (20, 40, 60, 100, 160):
+            cw = text_width(w, size)
+            left = row_x(w, cw, "left", size)
+            right = w - left - cw
+            assert left >= margin(w, size) >= 1
+            assert right >= margin(w, size)
+
+
+def test_margins_change_width_on_phone():
+    # 40 columns: 4, 6, 8, 2 and 1 empty at each side
+    widths = [text_width(40, m) for m in MARGINS]
+    assert widths == [32, 28, 24, 36, 38]
+
+
+def test_margins_change_width_on_wide_screen():
+    # the column cap follows the margins, so z also
+    # shows where the cap, not the margin, decides
+    widths = [text_width(200, m) for m in MARGINS]
+    assert widths[0] == TEXT_MAX
+    assert widths[1] < widths[0]
+    assert widths[2] < widths[1]
+    assert widths[3] > widths[0]
+    assert widths[4] > widths[3]
+
+
+def test_read_help_grows_with_width():
+    phone = help_line(READ_HELP, 40)
+    assert len(phone) < 40
+    assert phone.endswith("q back")
+    wide = help_line(READ_HELP, 200)
+    for k, what, _ in READ_HELP:
+        assert f"{k} {what}" in wide
+    assert "z margins" in help_line(READ_HELP, 100)
+
+
+def test_panel_helps_fit():
+    for items in PANEL_HELPS.values():
+        for w in range(10, 120):
+            t = help_line(items, w)
+            if t != help_line(items, 1):
+                assert len(t) < w
 
 
 def test_row_x_wide_screen_centers_column():
