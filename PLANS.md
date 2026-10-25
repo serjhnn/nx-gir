@@ -194,6 +194,59 @@ TODO:
 - [ ] Decide where the pictures are stored (they will
       not fit in git; see the hosting question below)
 
+## Plan: Armenian meanings of words (`A`)
+
+`a` in the reader shows what a word means in English
+(the Old Armenian entries of the English Wiktionary).
+`A` will show the meaning in Armenian.
+
+Chosen source: the Armenian Wiktionary
+(hy.wiktionary.org), from its dump on
+dumps.wikimedia.org (CC BY-SA 4.0, like the English
+data). kaikki.org has no extract of it, so we read the
+dump ourselves. What we found (dump of 2026-10-01):
+
+- There is no Grabar section: the entries are modern
+  Armenian, in the reformed spelling. Many give the
+  classical spelling in `{{why|աստուած}}`, and old
+  senses are marked `{{հնց}}` (about 7,500) or
+  `{{գրբ}}`.
+- 3,982 of our 7,679 Grabar headwords match an entry
+  by title or by `{{why}}`; with simple spelling rules
+  (իւ → յու, եա → յա, է → ե, -եմ → -ել, -ամ → -ալ, …)
+  it is 4,799 (62%).
+- In the books in `books/`, 81% of the words get an
+  English meaning; 73% would get an Armenian one.
+- The meanings are modern Armenian senses, not always
+  the Grabar one; the `{{հնց}}` senses come closest.
+
+Other sources, not used now; for later:
+
+- [ ] *Նոր բառգիրք հայկազեան լեզուի* (Venice,
+      1836–37): the great Grabar dictionary, public
+      domain. Its explanations are in Grabar (and
+      Latin), and it exists only as scans, so it needs
+      OCR of two-column old print
+- [ ] Հ. Աճառյան, *Հայերեն արմատական բառարան*
+      (1926–35): public domain since 2024 (the author
+      died in 1953). Roots and their history, with
+      Armenian explanations; scans only, needs OCR
+- [ ] Ստ. Մալխասյանց, *Հայերէն բացատրական բառարան*
+      (1944–45): Grabar and modern words explained in
+      Armenian, the best fit. Under copyright until the
+      end of 2027 (the author died in 1957); free from
+      2028
+- [ ] Online copies of these dictionaries (e.g.
+      nayiri.com): check their terms before using any
+      text from them; copy only from scans we can cite
+- [ ] Follow «տե՛ս [[...]]» (see …) links in the
+      Wiktionary entries one step, to the entry that
+      has the meaning
+- [ ] Better old → new spelling rules, tested on the
+      words that are still not found
+- [ ] Show which senses are old (`{{հնց}}`, `{{գրբ}}`)
+      first, or only those
+
 ## Open questions
 
 - Permissions: which scans and texts can be published,
