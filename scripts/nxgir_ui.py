@@ -337,6 +337,24 @@ def cursor(visible):
         pass
 
 
+def confirm(win, question, redraw=None):
+    """Ask question at the bottom; True only for y.
+    After a resize, redraw() (if given) repaints the
+    screen and the question is asked again."""
+    while True:
+        h, w = win.getmaxyx()
+        win.move(h - 1, 0)
+        win.clrtoeol()
+        put(win, h - 1, 0, f"{question} y/n", style("help"))
+        win.refresh()
+        ch = key(win)
+        if ch == curses.KEY_RESIZE:
+            if redraw:
+                redraw()
+            continue
+        return ch in ("y", "Y")
+
+
 def tail(line, width):
     """line, or …and its end if longer than width."""
     if len(line) <= width:

@@ -14,6 +14,7 @@ import nxgir_grabar as grabar
 from nxgir_ui import (
     THEME_NAMES,
     THEMES,
+    confirm,
     help_line,
     key,
     prompt,
@@ -1361,6 +1362,11 @@ class Reader:
     def delete_note(self):
         p = self.panel
         item = p.entries[p.sel].item
+        if not confirm(
+            self.win, "delete this note?", self.draw
+        ):
+            self.msg = "note kept"
+            return
         self.state.delete_note(self.title, item)
         self.state.save()
         self.load_notes()

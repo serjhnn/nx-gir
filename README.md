@@ -178,7 +178,7 @@ word is under the cursor.
 | `m` | bookmark the word (again to remove); `*` in the top line marks it |
 | `M` | list bookmarks (`j`/`k` preview, `Enter` go, `x` delete, `q` close) |
 | `O` | add a note to the sentence under the cursor (the sentence is underlined; `Enter` saves, `Esc` cancels); `•` in the margin and the top line marks a sentence with notes |
-| `o` | list the notes of the book (`j`/`k` preview, `Enter` go, `e` edit, `x` delete, `q` close) |
+| `o` | list the notes of the book (`j`/`k` preview, `Enter` go, `e` edit, `x` delete after a `y`/`n` question, `q` close) |
 | `q` | back to the list |
 
 A sentence ends at `։` (not at the middle stop `.`)

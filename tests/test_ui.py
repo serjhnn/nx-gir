@@ -4,6 +4,7 @@ from nxgir_ui import (
     PLAIN,
     THEME_NAMES,
     THEMES,
+    confirm,
     fade,
     fit,
     help_line,
@@ -131,3 +132,37 @@ def test_tail_shows_end():
     assert tail("note: abc", 20) == "note: abc"
     assert tail("note: abcdef", 6) == "…bcdef"
     assert len(tail("x" * 50, 10)) == 10
+
+
+class FakeWin:
+    """Just enough of a curses window for confirm()."""
+
+    def __init__(self, keys):
+        self.keys = list(keys)
+        self.shown = []
+
+    def getmaxyx(self):
+        return 10, 40
+
+    def move(self, y, x):
+        pass
+
+    def clrtoeol(self):
+        pass
+
+    def refresh(self):
+        pass
+
+    def addnstr(self, y, x, text, n, attr):
+        self.shown.append(text[:n])
+
+    def get_wch(self):
+        return self.keys.pop(0)
+
+
+def test_confirm_only_y_says_yes():
+    win = FakeWin("y")
+    assert confirm(win, "delete this note?")
+    assert win.shown == ["delete this note? y/n"]
+    for k in ("n", "x", "\n", "\x1b"):
+        assert not confirm(FakeWin(k), "delete?")
