@@ -16,8 +16,9 @@
 
 - `ruff format` cannot split long strings, comments or
   docstrings; shorten or wrap those by hand.
-- Text files in `data/` and `grabar/` are content, not
-  code, and are exempt.
+- Text files in `data/`, `grabar/` and
+  `interpretations/` are content, not code, and are
+  exempt.
 
 ## Layout
 
@@ -54,6 +55,9 @@
 - `scripts/fetch-digilib.py`: downloads a book from
   digilib.am into `books/`, cut into parts
 - `books/`: the library; `data/`: test texts
+- `interpretations/`: the user's own texts on the
+  books, in Russian (`ru/`) and English (`en/`);
+  content, not code: save them exactly as given
 - `scripts/render-logo.py`, `scripts/render-screens.py`:
   regenerate the README images in `docs/` after
   changing the logo or the screens
