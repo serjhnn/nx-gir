@@ -228,7 +228,12 @@ def cmd_web(args):
     """Serve the web reader on this computer."""
     import nxgir_web
 
-    return nxgir_web.serve(shelf_files(), port=args.port)
+    return nxgir_web.serve(
+        shelf_files(),
+        port=args.port,
+        # the texts the web reader may edit
+        notes=next(s for s in SHELVES if s[0] == NOTES_DIR),
+    )
 
 
 def build_parser():

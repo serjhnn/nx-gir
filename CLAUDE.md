@@ -64,7 +64,10 @@
   reader: a standard-library HTTP server and a JSON
   API (tested in `tests/test_web.py`); it reuses the
   reader's text model and state, so both readers
-  share positions, bookmarks and notes
+  share positions, bookmarks and notes. The only
+  files it writes are `.md` texts in
+  `interpretations/` (edited or new, saved exactly as
+  given, never over a file changed on disk)
 - `web/`: the web pages (plain HTML, CSS, JS, no
   build step, nothing loaded from other sites); the
   60-character limit applies here too. `wordKey()`

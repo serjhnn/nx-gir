@@ -207,10 +207,15 @@ async function shelf(folder) {
     list.append(h("li", {}, item.folder
       ? folderRow(item) : bookRow(item)));
   }
+  const lang = folder.split("/")[1];
   show(
     folder ? crumbs(folder, false) : null,
     h("h1", {}, title),
     h("p", { class: "sub" }, plural(books, "book")),
+    data.editable ? h("div", { class: "actions" },
+      h("a", { class: "icon-btn",
+        href: "#/new/" + (lang || "ru") },
+      "+ New text")) : null,
     data.items.length ? list
       : h("p", { class: "empty" }, "No books here.")
   );
@@ -262,7 +267,11 @@ async function send(path, body, keepalive) {
     keepalive: !!keepalive,
   });
   const data = await r.json();
-  if (!r.ok) throw new Error(data.error || r.status);
+  if (!r.ok) {
+    const e = new Error(data.error || r.status);
+    e.status = r.status;
+    throw e;
+  }
   return data;
 }
 
@@ -527,7 +536,10 @@ function decorate() {
   R.tools.replaceChildren(
     btn("★ Bookmarks · " + R.marks.length,
       showMarks),
-    btn("✎ Notes · " + R.notes.length, showNotes));
+    btn("✎ Notes · " + R.notes.length, showNotes),
+    R.editable ? h("a", { class: "icon-btn",
+      href: "#/edit/" + enc(R.name || R.opening) },
+    "Edit text") : null);
 }
 
 function fail(e) {
@@ -731,7 +743,8 @@ async function book(name) {
     spans: [], keys: [], wpos: [],
     starts: data.starts, marks: data.marks,
     notes: data.notes, sel: -1, refs: [],
-    saved: "",
+    saved: "", editable: data.editable,
+    opening: name,
   });
   const text = h("div", { class: "text",
     lang: "hy" });
@@ -785,9 +798,185 @@ async function book(name) {
   savePos();
 }
 
+// -- editing interpretations --
+
+// the text being edited
+const E = {
+  dirty: false, // changed since the last save
+  hash: "", // the editor's page, to go back to
+  back: false, // going back after "stay"
+  save: null, // what Ctrl+S does
+};
+
+function leaveOk() {
+  return !E.dirty ||
+    confirm("Leave without saving your changes?");
+}
+
+window.addEventListener("beforeunload", (e) => {
+  if (E.dirty) e.preventDefault();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (!E.save) return;
+  if ((e.ctrlKey || e.metaKey) && e.key === "s") {
+    e.preventDefault();
+    E.save();
+  }
+});
+
+function textBox(value, placeholder) {
+  const box = h("textarea", { class: "editor",
+    spellcheck: "true", placeholder,
+    "aria-label": "Text" });
+  box.value = value;
+  box.addEventListener("input", () => {
+    E.dirty = true;
+  });
+  return box;
+}
+
+function status() {
+  return h("span", { class: "status",
+    role: "status" });
+}
+
+const MD_HELP = "Saved exactly as typed. Markdown:"
+  + " # title, > quote, **bold**, *italic*.";
+
+async function edit(name) {
+  const src = await api("source?name=" +
+    encodeURIComponent(name));
+  let ver = src.version;
+  const title = name.split("/").pop();
+  document.title = "Edit " + title + " · nx-gir";
+  const box = textBox(src.text);
+  const msg = status();
+  const reload = btn("Load the file again", () => {
+    if (!leaveOk()) return;
+    E.dirty = false;
+    route();
+  });
+  reload.hidden = true;
+  async function save() {
+    msg.className = "status";
+    msg.textContent = "Saving…";
+    try {
+      const r = await send("save", { name,
+        text: box.value, version: ver });
+      ver = r.version;
+      E.dirty = false;
+      msg.textContent = "Saved at " +
+        new Date().toLocaleTimeString([],
+          { hour: "2-digit", minute: "2-digit" });
+    } catch (e) {
+      msg.className = "status error";
+      msg.textContent = e.status === 409
+        ? "The file changed on disk since you opened"
+          + " it (a git pull?), so it was not saved."
+          + " Your text is still here: copy it, then"
+          + " load the file again."
+        : "Not saved: " + e.message;
+      reload.hidden = e.status !== 409;
+    }
+  }
+  E.save = save;
+  show(crumbs(name, false),
+    h("h1", {}, "Edit " + title),
+    h("p", { class: "sub" }, MD_HELP),
+    box,
+    h("div", { class: "actions" },
+      btn("Save", save, { class: "icon-btn primary" }),
+      h("a", { class: "icon-btn",
+        href: "#/read/" + enc(name) }, "Done"),
+      reload, msg));
+  box.focus({ preventScroll: true });
+}
+
+const TEXT_LANGS = { ru: "Русский", en: "English" };
+
+async function newText(lang) {
+  if (!TEXT_LANGS[lang]) lang = "ru";
+  document.title = "New text · nx-gir";
+  const file = h("input", { type: "text",
+    class: "field", id: "file", autocomplete: "off",
+    autocapitalize: "none", spellcheck: "false",
+    placeholder: "ps-118-33-37-pustota-i-put" });
+  const where = h("span", { class: "item-meta" });
+  const langs = h("div", { class: "seg",
+    role: "group", "aria-label": "Language" });
+  const msg = status();
+  function draw() {
+    const f = file.value.trim() || "…";
+    where.textContent = "interpretations/" + lang +
+      "/" + f.replace(/\.md$/, "") + ".md";
+    langs.replaceChildren(...Object.entries(TEXT_LANGS)
+      .map(([l, label]) => btn(label, () => {
+        lang = l;
+        draw();
+      }, { class: null, lang: l,
+        "aria-pressed": String(l === lang) })));
+  }
+  file.addEventListener("input", () => {
+    E.dirty = true;
+    msg.textContent = "";
+    draw();
+  });
+  draw();
+  const box = textBox("",
+    "# Title (Ps 118:33–37)\n\nThe text…");
+  async function create() {
+    msg.className = "status";
+    msg.textContent = "Saving…";
+    try {
+      const r = await send("new", { lang,
+        file: file.value.trim(), text: box.value });
+      E.dirty = false;
+      location.hash = "#/read/" + enc(r.name);
+    } catch (e) {
+      msg.className = "status error";
+      msg.textContent = "Not saved: " + e.message;
+    }
+  }
+  E.save = create;
+  // the language folder may have no texts yet
+  show(crumbs("interpretations/new", false),
+    h("h1", {}, "New text"),
+    h("p", { class: "sub" }, "One text per file,"
+      + " named by its passage and a short title in"
+      + " Latin letters. " + MD_HELP),
+    h("div", { class: "form" },
+      langs,
+      h("label", { for: "file" }, "File name"),
+      file, where),
+    box,
+    h("div", { class: "actions" },
+      btn("Create", create,
+        { class: "icon-btn primary" }),
+      h("a", { class: "icon-btn",
+        href: "#/f/interpretations" }, "Cancel"),
+      msg));
+  file.focus();
+}
+
 // -- pages --
 
 async function route() {
+  // unsaved text: ask before leaving the editor
+  if (E.back) {
+    E.back = false;
+    return;
+  }
+  if (E.hash && location.hash !== E.hash) {
+    if (!leaveOk()) {
+      E.back = true;
+      location.hash = E.hash;
+      return;
+    }
+  }
+  E.dirty = false;
+  E.save = null;
+  E.hash = "";
   const hash = location.hash.replace(/^#\/?/, "");
   if (R.timer) savePos(true);
   R.name = "";
@@ -797,6 +986,12 @@ async function route() {
   try {
     if (hash.startsWith("read/")) {
       await book(decodeURIComponent(hash.slice(5)));
+    } else if (hash.startsWith("edit/")) {
+      E.hash = location.hash;
+      await edit(decodeURIComponent(hash.slice(5)));
+    } else if (hash.startsWith("new/")) {
+      E.hash = location.hash;
+      await newText(hash.slice(4));
     } else if (hash.startsWith("f/")) {
       await shelf(decodeURIComponent(hash.slice(2)));
     } else {

@@ -279,6 +279,13 @@ phone's browser.
 - **★ Bookmark** a word, or **✎ Add note** to its
   sentence; the bar at the top lists them.
 - **Where you stopped** is saved as you scroll.
+- **Your interpretations** can be written here:
+  **Edit text** on a text in `interpretations/`, or
+  **+ New text** in that folder. Texts are saved
+  exactly as typed (Ctrl+S saves); a file changed on
+  disk meanwhile (by a `git pull`, say) is never
+  overwritten. Only `interpretations/` can be changed,
+  and committing the changes is left to you.
 - **Light and dark** themes: Auto follows the system;
   the button at the top right picks one.
 

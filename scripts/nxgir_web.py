@@ -13,18 +13,27 @@ tests/test_web.py); Handler only moves bytes.
   POST /api/position           {name, pos, lines}
   POST /api/mark               {name, pos}
   POST /api/note               {name, pos, text}
+  GET  /api/source?name=       an interpretation as is
+  POST /api/save               {name, text, version}
+  POST /api/new                {lang, file, text}
                                {name, i, text}
                                {name, i, delete: true}
 
 It is meant for this computer only: it listens on
 127.0.0.1, answers only to a local Host name, and
 writes only for JSON requests (which a web page from
-another site cannot send without asking first).
+another site cannot send without asking first). The
+only files it changes are the texts in
+interpretations/.
 """
 
+import hashlib
 import json
 import mimetypes
+import os
+import re
 import sys
+import tempfile
 from http.server import (
     BaseHTTPRequestHandler,
     ThreadingHTTPServer,
@@ -54,7 +63,13 @@ WEB_DIR = ROOT / "web"
 HOST = "127.0.0.1"
 PORT = 8088
 LOCAL_HOSTS = {"127.0.0.1", "localhost", "[::1]"}
-MAX_BODY = 64 * 1024
+# a request body: room for a long interpretation
+MAX_BODY = 1024 * 1024
+# languages of interpretations/ (folders ru/, en/)
+TEXT_LANGS = ("ru", "en")
+# a new text's file name: passage and title in Latin
+# letters, e.g. ps-118-33-37-pustota-i-put
+SLUG_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 LANGS = ("en", "hy")
 # pages load only their own files: no inline scripts
 # or styles, nothing from other sites
@@ -77,10 +92,13 @@ class App:
     files is [(name, size, path)], as shelf_files()
     in nxgir-cli.py gives it."""
 
-    def __init__(self, files, state_path=None):
+    def __init__(self, files, state_path=None, notes=None):
         self.files = list(files)
         self.paths = {n: p for n, _, p in self.files}
         self.state_path = state_path
+        # (folder, shelf prefix) of the texts that
+        # can be edited: interpretations/
+        self.notes = notes
 
     def state(self):
         """The state, read fresh: the terminal reader
@@ -94,6 +112,55 @@ class App:
         if name not in self.paths:
             raise ApiError(404, f"no such book: {name}")
         return self.paths[name]
+
+    def editable(self, name):
+        """True for a .md text in interpretations/:
+        the only files the web reader may change."""
+        if not self.notes or name not in self.paths:
+            return False
+        root, prefix = self.notes
+        path = Path(self.paths[name]).resolve()
+        return (
+            name.startswith(prefix)
+            and path.suffix == ".md"
+            and path.is_relative_to(Path(root).resolve())
+        )
+
+    def in_notes(self, folder):
+        """True for interpretations/ or a folder in it,
+        where new texts can be made."""
+        if not self.notes:
+            return False
+        top = self.notes[1].rstrip("/")
+        return folder == top or folder.startswith(top + "/")
+
+    def resize(self, name):
+        """Update a book's size after it was saved."""
+        self.files = [
+            (
+                n,
+                Path(p).stat().st_size
+                if n == name
+                else size,
+                p,
+            )
+            for n, size, p in self.files
+        ]
+
+    def add(self, name, path):
+        """Put a new text on the shelf, in order."""
+        self.paths[name] = path
+        self.files.append((name, path.stat().st_size, path))
+        prefix = self.notes[1]
+        rest = [
+            f
+            for f in self.files
+            if not f[0].startswith(prefix)
+        ]
+        texts = sorted(
+            f for f in self.files if f[0].startswith(prefix)
+        )
+        self.files = rest + texts
 
 
 def split_words(line):
@@ -131,6 +198,7 @@ def shelf(app, folder=""):
         "folder": folder,
         "parent": folder.rpartition("/")[0],
         "items": items,
+        "editable": app.in_notes(folder),
     }
 
 
@@ -190,6 +258,7 @@ def book(app, name):
         "pos": pos,
         "at": at,
         "starts": sentence_starts(lay),
+        "editable": app.editable(name),
         **places(app, name, st, lay),
     }
 
@@ -293,6 +362,96 @@ def note(app, body):
     return places(app, name, st, lay)
 
 
+# -- editing interpretations --
+
+
+def version(data):
+    """A short fingerprint of a file's bytes: saving
+    is refused if the file changed since it was read."""
+    return hashlib.sha256(data).hexdigest()[:16]
+
+
+def write_file(path, text):
+    """Write text atomically (a crash leaves the old
+    file or the new one, never half of it)."""
+    fd, tmp = tempfile.mkstemp(
+        dir=path.parent, prefix=".nxgir-"
+    )
+    try:
+        with os.fdopen(
+            fd, "w", encoding="utf-8", newline=""
+        ) as f:
+            f.write(text)
+        os.replace(tmp, path)
+    except OSError as e:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise ApiError(500, f"cannot save: {e}")
+
+
+def editable_path(app, name):
+    if not app.editable(name):
+        raise ApiError(403, f"not editable: {name}")
+    return Path(app.path(name))
+
+
+def source(app, name):
+    """The text of an interpretation as it is in the
+    file (Markdown marks kept), to edit."""
+    path = editable_path(app, name)
+    data = path.read_bytes()
+    return {
+        "name": name,
+        "text": data.decode("utf-8", errors="replace"),
+        "version": version(data),
+    }
+
+
+def save_text(app, body):
+    """Save an edited interpretation exactly as
+    given, if the file is still the version that was
+    read: {name, text, version}."""
+    name = text_arg(body, "name")
+    path = editable_path(app, name)
+    text = text_arg(body, "text")
+    if version(path.read_bytes()) != body.get("version"):
+        raise ApiError(
+            409,
+            "the file changed since it was opened",
+        )
+    write_file(path, text)
+    app.resize(name)
+    return {"version": version(path.read_bytes())}
+
+
+def new_text(app, body):
+    """Make a new interpretation: {lang: ru or en,
+    file: a name like ps-118-33-37-pustota-i-put,
+    text}. Never replaces a file."""
+    if not app.notes:
+        raise ApiError(403, "no interpretations folder")
+    lang = text_arg(body, "lang")
+    if lang not in TEXT_LANGS:
+        raise ApiError(400, f"no such language: {lang}")
+    slug = text_arg(body, "file").removesuffix(".md")
+    if not SLUG_RE.fullmatch(slug):
+        raise ApiError(
+            400,
+            "use small Latin letters, digits and -",
+        )
+    root, prefix = app.notes
+    path = Path(root) / lang / f"{slug}.md"
+    name = f"{prefix}{lang}/{slug}.md"
+    if path.exists() or name in app.paths:
+        raise ApiError(409, f"already there: {name}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    write_file(path, text_arg(body, "text"))
+    app.add(name, path)
+    return {"name": name}
+
+
 def get(app, route, query):
     """Answer a GET /api/... request."""
 
@@ -305,6 +464,8 @@ def get(app, route, query):
         return book(app, arg("name"))
     if route == "/api/word":
         return word(arg("w"), arg("lang", "en"))
+    if route == "/api/source":
+        return source(app, arg("name"))
     raise ApiError(404, f"no such page: {route}")
 
 
@@ -312,6 +473,8 @@ POSTS = {
     "/api/position": set_position,
     "/api/mark": toggle_mark,
     "/api/note": note,
+    "/api/save": save_text,
+    "/api/new": new_text,
 }
 
 
@@ -450,10 +613,13 @@ def server(app, host=HOST, port=PORT, web_dir=WEB_DIR):
     return ThreadingHTTPServer((host, port), handler)
 
 
-def serve(files, host=HOST, port=PORT):
-    """Serve until Ctrl-C. Returns an exit code."""
+def serve(files, host=HOST, port=PORT, notes=None):
+    """Serve until Ctrl-C. Returns an exit code.
+    notes: (folder, shelf prefix) of the texts that
+    can be edited."""
+    app = App(files, notes=notes)
     try:
-        srv = server(App(files), host, port)
+        srv = server(app, host, port)
     except OSError as e:
         print(
             f"cannot listen on {host}:{port}: {e}",

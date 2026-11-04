@@ -336,3 +336,157 @@ def test_js_word_key_matches_normalize():
     assert "wordKey" in web.static_file(
         "/app.js"
     ).read_text(encoding="utf-8")
+
+
+# -- editing interpretations --
+
+
+@pytest.fixture
+def notes_app(tmp_path):
+    books = tmp_path / "books"
+    books.mkdir()
+    book = books / "john.txt"
+    book.write_text("Ի սկզբանէ էր Բանն։\n")
+    notes = tmp_path / "interpretations"
+    (notes / "ru").mkdir(parents=True)
+    ps = notes / "ru" / "ps-1.md"
+    ps.write_text("# Пс 1\n\nТекст.\n", encoding="utf-8")
+    txt = notes / "ru" / "plain.txt"
+    txt.write_text("not markdown")
+    files = [
+        ("john.txt", 1, book),
+        ("interpretations/ru/plain.txt", 1, txt),
+        ("interpretations/ru/ps-1.md", 1, ps),
+    ]
+    return App(
+        files,
+        tmp_path / "state.json",
+        notes=(notes, "interpretations/"),
+    )
+
+
+def test_only_interpretations_are_editable(notes_app):
+    a = notes_app
+    assert a.editable("interpretations/ru/ps-1.md")
+    assert not a.editable("john.txt")
+    assert not a.editable("interpretations/ru/plain.txt")
+    assert not a.editable("interpretations/ru/nope.md")
+    assert web.book(a, "interpretations/ru/ps-1.md")[
+        "editable"
+    ]
+    assert not web.book(a, "john.txt")["editable"]
+    assert web.shelf(a, "interpretations")["editable"]
+    assert web.shelf(a, "interpretations/ru")["editable"]
+    assert not web.shelf(a)["editable"]
+    for name in ("john.txt", "../x.md"):
+        with pytest.raises(ApiError):
+            web.source(a, name)
+        with pytest.raises(ApiError):
+            web.post(
+                a,
+                "/api/save",
+                {"name": name, "text": "x", "version": ""},
+            )
+    # no notes folder given: nothing is editable
+    plain = App(a.files, a.state_path)
+    assert not plain.editable("interpretations/ru/ps-1.md")
+
+
+def test_save_exactly_as_given(notes_app):
+    name = "interpretations/ru/ps-1.md"
+    src = web.source(notes_app, name)
+    assert src["text"] == "# Пс 1\n\nТекст.\n"
+    # kept as is: spaces, no final newline, \r\n
+    text = "# Пс 1  \n\n  Новый текст.\r\nконец"
+    r = web.post(
+        notes_app,
+        "/api/save",
+        {
+            "name": name,
+            "text": text,
+            "version": src["version"],
+        },
+    )
+    path = notes_app.path(name)
+    assert path.read_bytes() == text.encode("utf-8")
+    assert (
+        r["version"]
+        == web.source(notes_app, name)["version"]
+    )
+    size = dict((n, s) for n, s, _ in notes_app.files)
+    assert size[name] == len(text.encode("utf-8"))
+    # no temporary files left behind
+    assert sorted(
+        p.name for p in path.parent.iterdir()
+    ) == [
+        "plain.txt",
+        "ps-1.md",
+    ]
+
+
+def test_save_refuses_a_changed_file(notes_app):
+    name = "interpretations/ru/ps-1.md"
+    src = web.source(notes_app, name)
+    path = notes_app.path(name)
+    path.write_text("changed elsewhere", encoding="utf-8")
+    with pytest.raises(ApiError) as e:
+        web.post(
+            notes_app,
+            "/api/save",
+            {
+                "name": name,
+                "text": "mine",
+                "version": src["version"],
+            },
+        )
+    assert e.value.status == 409
+    assert path.read_text() == "changed elsewhere"
+
+
+def test_new_text(notes_app):
+    a = notes_app
+    r = web.post(
+        a,
+        "/api/new",
+        {"lang": "en", "file": "ps-118-a", "text": "# A\n"},
+    )
+    name = "interpretations/en/ps-118-a.md"
+    assert r == {"name": name}
+    assert a.path(name).read_text() == "# A\n"
+    assert a.editable(name)
+    # on the shelf, in order, after the books
+    assert [n for n, _, _ in a.files] == [
+        "john.txt",
+        name,
+        "interpretations/ru/plain.txt",
+        "interpretations/ru/ps-1.md",
+    ]
+    items = web.shelf(a, "interpretations")["items"]
+    assert [i["label"] for i in items] == ["en/", "ru/"]
+    # never replaces a file
+    with pytest.raises(ApiError) as e:
+        web.post(
+            a,
+            "/api/new",
+            {"lang": "en", "file": "ps-118-a", "text": ""},
+        )
+    assert e.value.status == 409
+    assert a.path(name).read_text() == "# A\n"
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        {"lang": "hy", "file": "a", "text": ""},
+        {"lang": "ru", "file": "../x", "text": ""},
+        {"lang": "ru", "file": "a/b", "text": ""},
+        {"lang": "ru", "file": "Ps 1", "text": ""},
+        {"lang": "ru", "file": "", "text": ""},
+        {"lang": "ru", "file": "-a", "text": ""},
+        {"lang": "ru", "file": "a", "text": 5},
+    ],
+)
+def test_new_text_bad(notes_app, body):
+    with pytest.raises(ApiError):
+        web.post(notes_app, "/api/new", body)
+    assert not (notes_app.notes[0] / "ru" / "a.md").exists()
