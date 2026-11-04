@@ -67,8 +67,7 @@ Tools that help a modern reader through a Classical Armenian text:
 # print the book list instead of browsing it
 ./nxgir bookshelf --plain
 
-# print the logo: hy (default), hy-upright, hy-block,
-# hy-mono (the նղ monogram), en
+# print the logo: hy (default), hy-upright, hy-block, en
 ./nxgir banner en
 
 # read a book

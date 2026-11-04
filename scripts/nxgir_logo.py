@@ -35,22 +35,6 @@ LOGO_HY_BLOCK = r"""
                  ▀▀▀          ▀▀   ▀▀      ▀▀
 """.strip("\n").splitlines()
 
-# ն and ղ joined into one sign: the right stem of ն
-# is the left stem of ղ. Turned upside down it reads
-# the same (ն's hook becomes ղ's tail).
-LOGO_HY_MONO = r"""
-  ▄▄▄▄
- █▀▀██
-    ██     ███████▄
-    ██     ██    ▀██
-    ██     ██     ██
-    ██     ██     ██
-    ██▄    ██     ██
-     ▀███████     ██
-                  ██▄▄█
-                  ▀▀▀▀
-""".strip("\n").splitlines()
-
 LOGO_EN = r"""
          _  __            _
    ____ | |/ /     ____ _(_)____
@@ -64,14 +48,12 @@ LOGOS = {
     "hy": LOGO_HY,
     "hy-upright": LOGO_HY_UPRIGHT,
     "hy-block": LOGO_HY_BLOCK,
-    "hy-mono": LOGO_HY_MONO,
     "en": LOGO_EN,
 }
 DESCRIPTIONS = {
     "hy": "Armenian, slanted (default)",
     "hy-upright": "Armenian, upright",
     "hy-block": "Armenian, blocks",
-    "hy-mono": "Armenian, նղ monogram",
     "en": "Latin",
 }
 DEFAULT_LOGO = "hy"
