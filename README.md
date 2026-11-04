@@ -106,7 +106,7 @@ Tools that help a modern reader through a Classical Armenian text:
 
 ## Books
 
-The bookshelf shows the texts in two folders:
+The bookshelf shows the texts in three folders:
 
 - `books/`: the library, in Grabar: the four Gospels
   from the Venice 1895 Bible
@@ -115,9 +115,13 @@ The bookshelf shows the texts in two folders:
   (`books/grabar/grigor-tatevatsi/`, in parts); see
   `books/SOURCES.md`.
 - `data/`: short test texts; see `data/SOURCES.md`.
+- `interpretations/`: our own texts on the books, in
+  Russian (`ru/`) and English (`en/`); see
+  `interpretations/README.md`.
 
 The bookshelf shows them as folders (`grabar/`,
-`test/`, …), with the number of books in each:
+`interpretations/`, `test/`, …), with the number of
+books in each:
 
 | Key | Action |
 |-----|--------|

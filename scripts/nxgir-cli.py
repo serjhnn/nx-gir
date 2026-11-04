@@ -23,8 +23,15 @@ except ImportError:
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data"
 BOOKS_DIR = ROOT / "books"
-# folders shown in the bookshelf, in this order
-SHELVES = (BOOKS_DIR, DATA_DIR)
+NOTES_DIR = ROOT / "interpretations"
+# folders shown in the bookshelf, in this order, and
+# the folder their books are shown in ("" = at the
+# top: books/grabar/x.txt is shown as grabar/x.txt)
+SHELVES = (
+    (BOOKS_DIR, ""),
+    (DATA_DIR, ""),
+    (NOTES_DIR, "interpretations/"),
+)
 # notes about a shelf, not books: left off the list
 NOT_BOOKS = {"SOURCES.md", "README.md"}
 PROMPT = "nxgir> "
@@ -62,19 +69,30 @@ def banner(lang=None):
 
 
 def shelf_files():
-    """[(name, size, path)] for every file in books/
-    and data/; name is the path inside its folder."""
+    """[(name, size, path)] for every file in books/,
+    data/ and interpretations/; name is the path inside
+    its folder, with the shelf's prefix. Hidden files
+    (.gitkeep) are left out."""
     out = []
-    for root in SHELVES:
+    for root, prefix in SHELVES:
         if not root.is_dir():
             continue
         files = sorted(
             p
             for p in root.rglob("*")
-            if p.is_file() and p.name not in NOT_BOOKS
+            if p.is_file()
+            and p.name not in NOT_BOOKS
+            and not any(
+                part.startswith(".")
+                for part in p.relative_to(root).parts
+            )
         )
         out += [
-            (str(p.relative_to(root)), p.stat().st_size, p)
+            (
+                prefix + str(p.relative_to(root)),
+                p.stat().st_size,
+                p,
+            )
             for p in files
         ]
     return out
@@ -82,7 +100,7 @@ def shelf_files():
 
 def cmd_bookshelf(args):
     """Browse the books in books/ and data/."""
-    if not any(root.is_dir() for root in SHELVES):
+    if not any(root.is_dir() for root, _ in SHELVES):
         print(
             f"no books/ or data/ folder in {ROOT}",
             file=sys.stderr,

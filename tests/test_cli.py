@@ -42,6 +42,18 @@ def test_bookshelf_lists_books_not_notes(capsys):
     assert "SOURCES.md" not in out
 
 
+def test_bookshelf_lists_interpretations(capsys):
+    cli.run(["bookshelf", "--plain"])
+    out = capsys.readouterr().out
+    name = (
+        "interpretations/ru/ps-118-33-37-pustota-i-put.md"
+    )
+    assert name in out
+    # the folder's README and hidden files are no books
+    assert "README.md" not in out
+    assert ".gitkeep" not in out
+
+
 def test_grabar_word(capsys):
     assert cli.run(["grabar", "word", "լուսնի"]) == 0
     assert "moon" in capsys.readouterr().out
