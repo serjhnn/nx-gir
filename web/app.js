@@ -806,6 +806,32 @@ document.addEventListener("keydown", (e) => {
   else if (e.key === "N") step(-1);
 });
 
+// Text that starts `at` characters into its line,
+// with the bold and italic parts of the line
+// ([start, end, "b" or "i"], counted in characters
+// as Python does, not in JS string units) wrapped in
+// <strong> and <em>.
+function styled(t, at, spans) {
+  if (!spans.length) return [t];
+  const chars = Array.from(t);
+  const end = at + chars.length;
+  const cuts = new Set([at, end]);
+  for (const [a, b] of spans) {
+    if (a > at && a < end) cuts.add(a);
+    if (b > at && b < end) cuts.add(b);
+  }
+  const points = [...cuts].sort((x, y) => x - y);
+  const out = [];
+  for (let k = 0; k + 1 < points.length; k++) {
+    const [a, b] = [points[k], points[k + 1]];
+    const piece = chars.slice(a - at, b - at).join("");
+    const sp = spans.find((x) => x[0] <= a && b <= x[1]);
+    out.push(sp ? h(sp[2] === "b" ? "strong" : "em",
+      {}, piece) : piece);
+  }
+  return out;
+}
+
 async function book(name) {
   const data = await api("book?name=" +
     encodeURIComponent(name));
@@ -824,17 +850,25 @@ async function book(name) {
   R.text = text;
   applyView();
   const frag = document.createDocumentFragment();
+  const format = data.format || {};
   data.lines.forEach((parts, line) => {
     const p = document.createElement("p");
+    const f = format[line];
+    if (f && f.h) p.className = "md-h md-h" + f.h;
+    if (f && f.q) p.classList.add("md-q");
+    const spans = f ? f.spans : [];
+    let at = 0; // characters before this part
     parts.forEach((t, k) => {
+      const nodes = styled(t, at, spans);
+      at += Array.from(t).length;
       if (k % 2 === 0) {
-        if (t) p.append(t);
+        if (t) p.append(...nodes);
         return;
       }
       const s = document.createElement("span");
       s.className = "w";
       s.dataset.i = R.spans.length;
-      s.textContent = t;
+      s.append(...nodes);
       R.spans.push(s);
       R.keys.push(wordKey(t));
       R.wpos.push([line, (k - 1) / 2]);

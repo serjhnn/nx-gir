@@ -52,18 +52,52 @@ MD_EMPH = re.compile(r"(\*\*|__|\*)(?=\S)(.+?)(?<=\S)\1")
 MD_LINK = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
 
 
+MD_LEVEL = re.compile(r" {0,3}(#{1,6})(?: +|$)")
+
+
+class MdLine(NamedTuple):
+    """A Markdown line with its marks taken out."""
+
+    text: str
+    heading: int  # 1-6 for # to ######, else 0
+    quote: bool  # the line starts with >
+    # [start, end, "b" (bold) or "i" (italic)] in text
+    spans: list
+
+
+def markdown_line(line):
+    """One line of Markdown: its text without the
+    marks, and what they said (for the web reader to
+    show bold, italic, headings and quotes)."""
+    quote = bool(MD_QUOTE.match(line))
+    line = MD_QUOTE.sub("", line)
+    m = MD_LEVEL.match(line)
+    heading = len(m.group(1)) if m else 0
+    line = MD_HEAD.sub("", line)
+    line = MD_LINK.sub(r"\1", line)
+    # MD_EMPH.sub(r"\2", line), noting where each
+    # bold or italic part ends up
+    out, spans, last = "", [], 0
+    for m in MD_EMPH.finditer(line):
+        out += line[last : m.start()]
+        kind = "i" if m.group(1) == "*" else "b"
+        spans.append(
+            [len(out), len(out) + len(m.group(2)), kind]
+        )
+        out += m.group(2)
+        last = m.end()
+    out += line[last:]
+    return MdLine(out, heading, quote, spans)
+
+
 def plain_markdown(text):
     """text with the Markdown marks taken out. Lines
     stay lines (a line of only > becomes empty), so
     saved positions keep working."""
-    out = []
-    for line in text.splitlines():
-        line = MD_QUOTE.sub("", line)
-        line = MD_HEAD.sub("", line)
-        line = MD_LINK.sub(r"\1", line)
-        line = MD_EMPH.sub(r"\2", line)
-        out.append(line)
-    return "\n".join(out)
+    return "\n".join(
+        markdown_line(line).text
+        for line in text.splitlines()
+    )
 
 
 class Word(NamedTuple):

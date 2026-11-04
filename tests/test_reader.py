@@ -473,3 +473,67 @@ def test_plain_markdown():
         "Two",
         "2 * 3 * 4, #5",
     ]
+
+
+def test_markdown_line():
+    from nxgir_reader import markdown_line
+
+    m = markdown_line("Text with **bold**, *it* and __b__.")
+    assert m.text == "Text with bold, it and b."
+    assert [m.text[a:b] for a, b, _ in m.spans] == [
+        "bold",
+        "it",
+        "b",
+    ]
+    assert [k for _, _, k in m.spans] == ["b", "i", "b"]
+    assert not m.heading and not m.quote
+    m = markdown_line("## Two ##")
+    assert (m.text, m.heading) == ("Two", 2)
+    m = markdown_line("> a *quoted* word")
+    assert m.quote and m.text == "a quoted word"
+    assert m.spans == [[2, 8, "i"]]
+    assert markdown_line("2 * 3 * 4, #5").spans == []
+    # a link before the emphasis: places are counted
+    # in the text without the link's address
+    m = markdown_line("[x](http://y) **z**")
+    assert m.text == "x z" and m.spans == [[2, 3, "b"]]
+
+
+def old_plain_markdown(text):
+    """plain_markdown() before markdown_line()."""
+    from nxgir_reader import (
+        MD_EMPH,
+        MD_HEAD,
+        MD_LINK,
+        MD_QUOTE,
+    )
+
+    out = []
+    for line in text.splitlines():
+        line = MD_QUOTE.sub("", line)
+        line = MD_HEAD.sub("", line)
+        line = MD_LINK.sub(r"\1", line)
+        line = MD_EMPH.sub(r"\2", line)
+        out.append(line)
+    return "\n".join(out)
+
+
+def test_plain_markdown_unchanged():
+    """The text, and so every saved position, is the
+    same as before bold and italic were shown."""
+    from pathlib import Path
+
+    root = Path(__file__).parent.parent
+    texts = [
+        p.read_text(encoding="utf-8")
+        for d in ("interpretations", "data", "books")
+        for p in sorted((root / d).rglob("*"))
+        if p.suffix in (".md", ".txt")
+    ]
+    texts.append(
+        "**a *b* c** *x **y** z* ***w*** _u_ __v__\n"
+        "> > # not a heading\n"
+        "#no space\n####### seven\n"
+    )
+    for t in texts:
+        assert plain_markdown(t) == old_plain_markdown(t)

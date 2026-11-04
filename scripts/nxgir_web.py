@@ -46,6 +46,7 @@ from nxgir_browse import folder_exists, folder_items
 from nxgir_reader import (
     WORD_RE,
     layout,
+    markdown_line,
     note_start,
     plain_markdown,
     pos_of,
@@ -240,10 +241,31 @@ def places(app, name, st, lay=None):
     return {"marks": marks, "notes": notes}
 
 
+def md_format(app, name):
+    """What the Markdown marks of a .md book said, for
+    the lines that had any: {line: {"h": heading
+    level, "q": a quote, "spans": [[start, end, "b"
+    or "i"]]}}, places counted in the shown text."""
+    path = app.path(name)
+    if path.suffix.lower() != ".md":
+        return {}
+    out = {}
+    for n, line in enumerate(read_text(path).splitlines()):
+        m = markdown_line(line)
+        if m.heading or m.quote or m.spans:
+            out[n] = {
+                "h": m.heading,
+                "q": m.quote,
+                "spans": m.spans,
+            }
+    return out
+
+
 def book(app, name):
     """A book's lines, cut into words, with where it
     was left ("at": its word), the first word of every
-    sentence, its bookmarks and notes."""
+    sentence, its bookmarks and notes, and for a .md
+    book its bold, italic, headings and quotes."""
     text = book_text(app, name)
     lay = layout(text, 10**9)
     st = app.state()
@@ -260,6 +282,7 @@ def book(app, name):
         "at": at,
         "starts": sentence_starts(lay),
         "editable": app.editable(name),
+        "format": md_format(app, name),
         **places(app, name, st, lay),
     }
 

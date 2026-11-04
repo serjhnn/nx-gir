@@ -273,6 +273,45 @@ body.reading .bar {
   font: var(--text-size, 1.15rem) / 1.75 var(--serif);
 }
 
+/* Markdown in .md texts: headings, quotes, bold and
+   italic */
+
+.text .md-h {
+  margin: 0.4em 0 0.2em;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.text .md-h1 {
+  font-size: 1.5em;
+}
+
+.text .md-h2 {
+  font-size: 1.3em;
+}
+
+.text .md-h3,
+.text .md-h4,
+.text .md-h5,
+.text .md-h6 {
+  font-size: 1.1em;
+}
+
+.text .md-q {
+  padding-left: 1em;
+  border-left: 3px solid var(--accent);
+  color: var(--muted);
+  font-style: italic;
+}
+
+.text .md-q em {
+  font-style: normal;
+}
+
+.text strong {
+  font-weight: 700;
+}
+
 .text.centered {
   margin-inline: auto;
   text-align: center;

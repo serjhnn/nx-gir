@@ -509,3 +509,15 @@ def test_new_text_in_armenian(notes_app):
         "# Սաղմոս Ա\n"
     )
     assert notes_app.editable(name)
+
+
+def test_book_format(app):
+    md = web.book(app, "notes.md")
+    # notes.md is "# Title\n> **quote**\n"
+    assert md["format"] == {
+        0: {"h": 1, "q": False, "spans": []},
+        1: {"h": 0, "q": True, "spans": [[0, 5, "b"]]},
+    }
+    line = "".join(md["lines"][1])
+    assert line[0:5] == "quote"
+    assert web.book(app, "grabar/john.txt")["format"] == {}
