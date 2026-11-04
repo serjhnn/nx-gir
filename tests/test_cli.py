@@ -22,6 +22,7 @@ def test_complete_arguments():
     assert cli.completions("banner ", "hy-") == [
         "hy-upright",
         "hy-block",
+        "hy-mono",
     ]
     # one argument only
     assert cli.completions("banner hy ", "") == []

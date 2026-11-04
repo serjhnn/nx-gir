@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="261" height="240" viewBox="0 0 261 240">
+<title>նղ֊գիր</title>
+<rect width="261" height="240" rx="8" fill="#1e1e24"/>
+<g font-family="DejaVu Sans Mono,Menlo,Consolas,monospace" font-size="16" xml:space="preserve">
+<text x="20" y="36.0" fill="#ffc400">  ▄▄▄▄</text>
+<text x="20" y="56.0" fill="#f9b005"> █▀▀██</text>
+<text x="20" y="76.0" fill="#f39c0a">    ██     ███████▄</text>
+<text x="20" y="96.0" fill="#ed880f">    ██     ██    ▀██</text>
+<text x="20" y="116.0" fill="#e77414">    ██     ██     ██</text>
+<text x="20" y="136.0" fill="#e0601a">    ██     ██     ██</text>
+<text x="20" y="156.0" fill="#da4c1f">    ██▄    ██     ██</text>
+<text x="20" y="176.0" fill="#d43824">     ▀███████     ██</text>
+<text x="20" y="196.0" fill="#ce2429">                  ██▄▄█</text>
+<text x="20" y="216.0" fill="#c8102e">                  ▀▀▀▀</text>
+</g>
+</svg>
