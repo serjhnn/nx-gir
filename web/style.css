@@ -270,7 +270,36 @@ body.reading .bar {
 
 .text {
   max-width: 34em;
-  font: 1.15rem/1.75 var(--serif);
+  font: var(--text-size, 1.15rem) / 1.75 var(--serif);
+}
+
+.text.centered {
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* A− A+ and the alignment, at the right of the
+   reading toolbar */
+.view {
+  display: flex;
+  gap: 0.35rem;
+  margin-left: auto;
+}
+
+@media (max-width: 30rem) {
+  .tools .long {
+    display: none;
+  }
+
+  .tools {
+    gap: 0.35rem;
+  }
+}
+
+.view .icon-btn {
+  min-width: 2.5rem;
+  justify-content: center;
+  padding-inline: 8px;
 }
 
 .text p {

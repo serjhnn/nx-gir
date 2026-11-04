@@ -8,7 +8,8 @@ const main = document.getElementById("main");
 // -- small helpers --
 
 // h("a", {href: "#/"}, "text", child): an element.
-// Text is always set as text, never as HTML.
+// Text is always set as text, never as HTML. Kids
+// may be lists; null kids are left out.
 function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs || {})) {
@@ -16,10 +17,7 @@ function h(tag, attrs, ...kids) {
     if (k === "class") el.className = v;
     else el.setAttribute(k, v);
   }
-  for (const k of kids) {
-    if (k == null) continue;
-    el.append(k);
-  }
+  el.append(...kids.flat().filter((k) => k != null));
   return el;
 }
 
@@ -66,6 +64,8 @@ const ICONS = {
     "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z",
     "M12 3v18a9 9 0 0 0 0-18z",
   ],
+  left: ["M4 6h16M4 10h10M4 14h16M4 18h10"],
+  center: ["M4 6h16M7 10h10M4 14h16M7 18h10"],
 };
 
 // 512 B, 3.4 KB: like human_size() in Python.
@@ -93,7 +93,9 @@ function enc(name) {
 }
 
 function show(...kids) {
-  main.replaceChildren(...kids);
+  // (replaceChildren would write null as "null")
+  main.replaceChildren(
+    ...kids.filter((k) => k != null));
   window.scrollTo(0, 0);
 }
 
@@ -533,13 +535,84 @@ function decorate() {
   for (const n of R.notes) {
     R.spans[n.at]?.classList.add("noted");
   }
-  R.tools.replaceChildren(
-    btn("★ Bookmarks · " + R.marks.length,
-      showMarks),
-    btn("✎ Notes · " + R.notes.length, showNotes),
+  // on a phone the names hide, the counts stay
+  const count = (sign, name, n) => [sign + " ",
+    h("span", { class: "long" }, name + " · "),
+    String(n)];
+  const marks = "Bookmarks · " + R.marks.length;
+  const notes = "Notes · " + R.notes.length;
+  R.tools.replaceChildren(...[
+    btn(count("★", "Bookmarks", R.marks.length),
+      showMarks, { "aria-label": marks,
+        title: marks }),
+    btn(count("✎", "Notes", R.notes.length),
+      showNotes, { "aria-label": notes,
+        title: notes }),
     R.editable ? h("a", { class: "icon-btn",
       href: "#/edit/" + enc(R.name || R.opening) },
-    "Edit text") : null);
+    "Edit text") : null,
+    viewTools(),
+  ].filter(Boolean));
+}
+
+// -- how the text looks: size and alignment, kept
+// in this browser (a phone and a computer may want
+// different sizes) --
+
+// text sizes in rem; SIZE is the default
+const SIZES = [0.9, 1, 1.15, 1.3, 1.5, 1.75, 2];
+const SIZE = 2;
+const view = { size: SIZE, center: false };
+try {
+  const v = JSON.parse(
+    localStorage.getItem("nxgir-view") || "{}");
+  if (SIZES[v.size]) view.size = v.size;
+  view.center = v.center === true;
+} catch (e) {}
+
+function applyView() {
+  if (!R.text) return;
+  R.text.style.setProperty("--text-size",
+    SIZES[view.size] + "rem");
+  R.text.classList.toggle("centered", view.center);
+}
+
+function setView(change) {
+  // keep the word at the top of the screen there
+  const i = R.spans.length ? topWord() : -1;
+  const before = i >= 0
+    ? R.spans[i].getBoundingClientRect().top : 0;
+  Object.assign(view, change);
+  try {
+    localStorage.setItem("nxgir-view",
+      JSON.stringify(view));
+  } catch (e) {}
+  applyView();
+  if (i >= 0) {
+    const after = R.spans[i].getBoundingClientRect().top;
+    window.scrollBy(0, after - before);
+  }
+  decorate();
+}
+
+function viewTools() {
+  const n = view.size;
+  return h("div", { class: "view",
+    role: "group", "aria-label": "Text" },
+  btn("A−", () => setView({ size: n - 1 }), {
+    "aria-label": "Smaller text",
+    title: "Smaller text",
+    disabled: n === 0 ? "" : null }),
+  btn("A+", () => setView({ size: n + 1 }), {
+    "aria-label": "Bigger text",
+    title: "Bigger text",
+    disabled: n === SIZES.length - 1 ? "" : null }),
+  btn(icon(ICONS[view.center ? "center" : "left"]),
+    () => setView({ center: !view.center }), {
+      "aria-label": "Center the text",
+      "aria-pressed": String(view.center),
+      title: view.center ? "Text centered"
+        : "Text on the left" }));
 }
 
 function fail(e) {
@@ -748,6 +821,8 @@ async function book(name) {
   });
   const text = h("div", { class: "text",
     lang: "hy" });
+  R.text = text;
+  applyView();
   const frag = document.createDocumentFragment();
   data.lines.forEach((parts, line) => {
     const p = document.createElement("p");
