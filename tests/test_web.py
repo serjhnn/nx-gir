@@ -110,26 +110,45 @@ def test_position_round_trip(app):
 
 def test_marks_toggle(app):
     name = "grabar/john.txt"
-    body = {"name": name, "pos": [0, 1]}
+    body = {"name": name, "pos": [1, 1]}
     r = web.post(app, "/api/mark", body)
-    assert r == {"added": True, "marks": [[0, 1]]}
+    assert r["added"] is True
+    # word 1 of line 1 is the 6th word of the book
+    assert r["marks"] == [{"pos": [1, 1], "at": 5}]
+    assert web.book(app, name)["marks"] == r["marks"]
     r = web.post(app, "/api/mark", body)
-    assert r == {"added": False, "marks": []}
+    assert r["added"] is False and r["marks"] == []
+
+
+def test_book_position_and_sentences(app):
+    name = "grabar/john.txt"
+    b = web.book(app, name)
+    assert b["at"] is None
+    # two sentences, one per line
+    assert b["starts"] == [0, 4]
+    web.post(
+        app,
+        "/api/position",
+        {"name": name, "pos": [1, 3], "lines": 2},
+    )
+    assert web.book(app, name)["at"] == 7
 
 
 def test_notes_add_edit_delete(app):
     name = "grabar/john.txt"
+    # a word in the middle of the second sentence
     r = web.post(
         app,
         "/api/note",
-        {
-            "name": name,
-            "pos": [0, 0],
-            "quote": "Ի սկզբանէ",
-            "text": " first ",
-        },
+        {"name": name, "pos": [1, 2], "text": " hi "},
     )
-    assert r["notes"][0]["text"] == "first"
+    (n,) = r["notes"]
+    assert n["text"] == "hi"
+    # kept at the sentence's first word, like the
+    # terminal reader does it
+    assert n["pos"] == [1, 0] and n["at"] == 4
+    assert n["quote"] == "Եւ Բանն էր առ ա՟ծ"
+    assert app.state().notes(name)[0]["pos"] == [1, 0]
     r = web.post(
         app,
         "/api/note",

@@ -12,7 +12,7 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/word?w=&lang=      abbreviation + meaning
   POST /api/position           {name, pos, lines}
   POST /api/mark               {name, pos}
-  POST /api/note               {name, pos, quote, text}
+  POST /api/note               {name, pos, text}
                                {name, i, text}
                                {name, i, delete: true}
 
@@ -34,7 +34,19 @@ from urllib.parse import parse_qs, urlsplit
 
 import nxgir_grabar as grabar
 from nxgir_browse import folder_exists, folder_items
-from nxgir_reader import WORD_RE, plain_markdown, read_text
+from nxgir_reader import (
+    WORD_RE,
+    layout,
+    note_start,
+    plain_markdown,
+    pos_of,
+    quote,
+    read_text,
+    sentence_of,
+    sentence_starts,
+    sentence_text,
+    word_at,
+)
 from nxgir_state import State
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -122,22 +134,63 @@ def shelf(app, folder=""):
     }
 
 
-def book(app, name):
-    """A book's lines, cut into words, with where it
-    was left, its bookmarks and notes."""
+def book_text(app, name):
+    """The text the reader shows: Markdown marks
+    taken out of .md files."""
     path = app.path(name)
     text = read_text(path)
     if path.suffix.lower() == ".md":
         text = plain_markdown(text)
+    return text
+
+
+def book_words(app, name):
+    """Layout of a book, unwrapped: its words in the
+    same order as split_words() gives them, line by
+    line, so a word's index is the same in the page."""
+    return layout(book_text(app, name), 10**9)
+
+
+def places(app, name, st, lay=None):
+    """Bookmarks and notes, each with "at": the index
+    of its word (of a note: the first word of its
+    sentence), as the terminal reader finds them."""
+    lay = lay or book_words(app, name)
+    words = lay.words
+    marks, notes = [], []
+    if words:
+        starts = sentence_starts(lay)
+        marks = [
+            {"pos": m, "at": word_at(words, m)}
+            for m in st.marks(name)
+        ]
+        notes = [
+            dict(n, at=note_start(lay, starts, n))
+            for n in st.notes(name)
+        ]
+    return {"marks": marks, "notes": notes}
+
+
+def book(app, name):
+    """A book's lines, cut into words, with where it
+    was left ("at": its word), the first word of every
+    sentence, its bookmarks and notes."""
+    text = book_text(app, name)
+    lay = layout(text, 10**9)
     st = app.state()
+    pos = st.position(name)
+    at = None
+    if pos and lay.words:
+        at = word_at(lay.words, pos)
     return {
         "name": name,
         "lines": [
             split_words(line) for line in text.splitlines()
         ],
-        "pos": st.position(name),
-        "marks": st.marks(name),
-        "notes": st.notes(name),
+        "pos": pos,
+        "at": at,
+        "starts": sentence_starts(lay),
+        **places(app, name, st, lay),
     }
 
 
@@ -201,21 +254,29 @@ def toggle_mark(app, body):
     st = app.state()
     added = st.toggle_mark(name, pos)
     saved(st)
-    return {"added": added, "marks": st.marks(name)}
+    return {"added": added, **places(app, name, st)}
 
 
 def note(app, body):
-    """Add a note (no "i"), or edit or delete note i."""
+    """Add a note to the sentence of the word at
+    "pos" (no "i"), or edit or delete note i: the
+    i-th of notes()."""
     name = text_arg(body, "name")
-    app.path(name)
+    lay = book_words(app, name)
     st = app.state()
     if "i" not in body:
         pos = pos_arg(body)
         text = text_arg(body, "text").strip()
         if not text:
             raise ApiError(400, "empty note")
-        quote = text_arg(body, "quote")
-        st.add_note(name, pos, quote, text)
+        words = lay.words
+        if not words:
+            raise ApiError(400, "no words to note")
+        starts = sentence_starts(lay)
+        i = word_at(words, pos)
+        lo, hi = sentence_of(starts, i, len(words))
+        q = quote(sentence_text(lay, lo, hi))
+        st.add_note(name, pos_of(words, lo), q, text)
     else:
         i = body["i"]
         n = len(st.notes(name))
@@ -229,7 +290,7 @@ def note(app, body):
                 raise ApiError(400, "empty note")
             st.edit_note(name, i, text)
     saved(st)
-    return {"notes": st.notes(name)}
+    return places(app, name, st, lay)
 
 
 def get(app, route, query):

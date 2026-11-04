@@ -239,12 +239,32 @@ try {
 // state of the open book
 const R = {
   name: "",
+  lines: 0, // lines in the file
   spans: [], // every word, in reading order
   keys: [], // wordKey of each
+  wpos: [], // [line, n] of each, as saved
+  starts: [], // first word of every sentence
+  marks: [], // [{pos, at}]: at = word index
+  notes: [], // [{pos, quote, text, date, at}]
   sel: -1, // the chosen word
   refs: [], // indexes of words with its key
   panel: null,
+  tools: null,
+  saved: "", // the position last saved
+  timer: 0,
 };
+
+async function send(path, body, keepalive) {
+  const r = await fetch("/api/" + path, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+    keepalive: !!keepalive,
+  });
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || r.status);
+  return data;
+}
 
 async function lookup(w) {
   const k = lang + "\n" + w;
@@ -290,22 +310,55 @@ function section(title, ...kids) {
     h("h3", {}, title), ...kids);
 }
 
+function btn(label, onClick, attrs) {
+  const b = h("button", Object.assign(
+    { type: "button", class: "icon-btn" }, attrs),
+  label);
+  b.addEventListener("click", onClick);
+  return b;
+}
+
+// -- the panel: a word, the bookmarks, the notes,
+// or a note being written --
+
+function sheet() {
+  return R.panel && !R.panel.hidden &&
+    getComputedStyle(R.panel).position === "fixed";
+}
+
+function openPanel(title, titleLang, ...body) {
+  const close = btn("×", closePanel,
+    { class: "icon-btn close", "aria-label": "Close" });
+  R.panel.replaceChildren(
+    h("div", { class: "panel-head" },
+      h("h2", { lang: titleLang }, title), close),
+    h("div", { class: "panel-body" }, ...body));
+  R.panel.hidden = false;
+  document.body.classList.add("panel-open");
+}
+
+function closePanel() {
+  mark(false);
+  sentence(false);
+  R.sel = -1;
+  R.refs = [];
+  if (R.panel) R.panel.hidden = true;
+  document.body.classList.remove("panel-open");
+}
+
 function langSwitch() {
   const box = h("div", { class: "seg",
     role: "group", "aria-label": "Meanings in" });
   for (const l of ["en", "hy"]) {
-    const b = h("button", { type: "button",
-      "aria-pressed": String(l === lang),
-      lang: l }, LANG_NAMES[l]);
-    b.addEventListener("click", () => {
+    box.append(btn(LANG_NAMES[l], () => {
       if (l === lang) return;
       lang = l;
       try {
         localStorage.setItem("nxgir-lang", l);
       } catch (e) {}
-      drawPanel();
-    });
-    box.append(b);
+      drawWord();
+    }, { class: null, lang: l,
+      "aria-pressed": String(l === lang) }));
   }
   return box;
 }
@@ -313,59 +366,61 @@ function langSwitch() {
 function placesNav() {
   const n = R.refs.length;
   const at = R.refs.indexOf(R.sel);
-  const prev = h("button", { type: "button",
-    class: "icon-btn", "aria-label": "Previous place",
-    disabled: n < 2 ? "" : null }, "‹");
-  const next = h("button", { type: "button",
-    class: "icon-btn", "aria-label": "Next place",
-    disabled: n < 2 ? "" : null }, "›");
-  prev.addEventListener("click", () => step(-1));
-  next.addEventListener("click", () => step(1));
+  const off = n < 2 ? "" : null;
   const label = n === 1 ? "Only here"
     : (at + 1) + " of " + n + " places";
   return section("In this book",
     h("div", { class: "places" },
-      h("span", {}, label), prev, next));
+      h("span", {}, label),
+      btn("‹", () => step(-1), { disabled: off,
+        "aria-label": "Previous place" }),
+      btn("›", () => step(1), { disabled: off,
+        "aria-label": "Next place" })));
+}
+
+function markAt(i) {
+  return R.marks.find((m) => m.at === i);
+}
+
+function wordActions() {
+  const on = !!markAt(R.sel);
+  return h("div", { class: "actions" },
+    btn(on ? "★ Bookmarked" : "☆ Bookmark",
+      toggleMark, { "aria-pressed": String(on) }),
+    btn("✎ Add note", () => editNote(-1)));
 }
 
 // draw the panel for the chosen word
-async function drawPanel() {
-  const panel = R.panel;
+async function drawWord() {
   const span = R.spans[R.sel];
-  if (!panel || !span) return;
+  if (!R.panel || !span) return;
   const w = span.textContent;
-  const close = h("button", { type: "button",
-    class: "icon-btn close", "aria-label": "Close" },
-  "×");
-  close.addEventListener("click", closePanel);
-  const body = h("div", { class: "panel-body" },
+  openPanel(w, "hy",
     h("p", { class: "loading" }, "Looking up…"));
-  panel.replaceChildren(
-    h("div", { class: "panel-head" },
-      h("h2", { lang: "hy" }, w), close),
-    body);
-  panel.hidden = false;
-  document.body.classList.add("panel-open");
   let data;
   try {
     data = await lookup(w);
   } catch (e) {
-    body.replaceChildren(h("p", { class: "error" },
-      "Lookup failed: " + e.message));
-    return;
+    data = { error: e.message };
   }
   // a later word may have been chosen meanwhile
   if (R.spans[R.sel] !== span) return;
-  const parts = [placesNav()];
-  if (data.abbr.length) {
-    parts.push(section("Abbreviation",
-      helperLines(data.abbr)));
+  const parts = [wordActions(), placesNav()];
+  if (data.error) {
+    parts.push(h("p", { class: "error" },
+      "Lookup failed: " + data.error));
+  } else {
+    if (data.abbr.length) {
+      parts.push(section("Abbreviation",
+        helperLines(data.abbr)));
+    }
+    parts.push(section("Meaning", langSwitch(),
+      data.meaning.length ? helperLines(data.meaning)
+        : h("p", { class: "none" },
+          "Not in the vocabulary.")));
   }
-  parts.push(section("Meaning", langSwitch(),
-    data.meaning.length ? helperLines(data.meaning)
-      : h("p", { class: "none" },
-        "Not in the vocabulary.")));
-  body.replaceChildren(...parts);
+  R.panel.querySelector(".panel-body")
+    .replaceChildren(...parts);
 }
 
 function mark(on) {
@@ -377,21 +432,53 @@ function mark(on) {
   }
 }
 
-// keep a word in view above the bottom sheet
+// [first, last + 1): the sentence with word i
+function sentenceOf(i) {
+  let k = 0;
+  while (k + 1 < R.starts.length &&
+    R.starts[k + 1] <= i) k++;
+  const hi = k + 1 < R.starts.length
+    ? R.starts[k + 1] : R.spans.length;
+  return [R.starts[k] || 0, hi];
+}
+
+let lit = null; // the sentence shown for a note
+function sentence(on, i) {
+  if (lit) {
+    for (let j = lit[0]; j < lit[1]; j++) {
+      R.spans[j].classList.remove("sent");
+    }
+    lit = null;
+  }
+  if (!on) return;
+  lit = sentenceOf(i);
+  for (let j = lit[0]; j < lit[1]; j++) {
+    R.spans[j].classList.add("sent");
+  }
+}
+
+// height of the toolbar stuck to the top
+function bar() {
+  return R.tools ? R.tools.offsetHeight : 0;
+}
+
+// keep a word in view between the toolbar and the
+// bottom sheet
 function reveal(span) {
   const r = span.getBoundingClientRect();
-  const sheet = R.panel && !R.panel.hidden &&
-    getComputedStyle(R.panel).position === "fixed"
+  const cover = sheet()
     ? R.panel.getBoundingClientRect().height : 0;
-  const bottom = window.innerHeight - sheet - 16;
-  if (r.top < 72 || r.bottom > bottom) {
+  const top = bar() + 16;
+  const bottom = window.innerHeight - cover - 16;
+  if (r.top < top || r.bottom > bottom) {
     const mid = (r.top + r.bottom) / 2;
-    window.scrollBy({ top: mid - (72 + bottom) / 2 });
+    window.scrollBy({ top: mid - (top + bottom) / 2 });
   }
 }
 
 function choose(i) {
   mark(false);
+  sentence(false);
   const key = R.keys[i];
   if (R.sel < 0 || R.keys[R.sel] !== key) {
     R.refs = [];
@@ -401,7 +488,7 @@ function choose(i) {
   }
   R.sel = i;
   mark(true);
-  drawPanel().then(() => reveal(R.spans[i]));
+  drawWord().then(() => reveal(R.spans[i]));
 }
 
 function step(d) {
@@ -411,18 +498,226 @@ function step(d) {
   choose(R.refs[(at + d + n) % n]);
 }
 
-function closePanel() {
-  mark(false);
-  R.sel = -1;
-  R.refs = [];
-  if (R.panel) R.panel.hidden = true;
-  document.body.classList.remove("panel-open");
+// scroll to word i and make it blink once
+function go(i) {
+  const s = R.spans[i];
+  if (!s) return;
+  if (sheet()) closePanel();
+  const top = s.getBoundingClientRect().top;
+  window.scrollBy({ top: top - bar() - 48 });
+  s.classList.remove("flash");
+  void s.offsetWidth; // restart the animation
+  s.classList.add("flash");
 }
 
+// -- bookmarks and notes --
+
+// the marks on the words, and the counts above
+function decorate() {
+  for (const s of main.querySelectorAll(
+    ".w.bm, .w.noted")) {
+    s.classList.remove("bm", "noted");
+  }
+  for (const m of R.marks) {
+    R.spans[m.at]?.classList.add("bm");
+  }
+  for (const n of R.notes) {
+    R.spans[n.at]?.classList.add("noted");
+  }
+  R.tools.replaceChildren(
+    btn("★ Bookmarks · " + R.marks.length,
+      showMarks),
+    btn("✎ Notes · " + R.notes.length, showNotes));
+}
+
+function fail(e) {
+  alert("Could not save: " + e.message);
+}
+
+async function toggleMark() {
+  try {
+    const r = await send("mark",
+      { name: R.name, pos: R.wpos[R.sel] });
+    R.marks = r.marks;
+  } catch (e) {
+    return fail(e);
+  }
+  decorate();
+  if (R.sel >= 0) drawWord();
+}
+
+// the text of a line from word i on, cut to n
+function snippet(i, n = 70) {
+  const s = R.spans[i];
+  const nodes = [...s.parentElement.childNodes];
+  const t = nodes.slice(nodes.indexOf(s))
+    .map((x) => x.textContent).join("").trim();
+  return t.length > n
+    ? t.slice(0, n - 1).trimEnd() + "…" : t;
+}
+
+function lineOf(i) {
+  return "line " + (R.wpos[i][0] + 1);
+}
+
+function showMarks() {
+  closePanel();
+  if (!R.marks.length) {
+    openPanel("Bookmarks", "en", h("p",
+      { class: "none" }, "No bookmarks yet. Tap a"
+      + " word, then ☆ Bookmark."));
+    return;
+  }
+  const list = h("ul", { class: "items" });
+  for (const m of R.marks) {
+    const link = h("button", { type: "button",
+      class: "item-main" },
+    h("span", { class: "item-meta" }, lineOf(m.at)),
+    h("span", { class: "item-quote", lang: "hy" },
+      snippet(m.at)));
+    link.addEventListener("click", () => go(m.at));
+    const del = btn("Remove", async () => {
+      try {
+        R.marks = (await send("mark",
+          { name: R.name, pos: m.pos })).marks;
+      } catch (e) {
+        return fail(e);
+      }
+      decorate();
+      showMarks();
+    }, { class: "link-btn" });
+    list.append(h("li", {}, link, del));
+  }
+  openPanel("Bookmarks", "en", list);
+}
+
+function showNotes() {
+  closePanel();
+  if (!R.notes.length) {
+    openPanel("Notes", "en", h("p",
+      { class: "none" }, "No notes yet. Tap a word,"
+      + " then ✎ Add note."));
+    return;
+  }
+  const list = h("ul", { class: "items" });
+  R.notes.forEach((n, i) => {
+    const link = h("button", { type: "button",
+      class: "item-main" },
+    h("span", { class: "item-meta" },
+      lineOf(n.at) + (n.date ? " · " + n.date : "")),
+    h("span", { class: "item-quote", lang: "hy" },
+      "«" + n.quote + "»"),
+    h("span", { class: "item-text" }, n.text));
+    link.addEventListener("click", () => go(n.at));
+    const edit = btn("Edit", () => {
+      R.sel = -1;
+      editNote(i);
+    }, { class: "link-btn" });
+    const del = btn("Delete", async () => {
+      if (!confirm("Delete this note?")) return;
+      try {
+        R.notes = (await send("note", { name: R.name,
+          i: i, delete: true })).notes;
+      } catch (e) {
+        return fail(e);
+      }
+      decorate();
+      showNotes();
+    }, { class: "link-btn" });
+    list.append(h("li", {}, link,
+      h("div", { class: "item-btns" }, edit, del)));
+  });
+  openPanel("Notes", "en", list);
+}
+
+// write a new note on the chosen word's sentence
+// (i = -1), or change note i
+function editNote(i) {
+  const old = i >= 0 ? R.notes[i] : null;
+  const at = old ? old.at : R.sel;
+  mark(false);
+  sentence(true, at);
+  const [lo, hi] = lit;
+  const words = R.spans.slice(lo, hi)
+    .map((s) => s.textContent).join(" ");
+  const box = h("textarea", { rows: "5",
+    "aria-label": "Note" });
+  box.value = old ? old.text : "";
+  const save = btn("Save", async () => {
+    const text = box.value.trim();
+    if (!text) return box.focus();
+    const body = old ? { name: R.name, i: i, text }
+      : { name: R.name, pos: R.wpos[at], text };
+    try {
+      R.notes = (await send("note", body)).notes;
+    } catch (e) {
+      return fail(e);
+    }
+    decorate();
+    showNotes();
+  }, { class: "icon-btn primary" });
+  const cancel = btn("Cancel", () => {
+    if (old) showNotes();
+    else closePanel();
+  });
+  openPanel(old ? "Edit note" : "New note", "en",
+    h("p", { class: "item-quote", lang: "hy" },
+      "«" + (words.length > 120
+        ? words.slice(0, 119) + "…" : words) + "»"),
+    box, h("div", { class: "actions" }, save, cancel));
+  reveal(R.spans[at]);
+  box.focus({ preventScroll: true });
+}
+
+// -- where the book was left --
+
+// the first word at the top of the screen, not
+// hidden under the toolbar
+function topWord() {
+  const edge = R.tools.getBoundingClientRect().bottom;
+  let lo = 0;
+  let hi = R.spans.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    const r = R.spans[mid].getBoundingClientRect();
+    if (r.bottom > edge) hi = mid;
+    else lo = mid + 1;
+  }
+  return lo;
+}
+
+function savePos(keepalive) {
+  clearTimeout(R.timer);
+  R.timer = 0;
+  if (!R.name || !R.spans.length) return;
+  const pos = R.wpos[topWord()];
+  const k = pos.join(",");
+  if (k === R.saved) return;
+  R.saved = k;
+  send("position", { name: R.name, pos,
+    lines: R.lines }, keepalive).catch(() => {
+    R.saved = "";
+  });
+}
+
+window.addEventListener("scroll", () => {
+  if (!R.name) return;
+  clearTimeout(R.timer);
+  R.timer = setTimeout(savePos, 700);
+}, { passive: true });
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden && R.timer) savePos(true);
+});
+window.addEventListener("pagehide", () => {
+  if (R.timer) savePos(true);
+});
+
 document.addEventListener("keydown", (e) => {
-  if (R.sel < 0) return;
+  if (e.target.closest("textarea")) return;
   if (e.key === "Escape") closePanel();
-  else if (e.key === "n") step(1);
+  if (R.sel < 0) return;
+  if (e.key === "n") step(1);
   else if (e.key === "N") step(-1);
 });
 
@@ -431,15 +726,17 @@ async function book(name) {
     encodeURIComponent(name));
   const title = name.split("/").pop();
   document.title = title + " · nx-gir";
-  R.name = name;
-  R.spans = [];
-  R.keys = [];
-  R.sel = -1;
-  R.refs = [];
+  Object.assign(R, {
+    name: "", lines: data.lines.length,
+    spans: [], keys: [], wpos: [],
+    starts: data.starts, marks: data.marks,
+    notes: data.notes, sel: -1, refs: [],
+    saved: "",
+  });
   const text = h("div", { class: "text",
     lang: "hy" });
   const frag = document.createDocumentFragment();
-  for (const parts of data.lines) {
+  data.lines.forEach((parts, line) => {
     const p = document.createElement("p");
     parts.forEach((t, k) => {
       if (k % 2 === 0) {
@@ -452,10 +749,11 @@ async function book(name) {
       s.textContent = t;
       R.spans.push(s);
       R.keys.push(wordKey(t));
+      R.wpos.push([line, (k - 1) / 2]);
       p.append(s);
     });
     frag.append(p);
-  }
+  });
   text.append(frag);
   text.addEventListener("click", (e) => {
     const s = e.target.closest(".w");
@@ -467,18 +765,31 @@ async function book(name) {
   R.panel = h("aside", { class: "panel",
     "aria-label": "Word", "aria-live": "polite" });
   R.panel.hidden = true;
+  R.tools = h("div", { class: "tools" });
   document.body.classList.add("reading");
   show(crumbs(name, false), h("h1", {}, title),
     h("p", { class: "sub" },
       plural(data.lines.length, "line") +
       " · tap a word to look it up"),
+    R.tools,
     h("div", { class: "reader" }, text, R.panel));
+  decorate();
+  if (data.at != null && R.spans[data.at]) {
+    const top = R.spans[data.at]
+      .getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, top - bar() - 16);
+  }
+  // from now on scrolling is saved
+  R.name = name;
+  savePos();
 }
 
 // -- pages --
 
 async function route() {
   const hash = location.hash.replace(/^#\/?/, "");
+  if (R.timer) savePos(true);
+  R.name = "";
   closePanel();
   R.panel = null;
   document.body.classList.remove("reading");
