@@ -774,7 +774,8 @@ async function book(name) {
     R.tools,
     h("div", { class: "reader" }, text, R.panel));
   decorate();
-  if (data.at != null && R.spans[data.at]) {
+  // the first word: stay at the top, title shown
+  if (data.at > 0 && R.spans[data.at]) {
     const top = R.spans[data.at]
       .getBoundingClientRect().top + window.scrollY;
     window.scrollTo(0, top - bar() - 16);

@@ -60,7 +60,18 @@
 - `interpretations/`: the user's own texts on the
   books, in Russian (`ru/`) and English (`en/`);
   content, not code: save them exactly as given
-- `scripts/render-logo.py`, `scripts/render-screens.py`:
-  regenerate the README images in `docs/` after
-  changing the logo or the screens
+- `scripts/nxgir_web.py`: `nxgir web`, the local web
+  reader: a standard-library HTTP server and a JSON
+  API (tested in `tests/test_web.py`); it reuses the
+  reader's text model and state, so both readers
+  share positions, bookmarks and notes
+- `web/`: the web pages (plain HTML, CSS, JS, no
+  build step, nothing loaded from other sites); the
+  60-character limit applies here too. `wordKey()`
+  in `app.js` must match `normalize()` in the reader
+  (a test checks it)
+- `scripts/render-logo.py`, `scripts/render-screens.py`,
+  `scripts/render-web.py`: regenerate the README
+  images in `docs/` after changing the logo, the
+  screens or the web pages
 - Linux and Termux only, no Windows support for now.

@@ -99,6 +99,11 @@ Tools that help a modern reader through a Classical Armenian text:
 # those whose path has the text given)
 ./nxgir notes
 ./nxgir notes matthew
+
+# read in a web browser on this computer, at
+# http://localhost:8080/ (see "Web reader" below)
+./nxgir web
+./nxgir web --port 8000
 ./nxgir grabar modernize text.txt
 ./nxgir grabar translit text.txt
 ./nxgir grabar numeral ՌՄԾ
@@ -249,6 +254,42 @@ to `~/.termux/font.ttf` and run `termux-reload-settings`.
 Pick a font that has Armenian letters, such as DejaVu
 Sans Mono.
 
+## Web reader
+
+<p align="center">
+  <img src="docs/web-light.png" width="300"
+       alt="The web reader on a phone in the light
+            theme, with the word է looked up">
+</p>
+<p align="center">
+  <img src="docs/web-dark.png"
+       alt="The web reader on a wide screen in the
+            dark theme, with the notes beside the text">
+</p>
+
+`./nxgir web` opens the same library in a web browser:
+the bookshelf, the reader, and the Grabar helpers. Open
+the address it prints (`http://localhost:8080/`). On
+Termux, run it there and open the address in the
+phone's browser.
+
+- **Tap a word** to see what it may be short for, its
+  meaning in English or Armenian, and how many times it
+  is in the book (‹ › or `n` / `N` step through them).
+- **★ Bookmark** a word, or **✎ Add note** to its
+  sentence; the bar at the top lists them.
+- **Where you stopped** is saved as you scroll.
+- **Light and dark** themes: Auto follows the system;
+  the button at the top right picks one.
+
+Positions, bookmarks and notes are the same ones the
+terminal reader keeps, so a book can be started in one
+and finished in the other.
+
+It needs nothing beyond Python, and works offline. It
+is for this computer only: it listens on `127.0.0.1`
+and does not answer to other machines. Ctrl-C stops it.
+
 ## Requirements (planned)
 
 - Python 3.10+
@@ -284,6 +325,14 @@ pillow`):
 
 ```sh
 scripts/render-screens.py
+```
+
+The web reader's screenshots are taken in a headless
+browser. After changing the pages in `web/`, regenerate
+them (needs Node.js and `npm install playwright`):
+
+```sh
+scripts/render-web.py
 ```
 
 ## Contributing
