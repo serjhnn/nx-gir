@@ -477,7 +477,7 @@ def test_new_text(notes_app):
 @pytest.mark.parametrize(
     "body",
     [
-        {"lang": "hy", "file": "a", "text": ""},
+        {"lang": "fr", "file": "a", "text": ""},
         {"lang": "ru", "file": "../x", "text": ""},
         {"lang": "ru", "file": "a/b", "text": ""},
         {"lang": "ru", "file": "Ps 1", "text": ""},
@@ -490,3 +490,22 @@ def test_new_text_bad(notes_app, body):
     with pytest.raises(ApiError):
         web.post(notes_app, "/api/new", body)
     assert not (notes_app.notes[0] / "ru" / "a.md").exists()
+
+
+def test_new_text_in_armenian(notes_app):
+    r = web.post(
+        notes_app,
+        "/api/new",
+        {
+            "lang": "hy",
+            "file": "ps-1",
+            "text": "# Սաղմոս Ա\n",
+        },
+    )
+    name = "interpretations/hy/ps-1.md"
+    assert r == {"name": name}
+    path = notes_app.path(name)
+    assert path.read_text(encoding="utf-8") == (
+        "# Սաղմոս Ա\n"
+    )
+    assert notes_app.editable(name)

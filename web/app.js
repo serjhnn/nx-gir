@@ -893,7 +893,11 @@ async function edit(name) {
   box.focus({ preventScroll: true });
 }
 
-const TEXT_LANGS = { ru: "Русский", en: "English" };
+const TEXT_LANGS = {
+  ru: "Русский",
+  en: "English",
+  hy: "Հայերեն",
+};
 
 async function newText(lang) {
   if (!TEXT_LANGS[lang]) lang = "ru";

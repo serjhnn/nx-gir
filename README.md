@@ -121,7 +121,8 @@ The bookshelf shows the texts in three folders:
   `books/SOURCES.md`.
 - `data/`: short test texts; see `data/SOURCES.md`.
 - `interpretations/`: our own texts on the books, in
-  Russian (`ru/`) and English (`en/`); see
+  Russian (`ru/`), English (`en/`) and Armenian
+  (`hy/`); see
   `interpretations/README.md`. In `.md` files the
   reader hides the Markdown marks (`#`, `>`, `*`,
   links).
@@ -281,7 +282,8 @@ phone's browser.
 - **Where you stopped** is saved as you scroll.
 - **Your interpretations** can be written here:
   **Edit text** on a text in `interpretations/`, or
-  **+ New text** in that folder. Texts are saved
+  **+ New text** in that folder (in Russian, English
+  or Armenian). Texts are saved
   exactly as typed (Ctrl+S saves); a file changed on
   disk meanwhile (by a `git pull`, say) is never
   overwritten. Only `interpretations/` can be changed,

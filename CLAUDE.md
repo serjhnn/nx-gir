@@ -58,7 +58,8 @@
   digilib.am into `books/`, cut into parts
 - `books/`: the library; `data/`: test texts
 - `interpretations/`: the user's own texts on the
-  books, in Russian (`ru/`) and English (`en/`);
+  books, in Russian (`ru/`), English (`en/`) and
+  Armenian (`hy/`);
   content, not code: save them exactly as given
 - `scripts/nxgir_web.py`: `nxgir web`, the local web
   reader: a standard-library HTTP server and a JSON

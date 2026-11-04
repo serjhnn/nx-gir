@@ -65,8 +65,9 @@ PORT = 8088
 LOCAL_HOSTS = {"127.0.0.1", "localhost", "[::1]"}
 # a request body: room for a long interpretation
 MAX_BODY = 1024 * 1024
-# languages of interpretations/ (folders ru/, en/)
-TEXT_LANGS = ("ru", "en")
+# languages of interpretations/ (folders ru/, en/,
+# hy/)
+TEXT_LANGS = ("ru", "en", "hy")
 # a new text's file name: passage and title in Latin
 # letters, e.g. ps-118-33-37-pustota-i-put
 SLUG_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
@@ -427,7 +428,7 @@ def save_text(app, body):
 
 
 def new_text(app, body):
-    """Make a new interpretation: {lang: ru or en,
+    """Make a new interpretation: {lang: ru, en or hy,
     file: a name like ps-118-33-37-pustota-i-put,
     text}. Never replaces a file."""
     if not app.notes:
