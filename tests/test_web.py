@@ -273,3 +273,20 @@ def test_http_foreign_host(url):
     assert r.status == 403
     r, _ = request(url, "GET", "/", Host="evil.example")
     assert r.status == 403
+
+
+def test_http_security_headers(url):
+    r, _ = request(url, "GET", "/")
+    csp = r.getheader("Content-Security-Policy")
+    assert "default-src 'self'" in csp
+    r, _ = request(url, "GET", "/api/shelf")
+    assert r.getheader("Content-Security-Policy")
+
+
+def test_web_dir_has_the_pages():
+    for name in ("index.html", "app.js", "style.css"):
+        assert web.static_file("/" + name), name
+    html = web.static_file("/").read_text()
+    # the page works under the CSP: no inline code
+    assert "<script>" not in html
+    assert "style=" not in html

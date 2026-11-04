@@ -44,6 +44,12 @@ PORT = 8080
 LOCAL_HOSTS = {"127.0.0.1", "localhost", "[::1]"}
 MAX_BODY = 64 * 1024
 LANGS = ("en", "hy")
+# pages load only their own files: no inline scripts
+# or styles, nothing from other sites
+CSP = (
+    "default-src 'self'; img-src 'self' data:;"
+    " frame-ancestors 'none'"
+)
 
 
 class ApiError(Exception):
@@ -295,6 +301,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header(
             "X-Content-Type-Options", "nosniff"
         )
+        self.send_header("Content-Security-Policy", CSP)
         self.end_headers()
         if self.command != "HEAD":
             self.wfile.write(data)
