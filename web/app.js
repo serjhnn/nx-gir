@@ -905,6 +905,9 @@ function textBox(value, placeholder) {
     spellcheck: "true", placeholder,
     "aria-label": "Text" });
   box.value = value;
+  // the size chosen with A− / A+ in the reader
+  box.style.setProperty("--text-size",
+    SIZES[view.size] + "rem");
   box.addEventListener("input", () => {
     E.dirty = true;
   });

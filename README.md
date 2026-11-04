@@ -282,7 +282,8 @@ phone's browser.
 - **Where you stopped** is saved as you scroll.
 - **A− / A+** make the text smaller or bigger, and the
   button beside them centers it. Each browser keeps its
-  own choice, so a phone and a computer can differ.
+  own choice, so a phone and a computer can differ. The
+  editor uses the same size.
 - **Your interpretations** can be written here:
   **Edit text** on a text in `interpretations/`, or
   **+ New text** in that folder (in Russian, English

@@ -428,7 +428,7 @@ a.icon-btn {
   min-height: 60vh;
   margin: 0 0 0.75rem;
   padding: 14px 16px;
-  font: 1.05rem/1.7 var(--serif);
+  font: var(--text-size, 1.15rem) / 1.7 var(--serif);
 }
 
 .form {
