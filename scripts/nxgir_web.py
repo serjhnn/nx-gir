@@ -52,7 +52,7 @@ from nxgir_state import State
 ROOT = Path(__file__).resolve().parent.parent
 WEB_DIR = ROOT / "web"
 HOST = "127.0.0.1"
-PORT = 8080
+PORT = 8088
 LOCAL_HOSTS = {"127.0.0.1", "localhost", "[::1]"}
 MAX_BODY = 64 * 1024
 LANGS = ("en", "hy")

@@ -278,8 +278,8 @@ def build_parser():
     p.add_argument(
         "--port",
         type=int,
-        default=8080,
-        help="the port to listen on (default 8080)",
+        default=8088,
+        help="the port to listen on (default 8088)",
     )
     p.set_defaults(func=cmd_web)
     p = sub.add_parser("grabar", help="Grabar helpers")

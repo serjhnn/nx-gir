@@ -101,7 +101,7 @@ Tools that help a modern reader through a Classical Armenian text:
 ./nxgir notes matthew
 
 # read in a web browser on this computer, at
-# http://localhost:8080/ (see "Web reader" below)
+# http://localhost:8088/ (see "Web reader" below)
 ./nxgir web
 ./nxgir web --port 8000
 ./nxgir grabar modernize text.txt
@@ -269,7 +269,7 @@ Sans Mono.
 
 `./nxgir web` opens the same library in a web browser:
 the bookshelf, the reader, and the Grabar helpers. Open
-the address it prints (`http://localhost:8080/`). On
+the address it prints (`http://localhost:8088/`). On
 Termux, run it there and open the address in the
 phone's browser.
 
