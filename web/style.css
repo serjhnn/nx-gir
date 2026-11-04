@@ -111,6 +111,17 @@ main {
   text-decoration: none;
 }
 
+.brand-mark {
+  align-self: center;
+  width: 1.6rem;
+  height: 1.75rem;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .brand-hy {
   font: 600 1.25rem var(--serif);
 }

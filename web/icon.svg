@@ -1,7 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg"
   viewBox="0 0 32 32">
+<!-- ն and ղ joined: the right stem of ն is the
+  left stem of ղ; the same turned upside down -->
 <rect width="32" height="32" rx="7" fill="#D97757"/>
-<text x="16" y="23" text-anchor="middle"
-  font-family="serif" font-size="20"
-  fill="#FAF9F5">գ</text>
+<path d="M5.5 8.5Q5.5 5 9 5V19Q9 23 12.5 23
+  Q16 23 16 19V13Q16 9 19.5 9Q23 9 23 13V27
+  Q26.5 27 26.5 23.5"
+  fill="none" stroke="#FAF9F5" stroke-width="2.6"
+  stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
