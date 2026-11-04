@@ -224,6 +224,13 @@ def cmd_notes(args):
     return 0
 
 
+def cmd_web(args):
+    """Serve the web reader on this computer."""
+    import nxgir_web
+
+    return nxgir_web.serve(shelf_files(), port=args.port)
+
+
 def build_parser():
     parser = argparse.ArgumentParser(
         prog="nxgir",
@@ -264,6 +271,17 @@ def build_parser():
         help="only books whose path has this text",
     )
     p.set_defaults(func=cmd_notes)
+    p = sub.add_parser(
+        "web",
+        help="the web reader, on this computer only",
+    )
+    p.add_argument(
+        "--port",
+        type=int,
+        default=8080,
+        help="the port to listen on (default 8080)",
+    )
+    p.set_defaults(func=cmd_web)
     p = sub.add_parser("grabar", help="Grabar helpers")
     tools = p.add_subparsers(dest="tool", required=True)
     p = tools.add_parser(
