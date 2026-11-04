@@ -117,7 +117,9 @@ The bookshelf shows the texts in three folders:
 - `data/`: short test texts; see `data/SOURCES.md`.
 - `interpretations/`: our own texts on the books, in
   Russian (`ru/`) and English (`en/`); see
-  `interpretations/README.md`.
+  `interpretations/README.md`. In `.md` files the
+  reader hides the Markdown marks (`#`, `>`, `*`,
+  links).
 
 The bookshelf shows them as folders (`grabar/`,
 `interpretations/`, `test/`, …), with the number of

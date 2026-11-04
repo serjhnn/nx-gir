@@ -44,6 +44,28 @@ def normalize(word):
     return word.casefold().translate(STRESS)
 
 
+# Markdown marks hidden in .md files: heading #,
+# quote >, emphasis * ** __, and [link](url)
+MD_HEAD = re.compile(r"^ {0,3}#{1,6}(?: +|$)| +#+ *$")
+MD_QUOTE = re.compile(r"^ {0,3}(?:> ?)+")
+MD_EMPH = re.compile(r"(\*\*|__|\*)(?=\S)(.+?)(?<=\S)\1")
+MD_LINK = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
+
+
+def plain_markdown(text):
+    """text with the Markdown marks taken out. Lines
+    stay lines (a line of only > becomes empty), so
+    saved positions keep working."""
+    out = []
+    for line in text.splitlines():
+        line = MD_QUOTE.sub("", line)
+        line = MD_HEAD.sub("", line)
+        line = MD_LINK.sub(r"\1", line)
+        line = MD_EMPH.sub(r"\2", line)
+        out.append(line)
+    return "\n".join(out)
+
+
 class Word(NamedTuple):
     row: int  # wrapped row
     col: int  # column in that row
@@ -1403,5 +1425,9 @@ def read_text(path):
 
 def read(win, path, title, state=None):
     """Open path in the reader until q. With a State,
-    the position, bookmarks and settings are saved."""
-    Reader(win, read_text(path), title, state).run()
+    the position, bookmarks and settings are saved.
+    Markdown marks are hidden in .md files."""
+    text = read_text(path)
+    if path.suffix.lower() == ".md":
+        text = plain_markdown(text)
+    Reader(win, text, title, state).run()

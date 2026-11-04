@@ -14,6 +14,7 @@ from nxgir_reader import (
     normalize,
     note_start,
     notes_panel,
+    plain_markdown,
     quote,
     references,
     row_x,
@@ -449,3 +450,26 @@ def test_notes_panel():
     p.wrap(60)
     assert p.entries[p.sel].item == 1
     assert len(p.entries) == 4
+
+
+def test_plain_markdown():
+    text = (
+        "# Пустота и путь (Пс 118:33-37)\n"
+        "\n"
+        "> “Դարձրո՛ւ աչքերս”\n"
+        ">\n"
+        "> ՍԱՂՄՈՍՆԵՐ 118:37\n"
+        "Text with **bold**, *it* and [a link](http://x).\n"
+        "## Two ##\n"
+        "2 * 3 * 4, #5"
+    )
+    assert plain_markdown(text).splitlines() == [
+        "Пустота и путь (Пс 118:33-37)",
+        "",
+        "“Դարձրո՛ւ աչքերս”",
+        "",
+        "ՍԱՂՄՈՍՆԵՐ 118:37",
+        "Text with bold, it and a link.",
+        "Two",
+        "2 * 3 * 4, #5",
+    ]
