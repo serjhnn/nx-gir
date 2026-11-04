@@ -290,3 +290,30 @@ def test_web_dir_has_the_pages():
     # the page works under the CSP: no inline code
     assert "<script>" not in html
     assert "style=" not in html
+
+
+def js_key(w):
+    """wordKey() in web/app.js."""
+    return (
+        w.lower()
+        .translate(str.maketrans("", "", "՛՜՞"))
+        .replace("և", "եւ")
+    )
+
+
+def test_js_word_key_matches_normalize():
+    from nxgir_reader import WORD_RE, normalize
+
+    root = web.ROOT
+    words = set()
+    for d in ("books", "data", "interpretations"):
+        for p in (root / d).rglob("*"):
+            if p.suffix in (".txt", ".md"):
+                text = p.read_text(encoding="utf-8")
+                words.update(WORD_RE.findall(text))
+    assert words
+    bad = [w for w in words if js_key(w) != normalize(w)]
+    assert bad == []
+    assert "wordKey" in web.static_file(
+        "/app.js"
+    ).read_text(encoding="utf-8")

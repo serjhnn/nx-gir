@@ -216,28 +216,272 @@ async function shelf(folder) {
   );
 }
 
-// -- a book, as plain text for now --
+// -- reader --
+
+// Key for comparing words: normalize() in
+// nxgir_reader.py. Ignores case and the marks
+// ՛ ՜ ՞; և is the same as եւ (tests/test_web.py
+// checks this matches on the whole library).
+function wordKey(w) {
+  return w.toLowerCase().replace(/[՛՜՞]/g, "")
+    .replace(/և/g, "եւ");
+}
+
+const LANG_NAMES = { en: "English", hy: "Հայերեն" };
+const cache = new Map();
+let lang = "en";
+try {
+  if (localStorage.getItem("nxgir-lang") === "hy") {
+    lang = "hy";
+  }
+} catch (e) {}
+
+// state of the open book
+const R = {
+  name: "",
+  spans: [], // every word, in reading order
+  keys: [], // wordKey of each
+  sel: -1, // the chosen word
+  refs: [], // indexes of words with its key
+  panel: null,
+};
+
+async function lookup(w) {
+  const k = lang + "\n" + w;
+  if (!cache.has(k)) {
+    cache.set(k, api("word?w=" + encodeURIComponent(w)
+      + "&lang=" + lang));
+  }
+  try {
+    return await cache.get(k);
+  } catch (e) {
+    cache.delete(k);
+    throw e;
+  }
+}
+
+// Lines from the Grabar helpers as a list: a line
+// at the left is a heading, an indented one is an
+// item, "Source: ..." is a small note.
+function helperLines(lines) {
+  const box = h("div", { class: "entry",
+    lang: "hy" });
+  let list = null;
+  for (const line of lines) {
+    if (line.startsWith("Source:")) {
+      box.append(h("p", { class: "source",
+        lang: "en" }, line));
+    } else if (line.startsWith(" ")) {
+      if (!list) {
+        list = h("ul");
+        box.append(list);
+      }
+      list.append(h("li", {}, line.trim()));
+    } else {
+      list = null;
+      box.append(h("p", { class: "head" }, line));
+    }
+  }
+  return box;
+}
+
+function section(title, ...kids) {
+  return h("section", { class: "part" },
+    h("h3", {}, title), ...kids);
+}
+
+function langSwitch() {
+  const box = h("div", { class: "seg",
+    role: "group", "aria-label": "Meanings in" });
+  for (const l of ["en", "hy"]) {
+    const b = h("button", { type: "button",
+      "aria-pressed": String(l === lang),
+      lang: l }, LANG_NAMES[l]);
+    b.addEventListener("click", () => {
+      if (l === lang) return;
+      lang = l;
+      try {
+        localStorage.setItem("nxgir-lang", l);
+      } catch (e) {}
+      drawPanel();
+    });
+    box.append(b);
+  }
+  return box;
+}
+
+function placesNav() {
+  const n = R.refs.length;
+  const at = R.refs.indexOf(R.sel);
+  const prev = h("button", { type: "button",
+    class: "icon-btn", "aria-label": "Previous place",
+    disabled: n < 2 ? "" : null }, "‹");
+  const next = h("button", { type: "button",
+    class: "icon-btn", "aria-label": "Next place",
+    disabled: n < 2 ? "" : null }, "›");
+  prev.addEventListener("click", () => step(-1));
+  next.addEventListener("click", () => step(1));
+  const label = n === 1 ? "Only here"
+    : (at + 1) + " of " + n + " places";
+  return section("In this book",
+    h("div", { class: "places" },
+      h("span", {}, label), prev, next));
+}
+
+// draw the panel for the chosen word
+async function drawPanel() {
+  const panel = R.panel;
+  const span = R.spans[R.sel];
+  if (!panel || !span) return;
+  const w = span.textContent;
+  const close = h("button", { type: "button",
+    class: "icon-btn close", "aria-label": "Close" },
+  "×");
+  close.addEventListener("click", closePanel);
+  const body = h("div", { class: "panel-body" },
+    h("p", { class: "loading" }, "Looking up…"));
+  panel.replaceChildren(
+    h("div", { class: "panel-head" },
+      h("h2", { lang: "hy" }, w), close),
+    body);
+  panel.hidden = false;
+  document.body.classList.add("panel-open");
+  let data;
+  try {
+    data = await lookup(w);
+  } catch (e) {
+    body.replaceChildren(h("p", { class: "error" },
+      "Lookup failed: " + e.message));
+    return;
+  }
+  // a later word may have been chosen meanwhile
+  if (R.spans[R.sel] !== span) return;
+  const parts = [placesNav()];
+  if (data.abbr.length) {
+    parts.push(section("Abbreviation",
+      helperLines(data.abbr)));
+  }
+  parts.push(section("Meaning", langSwitch(),
+    data.meaning.length ? helperLines(data.meaning)
+      : h("p", { class: "none" },
+        "Not in the vocabulary.")));
+  body.replaceChildren(...parts);
+}
+
+function mark(on) {
+  for (const i of R.refs) {
+    R.spans[i].classList.toggle("ref", on);
+  }
+  if (R.sel >= 0) {
+    R.spans[R.sel].classList.toggle("sel", on);
+  }
+}
+
+// keep a word in view above the bottom sheet
+function reveal(span) {
+  const r = span.getBoundingClientRect();
+  const sheet = R.panel && !R.panel.hidden &&
+    getComputedStyle(R.panel).position === "fixed"
+    ? R.panel.getBoundingClientRect().height : 0;
+  const bottom = window.innerHeight - sheet - 16;
+  if (r.top < 72 || r.bottom > bottom) {
+    const mid = (r.top + r.bottom) / 2;
+    window.scrollBy({ top: mid - (72 + bottom) / 2 });
+  }
+}
+
+function choose(i) {
+  mark(false);
+  const key = R.keys[i];
+  if (R.sel < 0 || R.keys[R.sel] !== key) {
+    R.refs = [];
+    R.keys.forEach((k, j) => {
+      if (k === key) R.refs.push(j);
+    });
+  }
+  R.sel = i;
+  mark(true);
+  drawPanel().then(() => reveal(R.spans[i]));
+}
+
+function step(d) {
+  const n = R.refs.length;
+  if (n < 2) return;
+  const at = R.refs.indexOf(R.sel);
+  choose(R.refs[(at + d + n) % n]);
+}
+
+function closePanel() {
+  mark(false);
+  R.sel = -1;
+  R.refs = [];
+  if (R.panel) R.panel.hidden = true;
+  document.body.classList.remove("panel-open");
+}
+
+document.addEventListener("keydown", (e) => {
+  if (R.sel < 0) return;
+  if (e.key === "Escape") closePanel();
+  else if (e.key === "n") step(1);
+  else if (e.key === "N") step(-1);
+});
 
 async function book(name) {
   const data = await api("book?name=" +
     encodeURIComponent(name));
   const title = name.split("/").pop();
   document.title = title + " · nx-gir";
+  R.name = name;
+  R.spans = [];
+  R.keys = [];
+  R.sel = -1;
+  R.refs = [];
   const text = h("div", { class: "text",
     lang: "hy" });
+  const frag = document.createDocumentFragment();
   for (const parts of data.lines) {
-    text.append(h("p", {}, parts.join("")));
+    const p = document.createElement("p");
+    parts.forEach((t, k) => {
+      if (k % 2 === 0) {
+        if (t) p.append(t);
+        return;
+      }
+      const s = document.createElement("span");
+      s.className = "w";
+      s.dataset.i = R.spans.length;
+      s.textContent = t;
+      R.spans.push(s);
+      R.keys.push(wordKey(t));
+      p.append(s);
+    });
+    frag.append(p);
   }
+  text.append(frag);
+  text.addEventListener("click", (e) => {
+    const s = e.target.closest(".w");
+    if (!s) return;
+    const i = Number(s.dataset.i);
+    if (i === R.sel) closePanel();
+    else choose(i);
+  });
+  R.panel = h("aside", { class: "panel",
+    "aria-label": "Word", "aria-live": "polite" });
+  R.panel.hidden = true;
+  document.body.classList.add("reading");
   show(crumbs(name, false), h("h1", {}, title),
     h("p", { class: "sub" },
-      plural(data.lines.length, "line")),
-    text);
+      plural(data.lines.length, "line") +
+      " · tap a word to look it up"),
+    h("div", { class: "reader" }, text, R.panel));
 }
 
 // -- pages --
 
 async function route() {
   const hash = location.hash.replace(/^#\/?/, "");
+  closePanel();
+  R.panel = null;
+  document.body.classList.remove("reading");
   try {
     if (hash.startsWith("read/")) {
       await book(decodeURIComponent(hash.slice(5)));
