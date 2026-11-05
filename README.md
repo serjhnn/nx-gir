@@ -348,14 +348,6 @@ them (needs Node.js and `npm install playwright`):
 scripts/render-web.py
 ```
 
-The bird marks of the web reader (`web/mark-hy.svg`,
-`web/mark-en.svg` and the tab icon `web/icon.svg`) are
-drawn by a script. After changing a bird, redraw them:
-
-```sh
-scripts/render-birds.py
-```
-
 ## Contributing
 
 Grabar texts, glossaries, and lists of abbreviations are especially welcome,

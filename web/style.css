@@ -113,14 +113,12 @@ main {
 
 .brand-mark {
   align-self: center;
-  width: 2.8rem;
-  height: 2.8rem;
-}
-
-.brand-mark-en {
-  width: 2.1rem;
-  height: 2.1rem;
-  margin-left: 0.25rem;
+  width: 1.6rem;
+  height: 1.75rem;
+  fill: none;
+  stroke: var(--accent);
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .brand-hy {

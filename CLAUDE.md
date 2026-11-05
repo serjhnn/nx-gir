@@ -78,7 +78,4 @@
   `scripts/render-web.py`: regenerate the README
   images in `docs/` after changing the logo, the
   screens or the web pages
-- `scripts/render-birds.py`: draws the bird-letter
-  marks `web/mark-hy.svg`, `web/mark-en.svg` and
-  `web/icon.svg`; edit the script, not the SVGs
 - Linux and Termux only, no Windows support for now.
