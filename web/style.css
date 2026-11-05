@@ -281,7 +281,8 @@ body.reading .bar {
 
 .text {
   max-width: 34em;
-  font: var(--text-size, 1.15rem) / 1.75 var(--serif);
+  font: var(--text-size, 1.15rem) /
+    var(--text-line, 1.75) var(--serif);
 }
 
 /* Markdown in .md texts: headings, quotes, bold and
@@ -478,7 +479,8 @@ a.icon-btn {
   min-height: 60vh;
   margin: 0 0 0.75rem;
   padding: 14px 16px;
-  font: var(--text-size, 1.15rem) / 1.7 var(--serif);
+  font: var(--text-size, 1.15rem) /
+    var(--text-line, 1.7) var(--serif);
 }
 
 .form {

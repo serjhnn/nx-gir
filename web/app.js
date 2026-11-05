@@ -61,6 +61,9 @@ const ICONS = {
     "M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z",
   ],
   left: ["M4 6h16M4 10h10M4 14h16M4 18h10"],
+  // lines with an up-down arrow beside them
+  spacing: ["M11 6h9M11 12h9M11 18h9",
+    "M5 4v16M3 6l2-2l2 2M3 18l2 2l2-2"],
   center: ["M4 6h16M7 10h10M4 14h16M7 18h10"],
 };
 
@@ -550,7 +553,10 @@ function decorate() {
 const SIZES = [0.7, 0.8, 0.9, 1, 1.15, 1.3, 1.5, 1.75,
   2];
 const SIZE = 4;
-const view = { size: SIZE, center: false };
+// space between lines, as line-height; the first is
+// the default
+const LINES = [1.75, 2.1, 2.5];
+const view = { size: SIZE, center: false, line: 0 };
 try {
   const v = JSON.parse(
     localStorage.getItem("nxgir-view") || "{}");
@@ -560,12 +566,15 @@ try {
   // the list, from 0.9
   else if (SIZES[v.size + 2]) view.size = v.size + 2;
   view.center = v.center === true;
+  view.line = Math.max(0, LINES.indexOf(v.line));
 } catch (e) {}
 
 function applyView() {
   if (!R.text) return;
   R.text.style.setProperty("--text-size",
     SIZES[view.size] + "rem");
+  R.text.style.setProperty("--text-line",
+    LINES[view.line]);
   R.text.classList.toggle("centered", view.center);
 }
 
@@ -578,7 +587,8 @@ function setView(change) {
   try {
     localStorage.setItem("nxgir-view",
       JSON.stringify({ rem: SIZES[view.size],
-        center: view.center }));
+        center: view.center,
+        line: LINES[view.line] }));
   } catch (e) {}
   applyView();
   if (i >= 0) {
@@ -605,7 +615,15 @@ function viewTools() {
       "aria-label": "Center the text",
       "aria-pressed": String(view.center),
       title: view.center ? "Text centered"
-        : "Text on the left" }));
+        : "Text on the left" }),
+  btn(icon(ICONS.spacing),
+    () => setView({
+      line: (view.line + 1) % LINES.length }), {
+      "aria-label": "Line spacing " + (view.line + 1)
+        + " of " + LINES.length,
+      title: view.line === LINES.length - 1
+        ? "Widest lines (click for normal)"
+        : "Line spacing (click for more)" }));
 }
 
 function fail(e) {
@@ -935,6 +953,8 @@ function textBox(value, placeholder) {
   // the size chosen with A− / A+ in the reader
   box.style.setProperty("--text-size",
     SIZES[view.size] + "rem");
+  box.style.setProperty("--text-line",
+    LINES[view.line]);
   box.addEventListener("input", () => {
     E.dirty = true;
   });
