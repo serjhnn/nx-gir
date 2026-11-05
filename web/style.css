@@ -126,11 +126,6 @@ main {
   font: 600 1.25rem var(--serif);
 }
 
-.brand-en {
-  color: var(--muted);
-  font-size: 0.85rem;
-}
-
 .icon-btn {
   display: inline-flex;
   align-items: center;
