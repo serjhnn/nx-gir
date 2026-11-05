@@ -80,10 +80,90 @@ function plural(n, word) {
 }
 
 async function api(path) {
+  if (STATIC) return staticApi(path);
   const r = await fetch("/api/" + path);
   const data = await r.json();
   if (!r.ok) throw new Error(data.error || r.status);
   return data;
+}
+
+// -- the published copy (GitHub Pages) --
+// No server there: scripts/build-site.py wrote the
+// answers into files under data/, and sets
+// NXGIR_STATIC (static.js). It only reads: no
+// bookmarks, notes or editing; where you stopped is
+// kept in this browser.
+
+const STATIC = window.NXGIR_STATIC === true;
+// files the words are spread over, per language;
+// as BUCKETS in build-site.py
+const BUCKETS = 256;
+const buckets = new Map();
+
+async function json(url) {
+  const r = await fetch(url);
+  if (!r.ok) {
+    throw new Error(r.status === 404
+      ? "Not in the published copy" : r.status);
+  }
+  return r.json();
+}
+
+// FNV-1a over the code points of a word: which file
+// it is in; as bucket() in build-site.py
+function bucket(w) {
+  let x = 0x811c9dc5;
+  for (const ch of w) {
+    x = Math.imul(x ^ ch.codePointAt(0), 0x01000193);
+  }
+  return (x >>> 0) % BUCKETS;
+}
+
+function readAt(name) {
+  try {
+    return JSON.parse(localStorage.getItem(
+      "nxgir-read:" + name) || "null");
+  } catch (e) {
+    return null;
+  }
+}
+
+async function staticApi(path) {
+  const [route, query] = path.split("?");
+  const q = new URLSearchParams(query);
+  if (route === "shelf") {
+    const f = q.get("folder") || "";
+    const data = await json("data/shelf/" +
+      (f ? enc(f) + "/" : "") + "index.json");
+    for (const item of data.items) {
+      const r = item.folder ? null : readAt(item.name);
+      if (r) item.progress = r.pct;
+    }
+    return data;
+  }
+  if (route === "book") {
+    const name = q.get("name");
+    const data = await json("data/book/" + enc(name)
+      + ".json");
+    const r = readAt(name);
+    if (r) data.at = r.at;
+    return data;
+  }
+  if (route === "word") {
+    const w = q.get("w").trim();
+    const k = q.get("lang") + "/" + bucket(w);
+    if (!buckets.has(k)) {
+      buckets.set(k, json("data/word/" + k + ".json")
+        .catch((e) => {
+          buckets.delete(k);
+          throw e;
+        }));
+    }
+    const e = (await buckets.get(k))[w];
+    return { word: w, abbr: e ? e[0] : [],
+      meaning: e ? e[1] : [] };
+  }
+  throw new Error("Not in the published copy");
 }
 
 function enc(name) {
@@ -407,7 +487,8 @@ async function drawWord() {
   }
   // a later word may have been chosen meanwhile
   if (R.spans[R.sel] !== span) return;
-  const parts = [wordActions(), placesNav()];
+  const parts = [STATIC ? null : wordActions(),
+    placesNav()];
   if (data.error) {
     parts.push(h("p", { class: "error" },
       "Lookup failed: " + data.error));
@@ -422,7 +503,7 @@ async function drawWord() {
           "Not in the vocabulary.")));
   }
   R.panel.querySelector(".panel-body")
-    .replaceChildren(...parts);
+    .replaceChildren(...parts.filter(Boolean));
 }
 
 function mark(on) {
@@ -533,12 +614,12 @@ function decorate() {
   const marks = "Bookmarks · " + R.marks.length;
   const notes = "Notes · " + R.notes.length;
   R.tools.replaceChildren(...[
-    btn(count("★", "Bookmarks", R.marks.length),
-      showMarks, { "aria-label": marks,
-        title: marks }),
-    btn(count("✎", "Notes", R.notes.length),
-      showNotes, { "aria-label": notes,
-        title: notes }),
+    STATIC ? null : btn(count("★", "Bookmarks",
+      R.marks.length), showMarks,
+    { "aria-label": marks, title: marks }),
+    STATIC ? null : btn(count("✎", "Notes",
+      R.notes.length), showNotes,
+    { "aria-label": notes, title: notes }),
     R.editable ? h("a", { class: "icon-btn",
       href: "#/edit/" + enc(R.name || R.opening) },
     "Edit text") : null,
@@ -790,10 +871,21 @@ function savePos(keepalive) {
   clearTimeout(R.timer);
   R.timer = 0;
   if (!R.name || !R.spans.length) return;
-  const pos = R.wpos[topWord()];
+  const top = topWord();
+  const pos = R.wpos[top];
   const k = pos.join(",");
   if (k === R.saved) return;
   R.saved = k;
+  if (STATIC) {
+    // as State.progress() counts it
+    const pct = Math.min(100,
+      Math.round(100 * (pos[0] + 1) / R.lines));
+    try {
+      localStorage.setItem("nxgir-read:" + R.name,
+        JSON.stringify({ at: top, pct }));
+    } catch (e) {}
+    return;
+  }
   send("position", { name: R.name, pos,
     lines: R.lines }, keepalive).catch(() => {
     R.saved = "";

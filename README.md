@@ -306,6 +306,28 @@ It needs nothing beyond Python, and works offline. It
 is for this computer only: it listens on `127.0.0.1`
 and does not answer to other machines. Ctrl-C stops it.
 
+### Published copy (GitHub Pages)
+
+A read-only copy of the web reader can be published
+as plain files, with no server: the library, the
+books, word lookups and the text settings. It has no
+bookmarks, notes or editing, and where you stopped is
+kept in each browser. Nothing of your saved state goes
+into it, but everything on the shelf does, your texts
+in `interpretations/` too, and a GitHub Pages site can
+be seen by anyone.
+
+`.github/workflows/pages.yml` builds and publishes it
+on every push to `main`. Turn it on once: in the
+repository's **Settings → Pages**, set **Source** to
+**GitHub Actions**. To build it here and look at it
+(about a minute, 50 MB in `site/`):
+
+```sh
+scripts/build-site.py
+python3 -m http.server -d site
+```
+
 ## Requirements (planned)
 
 - Python 3.10+

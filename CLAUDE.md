@@ -74,6 +74,13 @@
   60-character limit applies here too. `wordKey()`
   in `app.js` must match `normalize()` in the reader
   (a test checks it)
+- `scripts/build-site.py`: the read-only copy of the
+  web reader for GitHub Pages (`site/`, published by
+  `.github/workflows/pages.yml`): the answers of the
+  API as files, read by `app.js` when `static.js`
+  sets `NXGIR_STATIC`; tested in
+  `tests/test_site.py`. `bucket()` and `BUCKETS` must
+  match `app.js` (a test checks it)
 - `scripts/render-logo.py`, `scripts/render-screens.py`,
   `scripts/render-web.py`: regenerate the README
   images in `docs/` after changing the logo, the
