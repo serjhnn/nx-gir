@@ -560,13 +560,18 @@ function decorate() {
 // different sizes) --
 
 // text sizes in rem; SIZE is the default
-const SIZES = [0.9, 1, 1.15, 1.3, 1.5, 1.75, 2];
-const SIZE = 2;
+const SIZES = [0.7, 0.8, 0.9, 1, 1.15, 1.3, 1.5, 1.75,
+  2];
+const SIZE = 4;
 const view = { size: SIZE, center: false };
 try {
   const v = JSON.parse(
     localStorage.getItem("nxgir-view") || "{}");
-  if (SIZES[v.size]) view.size = v.size;
+  const i = SIZES.indexOf(v.rem);
+  if (i >= 0) view.size = i;
+  // saved before 0.7 and 0.8 came: the place in
+  // the list, from 0.9
+  else if (SIZES[v.size + 2]) view.size = v.size + 2;
   view.center = v.center === true;
 } catch (e) {}
 
@@ -585,7 +590,8 @@ function setView(change) {
   Object.assign(view, change);
   try {
     localStorage.setItem("nxgir-view",
-      JSON.stringify(view));
+      JSON.stringify({ rem: SIZES[view.size],
+        center: view.center }));
   } catch (e) {}
   applyView();
   if (i >= 0) {
