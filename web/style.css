@@ -87,6 +87,18 @@ a {
   border-radius: 4px;
 }
 
+/* no blue flash from the phone's browser on a tap;
+   a press shows in the page's own colors */
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.icon-btn:active,
+.link-btn:active {
+  background: var(--hover);
+}
+
 main {
   max-width: 44rem;
   margin: 0 auto;
