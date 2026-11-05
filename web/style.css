@@ -802,12 +802,28 @@ body.panel-open main {
   }
 }
 
-/* two versions side by side (.par: the other
-   one): only on a wide screen, each line beside
-   its pair */
+/* two versions (.par: the other one), when
+   Parallel is on: on a phone each line of it under
+   its pair, on a wide screen beside it */
 
-.text .par,
-.wide-only {
+.text .par {
+  display: none;
+}
+
+.text.parallel .par {
+  display: block;
+}
+
+.text.parallel .par:not(.par-head) {
+  margin-bottom: 0.6em;
+  padding-left: 0.75em;
+  border-left: 2px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.9em;
+}
+
+/* no second empty line under an empty one */
+.text.parallel .par:empty {
   display: none;
 }
 
@@ -821,11 +837,12 @@ body.panel-open main {
   color: inherit;
 }
 
-@media (min-width: 64rem) {
-  .wide-only {
-    display: inline-flex;
-  }
+/* on a phone only the other version's name */
+.text.parallel .par-head:first-child {
+  display: none;
+}
 
+@media (min-width: 64rem) {
   body.reading.parallel main,
   body.reading.parallel .bar {
     max-width: 100rem;
@@ -842,7 +859,17 @@ body.panel-open main {
     max-width: none;
   }
 
-  .text.parallel .par {
+  .text.parallel .par:not(.par-head) {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  /* both columns need every row, empty or not */
+  .text.parallel .par:empty,
+  .text.parallel .par-head:first-child {
     display: block;
   }
 }

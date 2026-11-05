@@ -283,11 +283,12 @@ phone's browser.
 - **★ Bookmark** a word, or **✎ Add note** to its
   sentence; the bar at the top lists them.
 - **Where you stopped** is saved as you scroll.
-- **⇆ Parallel**, on a wide screen: a book with a
-  version in another language folder (the same path
-  under `grabar/` and `ashkharhabar/`) is shown
-  beside it, line by line. The name above the
-  second column opens that version.
+- **⇆ Parallel**: a book with a version in another
+  language folder (the same path under `grabar/` and
+  `ashkharhabar/`) is shown with it, line by line:
+  beside it on a wide screen, each line under its
+  pair on a phone. The name of the other version,
+  above the text, opens it.
 - **A− / A+** make the text smaller or bigger; the
   buttons beside them center it and space the lines
   (each tap more, then back to normal). Each browser

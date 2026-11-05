@@ -627,7 +627,6 @@ function decorate() {
     R.par ? btn(["⇆ ", h("span", { class: "long" },
       "Parallel")],
     () => setView({ parallel: !view.parallel }), {
-      class: "icon-btn wide-only",
       "aria-pressed": String(view.parallel),
       "aria-label": "Show the two versions",
       title: "Side by side with "
@@ -960,7 +959,8 @@ function styled(t, at, spans) {
 // -- two versions side by side: the other one
 // (data.parallel, e.g. ashkharhabar/ beside
 // grabar/) goes in a .par line after each line;
-// the CSS shows them only on a wide screen --
+// the CSS puts it under its line on a phone and
+// beside it on a wide screen --
 
 const PAR_NAMES = { grabar: "Գրաբար",
   ashkharhabar: "Աշխարհաբար" };
