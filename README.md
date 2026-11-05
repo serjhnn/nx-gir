@@ -312,10 +312,10 @@ A read-only copy of the web reader can be published
 as plain files, with no server: the library, the
 books, word lookups and the text settings. It has no
 bookmarks, notes or editing, and where you stopped is
-kept in each browser. Nothing of your saved state goes
-into it, but everything on the shelf does, your texts
-in `interpretations/` too, and a GitHub Pages site can
-be seen by anyone.
+kept in each browser. The test texts of `data/` and
+your saved state are left out; the rest of the shelf
+goes in, your texts in `interpretations/` too, and a
+GitHub Pages site can be seen by anyone.
 
 `.github/workflows/pages.yml` builds and publishes it
 on every push to `main`. Turn it on once: in the

@@ -85,3 +85,18 @@ def test_bucket_matches_app_js():
         check=True,
     ).stdout
     assert json.loads(got) == [bs.bucket(w) for w in words]
+
+
+def test_test_texts_left_out(tmp_path):
+    data = tmp_path / "data"
+    (data / "test").mkdir(parents=True)
+    t = data / "test" / "a.txt"
+    t.write_text("x")
+    b = tmp_path / "books" / "b.txt"
+    b.parent.mkdir()
+    b.write_text("x")
+    assert bs.unpublished(t, data)
+    assert not bs.unpublished(b, data)
+    names = [n for n, _, _ in bs.shelf_files()]
+    assert names
+    assert not any(n.startswith("test/") for n in names)

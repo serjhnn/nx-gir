@@ -14,6 +14,8 @@ the same functions (nxgir_web.py):
         words of the books that the Grabar helpers
         know, spread over BUCKETS files by bucket()
 
+The test texts of data/ are left out.
+
 static.js tells app.js to read these files. The copy
 only reads: no bookmarks, notes or editing, and where
 you stopped is kept in the browser. Nothing of the
@@ -141,14 +143,28 @@ def build(out, files):
 
 
 def shelf_files():
-    """The books, as the CLI finds them."""
+    """The books, as the CLI finds them, without the
+    test texts of data/."""
     path = HERE / "nxgir-cli.py"
     spec = importlib.util.spec_from_file_location(
         "nxgir_cli", path
     )
     cli = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(cli)
-    return cli.shelf_files()
+    return [
+        f
+        for f in cli.shelf_files()
+        if not unpublished(f[2], cli.DATA_DIR)
+    ]
+
+
+def unpublished(path, data_dir):
+    """True for a file in data/ (test texts)."""
+    return (
+        Path(path)
+        .resolve()
+        .is_relative_to(Path(data_dir).resolve())
+    )
 
 
 def size(path):
