@@ -60,10 +60,6 @@ const ICONS = {
   moon: [
     "M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z",
   ],
-  auto: [
-    "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z",
-    "M12 3v18a9 9 0 0 0 0-18z",
-  ],
   left: ["M4 6h16M4 10h10M4 14h16M4 18h10"],
   center: ["M4 6h16M7 10h10M4 14h16M7 18h10"],
 };
@@ -123,20 +119,17 @@ function crumbs(path, last) {
 
 // -- theme --
 
-const THEMES = ["auto", "light", "dark"];
 const button = document.getElementById("theme");
 
 function theme() {
   const t = document.documentElement.dataset.theme;
-  return THEMES.includes(t) ? t : "auto";
+  return t === "dark" ? "dark" : "light";
 }
 
 function drawTheme() {
   const t = theme();
-  const names = { auto: "Auto", light: "Light",
-    dark: "Dark" };
-  const which = { auto: "auto", light: "sun",
-    dark: "moon" };
+  const names = { light: "Light", dark: "Dark" };
+  const which = { light: "sun", dark: "moon" };
   button.replaceChildren(icon(ICONS[which[t]]),
     h("span", {}, names[t]));
   button.title = "Theme: " + names[t] +
@@ -144,16 +137,10 @@ function drawTheme() {
 }
 
 button.addEventListener("click", () => {
-  const t = THEMES[(THEMES.indexOf(theme()) + 1) % 3];
-  const root = document.documentElement;
-  if (t === "auto") delete root.dataset.theme;
-  else root.dataset.theme = t;
+  const t = theme() === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = t;
   try {
-    if (t === "auto") {
-      localStorage.removeItem("nxgir-theme");
-    } else {
-      localStorage.setItem("nxgir-theme", t);
-    }
+    localStorage.setItem("nxgir-theme", t);
   } catch (e) {}
   drawTheme();
 });

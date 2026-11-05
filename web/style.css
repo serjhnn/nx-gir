@@ -1,6 +1,7 @@
 /* nx-gir web: light and dark themes.
    Colors are tokens; dark is set twice: for the
-   system choice and for the theme button. */
+   theme button, and for the system choice when
+   scripts are off. */
 
 :root {
   color-scheme: light;
