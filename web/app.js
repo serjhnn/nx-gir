@@ -570,6 +570,9 @@ try {
 } catch (e) {}
 
 function applyView() {
+  // on the page too: the word panel follows the size
+  document.documentElement.style.setProperty(
+    "--text-size", SIZES[view.size] + "rem");
   if (!R.text) return;
   R.text.style.setProperty("--text-size",
     SIZES[view.size] + "rem");

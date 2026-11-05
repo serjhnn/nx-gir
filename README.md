@@ -284,7 +284,8 @@ phone's browser.
   buttons beside them center it and space the lines
   (each tap more, then back to normal). Each browser
   keeps its own choice, so a phone and a computer can
-  differ. The editor uses the same size and spacing.
+  differ. The editor uses the same size and spacing,
+  and the word panel grows and shrinks with the text.
 - **Your interpretations** can be written here:
   **Edit text** on a text in `interpretations/`, or
   **+ New text** in that folder (in Russian, English

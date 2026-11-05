@@ -609,9 +609,15 @@ p.item-quote {
 }
 
 /* the word panel: a sheet at the bottom of a
-   phone, a column beside the text when wide */
+   phone, a column beside the text when wide. Its
+   text grows and shrinks with the book's (A− / A+):
+   1em here is 1rem at the default size, 1.15rem;
+   sizes inside are in em, small ones no smaller
+   than the smallest text, 0.7rem */
 
 .panel {
+  font-size: max(0.75rem,
+    calc(var(--text-size, 1.15rem) / 1.15));
   position: fixed;
   left: 0;
   right: 0;
@@ -647,12 +653,12 @@ body.panel-open main {
 
 .panel-head h2 {
   margin: 0;
-  font: 500 1.5rem/1.2 var(--serif);
+  font: 500 1.5em/1.2 var(--serif);
   overflow-wrap: anywhere;
 }
 
-.close {
-  font-size: 1.2rem;
+.panel .icon-btn.close {
+  font-size: 1.2em;
   line-height: 1;
 }
 
@@ -664,7 +670,7 @@ body.panel-open main {
 .part h3 {
   margin: 0 0 0.5rem;
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: max(0.75em, 0.7rem);
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -728,6 +734,19 @@ body.panel-open main {
 .places span {
   flex: 1;
   font-variant-numeric: tabular-nums;
+}
+
+/* shared with the rest of the page, in em here */
+.panel .icon-btn {
+  font-size: max(0.85em, 0.7rem);
+}
+
+.panel .link-btn,
+.panel .none,
+.panel .loading,
+.panel .entry .source,
+.panel .seg button {
+  font-size: max(0.8em, 0.7rem);
 }
 
 .icon-btn:disabled {
