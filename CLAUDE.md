@@ -56,7 +56,11 @@
   `books/SOURCES.md`)
 - `scripts/fetch-digilib.py`: downloads a book from
   digilib.am into `books/`, cut into parts
-- `books/`: the library; `data/`: test texts
+- `books/`: the library; `data/`: test texts.
+  A book under `grabar/` and its translation at the
+  same path under `ashkharhabar/` are read side by
+  side in the web reader (`PARALLEL` in
+  `nxgir_web.py`); keep their lines one for one
 - `interpretations/`: the user's own texts on the
   books, in Russian (`ru/`), English (`en/`) and
   Armenian (`hy/`);

@@ -117,7 +117,10 @@ The bookshelf shows the texts in three folders:
   and Psalm 118 from the Venice 1895 Bible
   (`books/grabar/bible/`) and three works
   of Grigor Tatevatsi from Digilib
-  (`books/grabar/grigor-tatevatsi/`, in parts); see
+  (`books/grabar/grigor-tatevatsi/`, in parts); and
+  Psalm 118 in the Eastern Armenian translation of
+  Holy Etchmiadzin, 1994
+  (`books/ashkharhabar/bible/`); see
   `books/SOURCES.md`.
 - `data/`: short test texts; see `data/SOURCES.md`.
 - `interpretations/`: our own texts on the books, in
@@ -280,6 +283,11 @@ phone's browser.
 - **★ Bookmark** a word, or **✎ Add note** to its
   sentence; the bar at the top lists them.
 - **Where you stopped** is saved as you scroll.
+- **⇆ Parallel**, on a wide screen: a book with a
+  version in another language folder (the same path
+  under `grabar/` and `ashkharhabar/`) is shown
+  beside it, line by line. The name above the
+  second column opens that version.
 - **A− / A+** make the text smaller or bigger; the
   buttons beside them center it and space the lines
   (each tap more, then back to normal). Each browser

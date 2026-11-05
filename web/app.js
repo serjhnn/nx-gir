@@ -330,6 +330,7 @@ const R = {
   tools: null,
   saved: "", // the position last saved
   timer: 0,
+  par: null, // the other version: book() data
 };
 
 async function send(path, body, keepalive) {
@@ -623,6 +624,14 @@ function decorate() {
     R.editable ? h("a", { class: "icon-btn",
       href: "#/edit/" + enc(R.name || R.opening) },
     "Edit text") : null,
+    R.par ? btn(["⇆ ", h("span", { class: "long" },
+      "Parallel")],
+    () => setView({ parallel: !view.parallel }), {
+      class: "icon-btn wide-only",
+      "aria-pressed": String(view.parallel),
+      "aria-label": "Show the two versions",
+      title: "Side by side with "
+        + parLabel(R.par.name) }) : null,
     viewTools(),
   ].filter(Boolean));
 }
@@ -638,7 +647,8 @@ const SIZE = 4;
 // space between lines, as line-height; the first is
 // the default
 const LINES = [1.75, 2.1, 2.5];
-const view = { size: SIZE, center: false, line: 0 };
+const view = { size: SIZE, center: false, line: 0,
+  parallel: true };
 try {
   const v = JSON.parse(
     localStorage.getItem("nxgir-view") || "{}");
@@ -649,6 +659,7 @@ try {
   else if (SIZES[v.size + 2]) view.size = v.size + 2;
   view.center = v.center === true;
   view.line = Math.max(0, LINES.indexOf(v.line));
+  view.parallel = v.parallel !== false;
 } catch (e) {}
 
 function applyView() {
@@ -661,6 +672,9 @@ function applyView() {
   R.text.style.setProperty("--text-line",
     LINES[view.line]);
   R.text.classList.toggle("centered", view.center);
+  const par = Boolean(R.par && view.parallel);
+  R.text.classList.toggle("parallel", par);
+  document.body.classList.toggle("parallel", par);
 }
 
 function setView(change) {
@@ -673,7 +687,8 @@ function setView(change) {
     localStorage.setItem("nxgir-view",
       JSON.stringify({ rem: SIZES[view.size],
         center: view.center,
-        line: LINES[view.line] }));
+        line: LINES[view.line],
+        parallel: view.parallel }));
   } catch (e) {}
   applyView();
   if (i >= 0) {
@@ -942,6 +957,36 @@ function styled(t, at, spans) {
   return out;
 }
 
+// -- two versions side by side: the other one
+// (data.parallel, e.g. ashkharhabar/ beside
+// grabar/) goes in a .par line after each line;
+// the CSS shows them only on a wide screen --
+
+const PAR_NAMES = { grabar: "Գրաբար",
+  ashkharhabar: "Աշխարհաբար" };
+
+function parLabel(name) {
+  const top = name.split("/")[0];
+  return PAR_NAMES[top] || top;
+}
+
+// the names above the two columns; the other one
+// opens that version
+function parHead(name, other) {
+  return [
+    h("p", { class: "par par-head" },
+      parLabel(name)),
+    h("p", { class: "par par-head" },
+      h("a", { href: "#/read/" + enc(other) },
+        parLabel(other))),
+  ];
+}
+
+function parLine(line) {
+  const parts = R.par.lines[line] || [""];
+  return h("p", { class: "par" }, parts.join(""));
+}
+
 async function book(name) {
   const data = await api("book?name=" +
     encodeURIComponent(name));
@@ -953,14 +998,26 @@ async function book(name) {
     starts: data.starts, marks: data.marks,
     notes: data.notes, sel: -1, refs: [],
     saved: "", editable: data.editable,
-    opening: name,
+    opening: name, par: null,
   });
+  // the other version, read beside it on a wide
+  // screen
+  const other = (data.parallel || [])[0];
+  if (other) {
+    try {
+      R.par = await api("book?name=" +
+        encodeURIComponent(other));
+    } catch (e) {} // read it alone
+  }
   const text = h("div", { class: "text",
     lang: "hy" });
   R.text = text;
   applyView();
   const frag = document.createDocumentFragment();
   const format = data.format || {};
+  if (R.par) {
+    frag.append(...parHead(name, R.par.name));
+  }
   data.lines.forEach((parts, line) => {
     const p = document.createElement("p");
     const f = format[line];
@@ -985,7 +1042,14 @@ async function book(name) {
       p.append(s);
     });
     frag.append(p);
+    if (R.par) frag.append(parLine(line));
   });
+  // lines the other version has more of
+  for (let line = data.lines.length;
+    R.par && line < R.par.lines.length; line++) {
+    frag.append(h("p", { class: "par" }),
+      parLine(line));
+  }
   text.append(frag);
   text.addEventListener("click", (e) => {
     const s = e.target.closest(".w");
@@ -1210,7 +1274,9 @@ async function route() {
   R.name = "";
   closePanel();
   R.panel = null;
-  document.body.classList.remove("reading");
+  R.par = null;
+  document.body.classList.remove("reading",
+    "parallel");
   try {
     if (hash.startsWith("read/")) {
       await book(decodeURIComponent(hash.slice(5)));

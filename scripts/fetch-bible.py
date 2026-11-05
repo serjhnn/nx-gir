@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
-"""Download a Bible book in Grabar as a text file.
+"""Download a Bible book in Armenian as a text file.
 
 Source: the Venice 1895 Armenian Bible (ed. Arsen
 Bagratuni, public domain) as published at
-bible.armeniancathedral.org. Usage:
+bible.armeniancathedral.org; with --1994, the
+Eastern Armenian translation of Holy Etchmiadzin
+(1994) from the same site. Usage:
 
-    scripts/fetch-bible.py CODE CHAPTERS TITLE OUT
+    scripts/fetch-bible.py [--1994] CODE CHAPTERS \\
+        TITLE OUT
 
 e.g. scripts/fetch-bible.py Mt 28 \\
     "Աւետարան ըստ Մատթէոսի" books/.../1-matthew.txt
@@ -29,7 +32,10 @@ import time
 import urllib.request
 from html.parser import HTMLParser
 
-URL = "https://bible.armeniancathedral.org/book/t{}_{}.htm"
+SITE = "https://bible.armeniancathedral.org/"
+URL = SITE + "book/t{}_{}.htm"
+# the 1994 text: a JavaScript list on the site
+URL_1994 = SITE + "_addon/main/t{}_{}.js"
 HEADERS = {
     "Accept": "text/html,*/*",
     "User-Agent": "nx-gir/0 (+github.com/serjhnn/nx-gir)",
@@ -100,15 +106,37 @@ class Verses(HTMLParser):
             self.cur.append(data)
 
 
-def fetch(code, chapter):
-    req = urllib.request.Request(
-        URL.format(code, chapter), headers=HEADERS
-    )
+def get(url):
+    req = urllib.request.Request(url, headers=HEADERS)
     with urllib.request.urlopen(req, timeout=30) as r:
-        html = r.read().decode("utf-8")
+        return r.read().decode("utf-8")
+
+
+def fetch(code, chapter):
+    """The verses as "chapter:verse text"."""
     p = Verses()
-    p.feed(html)
+    p.feed(get(URL.format(code, chapter)))
     return [re.sub(r"\s+", " ", c).strip() for c in p.cells]
+
+
+def verses_1994(js, chapter):
+    """The verses of the list arm_txt_1994 = [
+    '1 text', ...] as "chapter:verse text"."""
+    m = re.search(
+        r"arm_txt_1994\s*=\s*\[(.*?)\n\s*\];", js, re.S
+    )
+    if not m:
+        return []
+    out = []
+    for s in re.findall(r"'((?:[^'\\]|\\.)*)'", m[1]):
+        s = re.sub(r"\\(.)", r"\1", s)
+        out.append(f"{chapter}:" + s.strip())
+    return out
+
+
+def fetch_1994(code, chapter):
+    js = get(URL_1994.format(code, chapter))
+    return verses_1994(js, chapter)
 
 
 def clean(text, notes):
@@ -126,6 +154,9 @@ def clean(text, notes):
 
 
 def main(argv):
+    get_verses = fetch
+    if argv[:1] == ["--1994"]:
+        get_verses, argv = fetch_1994, argv[1:]
     if len(argv) != 4:
         sys.exit(__doc__)
     code, chapters, title, out = argv
@@ -138,7 +169,7 @@ def main(argv):
             n = armenian_number(c)
             parts += ["", f"Գլուխ {n}", ""]
         nums = []
-        for cell in fetch(code, c):
+        for cell in get_verses(code, c):
             m = re.match(rf"{c}:(\d+) (.*)", cell)
             if not m:
                 print(

@@ -72,6 +72,25 @@ def test_book_words_and_markdown(app):
     assert "".join(md["lines"][1]) == "quote"
 
 
+def test_parallel(tmp_path):
+    files = []
+    for top in ("grabar", "ashkharhabar"):
+        for name in ("ps.txt", "only-" + top + ".txt"):
+            p = tmp_path / top / name
+            p.parent.mkdir(exist_ok=True)
+            p.write_text("Սաղմոս\n")
+            files.append((f"{top}/{name}", 7, p))
+    app = App(files, tmp_path / "state.json")
+    ps = web.book(app, "grabar/ps.txt")
+    assert ps["parallel"] == ["ashkharhabar/ps.txt"]
+    back = web.book(app, "ashkharhabar/ps.txt")
+    assert back["parallel"] == ["grabar/ps.txt"]
+    one = "grabar/only-grabar.txt"
+    assert web.book(app, one)["parallel"] == []
+    assert app.parallel("grabar") == []
+    assert app.parallel("notes/grabar/ps.txt") == []
+
+
 def test_only_shelf_books_are_read(app):
     for name in (
         "../secret.txt",

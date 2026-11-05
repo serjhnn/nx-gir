@@ -73,6 +73,10 @@ TEXT_LANGS = ("ru", "en", "hy")
 # letters, e.g. ps-118-33-37-pustota-i-put
 SLUG_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 LANGS = ("en", "hy")
+# a book and its translation: the same path in the
+# other folder, e.g. grabar/bible/x.txt and
+# ashkharhabar/bible/x.txt, read side by side
+PARALLEL = ("grabar", "ashkharhabar")
 # pages load only their own files: no inline scripts
 # or styles, nothing from other sites
 CSP = (
@@ -114,6 +118,19 @@ class App:
         if name not in self.paths:
             raise ApiError(404, f"no such book: {name}")
         return self.paths[name]
+
+    def parallel(self, name):
+        """The other versions of a book on the shelf:
+        its path in the other PARALLEL folders."""
+        top, _, rest = name.partition("/")
+        if top not in PARALLEL or not rest:
+            return []
+        return [
+            f"{other}/{rest}"
+            for other in PARALLEL
+            if other != top
+            and f"{other}/{rest}" in self.paths
+        ]
 
     def editable(self, name):
         """True for a .md text in interpretations/:
@@ -282,6 +299,7 @@ def book(app, name):
         "at": at,
         "starts": sentence_starts(lay),
         "editable": app.editable(name),
+        "parallel": app.parallel(name),
         "format": md_format(app, name),
         **places(app, name, st, lay),
     }

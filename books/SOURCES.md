@@ -72,6 +72,33 @@ The first line after the title is the heading
 `Ալէլուիա։` (verse 0 on the site); then one verse per
 line, without verse numbers or chapter heading.
 
+## ashkharhabar/bible/old-testament/
+
+Psalm 118 in the Eastern Armenian translation of
+the Mother See of Holy Etchmiadzin (Աստուածաշունչ
+մատեան, Էջմիածին, 1994), as published on the same
+site (its "Eastern Armenian 1994" text), in the
+classical spelling the site uses. This translation
+is not in the public domain; only this psalm is
+included, for reading beside the Grabar.
+
+| File | Book | Verses |
+|------|------|-------:|
+| `psalm-118.txt` | Սաղմոս ՃԺԸ | 176 |
+
+Downloaded on 2026-11-05:
+
+```sh
+D=books/ashkharhabar/bible/old-testament
+scripts/fetch-bible.py --1994 Ps 118-118 "Սաղմոս ՃԺԸ" $D/psalm-118.txt
+```
+
+The site's `:` was replaced with `։`; nothing else was
+changed. The lines match
+`grabar/bible/old-testament/psalm-118.txt` one for one
+(title, `Ալէլուիա`, verses 1–176), so the web reader
+can show the two side by side.
+
 ## grabar/grigor-tatevatsi/
 
 Three works of Grigor Tatevatsi (Գրիգոր Տաթեւացի,
