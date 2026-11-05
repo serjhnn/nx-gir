@@ -133,10 +133,11 @@ function drawTheme() {
   const t = theme();
   const names = { light: "Light", dark: "Dark" };
   const which = { light: "sun", dark: "moon" };
-  button.replaceChildren(icon(ICONS[which[t]]),
-    h("span", {}, names[t]));
+  const other = t === "dark" ? "light" : "dark";
+  button.replaceChildren(icon(ICONS[which[t]]));
   button.title = "Theme: " + names[t] +
-    " (click to change)";
+    " (click for " + names[other].toLowerCase() + ")";
+  button.setAttribute("aria-label", button.title);
 }
 
 button.addEventListener("click", () => {

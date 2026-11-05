@@ -467,6 +467,13 @@ textarea:focus {
 
 /* editing interpretations */
 
+/* the theme button: only its icon */
+#theme {
+  min-width: 2.5rem;
+  justify-content: center;
+  padding-inline: 8px;
+}
+
 a.icon-btn {
   text-decoration: none;
 }
