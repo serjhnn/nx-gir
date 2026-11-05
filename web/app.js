@@ -895,7 +895,10 @@ function savePos(keepalive) {
 window.addEventListener("scroll", () => {
   if (!R.name) return;
   clearTimeout(R.timer);
-  R.timer = setTimeout(savePos, 700);
+  // the published copy only writes to this
+  // browser: save at once; the server gets one
+  // request once the scrolling stops
+  R.timer = setTimeout(savePos, STATIC ? 0 : 200);
 }, { passive: true });
 
 document.addEventListener("visibilitychange", () => {
