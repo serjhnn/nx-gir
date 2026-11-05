@@ -49,6 +49,29 @@ How this edition differs from the usual verse list:
   of different verse division.
 - John 14:14 is not in the edition.
 
+## grabar/bible/old-testament/
+
+Psalm 118 from the same Venice 1895 Bible and site.
+The edition numbers the Psalms as the Greek and
+Armenian Bibles do, so this is the long psalm
+"Երանեալ են ամբիծք" (Psalm 119 in Hebrew numbering).
+
+| File | Book | Verses |
+|------|------|-------:|
+| `psalm-118.txt` | Սաղմոս ՃԺԸ | 176 |
+
+Downloaded on 2026-11-05 with the same cleanup as the
+Gospels (47 footnote markers removed):
+
+```sh
+D=books/grabar/bible/old-testament
+scripts/fetch-bible.py Ps 118-118 "Սաղմոս ՃԺԸ" $D/psalm-118.txt
+```
+
+The first line after the title is the heading
+`Ալէլուիա։` (verse 0 on the site); then one verse per
+line, without verse numbers or chapter heading.
+
 ## grabar/grigor-tatevatsi/
 
 Three works of Grigor Tatevatsi (Գրիգոր Տաթեւացի,

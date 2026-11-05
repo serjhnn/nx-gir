@@ -10,6 +10,11 @@ bible.armeniancathedral.org. Usage:
 e.g. scripts/fetch-bible.py Mt 28 \\
     "Աւետարան ըստ Մատթէոսի" books/.../1-matthew.txt
 
+CHAPTERS is a count (28: chapters 1-28), a range
+(1-3) or one chapter (118-118, written without a
+chapter heading). Psalms use the Armenian (Greek)
+numbering: Ps 118 is "Blessed are the undefiled".
+
 Cleanup: the site's ":" and "`" become the Armenian
 full stop ։ and comma ՝, footnote markers like [12]
 and the `` closing a footnoted passage are removed,
@@ -31,13 +36,28 @@ HEADERS = {
 }
 ONES = "ԱԲԳԴԵԶԷԸԹ"
 TENS = "ԺԻԼԽԾԿՀՁՂ"
+HUNDREDS = "ՃՄՅՆՇՈՉՊՋ"
 
 
 def armenian_number(n):
-    """1-99 in Armenian letters: 11 -> ԺԱ."""
-    tens = TENS[n // 10 - 1] if n >= 10 else ""
-    ones = ONES[n % 10 - 1] if n % 10 else ""
-    return tens + ones
+    """1-999 in Armenian letters: 118 -> ՃԺԸ."""
+    out = ""
+    for digit, letters in (
+        (n // 100, HUNDREDS),
+        (n // 10 % 10, TENS),
+        (n % 10, ONES),
+    ):
+        if digit:
+            out += letters[digit - 1]
+    return out
+
+
+def chapter_range(arg):
+    """'28' -> 1..28, '118-118' -> 118..118."""
+    first, _, last = arg.partition("-")
+    if not last:
+        first, last = "1", first
+    return range(int(first), int(last) + 1)
 
 
 class Verses(HTMLParser):
@@ -112,8 +132,11 @@ def main(argv):
     notes = {"footnote markers": 0, "doubled full stops": 0}
     parts = [title, ""]
     total = 0
-    for c in range(1, int(chapters) + 1):
-        parts += ["", f"Գլուխ {armenian_number(c)}", ""]
+    span = chapter_range(chapters)
+    for c in span:
+        if len(span) > 1:
+            n = armenian_number(c)
+            parts += ["", f"Գլուխ {n}", ""]
         nums = []
         for cell in fetch(code, c):
             m = re.match(rf"{c}:(\d+) (.*)", cell)
@@ -138,7 +161,8 @@ def main(argv):
     with open(out, "w", encoding="utf-8") as f:
         f.write("\n".join(parts).strip() + "\n")
     print(
-        f"{out}: {chapters} chapters, {total} verses; "
+        f"{out}: {len(span)} chapters, "
+        f"{total} verses; "
         + ", ".join(f"{v} {k}" for k, v in notes.items()),
         file=sys.stderr,
     )
