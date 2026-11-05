@@ -46,7 +46,8 @@ def test_bookshelf_lists_interpretations(capsys):
     cli.run(["bookshelf", "--plain"])
     out = capsys.readouterr().out
     name = (
-        "interpretations/ru/ps-118-33-37-pustota-i-put.md"
+        "interpretations/hy/"
+        "ps-118-33-37-datarkutyun-ev-chanaparh.md"
     )
     assert name in out
     # the folder's README and hidden files are no books
