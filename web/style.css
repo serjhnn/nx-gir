@@ -804,7 +804,7 @@ body.panel-open main {
 
 /* two versions (.par: the other one), when
    Parallel is on: on a phone each line of it under
-   its pair, on a wide screen beside it */
+   its pair, from 40rem beside it */
 
 .text .par {
   display: none;
@@ -842,20 +842,14 @@ body.panel-open main {
   display: none;
 }
 
-@media (min-width: 64rem) {
-  body.reading.parallel main,
-  body.reading.parallel .bar {
-    max-width: 100rem;
-  }
-
-  body.parallel .reader {
-    grid-template-columns: minmax(0, 1fr) 20rem;
-  }
-
+/* two columns from 40rem: an open folding phone
+   (a Galaxy Fold is about 53rem wide) or a phone on
+   its side */
+@media (min-width: 40rem) {
   .text.parallel {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.4em 2.5rem;
+    gap: 0.4em 1.5rem;
     max-width: none;
   }
 
@@ -871,6 +865,22 @@ body.panel-open main {
   .text.parallel .par:empty,
   .text.parallel .par-head:first-child {
     display: block;
+  }
+}
+
+/* a computer: room for the word panel beside */
+@media (min-width: 64rem) {
+  body.reading.parallel main,
+  body.reading.parallel .bar {
+    max-width: 100rem;
+  }
+
+  body.parallel .reader {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+
+  .text.parallel {
+    column-gap: 2.5rem;
   }
 }
 

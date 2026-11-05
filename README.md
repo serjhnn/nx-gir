@@ -286,8 +286,9 @@ phone's browser.
 - **⇆ Parallel**: a book with a version in another
   language folder (the same path under `grabar/` and
   `ashkharhabar/`) is shown with it, line by line:
-  beside it on a wide screen, each line under its
-  pair on a phone. The name of the other version,
+  beside it on a screen at least 640 pixels wide
+  (a computer, an open folding phone, a phone on
+  its side), each line under its pair on a phone. The name of the other version,
   above the text, opens it.
 - **A− / A+** make the text smaller or bigger; the
   buttons beside them center it and space the lines
