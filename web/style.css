@@ -892,6 +892,24 @@ body.panel-open main {
   }
 }
 
+/* the home button: only while the toolbar is at
+   the top of the screen */
+.tools .home {
+  display: none;
+  min-width: 2.5rem;
+  justify-content: center;
+  padding-inline: 8px;
+}
+
+.tools.stuck .home {
+  display: inline-flex;
+}
+
+.tools .home svg {
+  width: 18px;
+  height: 20px;
+}
+
 /* the text settings button: only on a phone */
 .tools .more {
   display: none;

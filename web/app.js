@@ -624,6 +624,12 @@ function decorate() {
   const dir = (R.name || R.opening).split("/")
     .slice(0, -1).join("/");
   R.tools.replaceChildren(...[
+    // the site's mark, once the top bar has
+    // scrolled away (see stick())
+    h("a", { class: "icon-btn home", href: "#/",
+      "aria-label": "Library", title: "Library" },
+    document.querySelector(".brand-mark")
+      .cloneNode(true)),
     h("a", { class: "icon-btn back",
       href: dir ? "#/f/" + enc(dir) : "#/",
       "aria-label": "Back to the folder",
@@ -934,7 +940,16 @@ function savePos(keepalive) {
   });
 }
 
+// the toolbar at the top of the screen: it shows
+// the home button
+function stick() {
+  if (!R.tools) return;
+  R.tools.classList.toggle("stuck",
+    R.tools.getBoundingClientRect().top < 1);
+}
+
 window.addEventListener("scroll", () => {
+  stick();
   if (!R.name) return;
   clearTimeout(R.timer);
   // the published copy only writes to this
@@ -1104,6 +1119,7 @@ async function book(name) {
       .getBoundingClientRect().top + window.scrollY;
     window.scrollTo(0, top - bar() - 16);
   }
+  stick();
   // from now on scrolling is saved
   R.name = name;
   savePos();
