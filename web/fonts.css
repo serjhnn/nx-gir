@@ -316,3 +316,60 @@
     format("woff2");
   unicode-range: U+0530-058F, U+FB13-FB17;
 }
+
+/* Arian AMU: the files as they came (their license
+   asks that a changed copy be renamed), so whole,
+   not cut by script */
+@font-face {
+  font-family: "nx Arian Grqi";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/arian-grqi-400-normal.ttf")
+    format("truetype");
+}
+
+@font-face {
+  font-family: "nx Arian Grqi";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/arian-grqi-400-italic.ttf")
+    format("truetype");
+}
+
+@font-face {
+  font-family: "nx Arian AMU Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/arian-serif-400-normal.ttf")
+    format("truetype");
+}
+
+@font-face {
+  font-family: "nx Arian AMU Serif";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/arian-serif-400-italic.ttf")
+    format("truetype");
+}
+
+@font-face {
+  font-family: "nx Arian AMU Serif";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/arian-serif-700-normal.ttf")
+    format("truetype");
+}
+
+@font-face {
+  font-family: "nx Arian AMU Serif";
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url("fonts/arian-serif-700-italic.ttf")
+    format("truetype");
+}

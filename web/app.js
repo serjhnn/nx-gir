@@ -697,8 +697,11 @@ const SIZE = 4;
 const LINES = [1.75, 2.1, 2.5];
 // the book fonts (fonts.css); the first is the
 // default
-const FONTS = ["noto", "garamond", "oldstandard"];
+const FONTS = ["noto", "grqi", "arianserif",
+  "garamond", "oldstandard"];
 const FONT_NAMES = { noto: "Noto Serif",
+  grqi: "Arian Grqi",
+  arianserif: "Arian AMU Serif",
   garamond: "EB Garamond",
   oldstandard: "Old Standard" };
 const view = { size: SIZE, center: false, line: 0,

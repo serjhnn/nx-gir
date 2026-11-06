@@ -77,6 +77,18 @@
   --shadow: rgba(0, 0, 0, 0.6);
 }
 
+/* Armenian book fonts by Ruben Tarumian, with
+   their own Latin and Cyrillic letters */
+:root[data-font="grqi"] {
+  --book: "nx Arian Grqi", "nx Noto Serif Armenian",
+    Georgia, serif;
+}
+
+:root[data-font="arianserif"] {
+  --book: "nx Arian AMU Serif",
+    "nx Noto Serif Armenian", Georgia, serif;
+}
+
 /* old style book fonts; Armenian letters from
    FreeSerif, whose Armenian is the classical kind */
 :root[data-font="garamond"] {
