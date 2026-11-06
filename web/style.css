@@ -89,6 +89,18 @@
     "nx Noto Serif Armenian", Georgia, serif;
 }
 
+/* a decorative Armenian face, with Latin and
+   Cyrillic letters */
+:root[data-font="faulmann"] {
+  --book: "nx Faulmann", "nx Noto Serif Armenian",
+    Georgia, serif;
+}
+
+/* its spaces are wide: about 1.2em drawn bigger */
+:root[data-font="faulmann"] :is(.text, .editor) {
+  word-spacing: -0.7em;
+}
+
 /* old style book fonts; Armenian letters from
    FreeSerif, whose Armenian is the classical kind */
 :root[data-font="garamond"] {

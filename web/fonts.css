@@ -373,3 +373,16 @@
   src: url("fonts/arian-serif-700-italic.ttf")
     format("truetype");
 }
+
+/* Faulmann: the file as it came, whole; its small
+   letters are small beside its capitals, as in old
+   print, so it is drawn bigger */
+@font-face {
+  font-family: "nx Faulmann";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  size-adjust: 160%;
+  src: url("fonts/faulmann-400-normal.ttf")
+    format("truetype");
+}

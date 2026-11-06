@@ -12,6 +12,7 @@ text of the books only.
 | `oldstandard-*` | Old Standard TT | SIL OFL 1.1, `OFL-old-standard.txt` |
 | `arian-grqi-*` | Arian Grqi | Free license of Ruben Hakobyan (Tarumian), `Arian-AMU-license.txt` |
 | `arian-serif-*` | Arian AMU Serif | the same |
+| `faulmann-*` | Faulmann, by Dare-demo Iie (2020) | no license file; fonter.am: "free to download and free to use, personally or commercially" |
 | `freeserif-*` | GNU FreeSerif, Armenian letters only | GPL 3+ with the font exception, `FreeFont-license.txt` |
 
 The Arian fonts are the .ttf files of
@@ -23,6 +24,12 @@ them with the license beside them, and asks that a
 changed font not use the names Arian, AMU or
 Tarumian; their name tables also cite the SIL OFL
 1.1, with the Reserved Font Name Arian AMU.
+
+Faulmann is FaulmannFont.ttf of `faulmann.zip` from
+fonter.am (fonts/faulmann), renamed but otherwise as
+it came. It has no license of its own beyond the
+copyright line "(c) Dare-demo Iie, 2020"; it is here
+on fonter.am's terms quoted above.
 
 The Noto, EB Garamond and Old Standard files are the
 woff2 files of the Fontsource npm packages
