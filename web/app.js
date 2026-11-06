@@ -203,6 +203,7 @@ function crumbs(path, last) {
 // -- theme --
 
 const button = document.getElementById("theme");
+const topBar = button.parentNode;
 
 function theme() {
   const t = document.documentElement.dataset.theme;
@@ -722,7 +723,9 @@ function viewTools() {
         + " of " + LINES.length,
       title: view.line === LINES.length - 1
         ? "Widest lines (click for normal)"
-        : "Line spacing (click for more)" }));
+        : "Line spacing (click for more)" }),
+  // the theme button joins the row while reading
+  button);
 }
 
 function fail(e) {
@@ -1277,6 +1280,8 @@ async function route() {
   R.par = null;
   document.body.classList.remove("reading",
     "parallel");
+  // back to the top bar from the reading tools
+  if (button.parentNode !== topBar) topBar.append(button);
   try {
     if (hash.startsWith("read/")) {
       await book(decodeURIComponent(hash.slice(5)));
