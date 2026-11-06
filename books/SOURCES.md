@@ -141,3 +141,23 @@ How the files are made:
   have no text of their own.
 - Some paragraphs are very long (a whole sermon in the
   summer volume can be one paragraph), as on Digilib.
+
+## ashkharhabar/grigor-tatevatsi/3-amaran-hator/
+
+`01.txt`: a translation into modern Eastern Armenian
+of `grabar/grigor-tatevatsi/3-amaran-hator/01.txt`
+(part 1 of 24 of Ամառան հատոր: the sermons on Psalm
+118:35 and on the Ten Commandments, Գլուխ Ա–Ե), made
+by Claude (Anthropic's AI model) on 2026-11-06 at the user's
+request. It is a machine translation, not a published
+or reviewed one: read it as a help to the Grabar, not
+in its place.
+
+- Reformed (Soviet) spelling, as written in Armenia
+  today.
+- The lines match the Grabar one for one (title,
+  headings, then one paragraph per line), so the web
+  reader shows the two side by side.
+- Quotations keep the parentheses of the Grabar.
+  Slips and repeated passages in the Digilib text are
+  translated as they stand, not corrected.
