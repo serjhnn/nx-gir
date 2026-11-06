@@ -371,7 +371,8 @@ TODO:
 ## TODO: the website
 
 - [ ] A separate email address for the project
-      (e.g. a new Gmail), so the author's own address
+      (e.g. nxgir.project@gmail.com, if it is still
+      free), so the author's own address
       is not on the site; then put it in `CONTACT` in
       `web/app.js` (kept in two parts there, so that
       programs gathering addresses do not find it)
