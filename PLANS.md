@@ -255,6 +255,119 @@ Other sources, not used now; for later:
 - [ ] Show which senses are old (`{{հնց}}`, `{{գրբ}}`)
       first, or only those
 
+## Plan: Grigor Tatevatsi in modern Armenian
+
+Translate the three works of Grigor Tatevatsi in
+`books/grabar/grigor-tatevatsi/` into modern Eastern
+Armenian, one sentence per line, to read side by
+side with the Grabar in the web reader.
+
+What there is (from Digilib, see `books/SOURCES.md`):
+
+| Work | Parts | Size |
+|------|------:|-----:|
+| `1-girk-harcmanc/` Գիրք հարցմանց | 12 | 3.0 MB |
+| `2-dzmeran-hator/` Ձմեռան հատոր | 18 | 4.6 MB |
+| `3-amaran-hator/` Ամառան հատոր | 24 | 4.8 MB |
+
+54 parts, about 6 million letters; a part is about
+230 KB (115,000 letters). Part 1 of Ամառան հատոր is
+done (2026-11-06): 1,201 sentences, both files line
+for line.
+
+What part 1 taught us:
+
+- Translating whole paragraphs first and cutting
+  them into sentences afterwards was the hard part:
+  the translation joined what the Grabar says in two
+  sentences (mostly `որ ասէ։ (quotation)`), and the
+  two had to be matched up again by hand.
+- So: **cut the Grabar into sentences first, then
+  translate it line by line**. Each line of the
+  translation is then the translation of the same
+  line of the Grabar, and nothing has to be matched.
+- A sentence ends at `։` (and `:`), as the reader's
+  `sentence_starts()` counts it, also when `)`
+  follows (`։)`). The Grabar `.` is a pause inside a
+  sentence, not an end.
+- Some Digilib slips are in the text (a missing space
+  after `։`, repeated passages, typos); keep them in
+  the Grabar and translate what stands there.
+
+How each part is done:
+
+1. Cut the Grabar part into sentences with the
+   script (below): one sentence per line, a blank
+   line where a Digilib paragraph ended. The words
+   stay as they are; check it with the script's
+   test (same text, spaces aside).
+2. Translate it line by line into
+   `books/ashkharhabar/grigor-tatevatsi/<work>/NN.txt`:
+   the same number of lines, blank lines in the same
+   places. The first line is the title
+   (`Քարոզգիրք, որ կոչվում է … · n/total`).
+3. Check: the test (below) passes; spot-read the
+   two side by side in `nxgir web`.
+4. Add the part to `books/SOURCES.md` (a line in the
+   table under `ashkharhabar/grigor-tatevatsi/`).
+5. Commit per part, so a long work can stop and go
+   on at any part.
+
+How the translation is written:
+
+- Reformed (Soviet) spelling, as in Armenia today.
+- Close to the Grabar, sentence by sentence; clear
+  modern words, not a retelling. Quotations keep the
+  Grabar's parentheses.
+- Bible quotations are translated from the Grabar
+  as they stand (Tatevatsi often quotes from memory);
+  the 1994 Etchmiadzin translation is not copied (it
+  is not free).
+- The same Grabar term gets the same modern word
+  everywhere: keep a list in
+  `books/ashkharhabar/grigor-tatevatsi/TERMS.md`
+  (e.g. վարդապետ → վարդապետ, շնութիւն → շնություն,
+  ցասումն → ցասում, ցանկութիւն → ցանկություն,
+  բանն (reason) → բանականություն, the Ten
+  Commandments as «Մի՛ սպանիր», «Մի՛ շնացիր» …).
+- Numbers written with Armenian letters stay as in
+  the Grabar (ՃՁԳ հազար); a slip in them is noted in
+  `SOURCES.md`, not corrected.
+- It is a machine translation until someone who
+  reads Grabar has checked it; `SOURCES.md` says so
+  for every part, and says which parts were checked.
+
+Order: finish Ամառան հատոր (parts 2–24), then
+Ձմեռան հատոր (sermons too, the same terms), then
+Գիրք հարցմանց (questions and answers on theology and
+philosophy: the hardest; the terms list will help).
+
+TODO:
+
+- [ ] `scripts/split-sentences.py`: cut a Grabar
+      file into sentences as part 1 was cut (the
+      rule above), with a test in `tests/` that the
+      text is unchanged and every line is one
+      sentence
+- [ ] A test that every file in `ashkharhabar/` has
+      as many lines as its partner in `grabar/`,
+      blank lines in the same places
+- [ ] `TERMS.md`, started from part 1
+- [ ] Cut all 54 Grabar parts into sentences (one
+      commit; positions saved in the reader move,
+      notes follow their sentence)
+- [ ] Translate Ամառան հատոր: [x] 01 [ ] 02 [ ] 03
+      [ ] 04 [ ] 05 [ ] 06 [ ] 07 [ ] 08 [ ] 09
+      [ ] 10 [ ] 11 [ ] 12 [ ] 13 [ ] 14 [ ] 15
+      [ ] 16 [ ] 17 [ ] 18 [ ] 19 [ ] 20 [ ] 21
+      [ ] 22 [ ] 23 [ ] 24
+- [ ] Translate Ձմեռան հատոր: 18 parts
+- [ ] Translate Գիրք հարցմանց: 12 parts
+- [ ] Ask someone who reads Grabar to check a few
+      parts; fix the terms list from what they find
+- [ ] Later: `fetch-digilib.py` could write one
+      sentence per line itself, for new books
+
 ## Open questions
 
 - Permissions: which scans and texts can be published,
