@@ -358,10 +358,11 @@ async function shelf(folder) {
   const lang = folder.split("/")[1];
   show(
     folder ? crumbs(folder, false) : null,
+    // at the top the welcome comes first
+    folder ? null : intro(),
     h("h1", {}, title),
     h("p", { class: "sub" }, plural(data.count,
       data.unit)),
-    folder ? null : intro(),
     data.editable ? h("div", { class: "actions" },
       h("a", { class: "icon-btn",
         href: "#/new/" + (lang || "ru") },
