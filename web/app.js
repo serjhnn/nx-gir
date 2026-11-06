@@ -289,6 +289,35 @@ function folderRow(item) {
     plural(item.size, item.unit || "book")));
 }
 
+// where a first-time visitor starts: Grabar and
+// its modern Armenian translation side by side
+const START = "grabar/grigor-tatevatsi/" +
+  "3-amaran-hator/01.txt";
+
+// the welcome above the library, in Armenian
+function intro() {
+  return h("section", { class: "intro", lang: "hy" },
+    h("h2", {}, "Բարի գալուստ"),
+    h("p", {}, "Այստեղ կարող եք կարդալ գրաբարով՝ "
+      + "դասական հայերենով գրված գրքեր։ Հպեք "
+      + "որևէ բառի, և կտեսնեք դրա իմաստը, "
+      + "բառարանային ձևը և այն մյուս տեղերը, "
+      + "որտեղ բառը հանդիպում է գրքում։"),
+    h("p", {}, "Սկսելու համար բացեք Գրիգոր "
+      + "Տաթևացու «Ամառան հատորի» առաջին մասը. "
+      + "գրաբար բնագիրն այնտեղ ժամանակակից "
+      + "հայերեն թարգմանության հետ կողք կողքի "
+      + "է, ամեն նախադասությունը՝ առանձին "
+      + "տողում։"),
+    h("p", { class: "intro-btn" },
+      h("a", { class: "icon-btn primary",
+        href: "#/read/" + enc(START) },
+      "Կարդալ «Ամառան հատոր», մաս 1 →")),
+    h("p", { class: "intro-note" },
+      "Թարգմանությունը մեքենայական է և դեռ "
+      + "ստուգված չէ մասնագետի կողմից։"));
+}
+
 async function shelf(folder) {
   const q = encodeURIComponent(folder);
   const data = await api("shelf?folder=" + q);
@@ -307,6 +336,7 @@ async function shelf(folder) {
     h("h1", {}, title),
     h("p", { class: "sub" }, plural(data.count,
       data.unit)),
+    folder ? null : intro(),
     data.editable ? h("div", { class: "actions" },
       h("a", { class: "icon-btn",
         href: "#/new/" + (lang || "ru") },
