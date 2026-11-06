@@ -708,7 +708,7 @@ const FONT_NAMES = { grqi: "Arian Grqi",
   garamond: "EB Garamond",
   oldstandard: "Old Standard" };
 const view = { size: SIZE, center: false, line: 0,
-  font: 0, parallel: true };
+  font: 0, parallel: true, sentences: false };
 try {
   const v = JSON.parse(
     localStorage.getItem("nxgir-view") || "{}");
@@ -721,6 +721,7 @@ try {
   view.line = Math.max(0, LINES.indexOf(v.line));
   view.font = Math.max(0, FONTS.indexOf(v.font));
   view.parallel = v.parallel !== false;
+  view.sentences = v.sentences === true;
 } catch (e) {}
 
 function applyView() {
@@ -738,6 +739,8 @@ function applyView() {
   R.text.style.setProperty("--text-line",
     LINES[view.line]);
   R.text.classList.toggle("centered", view.center);
+  R.text.classList.toggle("sentences",
+    view.sentences);
   const par = Boolean(R.par && view.parallel);
   R.text.classList.toggle("parallel", par);
   document.body.classList.toggle("parallel", par);
@@ -755,7 +758,8 @@ function setView(change) {
         center: view.center,
         line: LINES[view.line],
         font: FONTS[view.font],
-        parallel: view.parallel }));
+        parallel: view.parallel,
+        sentences: view.sentences }));
   } catch (e) {}
   applyView();
   if (i >= 0) {
@@ -791,6 +795,13 @@ function viewTools() {
       title: view.line === LINES.length - 1
         ? "Widest lines (click for normal)"
         : "Line spacing (click for more)" }),
+  btn("¶", () => setView({
+    sentences: !view.sentences }), {
+    "aria-label": "Each sentence on its own line",
+    "aria-pressed": String(view.sentences),
+    title: view.sentences
+      ? "Sentences apart (click to join)"
+      : "Text as written (click for sentences)" }),
   fontPick(),
   // the theme button joins the row while reading
   button);
@@ -1077,7 +1088,22 @@ function parHead(name, other) {
 
 function parLine(line) {
   const parts = R.par.lines[line] || [""];
-  return h("p", { class: "par" }, parts.join(""));
+  const p = h("p", { class: "par" });
+  let i = R.par.first[line] || 0;
+  parts.forEach((t, k) => {
+    if (k % 2 && k > 1 && R.par.starts.has(i)) {
+      p.append(cut());
+    }
+    if (k % 2) i++;
+    if (t) p.append(t);
+  });
+  return p;
+}
+
+// where a sentence starts inside a line: shown as
+// a break when Sentences (¶) is on
+function cut() {
+  return h("span", { class: "cut" });
 }
 
 async function book(name) {
@@ -1100,6 +1126,14 @@ async function book(name) {
     try {
       R.par = await api("book?name=" +
         encodeURIComponent(other));
+      // the first word of each of its lines
+      let n = 0;
+      R.par.first = R.par.lines.map((parts) => {
+        const at = n;
+        n += (parts.length - 1) / 2;
+        return at;
+      });
+      R.par.starts = new Set(R.par.starts || []);
     } catch (e) {} // read it alone
   }
   const text = h("div", { class: "text",
@@ -1108,6 +1142,7 @@ async function book(name) {
   applyView();
   const frag = document.createDocumentFragment();
   const format = data.format || {};
+  const starts = new Set(data.starts || []);
   if (R.par) {
     frag.append(...parHead(name, R.par.name));
   }
@@ -1124,6 +1159,9 @@ async function book(name) {
       if (k % 2 === 0) {
         if (t) p.append(...nodes);
         return;
+      }
+      if (k > 1 && starts.has(R.spans.length)) {
+        p.append(cut());
       }
       const s = document.createElement("span");
       s.className = "w";

@@ -479,6 +479,17 @@ body.reading .bar {
   overflow-wrap: break-word;
 }
 
+/* Sentences (¶): each sentence from a new line,
+   with a little space above it */
+.text .cut {
+  display: none;
+}
+
+.text.sentences .cut {
+  display: block;
+  height: 0.5em;
+}
+
 .w {
   cursor: pointer;
   border-radius: 3px;
