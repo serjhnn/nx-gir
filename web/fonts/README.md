@@ -14,6 +14,7 @@ text of the books only.
 | `arian-serif-*` | Arian AMU Serif | the same |
 | `faulmann-*` | Faulmann, by Dare-demo Iie (2020) | no license file; fonter.am: "free to download and free to use, personally or commercially" |
 | `geghagrutyun-*` | Armeniapedia Geghagrutyun, by Raffi Kojian (2016) | no license file; fonter.am: "free to download and free to use, personally or commercially" |
+| `tumanian-*` | Tumanian's Handwriting, by Ruben Tarumian (2005) | no license file; the author (tarumian.am/?p=2243): "Տառատեսակը կարող եք ազատորեն ներբեռնել եւ անվճար գործածել" (free to download and use) |
 | `freeserif-*` | GNU FreeSerif, Armenian letters only | GPL 3+ with the font exception, `FreeFont-license.txt` |
 
 The Arian fonts are the .ttf files of
@@ -39,6 +40,14 @@ otherwise as it came, on the same terms: only the
 copyright line "Copyright (c) 2016, Raffi Kojian".
 It has the Armenian letters and digits, no
 punctuation, Latin or Cyrillic.
+
+Tumanian's Handwriting is
+ArTar_TumanianDzeragir_U.ttf of
+`tumanian-dzeragir.zip` from fonter.am
+(fonts/tumanian-dzeragir), renamed but otherwise as it
+came. It carries "Copyright (c) 2005 by Ruben
+Tarumian. All rights reserved."; its terms are the
+author's words quoted above.
 
 The Noto, EB Garamond and Old Standard files are the
 woff2 files of the Fontsource npm packages

@@ -297,7 +297,9 @@ phone's browser.
   Arian Grqi (the default) and Arian AMU Serif,
   Armenian book fonts; Noto Serif; the decorative
   old print face Faulmann; the calligraphic
-  Geghagrutyun; or the old style book fonts EB
+  Geghagrutyun; Tumanian's Handwriting, made from
+  Hovhannes Tumanyan's hand; or the old style book
+  fonts EB
   Garamond and Old Standard (with the classical
   Armenian letters of FreeSerif). The rest of the
   page keeps its own font. The fonts come with the

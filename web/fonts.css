@@ -400,3 +400,15 @@
   src: url("fonts/geghagrutyun-400-normal.ttf")
     format("truetype");
 }
+
+/* Tumanian's Handwriting: the file as it came;
+   small letters small, so drawn bigger */
+@font-face {
+  font-family: "nx Tumanian";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  size-adjust: 145%;
+  src: url("fonts/tumanian-400-normal.ttf")
+    format("truetype");
+}

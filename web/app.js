@@ -698,13 +698,14 @@ const LINES = [1.75, 2.1, 2.5];
 // the book fonts (fonts.css); the first is the
 // default
 const FONTS = ["grqi", "arianserif", "noto",
-  "faulmann", "geghagrutyun", "garamond",
-  "oldstandard"];
+  "faulmann", "geghagrutyun", "tumanian",
+  "garamond", "oldstandard"];
 const FONT_NAMES = { grqi: "Arian Grqi",
   noto: "Noto Serif",
   arianserif: "Arian AMU Serif",
   faulmann: "Faulmann",
   geghagrutyun: "Geghagrutyun",
+  tumanian: "Tumanian's Hand",
   garamond: "EB Garamond",
   oldstandard: "Old Standard" };
 const view = { size: SIZE, center: false, line: 0,

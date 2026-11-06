@@ -114,6 +114,13 @@
   word-spacing: -0.3em;
 }
 
+/* Hovhannes Tumanyan's handwriting, as a font by
+   Ruben Tarumian, with Latin and Cyrillic letters */
+:root[data-font="tumanian"] {
+  --book: "nx Tumanian", "nx Noto Serif Armenian",
+    Georgia, serif;
+}
+
 /* old style book fonts; Armenian letters from
    FreeSerif, whose Armenian is the classical kind */
 :root[data-font="garamond"] {
@@ -415,6 +422,7 @@ body.reading .bar {
   display: flex;
   gap: 0.35rem;
   margin-left: auto;
+  min-width: 0;
 }
 
 @media (max-width: 30rem) {
@@ -431,6 +439,10 @@ body.reading .bar {
 
 /* the list of book fonts, drawn like the buttons */
 .font-pick {
+  /* a long name shrinks it, not the row */
+  min-width: 0;
+  max-width: 10rem;
+  text-overflow: ellipsis;
   height: 2.1rem;
   padding: 0 28px 0 12px;
   border: 1px solid var(--rule);
