@@ -20,10 +20,10 @@
   --shadow: rgba(20, 20, 19, 0.08);
   --serif: "Noto Serif Armenian", "Noto Serif",
     Georgia, "Times New Roman", serif;
-  /* the font of the books' text only: Noto, or the
-     one picked in the text settings (fonts.css,
-     data-font); the page keeps --serif */
-  --book: "nx Noto Serif Armenian",
+  /* the font of the books' text only: Arian Grqi,
+     or the one picked in the text settings
+     (fonts.css, data-font); the page keeps --serif */
+  --book: "nx Arian Grqi", "nx Noto Serif Armenian",
     "Noto Serif Armenian", "Noto Serif",
     Georgia, "Times New Roman", serif;
   --sans: system-ui, -apple-system, "Segoe UI",
@@ -77,11 +77,13 @@
   --shadow: rgba(0, 0, 0, 0.6);
 }
 
-/* Armenian book fonts by Ruben Tarumian, with
-   their own Latin and Cyrillic letters */
-:root[data-font="grqi"] {
-  --book: "nx Arian Grqi", "nx Noto Serif Armenian",
-    Georgia, serif;
+/* the default, Arian Grqi, is in :root; Arian
+   fonts are by Ruben Tarumian, with their own Latin
+   and Cyrillic letters */
+:root[data-font="noto"] {
+  --book: "nx Noto Serif Armenian",
+    "Noto Serif Armenian", "Noto Serif",
+    Georgia, "Times New Roman", serif;
 }
 
 :root[data-font="arianserif"] {

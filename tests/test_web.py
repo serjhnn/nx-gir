@@ -347,10 +347,14 @@ def test_fonts_match_app_js():
         r"const FONTS = \[([^\]]*)\]", js
     ).group(1)
     fonts = re.findall(r'"(\w+)"', names)
-    assert fonts[0] == "noto"  # the default: no CSS
+    assert fonts[0] == "grqi"  # the default: no CSS
     css = web.static_file("/style.css").read_text()
     for f in fonts[1:]:
         assert f'[data-font="{f}"]' in css, f
+    # and the CSS default is that font
+    root = css[css.index(":root {") :]
+    book = root[root.index("--book:") :]
+    assert book.split(",")[0].endswith('"nx Arian Grqi"')
 
 
 def js_key(w):

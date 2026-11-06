@@ -697,11 +697,11 @@ const SIZE = 4;
 const LINES = [1.75, 2.1, 2.5];
 // the book fonts (fonts.css); the first is the
 // default
-const FONTS = ["noto", "grqi", "arianserif",
+const FONTS = ["grqi", "arianserif", "noto",
   "faulmann", "geghagrutyun", "garamond",
   "oldstandard"];
-const FONT_NAMES = { noto: "Noto Serif",
-  grqi: "Arian Grqi",
+const FONT_NAMES = { grqi: "Arian Grqi",
+  noto: "Noto Serif",
   arianserif: "Arian AMU Serif",
   faulmann: "Faulmann",
   geghagrutyun: "Geghagrutyun",
