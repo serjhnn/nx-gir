@@ -141,6 +141,13 @@ How the files are made:
   have no text of their own.
 - Some paragraphs are very long (a whole sermon in the
   summer volume can be one paragraph), as on Digilib.
+- `3-amaran-hator/01.txt` is cut further: one
+  sentence per line (a sentence ends at `։`, as the
+  reader counts them), with a blank line where a
+  Digilib paragraph ended, to be read beside its
+  translation in `ashkharhabar/`. The words are as on
+  Digilib; where a `։` had no space after it (6
+  times), the line break now stands there.
 
 ## ashkharhabar/grigor-tatevatsi/3-amaran-hator/
 
@@ -155,9 +162,14 @@ in its place.
 
 - Reformed (Soviet) spelling, as written in Armenia
   today.
-- The lines match the Grabar one for one (title,
-  headings, then one paragraph per line), so the web
-  reader shows the two side by side.
+- The lines match the Grabar one for one: one
+  Grabar sentence per line and its translation on the
+  same line of this file, so the web reader shows the
+  two side by side. Where the translation joins what
+  the Grabar says in two sentences (mostly the words
+  before a quotation, which the Grabar ends with
+  `։`), it is cut at the same place, so some lines
+  end in a comma or a `.`.
 - Quotations keep the parentheses of the Grabar.
   Slips and repeated passages in the Digilib text are
   translated as they stand, not corrected.
