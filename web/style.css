@@ -291,9 +291,12 @@ h1 {
   font: 500 1.3rem/1.3 var(--serif);
 }
 
+/* the questions: set apart by color, not weight,
+   which glares on a dark page */
 .intro h3 {
-  margin: 1rem 0 0.25rem;
-  font: 600 1rem/1.4 var(--sans);
+  margin: 1rem 0 0.2rem;
+  font: 500 1rem/1.4 var(--serif);
+  color: var(--accent-ink);
 }
 
 .intro p {
