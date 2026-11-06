@@ -103,3 +103,6 @@ def test_test_texts_left_out(tmp_path):
     names = [n for n, _, _ in bs.shelf_files()]
     assert names
     assert not any(n.startswith("test/") for n in names)
+    assert not any(
+        n.startswith("interpretations/") for n in names
+    )
