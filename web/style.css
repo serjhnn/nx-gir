@@ -101,6 +101,17 @@
   word-spacing: -0.7em;
 }
 
+/* a calligraphic Armenian face: letters and
+   digits; punctuation, Latin and Cyrillic from Noto */
+:root[data-font="geghagrutyun"] {
+  --book: "nx Geghagrutyun", "nx Noto Serif Armenian",
+    "Noto Serif Armenian", Georgia, serif;
+}
+
+:root[data-font="geghagrutyun"] :is(.text, .editor) {
+  word-spacing: -0.3em;
+}
+
 /* old style book fonts; Armenian letters from
    FreeSerif, whose Armenian is the classical kind */
 :root[data-font="garamond"] {

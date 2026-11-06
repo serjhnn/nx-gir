@@ -296,7 +296,8 @@ phone's browser.
   **font list** picks the font of the text by name:
   Noto Serif, the Armenian book fonts Arian Grqi
   and Arian AMU Serif, the decorative old print face
-  Faulmann, or the old style book fonts
+  Faulmann, the calligraphic Geghagrutyun, or the
+  old style book fonts
   EB Garamond and Old Standard (with the classical
   Armenian letters of FreeSerif); the rest of the
   page keeps its own font. The fonts come with the

@@ -386,3 +386,16 @@
   src: url("fonts/faulmann-400-normal.ttf")
     format("truetype");
 }
+
+/* Armeniapedia Geghagrutyun: the file as it came;
+   Armenian letters and digits only (the rest from
+   Noto), small letters small, so drawn bigger */
+@font-face {
+  font-family: "nx Geghagrutyun";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  size-adjust: 120%;
+  src: url("fonts/geghagrutyun-400-normal.ttf")
+    format("truetype");
+}
