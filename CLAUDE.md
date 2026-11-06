@@ -90,3 +90,8 @@
   images in `docs/` after changing the logo, the
   screens or the web pages
 - Linux and Termux only, no Windows support for now.
+
+## Git
+
+- One developer: commit and push straight to `main`,
+  no branches or pull requests.
