@@ -294,6 +294,11 @@ function folderRow(item) {
 const START = "grabar/grigor-tatevatsi/" +
   "3-amaran-hator/01.txt";
 
+// where visitors can write: kept in parts and put
+// together only in the page, so that programs
+// gathering addresses from the files do not find it
+const CONTACT = ["serj.hnn13", "gmail.com"];
+
 // the welcome above the library, in Armenian:
 // questions a first-time visitor may ask
 function intro() {
@@ -320,7 +325,22 @@ function intro() {
       "Կարդալ «Ամառան հատոր», մաս 1 →")),
     qa("Ո՞վ է թարգմանել։",
       "Թարգմանությունը մեքենայական է և դեռ "
-      + "ստուգված չէ մասնագետի կողմից։"));
+      + "ստուգված չէ մասնագետի կողմից։"),
+    qa("Ինչպե՞ս կապվել։",
+      "Հարցերի, առաջարկների կամ սխալների մասին "
+      + "գրեք նախագծի հեղինակին՝ ", mail(), "։"));
+}
+
+// the contact address as a link, made in the page
+function mail() {
+  const at = CONTACT.join(String.fromCharCode(64));
+  const a = h("a", { href: "#" }, at);
+  // the mailto only when it is used
+  const set = () => { a.href = "mailto:" + at; };
+  a.addEventListener("pointerdown", set);
+  a.addEventListener("focus", set);
+  a.addEventListener("click", set);
+  return a;
 }
 
 async function shelf(folder) {
