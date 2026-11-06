@@ -93,5 +93,6 @@
 
 ## Git
 
-- One developer: commit and push straight to `main`,
-  no branches or pull requests.
+- One developer, no pull requests. Commit and push
+  to the session's own branch first, then ask before
+  pushing the work to `main`.
