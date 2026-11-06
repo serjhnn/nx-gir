@@ -304,9 +304,11 @@ phone's browser.
   disk meanwhile (by a `git pull`, say) is never
   overwritten. Only `interpretations/` can be changed,
   and committing the changes is left to you.
-- **Light and dark** themes: the button at the top
-  right switches between them; until you pick one,
-  the page starts in your system's.
+- **Light, dark and black** themes: the button at
+  the top right steps through them (black is dark on
+  a fully black background, for OLED screens and
+  reading at night); until you pick one, the page
+  starts in your system's light or dark.
 
 Positions, bookmarks and notes are the same ones the
 terminal reader keeps, so a book can be started in one

@@ -1,7 +1,9 @@
-/* nx-gir web: light and dark themes.
+/* nx-gir web: light, dark and black themes.
    Colors are tokens; dark is set twice: for the
    theme button, and for the system choice when
-   scripts are off. */
+   scripts are off. Black is dark on a fully black
+   background, for OLED screens and night reading;
+   only the theme button sets it. */
 
 :root {
   color-scheme: light;
@@ -52,6 +54,21 @@
   --mark: #4a3127;
   --on-accent: #1f1e1d;
   --shadow: rgba(0, 0, 0, 0.4);
+}
+
+:root[data-theme="black"] {
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: #0e0e0d;
+  --text: #e8e6de;
+  --muted: #94928b;
+  --rule: #262624;
+  --accent: #e08a6d;
+  --accent-ink: #e9a088;
+  --hover: #161615;
+  --mark: #3d261d;
+  --on-accent: #000000;
+  --shadow: rgba(0, 0, 0, 0.6);
 }
 
 *,

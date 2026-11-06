@@ -60,6 +60,11 @@ const ICONS = {
   moon: [
     "M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z",
   ],
+  // the moon and a star: the black theme
+  night: [
+    "M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z",
+    "M17 3v4M15 5h4",
+  ],
   left: ["M4 6h16M4 10h10M4 14h16M4 18h10"],
   // lines with an up-down arrow beside them
   spacing: ["M11 6h9M11 12h9M11 18h9",
@@ -210,24 +215,36 @@ function crumbs(path, last) {
 const button = document.getElementById("theme");
 const topBar = button.parentNode;
 
+// light, dark, black, and around again
+const THEMES = ["light", "dark", "black"];
+const THEME_NAMES = {
+  light: "Light", dark: "Dark", black: "Black" };
+const THEME_ICONS = {
+  light: "sun", dark: "moon", black: "night" };
+
 function theme() {
   const t = document.documentElement.dataset.theme;
-  return t === "dark" ? "dark" : "light";
+  return THEMES.includes(t) ? t : "light";
+}
+
+function nextTheme(t) {
+  return THEMES[(THEMES.indexOf(t) + 1) %
+    THEMES.length];
 }
 
 function drawTheme() {
   const t = theme();
-  const names = { light: "Light", dark: "Dark" };
-  const which = { light: "sun", dark: "moon" };
-  const other = t === "dark" ? "light" : "dark";
-  button.replaceChildren(icon(ICONS[which[t]]));
-  button.title = "Theme: " + names[t] +
-    " (click for " + names[other].toLowerCase() + ")";
+  const other = nextTheme(t);
+  button.replaceChildren(
+    icon(ICONS[THEME_ICONS[t]]));
+  button.title = "Theme: " + THEME_NAMES[t] +
+    " (click for " +
+    THEME_NAMES[other].toLowerCase() + ")";
   button.setAttribute("aria-label", button.title);
 }
 
 button.addEventListener("click", () => {
-  const t = theme() === "dark" ? "light" : "dark";
+  const t = nextTheme(theme());
   document.documentElement.dataset.theme = t;
   try {
     localStorage.setItem("nxgir-theme", t);

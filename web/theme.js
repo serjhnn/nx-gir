@@ -6,7 +6,8 @@
   try {
     t = localStorage.getItem("nxgir-theme");
   } catch (e) {}
-  if (t !== "light" && t !== "dark") {
+  var ok = { light: 1, dark: 1, black: 1 };
+  if (!ok[t]) {
     var dark = window.matchMedia &&
       matchMedia("(prefers-color-scheme: dark)").matches;
     t = dark ? "dark" : "light";
