@@ -66,6 +66,10 @@ const ICONS = {
     "M5 4v16M3 6l2-2l2 2M3 18l2 2l2-2"],
   center: ["M4 6h16M7 10h10M4 14h16M7 18h10"],
   back: ["M19 12H5M11 6l-6 6l6 6"],
+  // two sliders: the text settings
+  sliders: ["M4 7h9M17 7h3M4 17h3M11 17h9",
+    "M15 5a2 2 0 1 0 0 4a2 2 0 1 0 0-4z",
+    "M9 15a2 2 0 1 0 0 4a2 2 0 1 0 0-4z"],
 };
 
 // 512 B, 3.4 KB: like human_size() in Python.
@@ -641,8 +645,20 @@ function decorate() {
       "aria-label": "Show the two versions",
       title: "Side by side with "
         + parLabel(R.par.name) }) : null,
+    // on a phone the text tools hide behind this
+    btn(icon(ICONS.sliders), () => {
+      const open = R.tools.classList.toggle("open");
+      more.setAttribute("aria-expanded",
+        String(open));
+    }, {
+      class: "icon-btn more",
+      "aria-expanded": String(
+        R.tools.classList.contains("open")),
+      "aria-label": "Text settings",
+      title: "Text settings" }),
     viewTools(),
   ].filter(Boolean));
+  const more = R.tools.querySelector(".more");
 }
 
 // -- how the text looks: size and alignment, kept
