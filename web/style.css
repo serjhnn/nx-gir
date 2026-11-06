@@ -18,7 +18,10 @@
   --mark: #f5ddd2;
   --on-accent: #ffffff;
   --shadow: rgba(20, 20, 19, 0.08);
-  --serif: "Noto Serif Armenian", "Noto Serif",
+  /* the book font: Noto, or the one picked with
+     the font button (fonts.css, data-font) */
+  --serif: "nx Noto Serif Armenian",
+    "Noto Serif Armenian", "Noto Serif",
     Georgia, "Times New Roman", serif;
   --sans: system-ui, -apple-system, "Segoe UI",
     "Noto Sans Armenian", Roboto, sans-serif;
@@ -69,6 +72,18 @@
   --mark: #3d261d;
   --on-accent: #000000;
   --shadow: rgba(0, 0, 0, 0.6);
+}
+
+/* old style book fonts; Armenian letters from
+   FreeSerif, whose Armenian is the classical kind */
+:root[data-font="garamond"] {
+  --serif: "nx EB Garamond", "nx FreeSerif Armenian",
+    "nx Noto Serif Armenian", Georgia, serif;
+}
+
+:root[data-font="oldstandard"] {
+  --serif: "nx Old Standard", "nx FreeSerif Armenian",
+    "nx Noto Serif Armenian", Georgia, serif;
 }
 
 *,
@@ -372,6 +387,12 @@ body.reading .bar {
   min-width: 2.5rem;
   justify-content: center;
   padding-inline: 8px;
+}
+
+/* the font button shows its font */
+.view .font-btn {
+  font-family: var(--serif);
+  font-size: 1.05rem;
 }
 
 .text p {

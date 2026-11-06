@@ -292,7 +292,12 @@ phone's browser.
   above the text, opens it.
 - **A− / A+** make the text smaller or bigger; the
   buttons beside them center it and space the lines
-  (each tap more, then back to normal). Each browser
+  (each tap more, then back to normal), and **Aa**
+  changes the font: Noto Serif, or the old style
+  book fonts EB Garamond and Old Standard (with the
+  classical Armenian letters of FreeSerif). The
+  fonts come with the pages (`web/fonts/`), so they
+  work offline. Each browser
   keeps its own choice, so a phone and a computer can
   differ. The editor uses the same size and spacing,
   and the word panel grows and shrinks with the text.

@@ -31,6 +31,9 @@ def test_build(tmp_path, files):
     html = (out / "index.html").read_text("utf-8")
     assert '<script src="static.js">' in html
     assert html.index("static.js") < html.index("app.js")
+    # the fonts, in their folder
+    assert (out / "fonts.css").is_file()
+    assert list((out / "fonts").glob("*.woff2"))
     data = out / "data"
     top = json.loads(
         (data / "shelf/index.json").read_text("utf-8")

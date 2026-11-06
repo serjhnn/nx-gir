@@ -695,8 +695,14 @@ const SIZE = 4;
 // space between lines, as line-height; the first is
 // the default
 const LINES = [1.75, 2.1, 2.5];
+// the book fonts (fonts.css); the first is the
+// default
+const FONTS = ["noto", "garamond", "oldstandard"];
+const FONT_NAMES = { noto: "Noto Serif",
+  garamond: "EB Garamond",
+  oldstandard: "Old Standard" };
 const view = { size: SIZE, center: false, line: 0,
-  parallel: true };
+  font: 0, parallel: true };
 try {
   const v = JSON.parse(
     localStorage.getItem("nxgir-view") || "{}");
@@ -707,6 +713,7 @@ try {
   else if (SIZES[v.size + 2]) view.size = v.size + 2;
   view.center = v.center === true;
   view.line = Math.max(0, LINES.indexOf(v.line));
+  view.font = Math.max(0, FONTS.indexOf(v.font));
   view.parallel = v.parallel !== false;
 } catch (e) {}
 
@@ -714,6 +721,11 @@ function applyView() {
   // on the page too: the word panel follows the size
   document.documentElement.style.setProperty(
     "--text-size", SIZES[view.size] + "rem");
+  // the font is for the whole page: the headings
+  // and the word panel too
+  const root = document.documentElement;
+  if (view.font) root.dataset.font = FONTS[view.font];
+  else delete root.dataset.font;
   if (!R.text) return;
   R.text.style.setProperty("--text-size",
     SIZES[view.size] + "rem");
@@ -736,6 +748,7 @@ function setView(change) {
       JSON.stringify({ rem: SIZES[view.size],
         center: view.center,
         line: LINES[view.line],
+        font: FONTS[view.font],
         parallel: view.parallel }));
   } catch (e) {}
   applyView();
@@ -772,8 +785,20 @@ function viewTools() {
       title: view.line === LINES.length - 1
         ? "Widest lines (click for normal)"
         : "Line spacing (click for more)" }),
+  fontButton(),
   // the theme button joins the row while reading
   button);
+}
+
+// "Aa" in the font in use; a click for the next
+function fontButton() {
+  const now = FONT_NAMES[FONTS[view.font]];
+  const next = (view.font + 1) % FONTS.length;
+  return btn("Aa", () => setView({ font: next }), {
+    class: "icon-btn font-btn",
+    "aria-label": "Font: " + now,
+    title: "Font: " + now + " (click for "
+      + FONT_NAMES[FONTS[next]] + ")" });
 }
 
 function fail(e) {

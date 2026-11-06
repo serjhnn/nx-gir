@@ -78,6 +78,10 @@ def pages(out):
     for p in web.WEB_DIR.iterdir():
         if p.is_file():
             shutil.copy2(p, out / p.name)
+        elif p.is_dir():  # fonts/
+            shutil.copytree(
+                p, out / p.name, dirs_exist_ok=True
+            )
     (out / "static.js").write_text(
         "// the published copy: app.js reads data/\n"
         "window.NXGIR_STATIC = true;\n",

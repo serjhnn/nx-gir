@@ -1,6 +1,7 @@
-// Set the theme before the page is drawn, so it does
-// not flash: the one picked with the button, or, until
-// one is picked, the system's.
+// Set the theme and the book font before the page is
+// drawn, so they do not flash: the theme picked with
+// the button, or, until one is picked, the system's;
+// the font from the text settings (app.js).
 (function () {
   var t = null;
   try {
@@ -13,4 +14,11 @@
     t = dark ? "dark" : "light";
   }
   document.documentElement.dataset.theme = t;
+  try {
+    var v = JSON.parse(
+      localStorage.getItem("nxgir-view") || "{}");
+    if (v.font) {
+      document.documentElement.dataset.font = v.font;
+    }
+  } catch (e) {}
 })();

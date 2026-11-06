@@ -1,5 +1,6 @@
 import http.client
 import json
+import re
 import threading
 
 import nxgir_web as web
@@ -328,6 +329,28 @@ def test_web_dir_has_the_pages():
     # the page works under the CSP: no inline code
     assert "<script>" not in html
     assert "style=" not in html
+
+
+def test_fonts_are_there():
+    css = web.static_file("/fonts.css").read_text()
+    urls = re.findall(r'url\("([^"]+)"\)', css)
+    assert urls
+    for u in urls:
+        assert web.static_file("/" + u), u
+    html = web.static_file("/").read_text()
+    assert html.index("fonts.css") < html.index("style.css")
+
+
+def test_fonts_match_app_js():
+    js = web.static_file("/app.js").read_text()
+    names = re.search(
+        r"const FONTS = \[([^\]]*)\]", js
+    ).group(1)
+    fonts = re.findall(r'"(\w+)"', names)
+    assert fonts[0] == "noto"  # the default: no CSS
+    css = web.static_file("/style.css").read_text()
+    for f in fonts[1:]:
+        assert f'[data-font="{f}"]' in css, f
 
 
 def js_key(w):
