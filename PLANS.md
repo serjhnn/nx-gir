@@ -376,6 +376,19 @@ TODO:
       is not on the site; then put it in `CONTACT` in
       `web/app.js` (kept in two parts there, so that
       programs gathering addresses do not find it)
+- [ ] Faster Pages builds, when they get slow (more
+      than about 5 minutes; now 2–3 from push to
+      live). `build-site.py` builds the whole site
+      each time (about 54 MB: word lookups 30 MB,
+      books 21 MB), and GitHub Pages always takes the
+      whole site, so only the build can be made
+      faster: keep the built files between runs
+      (`actions/cache`), with a hash of each book's
+      text and of the build code; build again only
+      the books that changed, and the word files
+      only when a book's words or `grabar/` change.
+      A test that a build from the cache equals a
+      build from scratch
 
 ## Open questions
 
