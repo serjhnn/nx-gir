@@ -368,6 +368,14 @@ TODO:
 - [ ] Later: `fetch-digilib.py` could write one
       sentence per line itself, for new books
 
+## TODO: the website
+
+- [ ] A separate email address for the project
+      (e.g. a new Gmail), so the author's own address
+      is not on the site; then put it in `CONTACT` in
+      `web/app.js` (kept in two parts there, so that
+      programs gathering addresses do not find it)
+
 ## Open questions
 
 - Permissions: which scans and texts can be published,
