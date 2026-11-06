@@ -286,14 +286,12 @@ function folderRow(item) {
   h("span", { class: "name" },
     item.label.replace(/\/$/, "")),
   h("span", { class: "meta" },
-    plural(item.size, "book")));
+    plural(item.size, item.unit || "book")));
 }
 
 async function shelf(folder) {
   const q = encodeURIComponent(folder);
   const data = await api("shelf?folder=" + q);
-  const books = data.items.reduce(
-    (n, i) => n + (i.folder ? i.size : 1), 0);
   const title = folder
     ? folder.split("/").pop() : "Library";
   document.title = folder
@@ -307,7 +305,8 @@ async function shelf(folder) {
   show(
     folder ? crumbs(folder, false) : null,
     h("h1", {}, title),
-    h("p", { class: "sub" }, plural(books, "book")),
+    h("p", { class: "sub" }, plural(data.count,
+      data.unit)),
     data.editable ? h("div", { class: "actions" },
       h("a", { class: "icon-btn",
         href: "#/new/" + (lang || "ru") },

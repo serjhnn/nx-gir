@@ -47,6 +47,8 @@ def test_shelf_top_and_folder(app):
         "notes.md",
     ]
     assert top["items"][1]["progress"] is None
+    assert (top["count"], top["unit"]) == (2, "book")
+    assert top["items"][0]["unit"] == "book"
     sub = web.shelf(app, "grabar/")
     assert sub["parent"] == ""
     assert [i["name"] for i in sub["items"]] == [

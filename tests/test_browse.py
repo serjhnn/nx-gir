@@ -1,4 +1,10 @@
-from nxgir_browse import Shelf, folder_items, parent
+from nxgir_browse import (
+    Shelf,
+    folder_count,
+    folder_items,
+    is_part,
+    parent,
+)
 
 NT = "grabar/bible/new-testament"
 FILES = [
@@ -117,3 +123,29 @@ def test_new_folder_starts_below_up_row():
     shelf.open("grabar/bible")
     item = shelf.items[shelf.pane.pos]
     assert item.label == "new-testament/"
+
+
+TATEV = "grabar/tatev/2-dzmeran"
+PARTS = FILES + [
+    (f"{TATEV}/01.txt", 9, None),
+    (f"{TATEV}/02.txt", 9, None),
+    (f"{TATEV}/03.txt", 9, None),
+]
+
+
+def test_is_part():
+    assert is_part("a/01.txt")
+    assert not is_part("01.txt")
+    assert not is_part("a/1-matthew.txt")
+
+
+def test_book_in_parts_counts_once():
+    top = folder_items(PARTS, "")
+    assert top[0].label == "grabar/"
+    assert top[0].size == 4
+    assert top[0].unit == "book"
+    assert folder_count(PARTS, "") == (7, "book")
+    tatev = folder_items(PARTS, "grabar/tatev")
+    assert tatev[1].size == 3
+    assert tatev[1].unit == "part"
+    assert folder_count(PARTS, TATEV) == (3, "part")

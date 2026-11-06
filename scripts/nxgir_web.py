@@ -42,7 +42,11 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
 import nxgir_grabar as grabar
-from nxgir_browse import folder_exists, folder_items
+from nxgir_browse import (
+    folder_count,
+    folder_exists,
+    folder_items,
+)
 from nxgir_reader import (
     WORD_RE,
     layout,
@@ -210,12 +214,17 @@ def shelf(app, folder=""):
             "folder": item.folder,
             "size": item.size,
         }
-        if not item.folder:
+        if item.folder:
+            row["unit"] = item.unit
+        else:
             row["progress"] = st.progress(item.name)
         items.append(row)
+    count, unit = folder_count(app.files, folder)
     return {
         "folder": folder,
         "parent": folder.rpartition("/")[0],
+        "count": count,
+        "unit": unit,
         "items": items,
         "editable": app.in_notes(folder),
     }

@@ -151,6 +151,42 @@ class Item(NamedTuple):
     folder: bool
     size: int  # bytes, or books inside for a folder
     path: object = None  # Path of a book
+    unit: str = "book"  # what a folder's size counts
+
+
+def is_part(name):
+    """True for a part of a book cut into files
+    (01.txt, 02.txt, … in the book's folder, as
+    fetch-digilib.py writes them)."""
+    base = name.rpartition("/")[2]
+    stem = base.partition(".")[0]
+    return "/" in name and stem.isdigit()
+
+
+def book_of(name):
+    """The book a file belongs to: its folder for a
+    part, else the file itself."""
+    if is_part(name):
+        return name.rpartition("/")[0]
+    return name
+
+
+def plural(n, word):
+    return f"{n} {word}{'s' * (n != 1)}"
+
+
+def folder_count(files, folder):
+    """(n, unit) for the heading of a folder: its
+    parts for a book cut into parts, else the books
+    in it, a book of parts counted once."""
+    prefix = f"{folder}/" if folder else ""
+    names = [n for n, _, _ in files if n.startswith(prefix)]
+    if names and all(
+        "/" not in n[len(prefix) :] and is_part(n)
+        for n in names
+    ):
+        return len(names), "part"
+    return len({book_of(n) for n in names}), "book"
 
 
 def parent(folder):
@@ -162,7 +198,7 @@ def folder_items(files, folder):
     """Rows for one folder of files [(name, size, path)]:
     ".." (below the top), then folders, then books."""
     prefix = f"{folder}/" if folder else ""
-    counts = {}
+    subs = set()
     books = []
     for name, size, path in files:
         if not name.startswith(prefix):
@@ -170,15 +206,17 @@ def folder_items(files, folder):
         rest = name[len(prefix) :]
         sub, slash, _ = rest.partition("/")
         if slash:
-            counts[sub] = counts.get(sub, 0) + 1
+            subs.add(sub)
         else:
             books.append(
                 Item(rest, name, False, size, path)
             )
-    items = [
-        Item(f"{d}/", prefix + d, True, n)
-        for d, n in sorted(counts.items())
-    ]
+    items = []
+    for d in sorted(subs):
+        n, unit = folder_count(files, prefix + d)
+        items.append(
+            Item(f"{d}/", prefix + d, True, n, None, unit)
+        )
     if folder:
         up = Item("..", parent(folder), True, 0)
         items.insert(0, up)
@@ -197,8 +235,7 @@ def item_line(item, state, w):
     if item.label == "..":
         right = "up"
     elif item.folder:
-        n = item.size
-        right = f"{n} book{'s' * (n != 1)}"
+        right = plural(item.size, item.unit)
     else:
         right = human_size(item.size)
         pct = state.progress(item.name)
@@ -282,12 +319,8 @@ def list_view(win, files, title, state):
         where = title
         if shelf.folder:
             where = f"{title}/{shelf.folder}"
-        n = sum(
-            i.size if i.folder else 1
-            for i in shelf.items
-            if i.label != ".."
-        )
-        count = f"{n} book{'s' * (n != 1)} "
+        n, unit = folder_count(shelf.files, shelf.folder)
+        count = plural(n, unit) + " "
         room = w - len(count) - 3
         put(
             win,
