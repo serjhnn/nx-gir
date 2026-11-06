@@ -18,9 +18,12 @@
   --mark: #f5ddd2;
   --on-accent: #ffffff;
   --shadow: rgba(20, 20, 19, 0.08);
-  /* the book font: Noto, or the one picked with
-     the font button (fonts.css, data-font) */
-  --serif: "nx Noto Serif Armenian",
+  --serif: "Noto Serif Armenian", "Noto Serif",
+    Georgia, "Times New Roman", serif;
+  /* the font of the books' text only: Noto, or the
+     one picked in the text settings (fonts.css,
+     data-font); the page keeps --serif */
+  --book: "nx Noto Serif Armenian",
     "Noto Serif Armenian", "Noto Serif",
     Georgia, "Times New Roman", serif;
   --sans: system-ui, -apple-system, "Segoe UI",
@@ -77,12 +80,12 @@
 /* old style book fonts; Armenian letters from
    FreeSerif, whose Armenian is the classical kind */
 :root[data-font="garamond"] {
-  --serif: "nx EB Garamond", "nx FreeSerif Armenian",
+  --book: "nx EB Garamond", "nx FreeSerif Armenian",
     "nx Noto Serif Armenian", Georgia, serif;
 }
 
 :root[data-font="oldstandard"] {
-  --serif: "nx Old Standard", "nx FreeSerif Armenian",
+  --book: "nx Old Standard", "nx FreeSerif Armenian",
     "nx Noto Serif Armenian", Georgia, serif;
 }
 
@@ -322,7 +325,7 @@ body.reading .bar {
 .text {
   max-width: 34em;
   font: var(--text-size, 1.15rem) /
-    var(--text-line, 1.75) var(--serif);
+    var(--text-line, 1.75) var(--book);
 }
 
 /* Markdown in .md texts: headings, quotes, bold and
@@ -389,10 +392,36 @@ body.reading .bar {
   padding-inline: 8px;
 }
 
-/* the font button shows its font */
-.view .font-btn {
-  font-family: var(--serif);
-  font-size: 1.05rem;
+/* the list of book fonts, drawn like the buttons */
+.font-pick {
+  height: 2.1rem;
+  padding: 0 28px 0 12px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  appearance: none;
+  background-image: linear-gradient(
+      45deg, transparent 50%, currentColor 50%),
+    linear-gradient(
+      135deg, currentColor 50%, transparent 50%);
+  background-position: right 15px center,
+    right 10px center;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.font-pick:hover {
+  color: var(--text);
+  background-color: var(--hover);
+}
+
+.font-pick option {
+  background: var(--bg);
+  color: var(--text);
 }
 
 .text p {
@@ -530,7 +559,7 @@ a.icon-btn {
   margin: 0 0 0.75rem;
   padding: 14px 16px;
   font: var(--text-size, 1.15rem) /
-    var(--text-line, 1.7) var(--serif);
+    var(--text-line, 1.7) var(--book);
 }
 
 .form {

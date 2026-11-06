@@ -1,8 +1,9 @@
 # Fonts of the web reader
 
 Bundled so the pages load nothing from other sites.
-`../fonts.css` names them; the font button in the
-reader chooses between them.
+`../fonts.css` names them; the font list in the
+reader's text settings chooses between them, for the
+text of the books only.
 
 | Files | Font | License |
 |---|---|---|

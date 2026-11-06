@@ -1,8 +1,9 @@
 /* nx-gir web: the book fonts, kept in fonts/ (see
    fonts/README.md). A browser downloads a file only
    when the page has letters in its unicode-range.
-   The font button picks one with data-font on the
-   page; the stacks are in style.css. */
+   The font list in the text settings picks one with
+   data-font on the page; the stacks (--book) are in
+   style.css, for the books' text only. */
 
 @font-face {
   font-family: "nx Noto Serif Armenian";

@@ -721,8 +721,8 @@ function applyView() {
   // on the page too: the word panel follows the size
   document.documentElement.style.setProperty(
     "--text-size", SIZES[view.size] + "rem");
-  // the font is for the whole page: the headings
-  // and the word panel too
+  // on the page, as the font list is drawn before
+  // the text; style.css gives it to the text only
   const root = document.documentElement;
   if (view.font) root.dataset.font = FONTS[view.font];
   else delete root.dataset.font;
@@ -785,20 +785,22 @@ function viewTools() {
       title: view.line === LINES.length - 1
         ? "Widest lines (click for normal)"
         : "Line spacing (click for more)" }),
-  fontButton(),
+  fontPick(),
   // the theme button joins the row while reading
   button);
 }
 
-// "Aa" in the font in use; a click for the next
-function fontButton() {
-  const now = FONT_NAMES[FONTS[view.font]];
-  const next = (view.font + 1) % FONTS.length;
-  return btn("Aa", () => setView({ font: next }), {
-    class: "icon-btn font-btn",
-    "aria-label": "Font: " + now,
-    title: "Font: " + now + " (click for "
-      + FONT_NAMES[FONTS[next]] + ")" });
+// the book fonts by name
+function fontPick() {
+  const pick = h("select", { class: "font-pick",
+    "aria-label": "Font of the text",
+    title: "Font of the text" },
+  FONTS.map((f, i) => h("option", { value: String(i),
+    selected: i === view.font ? "" : null },
+  FONT_NAMES[f])));
+  pick.addEventListener("change", () =>
+    setView({ font: Number(pick.value) }));
+  return pick;
 }
 
 function fail(e) {
