@@ -65,6 +65,7 @@ const ICONS = {
   spacing: ["M11 6h9M11 12h9M11 18h9",
     "M5 4v16M3 6l2-2l2 2M3 18l2 2l2-2"],
   center: ["M4 6h16M7 10h10M4 14h16M7 18h10"],
+  back: ["M19 12H5M11 6l-6 6l6 6"],
 };
 
 // 512 B, 3.4 KB: like human_size() in Python.
@@ -615,7 +616,15 @@ function decorate() {
     String(n)];
   const marks = "Bookmarks · " + R.marks.length;
   const notes = "Notes · " + R.notes.length;
+  // back to the folder the book is in
+  const dir = (R.name || R.opening).split("/")
+    .slice(0, -1).join("/");
   R.tools.replaceChildren(...[
+    h("a", { class: "icon-btn back",
+      href: dir ? "#/f/" + enc(dir) : "#/",
+      "aria-label": "Back to the folder",
+      title: "Back to " + (dir || "the library") },
+    icon(ICONS.back)),
     STATIC ? null : btn(count("★", "Bookmarks",
       R.marks.length), showMarks,
     { "aria-label": marks, title: marks }),

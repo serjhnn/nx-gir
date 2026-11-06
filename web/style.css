@@ -349,10 +349,6 @@ body.reading .bar {
   .tools .long {
     display: none;
   }
-
-  .tools {
-    gap: 0.35rem;
-  }
 }
 
 .view .icon-btn {
@@ -479,8 +475,9 @@ textarea:focus {
 
 /* editing interpretations */
 
-/* the theme button: only its icon */
-#theme {
+/* the theme and back buttons: only their icons */
+#theme,
+.tools .back {
   min-width: 2.5rem;
   justify-content: center;
   padding-inline: 8px;
@@ -892,5 +889,27 @@ body.panel-open main {
   .w.flash {
     animation: none;
     outline: 2px solid var(--accent);
+  }
+}
+
+/* one row on a phone, the back button too */
+@media (max-width: 30rem) {
+  .tools {
+    gap: 0.3rem;
+  }
+
+  .view {
+    gap: 0.25rem;
+  }
+
+  .tools .icon-btn {
+    padding-inline: 8px;
+  }
+
+  .view .icon-btn,
+  .tools .back,
+  .tools #theme {
+    min-width: 2.1rem;
+    padding-inline: 5px;
   }
 }
