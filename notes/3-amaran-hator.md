@@ -22,7 +22,7 @@ closing prayer with the doxology.
 
 ## How to do the next part
 
-Parts 1–5 are done. To do part N (06 next):
+Parts 1–6 are done. To do part N (07 next):
 
 1. Split the Grabar into sentences in place (the
    file from Digilib has long paragraphs):
@@ -371,6 +371,111 @@ of the book: "second volume" of Grigor's sermons
   orders, a man, baptised, true intention); nine
   seals; essentials vs accidents of a rite.
 
+## Part 6 · ԳԼՈՒԽ ԽԱ-ԽԵ and ԽԶ-Ծ (sermons 41–50)
+
+- ԽԱ (line 5, "from another"): the priesthood, Ps
+  131:9 «Քահանայք Քո զգեցցին զարդարութիւն». Three
+  spiritual degrees (nature, grace, glory) and
+  order in each; why many orders (three reasons;
+  Moses' seventy elders; the queen of Sheba);
+  Solomon's throne with six steps; three honours of
+  priests: the six vestments (խոյր, շապիկ, գօտի:
+  Elijah's leather belt and Christ's golden one,
+  ձեռնուրար and բազպան, ուրար, նափորտ, each read
+  as the Passion and as a virtue), the tonsure as
+  a round crown (four reasons), the seat at
+  Christ's table above the angels; four reasons
+  for purity (the ark, the cupbearer, one dish,
+  God's works).
+- ԽԲ (line 124): priests, Mal 2:7 «Շրթունք
+  քահանային զգուշասցին գիտութեան». The lips that
+  keep knowledge (eight ways; no pork, no clipped
+  psalms: Satan takes the remainder); "the law
+  from his mouth"; sixteen likenesses of the priest
+  to an angel. Questions: why monks wear wool and
+  not linen (ten reasons each for wool and for the
+  linen of the old law); the loose robe of the
+  clergy; why they are called «ժառանգաւորք»; why
+  Christ went to the wedding and turned water into
+  wine (ten reasons; the six jars; water and wine
+  as advice to the married).
+- ԽԳ (line 249, "from another"): confessors, Mal
+  2:7 again. Four reasons the confessor needs
+  knowledge; seventeen rules: the right remedy for
+  each sin, penance by time, age, sex and rank,
+  none for the dying, no money for confession, the
+  seal (a locked chest that breaks before it
+  opens), purges and binders for the soul, gentle
+  words before the lancet; one who led others
+  into sin must bring them back (spiritual theft;
+  the robber must clothe whom he stripped).
+- ԽԴ (line 298): marriage I, Gen 1:27. "Not good
+  to be alone"; why woman is good though she
+  caused the fall (God's goods are not stopped by
+  one sin; why God spares sinners: six reasons);
+  without the fall no incarnation (felix culpa);
+  against a corruptible paradise with sexual
+  generation (seven proofs; Gregory of Nyssa; the
+  Muslims' bodily paradise); how men would have
+  multiplied (like angels, like lamps lit from
+  one); betrothal, consent, blessing, union; three
+  goods of marriage (faith, offspring, sacrament);
+  impediments; the two bonds and two deaths.
+- ԽԵ (line 421): marriage II, Gen 2:21. Only the
+  heading: no text follows on Digilib.
+- ԽԶ (line 426; group ԳԼՈՒԽ ԽԶ-Ծ starts): marriage
+  III, Eph 5:32 «Խորհուրդս այս մեծ է». The seven
+  sacraments; betrothal and the ring (ten
+  meanings: faith); the wedding as the incarnation
+  (ten properties of Adam's rib and the Virgin's
+  blood) and as Christ's union with the Church
+  (ten more); the bride at the left, then the
+  right; seven garments and seven gifts (four of
+  the body, three of the soul); dowry, gifts, veil,
+  crown, red and white thread; no crown at a second
+  marriage; three days of feast (Adam and Eve's
+  three happy hours) and the crown taken off on
+  the eighth day.
+- ԽԷ (line 609): sins I, 1 John 5:16 «եւ են՝ որք
+  մահու չափի են». Natural discernment; sins of
+  ignorance, of weakness and of will; twelve
+  differences between unwilling and wilful sin
+  (stumbling and falling in a pit, sick and dead,
+  warm water and a furnace); why God does not drag
+  us to good by force; God is not the cause of sin
+  (all he gave is good and measured); what sin
+  harms in body and in soul; why man sins (Satan
+  paints evil as good; the fish and the hook); no
+  repentance after death; prayers for the dead
+  help only the penitent.
+- ԽԸ (line 761): sins II, Ex 34:7 "visiting the
+  sins of the fathers to the third and fourth
+  generation" (six readings: seven ages, four
+  births, four centuries before Canaan, four
+  ways of sinning, four ages of man); why God
+  punishes; good works of unbelievers and mortal
+  sinners (dead, yet useful: eight reasons); four
+  signs of being in God's love; quantity and
+  quality of sin; the priest owes seven times more
+  good, the bishop eight, the catholicos nine, the
+  vardapet five honours more.
+- ԽԹ (line 861): sins III, Jas 1:15 «Ցանկութիւն
+  յղացեալ՝ զմեղս ծնանի». Desire as the serpent
+  (fourteen likenesses); desire and pleasure,
+  passion and defilement, sin and lawlessness;
+  sin, death and "unto death"; sins of the four
+  humours (Gregory of Nyssa); good shared is good,
+  evil shared is evil; "you number my steps and
+  seal my sins in a bag" (Job 14:16–17).
+- Ծ (line 947, "from another, and right"):
+  original sin, Ps 50:7. Original, mortal and
+  venial sin and how they differ (one, common,
+  equal, unwilled, of nature not person; the
+  Virgin cleansed at her ensoulment; only Christ
+  free of it); the four wounds it leaves (desire:
+  the hydrus and the crocodile; ignorance; anger;
+  malice). Goes on in part 7.
+
 ## Notes on the text
 
 - The Digilib text has many misprints; repeated
@@ -389,3 +494,16 @@ of the book: "second volume" of Grigor's sermons
 - Part 5 line 1447 reads «կարեն գալ» ("can come")
   where the sense needs «ոչ կարեն»; translated as
   «չեն կարող գալ».
+- Part 6 line 421: sermon ԽԵ is only a heading;
+  the next line starts group ԳԼՈՒԽ ԽԶ-Ծ.
+- Part 6 line 607 is a stray fragment «պատւով ե»
+  between two sermons; kept as «պատվով ե».
+- Part 6 line 585 reads «եւ զայս ունին հրեշտակք»
+  ("and this the angels have") where the sense
+  needs «ոչ ունին»; translated as «չունեն».
+- Part 6 line 590 reads «զի ժամ» where line 595
+  shows "three hours" is meant; translated as
+  «երեք ժամ».
+- Part 6 line 699 reads «կամ սիրով» ("or by
+  love") among punishments: «սրով» (by the sword)
+  is meant and translated.
