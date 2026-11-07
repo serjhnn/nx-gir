@@ -22,7 +22,7 @@ closing prayer with the doxology.
 
 ## How to do the next part
 
-Parts 1–8 are done. To do part N (09 next):
+Parts 1–9 are done. To do part N (10 next):
 
 1. Split the Grabar into sentences in place (the
    file from Digilib has long paragraphs):
@@ -663,6 +663,68 @@ of the book: "second volume" of Grigor's sermons
   asks no soul of the painter (the cherubim, the
   image on the cloth).
 
+## Part 9 · ԳԼՈՒԽ ՀԱ-ՀԵ (sermons 71–75)
+
+Only one chapter group; the file is 669 lines.
+
+- ՀԱ (line 5): untimely death, Wis 1:13 «Աստուած
+  զմահ ոչ արար». The commandment between life and
+  death; we sin by turning our face from God;
+  heaven and earth as witnesses (Moses); why the
+  righteous die with the wicked (Abraham's ten
+  righteous; the threshing sledge cleans the wheat
+  and breaks the straw); three kinds of untimely
+  death: weeding, fruit-picking, harvest; against
+  those who think the plague is caught (why flee,
+  and "flee and hide" read as fleeing sin; Lot,
+  Noah, the blood on the doors).
+- ՀԲ (line 116): the evil day, Prov 11:4 «Ոչ
+  օգնեսցեն ինչք յաւուր բարկութեան». Three evil
+  days: this life, death, judgement; the mind
+  chooses good from evil (sin dressed as good: tin
+  over copper, the hook, the harlot's honey);
+  evils of trial, of snares (David and Absalom,
+  Bathsheba) and of punishment (sword and bow, Ps
+  7); God warns from afar, then near, then on the
+  body; the day of death (the thief at four
+  watches; why we do not know it; the pitiless
+  caller); the day of judgement (no advocate,
+  the saints and angels turned accusers).
+- ՀԳ (line 267): affliction, Ps 119:1. Ten
+  afflictions of our nature (needs, excess,
+  illness, beasts, people, demons, the elements,
+  service of God, death, the torments); why God
+  allows them (Job, Paul, Hezekiah, Lazarus, the
+  man born blind, the martyrs); whether the Old
+  Law punished only here; why Israel suffered in
+  Egypt and the apostles were killed; five gains
+  (Chrysostom: the sledge, the file, the fire) and
+  five harms of affliction (among the Armenians).
+- ՀԴ (line 352): chastisement, Joel 2:15 «Փող
+  հարէք ի Սիօն». Rebuke for friends, vengeance
+  for enemies; Joel's six counsels: sound the
+  trumpet openly, gather every age, fast (the
+  daily and the set fasts), pray, weep (tears as
+  hot water, alms as soap; the child who cries
+  for the breast), "spare your people"; four
+  examples: Nineveh, David's census and the
+  plague (Ornan's threshing floor, the third to
+  the sixth hour), Hezekiah and Rabshakeh (and
+  Judith, Gog and Magog under Zerubbabel), God
+  merciful, compassionate and long-suffering (the
+  sinful woman and the two debtors). Ends with a
+  line announcing the next sermon (line 575).
+- ՀԵ (line 577): repentance, Matt 3:2. Can a man
+  be healed by repentance (Gregory of Nyssa: two
+  gifts, repentance and resurrection); not one sin
+  while keeping the others; hating, confessing,
+  doing the opposite; ten kinds of repentance, one
+  accepted; ten chains of Satan that keep us from
+  confession; ten reasons to repent at once (fire
+  in the house, the open prison, dung for gold,
+  the wise virgins); five ways: confession,
+  prayer, humility, alms, forgiving debts.
+
 ## Notes on the text
 
 - The Digilib text has many misprints; repeated
@@ -717,3 +779,19 @@ of the book: "second volume" of Grigor's sermons
   հերծուածօղքն»; the stray verb is left out.
 - Part 8 line 1126 ends in the abbreviation «յաւ»
   (for յաւիտեանս); written out in full.
+- Part 9 line 186 ends in a `)` with no opening
+  one; kept.
+- Part 9 line 338 reads «հարբեցօղ» ("drunkard")
+  among the virtues affliction brings: «համբերող»
+  is meant and translated.
+- Part 9 line 526 reads "a hundred and eighty-five
+  troops" without «հազար» (line 532 has it); kept
+  as it stands.
+- Part 9 line 583 reads «ըստ գտանք»; by the sense
+  «զղջանք» is meant: translated «զղջում».
+- Part 9 line 608 reads «թողութիւն եւ թողութիւն»
+  (kept) and «զի ունին միաբանութիւն», translated
+  as the question of 2 Cor 6:14 («ի՞նչ
+  միաբանություն ունեն»).
+- Part 9 line 668 opens a quotation that is never
+  closed; kept.
