@@ -368,6 +368,99 @@ TODO:
 - [ ] Later: `fetch-digilib.py` could write one
       sentence per line itself, for new books
 
+## Plan: more Grabar authors from Digilib
+
+After Tatevatsi, more books from Digilib
+(digilib.am), fetched the same way with
+`scripts/fetch-digilib.py`. The authors below were
+found on 2026-11-07 in its categories Theology,
+Historiography, Philosophy, Literature, Letters and
+Law (modern authors left out). Not yet checked: that
+each book is typed text, not only scans, and how big
+it is. Historiography showed links to its first 10
+pages only; there may be more.
+
+5th century (the golden age):
+
+- Ագաթանգեղոս (Agathangelos), History
+- Կորիւն (Koriun), Life of Mashtots
+- Մովսէս Խորենացի (Movses Khorenatsi), History
+- Եղիշէ (Yeghishe), on Vardan and the war
+- Փաւստոս Բուզանդ (Pavstos Buzand)
+- Ղազար Փարպեցի (Ghazar Parpetsi)
+- Եզնիկ Կողբացի (Eznik Koghbatsi), Refutation
+  of the Sects
+- Դաւիթ Անյաղթ (David the Invincible)
+- Մամբրէ Վերծանող (Mambre Vertsanogh)
+- Յովհան Մանդակունի (Hovhan Mandakuni)
+- Գրիգոր Լուսաւորիչ (Gregory the Illuminator,
+  the sermons under his name)
+
+6th–10th centuries:
+
+- Սեբէոս (Sebeos), Ղեւոնդ (Ghevond),
+  Յովհան Մամիկոնեան (Hovhan Mamikonian)
+- Անանիա Շիրակացի (Anania Shirakatsi)
+- Կոմիտաս Աղցեցի (Komitas Aghtsetsi),
+  Յովհան Օձնեցի (Hovhan Odznetsi),
+  Սահակ Ձորոփորեցի, Սահակ Մռուտ
+- Վրթանէս Քերթող, Մովսէս Ցուրտաւեցի
+  (letters and treatises)
+- Յովհաննէս Դրասխանակերտցի (Hovhannes
+  Draskhanakerttsi), Ուխտանէս (Ukhtanes)
+- Գրիգոր Նարեկացի (Grigor Narekatsi), Book of
+  Lamentations
+
+11th–14th centuries:
+
+- Գրիգոր Մագիստրոս (Grigor Magistros), letters
+- Ներսէս Շնորհալի (Nerses Shnorhali),
+  Ներսէս Լամբրոնացի (Nerses Lambronatsi)
+- Մխիթար Գոշ (Mkhitar Gosh), law code and fables
+- Վարդան Այգեկցի (Vardan Aygektsi), fables
+- Սամուէլ Անեցի, Մխիթար Անեցի, Կիրակոս
+  Գանձակեցի, Վարդան Արեւելցի, Սմբատ Սպարապետ,
+  Հեթում Պատմիչ, Ստեփաննոս Օրբելեան
+  (chronicles and histories)
+- Ֆրիկ (Frik), Յովհաննէս Թլկուրանցի
+  (Hovhannes Tlkurantsi), poets
+
+15th–18th centuries:
+
+- Թովմա Մեծոփեցի (Tovma Metsopetsi)
+- Առաքել Դաւրիժեցի (Arakel Davrizhetsi)
+- Զաքարիա Քանաքեռցի, Զաքարիա Ագուլեցի
+- Սիմէոն Լեհացի, Երեմիա Չէլէպի Քէօմիւրճեան
+- Ոսկան Երեւանցի, Սիմէօն Երեւանցի,
+  Աբրահամ Կրետացի, Եսայի Հասան Ջալալեան
+- Many poets of the time in Literature
+  (Նահապետ Քուչակ, Մարտիրոս Ղրիմեցի, Սիմէոն
+  Կաֆացի, Խաչատուր Կաֆացի, …)
+
+Not found in these categories (look elsewhere on
+Digilib or in other sources): Մատթէոս Ուռհայեցի,
+Թովմա Արծրունի, Յովհաննէս Երզնկացի, Կոստանդին
+Երզնկացի.
+
+Suggested order:
+
+1. Ներսէս Շնորհալի: a churchman like Tatevatsi,
+   clear language
+2. Եղիշէ, Կորիւն: short classic 5th-century prose,
+   the model Grabar
+3. Մովսէս Խորենացի: the best-known history
+4. Գրիգոր Նարեկացի: very important, very hard
+
+TODO:
+
+- [ ] For each author: open their books on Digilib,
+      note the book ids, check the text is typed
+- [ ] Fetch the first one into
+      `books/grabar/<author>/`, add it to
+      `books/SOURCES.md`
+- [ ] Look through Historiography past page 10 and
+      the other categories for authors missed here
+
 ## TODO: the website
 
 - [ ] A separate email address for the project
