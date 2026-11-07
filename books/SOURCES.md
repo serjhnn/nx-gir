@@ -164,9 +164,9 @@ faith, hope, love, virtue, prudence and wisdom,
 Գլուխ ԺԲ–Ի; on courage and work, sloth, sleep,
 marriage and justice, Գլուխ ԻԱ–Լ), made by Claude
 (Anthropic's AI model) on 2026-11-06 and
-2026-11-07 at the user's request. It is a machine translation, not a
-published or reviewed one: read it as a help to the
-Grabar, not in its place.
+2026-11-07 at the user's request. It is a machine
+translation, not a published or reviewed one: read
+it as a help to the Grabar, not in its place.
 
 - Reformed (Soviet) spelling, as written in Armenia
   today.
