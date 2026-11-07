@@ -270,3 +270,29 @@ def test_define_falls_back_to_ai():
     # Wiktionary first
     out = grabar.define("սիրեաց")
     assert out[-1] == grabar.SOURCE["en"]
+
+
+def test_load_reads_again_when_the_file_changes(
+    tmp_path,
+):
+    tsv = tmp_path / "abbr.tsv"
+    tsv.write_text(
+        "# a test table\nած\tԱստուած\tGod\tsacred\tA\n",
+        encoding="utf-8",
+    )
+    first = grabar.load(tsv)
+    assert [a.full for a in first] == ["Աստուած"]
+    # each call gets its own list
+    first.clear()
+    assert len(grabar.load(tsv)) == 1
+    tsv.write_text(
+        "ած\tԱստուած\tGod\tsacred\tA\n"
+        "-ութի\t-ութիւն\t-ness\tending\tA\n",
+        encoding="utf-8",
+    )
+    table = grabar.load(tsv)
+    assert len(table) == 2
+    fulls = [f for f, _ in grabar.expand("ած", table)]
+    assert fulls == ["Աստուած"]
+    fulls = [f for f, _ in grabar.expand("բարութի", table)]
+    assert fulls == ["բարութիւն"]

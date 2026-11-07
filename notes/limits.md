@@ -11,7 +11,7 @@ parts): it prints each number against its limit and
 adds a line to `notes/limits.tsv`, the history. The
 quick form without `--site` takes seconds; `--site`
 builds the Pages site in a temporary folder (about a
-minute today).
+quarter of a minute today).
 
 ## State on 2026-11-07 (commit 8dfe23d)
 
@@ -54,19 +54,22 @@ new books mostly repeat words already there.
   `fetch-digilib.py` does.
 - **Site build, 10 minutes** (our own limit).
   GitHub Actions allows hours, but a slow build slows
-  every publish. Today more than half of the build
-  is `nxgir_grabar.load()` reading
+  every publish. On 2026-11-07 more than half of
+  the build was `nxgir_grabar.load()` reading
   `grabar/abbreviations.tsv` again for every
-  different word (about 207,000 times).
+  different word (about 207,000 times); now it is
+  read once and indexed (65 s down to about 15 s,
+  the same site). The rest grows with the books.
 
 The translations take far longer than the space runs
 out: a translated part adds about 250 KB.
 
 ## To do
 
-- [ ] Read `abbreviations.tsv` once per run
-  (cache `nxgir_grabar.load()`): the site build
-  from about a minute to seconds.
+- [x] Read `abbreviations.tsv` once per run
+  (cache `nxgir_grabar.load()`, index the table):
+  done 2026-11-07, the site build from 65 s to
+  about 15 s.
 - [ ] Run `check-limits.py --site --record` after
   each new book or every few translated parts, and
   compare with the line above.

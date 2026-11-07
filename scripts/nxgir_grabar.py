@@ -73,8 +73,26 @@ def key(word):
     return word.translate(MARKS).casefold()
 
 
+# path -> ((mtime, size), (Abbr, ...)): load() reads
+# each file once and again only when it changes
+_LOADED = {}
+
+
 def load(path=ABBREVIATIONS):
-    """[Abbr] from the TSV file, in file order."""
+    """[Abbr] from the TSV file, in file order. The
+    file is read once and again when it changes on
+    disk; each call gets a list of its own."""
+    st = Path(path).stat()
+    stamp = (st.st_mtime_ns, st.st_size)
+    hit = _LOADED.get(str(path))
+    if hit is None or hit[0] != stamp:
+        hit = (stamp, tuple(_parse(path)))
+        _LOADED[str(path)] = hit
+    return list(hit[1])
+
+
+def _parse(path):
+    """[Abbr] read from the TSV file at path."""
     out = []
     text = Path(path).read_text(encoding="utf-8")
     for line in text.splitlines():
@@ -96,22 +114,33 @@ def load(path=ABBREVIATIONS):
     return out
 
 
+@functools.lru_cache(maxsize=8)
+def _index(rows):
+    """For a table as a tuple of Abbr: ({key of the
+    short form: [Abbr]} of whole words, in table
+    order; [(key of the ending, Abbr)], longest
+    first). Worked out once per table, so a lookup
+    does not go through every row."""
+    words = {}
+    for a in rows:
+        if a.kind != "ending":
+            words.setdefault(key(a.short), []).append(a)
+    endings = sorted(
+        (a for a in rows if a.kind == "ending"),
+        key=lambda a: -len(a.short),
+    )
+    ends = [(key(a.short.lstrip("-")), a) for a in endings]
+    return words, ends
+
+
 def expand(word, table=None):
     """[(full form, Abbr)] that a short word may stand
     for: whole words first, then endings."""
     table = load() if table is None else table
     k = key(word)
-    out = [
-        (a.full, a)
-        for a in table
-        if a.kind != "ending" and key(a.short) == k
-    ]
-    endings = sorted(
-        (a for a in table if a.kind == "ending"),
-        key=lambda a: -len(a.short),
-    )
-    for a in endings:
-        end = key(a.short.lstrip("-"))
+    words, endings = _index(tuple(table))
+    out = [(a.full, a) for a in words.get(k, ())]
+    for end, a in endings:
         if k.endswith(end) and len(k) > len(end):
             stem = word.translate(MARKS)[: -len(end)]
             out.append((stem + a.full.lstrip("-"), a))
@@ -134,14 +163,13 @@ def expand_prefix(word, table=None):
     table = load() if table is None else table
     plain = word.translate(MARKS)
     k = key(plain)
+    words = _index(tuple(table))[0]
     out = []
     for pre in PREFIXES:
         rest = k[len(pre) :]
         if not k.startswith(pre) or len(rest) < 2:
             continue
-        for a in table:
-            if a.kind == "ending" or key(a.short) != rest:
-                continue
+        for a in words.get(rest, ()):
             first = a.full[0].casefold()
             if pre == "յ" and first not in VOWELS:
                 continue
