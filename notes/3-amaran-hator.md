@@ -22,7 +22,7 @@ closing prayer with the doxology.
 
 ## How to do the next part
 
-Parts 1–10 are done. To do part N (11 next):
+Parts 1–11 are done. To do part N (12 next):
 
 1. Split the Grabar into sentences in place (the
    file from Digilib has long paragraphs):
@@ -793,6 +793,100 @@ two stray pieces from elsewhere inside sermon ՀԸ
   Ezekiel 5 read as confession. Ends with a line
   announcing sermons on prayer, fasting and alms.
 
+## Part 11 · ԳԼՈՒԽ ՁԱ-ՁԵ, ՁԶ-Ղ and ՂԱ-ՂԵ (sermons 81–95)
+
+Three chapter groups, 1308 lines: a run of sermons
+on prayer, then one on fasting.
+
+- ՁԱ (line 5): prayer, 1 Tim 2:1. Why the good
+  works are three (fasting, prayer, alms: six
+  reasons); twelve reasons prayer is above the
+  others (աղ "salt" in աղօթք); prayer, petition,
+  supplication, thanksgiving told apart four
+  ways; fruitful and fruitless prayer (the
+  hypocrite, the impatient, the bold, the
+  mocking); praying for others; seven marks of
+  pleasing prayer, seven hindrances, ten gains.
+- ՁԲ (line 153): "do not heap up empty phrases",
+  Matt 6:7. How to pray at all hours; ten kinds
+  of the heathen's "much speaking" (gods that are
+  absent demons, cursing one's enemy: the
+  prophets cursed Satan and sin, not men); why God
+  gives bodily things (eight reasons) and why he
+  often does not; ten marks of pleasing prayer
+  and the gifts that go with it; ten gains; prayer
+  as the highest of the acquired virtues.
+- ՁԳ (line 320): "my prayer was pure", Job 16:17.
+  Purity of heart, tongue and hands; prayer to
+  God as king, lord, judge and friend; four sides
+  of pleasing prayer (who prays, who receives,
+  what is asked, the helpers); ten spurs and ten
+  hindrances; prayer as a messenger (Rabshakeh's
+  foolish envoy); gains of silent prayer.
+- ՁԴ (line 410): the order of the hours, Ps
+  50:17. Seven hours in the Old Law, nine in the
+  New (twelve with the three private ones); why
+  at night and why midnight begins the day; a
+  long reading of the night, morning, noon and
+  evening offices, hymn by hymn, with the events
+  of each hour (third, sixth, ninth). Lines
+  414–417 are a garbled repeat of the opening.
+- ՁԵ (line 602): Song 6:7 "seven concubines and
+  nine brides": seven hours of the Law, nine of
+  the Church (nine reasons); three hours for lay
+  people; common and private prayer.
+- ՁԶ (line 720, group ԳԼՈՒԽ ՁԶ-Ղ starts): the
+  morning, Ps 62:7: ten reasons to pray at dawn
+  (Adam made at that hour, Christ before
+  Pilate, the morning of the resurrection).
+- ՁԷ (line 759): the morning, Isa 26:9. Day and
+  night as good and evil works, this life and the
+  next, death and resurrection; ten examples of
+  morning prayer (the angels' morning and evening
+  knowledge, Adam, the Exodus, the manna, the
+  cock).
+- ՁԸ (line 846): the noon hour, Ps 54:18: ten
+  reasons (the noonday demon, the sun at its
+  height, Adam's fall and Christ's gall at the
+  sixth hour).
+- ՁԹ (line 888): grace at table, Ps 144:15. Why
+  we bless food before and after; spiritual food
+  and drink; breaking bread crosswise; blessing
+  the wine cup (Evagrius); the cupbearer stands.
+- Ղ (line 951): the evening, Ps 54:18: ten
+  reasons; six ways of prayer; why prayers seem
+  unheard (twelve reasons) and what a request
+  needs.
+- ՂԱ (line 1015, group ԳԼՈՒԽ ՂԱ-ՂԵ starts):
+  prayer aloud, Ps 141:2: fifteen reasons (the
+  living harp, demons fleeing loud praise).
+- ՂԲ (line 1043): prayer aloud again: fourteen
+  reasons (the drink offerings of Num 15, the
+  walls of Jericho); four turns: the bodiless
+  into the body, the high into the low, the far
+  into the near, the hard into the easy.
+- ՂԳ (line 1086): "justice is better than the
+  blood of sacrifice", Prov 21:3. Prayer as the
+  true, speaking sacrifice; five reasons the
+  offerings of the wicked are refused; will and
+  time turn good into evil and evil into good.
+- ՂԴ (line 1144): joy and sorrow, Phil 4:4. Four
+  sorrows, two only apparent; shame and sorrow
+  told apart; the Lord's joy and the world's;
+  Christ's sorrow over sinners and joy at good
+  works; angels rejoice, demons grieve. Line 1211
+  closes the sermons on prayer.
+- ՂԵ (line 1214): fasting, Zech 8:19 "the fast of
+  the fourth, fifth, seventh and tenth". Five
+  causes of sickness and health in body and soul;
+  four fasts not accepted (forced, for health,
+  for money, for show); the four, five, seven and
+  ten read as the heart's evils, the senses, the
+  seven deadly sins and the Ten Commandments;
+  three gains (healing, victory over the flesh,
+  a lifted mind). Short, "for much was said in
+  the first volume"; ends announcing alms.
+
 ## Notes on the text
 
 - The Digilib text has many misprints; repeated
@@ -855,8 +949,10 @@ two stray pieces from elsewhere inside sermon ՀԸ
 - Part 9 line 526 reads "a hundred and eighty-five
   troops" without «հազար» (line 532 has it); kept
   as it stands.
-- Part 9 line 583 reads «ըստ գտանք»; by the sense
-  «զղջանք» is meant: translated «զղջում».
+- Part 9 line 583 reads «ըստ գտանք»: one word,
+  «ըստգտանք» ("reproach", as «ըստգտանիցեն» in
+  part 11 line 1081); translated «հանդիմանություն»
+  (first rendered «զղջում», corrected with part 11).
 - Part 9 line 608 reads «թողութիւն եւ թողութիւն»
   (kept) and «զի ունին միաբանութիւն», translated
   as the question of 2 Cor 6:14 («ի՞նչ
@@ -866,7 +962,7 @@ two stray pieces from elsewhere inside sermon ՀԸ
 - Part 10 line 6 has the verse and `(Գլուխ. ՀԶ)`
   on one line (no `։` after the verse); kept.
 - Part 10 line 75 again reads «ըստ գտանք»
-  (as part 9 line 583); translated «զղջում».
+  (as part 9 line 583); translated the same way.
 - Part 10 lines 380–420 (on greed, starting in
   the middle of a sentence) and 422–510 (on the
   creation of woman and on marriage, starting
@@ -886,3 +982,16 @@ two stray pieces from elsewhere inside sermon ՀԸ
 - Part 10 line 818 reads «պատարագս» where
   «պարագայս» (circumstances) is meant;
   translated so.
+- Part 11 line 414 opens with a `)` that has no
+  opening; lines 414–417 repeat the verse in a
+  garbled way. Kept as they stand.
+- Part 11 lines 566 and 587 start with a small
+  letter: a sentence cut by a paragraph break;
+  kept.
+- Part 11 lines 616, 622 and 624 give a number
+  that the list after them does not match (seven
+  for nine, four for three); kept as numbered.
+- Part 11 lines 89, 136, 213 and 1084 open a
+  quotation that is never closed, and 768/770,
+  1098/1099, 1134/1135, 1268/1271 close it on a
+  later line; parentheses kept as in the Grabar.
