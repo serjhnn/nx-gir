@@ -660,3 +660,22 @@ def test_recent(app):
     assert len(one["items"]) == 1
     with pytest.raises(web.ApiError):
         web.get(app, "/api/recent", {"n": ["x"]})
+
+
+def test_forget(app):
+    st = app.state()
+    st.set_position("grabar/john.txt", [1, 0], 2)
+    st.save()
+    web.post(
+        app, "/api/forget", {"name": "grabar/john.txt"}
+    )
+    assert web.recent(app)["items"] == []
+    # where it was left stays
+    st = app.state()
+    assert st.position("grabar/john.txt") == [1, 0]
+    # reading it again brings it back
+    st.books["grabar/john.txt"]["hidden"] -= 1
+    st.save()
+    assert len(web.recent(app)["items"]) == 1
+    with pytest.raises(web.ApiError):
+        web.post(app, "/api/forget", {"name": "x"})

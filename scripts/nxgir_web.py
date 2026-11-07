@@ -15,6 +15,7 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/stats              how close to the limits
   POST /api/position           {name, pos, lines}
   POST /api/mark               {name, pos}
+  POST /api/forget             {name}: off the list
   POST /api/note               {name, pos, text}
   GET  /api/source?name=       an interpretation as is
   POST /api/save               {name, text, version}
@@ -363,7 +364,11 @@ def recent(app, n=0):
     st = app.state()
     items = []
     for name, b in st.books.items():
-        if name not in app.paths or "pos" not in b:
+        if (
+            name not in app.paths
+            or "pos" not in b
+            or st.hidden(name)
+        ):
             continue
         items.append(
             {
@@ -512,6 +517,16 @@ def set_position(app, body):
     st.set_position(name, pos, lines)
     saved(st)
     return {"progress": st.progress(name)}
+
+
+def forget(app, body):
+    """Take a book off the list of readings."""
+    name = text_arg(body, "name")
+    app.path(name)
+    st = app.state()
+    st.hide(name)
+    saved(st)
+    return {"ok": True}
 
 
 def toggle_mark(app, body):
@@ -679,6 +694,7 @@ def get(app, route, query):
 POSTS = {
     "/api/position": set_position,
     "/api/mark": toggle_mark,
+    "/api/forget": forget,
     "/api/note": note,
     "/api/save": save_text,
     "/api/new": new_text,

@@ -220,7 +220,7 @@ function recentHere(n) {
       const k = localStorage.key(i);
       if (!k.startsWith(pre)) continue;
       const r = readAt(k.slice(pre.length));
-      if (!r) continue;
+      if (!r || r.hidden) continue;
       const name = k.slice(pre.length);
       items.push({ name,
         title: r.title || name.split("/").pop(),
@@ -611,6 +611,23 @@ function ago(seen) {
 const SHELF_LANGS = { grabar: "Գրաբար",
   ashkharhabar: "Աշխարհաբար" };
 
+// take a book off the list of readings: where it
+// was left stays, and reading it again brings it
+// back
+async function forget(name) {
+  if (!STATIC) {
+    await send("forget", { name });
+    return;
+  }
+  const r = readAt(name);
+  if (!r) return;
+  r.hidden = true;
+  try {
+    localStorage.setItem("nxgir-read:" + name,
+      JSON.stringify(r));
+  } catch (e) {}
+}
+
 // books read, newest first (/api/recent)
 function readingList(items) {
   const list = h("ul", { class: "readings" });
@@ -620,7 +637,22 @@ function readingList(items) {
     fill.style.width = pct + "%";
     const lang = SHELF_LANGS[r.name.split("/")[0]];
     const when = ago(r.seen);
+    const x = h("button", { type: "button",
+      class: "forget",
+      "aria-label": "Հեռացնել ցանկից",
+      title: "Հեռացնել ցանկից" }, "×");
+    x.addEventListener("click", async () => {
+      x.disabled = true;
+      try {
+        await forget(r.name);
+      } catch (e) {
+        x.disabled = false;
+        return;
+      }
+      route(); // the next one moves up
+    });
     list.append(h("li", {},
+      x,
       h("a", { href: "#/read/" + enc(r.name) },
         r.title),
       h("div", { class: "meta" },

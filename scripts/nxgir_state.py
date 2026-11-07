@@ -129,6 +129,19 @@ class State:
         b["lines"] = lines
         b["seen"] = int(time.time())
 
+    def hide(self, key):
+        """Take a book off the list of readings until
+        it is read again (its position stays)."""
+        b = self.books.get(key)
+        if b and "pos" in b:
+            b["hidden"] = b.get("seen", 0)
+
+    def hidden(self, key):
+        """True for a book taken off the list and not
+        read since."""
+        b = self.books.get(key, {})
+        return b.get("hidden", -1) >= b.get("seen", 0)
+
     def progress(self, key):
         """Percent read (0-100), or None if never opened."""
         b = self.books.get(key)

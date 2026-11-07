@@ -340,7 +340,9 @@ phone's browser.
   first, with how far you got and when; tap one to
   go on where you stopped. **Readings** (the link
   under it and under the library, or `#/recent`)
-  lists all of them. `nxgir web` takes them from
+  lists all of them. The × of a book takes it off
+  the list (where you stopped stays; reading it
+  again brings it back). `nxgir web` takes them from
   the saved state, so the terminal reader's books
   are there too; on nxgir.am each browser keeps its
   own.
