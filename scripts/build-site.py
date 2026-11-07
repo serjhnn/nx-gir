@@ -48,7 +48,7 @@ MARK = ".nxgir-site"
 # GoatCounter (goatcounter.com): the site's code,
 # CODE.goatcounter.com, where the published copy
 # counts its visits; "" counts nothing
-GOATCOUNTER = ""
+GOATCOUNTER = "nxgir"
 
 
 def bucket(w):
