@@ -26,6 +26,7 @@ not see the #/ pages of app.js:
 
     read/<book>.html   each book as a plain page,
         its text in the HTML, linked to the reader
+    blog/<slug>.html   each blog post, the same way
     sitemap.xml, robots.txt   where they are
 
 The test texts of data/ and the user's own texts in
@@ -267,7 +268,7 @@ def describe(lines, n=DESCRIBE):
 
 
 PAGE = """<!doctype html>
-<html lang="hy">
+<html lang="{lang}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport"
@@ -291,14 +292,59 @@ PAGE = """<!doctype html>
   <a class="brand" href="./">նղ֊գիր</a>
 </header>
 <main class="plain">
-<p><a href="{reader}">Read in the reader,
-with word lookup</a></p>
+<p><a href="{reader}">{open}</a></p>
 <h1>{title}</h1>
 {text}
 </main>
 </body>
 </html>
 """
+
+
+# the link at the top of a plain page
+OPEN_BOOK = "Read in the reader,\nwith word lookup"
+OPEN_POST = "Open in nx-gir"
+
+
+def plain_page(out, path, text, **kw):
+    """Write a plain page (PAGE) at path of out:
+    text is HTML, the rest (title, desc, reader,
+    and lang and open if not the book's) plain."""
+    kw = {"lang": "hy", "open": OPEN_BOOK, **kw}
+    kw = {k: htm.escape(v) for k, v in kw.items()}
+    page = PAGE.format(
+        canon=htm.escape(url(path)), text=text, **kw
+    )
+    dest = out / path
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_text(versioned(page, out), "utf-8")
+
+
+def post_pages(out, app):
+    """Each blog post as a plain page,
+    blog/<slug>.html. Returns [(path, title,
+    date)]."""
+    links = []
+    for p in web.blog(app)["posts"]:
+        path = f"blog/{p['slug']}.html"
+        text = "\n".join(
+            f"<{t}>{htm.escape(x)}</{t}>"
+            for k, x in p["blocks"]
+            for t in ["h2" if k == "h" else "p"]
+        )
+        paras = [x for k, x in p["blocks"] if k == "p"]
+        plain_page(
+            out,
+            path,
+            lang="en",
+            open=OPEN_POST,
+            title=p["title"],
+            desc=describe([""] + paras),
+            reader="./#/blog/" + p["slug"],
+            text=text,
+        )
+        links.append((path, p["title"], p["date"]))
+    return links
 
 
 def searchable(out, app, files):
@@ -308,7 +354,8 @@ def searchable(out, app, files):
     So each book is also a plain page with its text
     (read/<book>.html), listed in sitemap.xml, which
     robots.txt names, and linked from index.html for
-    browsers without JavaScript."""
+    browsers without JavaScript. The blog posts
+    too (post_pages()), with their dates."""
     esc = htm.escape
     links = []
     for name, _, _ in files:
@@ -325,25 +372,29 @@ def searchable(out, app, files):
         reader = "./#/read/" + "/".join(
             quote(x, safe="") for x in name.split("/")
         )
-        page = PAGE.format(
-            title=esc(title),
-            desc=esc(describe(lines)),
-            canon=esc(url(path)),
-            reader=esc(reader),
+        plain_page(
+            out,
+            path,
+            title=title,
+            desc=describe(lines),
+            reader=reader,
             text=text,
         )
-        dest = out / path
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_text(versioned(page, out), "utf-8")
         links.append((path, title))
-    urls = [SITE + "/"] + [url(p) for p, _ in links]
+    posts = post_pages(out, app)
+    urls = [(SITE + "/", "")]
+    urls += [(url(p), "") for p, _ in links]
+    urls += [(url(p), d) for p, _, d in posts]
+    links += [(p, t) for p, t, _ in posts]
     (out / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/'
         'schemas/sitemap/0.9">\n'
         + "".join(
-            f"<url><loc>{esc(u)}</loc></url>\n"
-            for u in urls
+            f"<url><loc>{esc(u)}</loc>"
+            + (f"<lastmod>{d}</lastmod>" if d else "")
+            + "</url>\n"
+            for u, d in urls
         )
         + "</urlset>\n",
         "utf-8",

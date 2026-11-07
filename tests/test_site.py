@@ -189,6 +189,19 @@ def test_searchable(tmp_path, files):
     assert f"Sitemap: {bs.SITE}/sitemap.xml" in robots
     index = (out / "index.html").read_text("utf-8")
     assert '<a href="read/grabar/john.html">' in index
+    # the blog posts, with their dates
+    post = out / "blog/welcome.html"
+    html = post.read_text("utf-8")
+    assert '<html lang="en">' in html
+    assert 'href="./#/blog/welcome"' in html
+    assert "<h1>Welcome to the nx-gir blog</h1>" in html
+    assert "<h2>The idea</h2>" in html
+    canon = bs.SITE + "/blog/welcome.html"
+    assert (
+        f"<url><loc>{canon}</loc>"
+        "<lastmod>2026-11-07</lastmod></url>"
+    ) in sm
+    assert '<a href="blog/welcome.html">' in index
 
 
 def test_describe():
