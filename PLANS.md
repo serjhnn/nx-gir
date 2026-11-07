@@ -461,6 +461,41 @@ TODO:
 - [ ] Look through Historiography past page 10 and
       the other categories for authors missed here
 
+## Plan: a contents page
+
+The welcome on the main page lists only the
+Tatevatsi works and how much of each is translated
+(`FRONT` in `web/app.js`). A page of its own will
+show the whole library:
+
+- Every book in `grabar/`, grouped by author, with
+  its century and kind (sermons, history, poems, …)
+- For each: its parts, how many have a translation
+  (`status()` in `nxgir_web.py` already counts them
+  for books in parts; books in one file count too),
+  and a progress bar like the one on the main page
+- Each part: what it covers (from `notes/`, e.g.
+  `notes/3-amaran-hator.md`), and a link to read it,
+  side by side where a translation exists
+- Books in another language than Grabar marked
+  (Shnorhali's riddles are Middle Armenian)
+- The authors still to come (the Digilib list
+  above), so a visitor sees what is planned
+- A link to it from the main page and the top bar
+
+TODO:
+
+- [ ] Choose its address (e.g. `#/contents`) and
+      what it is called in Armenian
+- [ ] An API answer with every book, its parts and
+      their translation status (and the same file
+      in `build-site.py` for the Pages copy)
+- [ ] Short descriptions of the parts: a file per
+      book in `notes/`, read by the page, or a
+      `contents.tsv`
+- [ ] The page in `app.js`, tested in
+      `tests/test_web.py`
+
 ## TODO: the website
 
 - [ ] A separate email address for the project

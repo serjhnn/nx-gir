@@ -321,6 +321,9 @@ function folderRow(item) {
 // its modern Armenian translation side by side
 const START = "grabar/grigor-tatevatsi/" +
   "3-amaran-hator/01.txt";
+// the books whose translation the welcome shows;
+// the others wait for a page of their own
+const FRONT = "grabar/grigor-tatevatsi/";
 
 // where visitors can write: kept in parts and put
 // together only in the page, so that programs
@@ -330,6 +333,8 @@ const CONTACT = ["serj.hnn13", "gmail.com"];
 // the welcome above the library, in Armenian:
 // questions a first-time visitor may ask
 function intro(status) {
+  status = (status || []).filter(
+    (b) => b.folder.startsWith(FRONT));
   const qa = (q, ...a) => [h("h3", {}, q),
     h("p", {}, ...a)];
   return h("section", { class: "intro", lang: "hy" },
@@ -351,7 +356,7 @@ function intro(status) {
       h("a", { class: "icon-btn primary",
         href: "#/read/" + enc(START) },
       "Կարդալ «Ամառան հատոր», մաս 1 →")),
-    status && status.length ? [
+    status.length ? [
       h("h3", {}, "Ի՞նչ է արդեն թարգմանված։"),
       statusList(status)] : null,
     qa("Ո՞վ է թարգմանել։",
