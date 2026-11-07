@@ -249,12 +249,13 @@ def history(path=HISTORY):
 def stats(m, past=(), words=None):
     """The Statistics page for measures m, the
     recorded past (oldest first) and the number of
-    different words (or None). Where m has no site
-    or build, the last recorded one is shown, with
-    its date."""
+    different words (or None). Where m has no site,
+    build or git size, the last recorded one is
+    shown, with its date: close enough, and the
+    Pages build has no git history to measure."""
     m = dict(m)
     since = {}
-    for k in ("site", "build"):
+    for k in ("site", "build", "git"):
         if m[k] == "":
             for row in reversed(past):
                 if row[k] != "":

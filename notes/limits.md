@@ -17,8 +17,12 @@ The same numbers are on the **Statistics** page of
 the web reader (`#/stats`, linked under the shelf
 and from the Timeline). On the Pages site they are
 measured at every publish, with the site's real size
-and build time; in `nxgir web` the site's size and
-build time are the last ones in `limits.tsv`.
+and build time; the git history is the last size in
+`limits.tsv` (GitHub Actions copies only the last
+commit, and an estimate is enough). In `nxgir web`
+the git size is measured, and the site's size and
+build time are the last ones in `limits.tsv`. So
+record after big additions to keep them fresh.
 
 ## State on 2026-11-07 (commit 8dfe23d)
 

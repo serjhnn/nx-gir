@@ -78,7 +78,8 @@
   `scripts/check-limits.py` and on the Statistics
   page (`#/stats`: `/api/stats`, and
   `data/stats.json` written by `build-site.py`
-  with the site's size and build time). The
+  with the site's size and build time; the git
+  size there is the last in `notes/limits.tsv`). The
   limits, a dated state and a to-do list are in
   `notes/limits.md`.
   After a new book or a few translated parts, run it

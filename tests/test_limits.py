@@ -151,6 +151,10 @@ def test_stats_takes_the_last_site_measured():
         "2026-11-02",
         "2026-11-01",
     ]
+    # no git size measured: the last recorded one
+    s = cl.stats(measures(git=""), past)
+    got = {x["key"]: x for x in s["limits"]}
+    assert got["git"]["since"] == "2026-11-03"
 
 
 def test_stats_without_a_site():

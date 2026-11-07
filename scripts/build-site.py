@@ -204,15 +204,18 @@ def build(out, files, timeline=web.tl.TIMELINE):
 
 def stats(out, words, took, root=ROOT):
     """The Statistics page with the size of the site
-    in out and the time it took to build; without
-    git (a copy of the files only) the page has no
-    git measures and says so."""
+    in out and the time it took to build. The size
+    of the git history is the last recorded in
+    notes/limits.tsv: GitHub Actions checks out the
+    last commit only. Without git at all the page
+    says so."""
     try:
         m = lim.measure(root)
     except (OSError, lim.subprocess.CalledProcessError):
         return {"error": "measured without git"}
     m["site"] = lim.folder_size(out)
     m["build"] = round(took)
+    m["git"] = ""  # the recorded one, see above
     return lim.stats(m, lim.history(), len(words))
 
 

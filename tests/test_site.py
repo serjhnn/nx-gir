@@ -72,6 +72,8 @@ def test_build(tmp_path, files):
     got = {x["key"]: x for x in st["limits"]}
     assert 0 < got["site"]["value"]
     assert got["site"]["since"] == ""
+    # git as recorded in notes/limits.tsv
+    assert got["git"]["since"]
     assert st["words"] == words
     assert top["news"][0]["title"] == "John"
     assert book["pos"] is None and not book["editable"]
