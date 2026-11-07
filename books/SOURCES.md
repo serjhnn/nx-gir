@@ -183,3 +183,55 @@ it as a help to the Grabar, not in its place.
 - Quotations keep the parentheses of the Grabar.
   Slips and repeated passages in the Digilib text are
   translated as they stand, not corrected.
+
+## grabar/nerses-shnorhali/
+
+Seven works of Nerses Shnorhali (Ներսէս Շնորհալի,
+1102–1173, Catholicos of the Armenians), from
+Digilib, like the Tatevatsi works above (same
+remarks on the source and license).
+
+| Folder | Work | Digilib | Sections |
+|--------|------|---------|---------:|
+| `1-tught-yndhanrakan/` | Թուղթ ընդհանրական (General Epistle), prose | [299](https://www.digilib.am/book/299/) | 10 |
+| `2-voghb-edesioy/` | Ողբ Եդեսիոյ (Lament on Edessa), verse | [301](https://www.digilib.am/book/301/) | 14 |
+| `3-vipasanutyun/` | Վիպասանութիւն (a history in verse) | [300](https://www.digilib.am/book/300/) | 2 |
+| `4-gandzer/` | Գանձեր, տաղեր, փոխեր (hymns) | [296](https://www.digilib.am/book/296/) | 14 |
+| `5-tagher/` | Տաղեր (songs) | [298](https://www.digilib.am/book/298/) | 102 |
+| `6-yaghags-yerkni/` | Յաղագս երկնի եւ զարդուց նորա (On the heavens), verse | [295](https://www.digilib.am/book/295/) | 1 |
+| `7-hanelukner/` | Հանելուկներ (riddles), verse | [297](https://www.digilib.am/book/297/) | 1 |
+
+Downloaded on 2026-11-07 with
+`scripts/fetch-digilib.py`, made the same way as
+the Tatevatsi works:
+
+```sh
+D=books/grabar/nerses-shnorhali
+scripts/fetch-digilib.py 299 "Թուղթ ընդհանրական" $D/1-tught-yndhanrakan
+scripts/fetch-digilib.py 301 "Ողբ Եդեսիոյ" $D/2-voghb-edesioy
+scripts/fetch-digilib.py 300 "Վիպասանութիւն" $D/3-vipasanutyun
+scripts/fetch-digilib.py 296 "Գանձեր, տաղեր, փոխեր" $D/4-gandzer
+scripts/fetch-digilib.py 298 "Տաղեր" $D/5-tagher
+scripts/fetch-digilib.py 295 "Յաղագս երկնի եւ զարդուց նորա" $D/6-yaghags-yerkni
+scripts/fetch-digilib.py 297 "Հանելուկներ" $D/7-hanelukner
+```
+
+Notes:
+
+- Each work is small enough for one part (`01.txt`).
+- The headings are Digilib's section numbers
+  (`[Ա]`, `[1]`, …). In `4-gandzer/` they start at
+  `[ՃԳ]`, as on Digilib, and one section is only a
+  group heading (`- ՀԱՎԵԼՎԱԾՆԵՐ ՏԱՂԵՐ ՓՈԽԵՐ`) with
+  no text of its own.
+- The poems have one verse per line; the General
+  Epistle has long paragraphs, like Tatevatsi.
+- Digilib writes `:` for the Armenian full stop `։`
+  and `'` for the stress mark `՛` here; they are kept
+  as on Digilib (the reader counts `:` as a sentence
+  end too).
+- The riddles (`7-hanelukner/`) are not Grabar but
+  Middle Armenian, the language of the 12th–13th
+  centuries (`զետ` "like", `ու` "and", `կու`,
+  `հանց`, verbs such as `դառնա`, `կարդա`). They are
+  kept here with the other works under his name.
