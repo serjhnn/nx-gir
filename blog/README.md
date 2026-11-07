@@ -16,3 +16,6 @@ read by `scripts/nxgir_blog.py`. Content, not code.
 - Newest first on the page, in the language the
   reader picks (Armenian first); a post without
   that language shows in the first one it has.
+- Drafts go in `blog/drafts/`, named the same way:
+  they are not read, so not on the page or the
+  site. Move a draft up into `blog/` to publish it.

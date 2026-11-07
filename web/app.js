@@ -989,13 +989,15 @@ async function blogPage(path) {
     ? data.posts.find((p) => p.slug === slug) : null;
   if (slug && !one) throw new Error("No such post");
   const draw = () => {
-    const lang = blogLang();
-    const t = BLOG[lang];
-    // the languages the posts on this page have
+    // the languages the posts on this page have;
+    // the one picked, if they have it
     const have = new Set((one ? [one] : data.posts)
       .flatMap((p) => p.versions.map((v) => v.lang)));
     const langs = Object.keys(BLOG)
       .filter((l) => have.has(l));
+    const lang = have.has(blogLang()) || !langs.length
+      ? blogLang() : langs[0];
+    const t = BLOG[lang];
     const pick = h("div", { class: "filters",
       role: "group", "aria-label": "Language" },
     langs.map((l) => {

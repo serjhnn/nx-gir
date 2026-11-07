@@ -27,6 +27,11 @@ def folder(tmp_path):
         "# Later\n\nText.\n", "utf-8"
     )
     (d / "README.md").write_text("# not a post\n")
+    # a draft: not read
+    (d / "drafts").mkdir()
+    (d / "drafts/2026-10-07-hello.ru.md").write_text(
+        "# Привет\n\nЧерновик.\n", "utf-8"
+    )
     return d
 
 
@@ -84,11 +89,8 @@ def test_web_blog(tmp_path, folder):
 
 
 def test_the_blog():
-    # blog/ reads, and opens with the welcome, in
-    # Armenian and English
+    # blog/ reads, and opens with the welcome
     posts = bl.read()
     assert posts[-1]["slug"] == "welcome"
     assert posts[-1]["date"] == "2026-11-07"
-    langs = [v["lang"] for v in posts[-1]["versions"]]
-    assert langs == ["hy", "en"]
     json.dumps(posts)

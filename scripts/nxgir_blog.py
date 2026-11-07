@@ -2,6 +2,7 @@
 post and language, named YYYY-MM-DD-slug.LANG.md
 (see blog/README.md); the versions of a post share
 its date and slug.
+Drafts are in blog/drafts/, which is not read.
 
 A post is a "# Title" line, then paragraphs split
 by empty lines; "## " starts a subheading. read()
