@@ -116,23 +116,56 @@ const STATIC = window.NXGIR_STATIC === true;
 // browser, and never on the local server.
 let counted = "";
 function visit(path) {
-  const url = window.NXGIR_COUNT;
-  if (!STATIC || !url || navigator.webdriver) return;
   if (path === counted) return;
   const first = counted === "";
   counted = path;
-  const q = new URLSearchParams({
-    p: path,
-    t: document.title,
-    s: String(screen.width),
-    rnd: Math.random().toString(36).slice(2),
-  });
+  const q = { p: path, t: document.title };
   // where they came from, on the first page only
   if (first && document.referrer) {
-    q.set("r", document.referrer);
+    q.r = document.referrer;
   }
-  new Image().src = url + "?" + q;
+  beacon(q);
 }
+
+function beacon(q) {
+  const url = window.NXGIR_COUNT;
+  if (!STATIC || !url || navigator.webdriver) return;
+  const all = new URLSearchParams({ ...q,
+    s: String(screen.width),
+    rnd: Math.random().toString(36).slice(2) });
+  new Image().src = url + "?" + all;
+}
+
+// How far into a book readers get: the first time
+// this browser sees the end of a quarter of it, an
+// event "/read/<book>/50%" is counted (titled
+// "<title> · 50%"). The part seen is the line of
+// the last word on the screen. Kept per browser,
+// so a reader who comes back is not counted again.
+const DEPTHS = [25, 50, 75, 100];
+function depth(title) {
+  if (!STATIC || !window.NXGIR_COUNT) return;
+  const key = "nxgir-depth:" + R.name;
+  let got = 0;
+  try {
+    got = Number(localStorage.getItem(key)) || 0;
+  } catch (e) {}
+  const line = R.wpos[lastWord()][0] + 1;
+  const pct = 100 * line / R.lines;
+  const now = DEPTHS.filter((d) => d <= pct + 0.5)
+    .pop() || 0;
+  if (now <= got) return;
+  try {
+    localStorage.setItem(key, String(now));
+  } catch (e) {}
+  for (const d of DEPTHS) {
+    if (d <= got || d > now) continue;
+    beacon({ p: "/read/" + R.name + "/" + d + "%",
+      t: (title || R.name) + " · " + d + "%",
+      e: "true" });
+  }
+}
+
 // files the words are spread over, per language;
 // as BUCKETS in build-site.py
 const BUCKETS = 256;
@@ -465,6 +498,7 @@ const R = {
   refs: [], // indexes of words with its key
   panel: null,
   tools: null,
+  title: "", // of the book open
   saved: "", // the position last saved
   timer: 0,
   par: null, // the other version: book() data
@@ -1091,6 +1125,20 @@ function topWord() {
   return lo;
 }
 
+// the last word on the screen
+function lastWord() {
+  const edge = window.innerHeight;
+  let lo = 0;
+  let hi = R.spans.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi + 1) >> 1;
+    const r = R.spans[mid].getBoundingClientRect();
+    if (r.top < edge) lo = mid;
+    else hi = mid - 1;
+  }
+  return lo;
+}
+
 function savePos(keepalive) {
   clearTimeout(R.timer);
   R.timer = 0;
@@ -1101,6 +1149,7 @@ function savePos(keepalive) {
   if (k === R.saved) return;
   R.saved = k;
   if (STATIC) {
+    depth(R.title);
     // as State.progress() counts it
     const pct = Math.min(100,
       Math.round(100 * (pos[0] + 1) / R.lines));
@@ -1325,6 +1374,7 @@ async function book(name) {
   stick();
   // from now on scrolling is saved
   R.name = name;
+  R.title = title;
   savePos();
 }
 
