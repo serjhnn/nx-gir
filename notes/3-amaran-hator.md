@@ -20,6 +20,64 @@ answers (պատասխանի), many comparisons from nature
 (ants, bees, the body, seeds, the sea), and a
 closing prayer with the doxology.
 
+## How to do the next part
+
+Parts 1–5 are done. To do part N (06 next):
+
+1. Split the Grabar into sentences in place (the
+   file from Digilib has long paragraphs):
+
+   ```python
+   import re, sys
+   p = sys.argv[1]
+   lines = open(p).read().split("\n")
+   cut = re.compile(
+       r"(։+)(\s*\))?\s*(?=[^\s)])")
+   def sub(m):
+       close = ")" if m.group(2) else ""
+       return m.group(1) + close + "\n"
+   out = []
+   for i, ln in enumerate(lines):
+       if i == 0:
+           out.append(ln)
+           continue
+       if not ln.strip():
+           continue
+       if out[-1] != "":
+           out.append("")
+       part = cut.sub(sub, ln.strip())
+       out += [x.strip()
+               for x in part.split("\n")]
+   open(p, "w").write("\n".join(out) + "\n")
+   ```
+
+   One sentence per line, cut after `։` (a run
+   `։։` and a closing `)` stay on the line); a
+   blank line where a Digilib paragraph ended.
+   Count the places where `։` had no space after
+   it, for `books/SOURCES.md`.
+2. Translate line for line into
+   `books/ashkharhabar/.../NN.txt`, in chunks of
+   about 75 lines:
+   - title line: «Քարոզգիրք, որ կոչվում է Ամառան
+     հատոր · N/24»; `(Գլուխ. X)` becomes
+     `(Գլուխ X)`; chapter group lines
+     (`ԳԼՈՒԽ ԼԱ-ԼԵ`) stay as they are;
+   - reformed spelling, `և`/`Եվ`, never `եւ`;
+   - quotations keep the Grabar's parentheses;
+     no square brackets; a leading `*` is kept;
+   - repeated passages and odd numbering are kept
+     (see "Notes on the text" below).
+3. Check: same line count as the Grabar, blank
+   lines at the same places, no `։` inside a line
+   (except where the Grabar has it), no Latin
+   letters, no `եւ`.
+4. Update `books/SOURCES.md` (file range, the `։`
+   count, the part's sermons in the translation
+   note) and add a "Part N" section here.
+5. Run ruff and pytest, commit, push to the
+   session branch, then ask before `main`.
+
 ## Part 1 · ԳԼՈՒԽ Ա-Ե (sermons 1–5)
 
 Opens with a prayer to the Holy Spirit and the title
