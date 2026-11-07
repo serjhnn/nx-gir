@@ -211,8 +211,14 @@ function readAt(name) {
 }
 
 // the books read in this browser, newest first, as
-// /api/recent gives them: n of them, or all for 0
-function recentHere(n) {
+// /api/recent gives them: n of them, or all for 0;
+// titles from data/titles.json
+async function recentHere(n) {
+  let titles = {};
+  try {
+    titles = await json("data/titles.json");
+  } catch (e) {}
+  const loaded = Object.keys(titles).length > 0;
   const pre = "nxgir-read:";
   const items = [];
   try {
@@ -222,8 +228,11 @@ function recentHere(n) {
       const r = readAt(k.slice(pre.length));
       if (!r || r.hidden) continue;
       const name = k.slice(pre.length);
+      // a book no longer on the site
+      if (loaded && !(name in titles)) continue;
       items.push({ name,
-        title: r.title || name.split("/").pop(),
+        title: titles[name] || r.title
+          || name.split("/").pop(),
         progress: r.pct, seen: r.t || 0 });
     }
   } catch (e) {}
@@ -248,7 +257,7 @@ async function staticApi(path) {
     return json("data/timeline.json");
   }
   if (route === "recent") {
-    return { items: recentHere(
+    return { items: await recentHere(
       Number(q.get("n")) || 0) };
   }
   if (route === "stats") {

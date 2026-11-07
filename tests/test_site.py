@@ -61,6 +61,13 @@ def test_build(tmp_path, files):
     )
     assert book["lines"][0][1] == "Ի"
     # the timeline, and its newest on the top page
+    # the titles, for the list of readings
+    titles = json.loads(
+        (data / "titles.json").read_text("utf-8")
+    )
+    assert titles == {
+        "grabar/john.txt": "Ի սկզբանէ էր Բանն, ած։"
+    }
     tl = json.loads(
         (data / "timeline.json").read_text("utf-8")
     )

@@ -14,6 +14,8 @@ the same functions (nxgir_web.py):
         words of the books that the Grabar helpers
         know, spread over BUCKETS files by bucket()
     data/timeline.json              /api/timeline
+    data/titles.json                each book's title,
+        for /api/recent (the rest is in the browser)
     data/stats.json                 /api/stats, with
         this site's size and build time
 
@@ -187,6 +189,15 @@ def build(out, files, timeline=web.tl.TIMELINE):
         dirs = folders(files)
         write_json(
             data / "timeline.json", web.timeline(app)
+        )
+        # for the list of readings, which only has
+        # the names (recentHere() in app.js)
+        write_json(
+            data / "titles.json",
+            {
+                n: web.book_title(app, n)
+                for n, _, _ in files
+            },
         )
         for f in dirs:
             path = data / "shelf" / f / "index.json"
