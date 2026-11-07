@@ -72,10 +72,15 @@
   book covers (`notes/3-amaran-hator.md`, added to
   with every translated part); not on the shelf and
   not on the Pages site
-- `scripts/check-limits.py`: how close the repository
-  is to the limits of GitHub and of a phone (tested
-  in `tests/test_limits.py`); the limits, a dated
-  state and a to-do list are in `notes/limits.md`.
+- `scripts/nxgir_limits.py`: how close the
+  repository is to the limits of GitHub and of a
+  phone (tested in `tests/test_limits.py`), shown by
+  `scripts/check-limits.py` and on the Statistics
+  page (`#/stats`: `/api/stats`, and
+  `data/stats.json` written by `build-site.py`
+  with the site's size and build time). The
+  limits, a dated state and a to-do list are in
+  `notes/limits.md`.
   After a new book or a few translated parts, run it
   with `--site --record` (adds a line to
   `notes/limits.tsv`) and update the notes

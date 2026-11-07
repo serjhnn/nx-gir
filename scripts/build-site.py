@@ -14,6 +14,8 @@ the same functions (nxgir_web.py):
         words of the books that the Grabar helpers
         know, spread over BUCKETS files by bucket()
     data/timeline.json              /api/timeline
+    data/stats.json                 /api/stats, with
+        this site's size and build time
 
 The test texts of data/ and the user's own texts in
 interpretations/ are left out.
@@ -33,12 +35,14 @@ import json
 import shutil
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 sys.path.insert(0, str(HERE))
 
+import nxgir_limits as lim  # noqa: E402
 import nxgir_web as web  # noqa: E402
 
 # files the words are spread over, per language;
@@ -145,6 +149,7 @@ def build(out, files, timeline=web.tl.TIMELINE):
     """Write the site for files [(name, size, path)]
     and the events of timeline (timeline.tsv) into
     out. Returns (books, folders, words)."""
+    start = time.monotonic()
     out = Path(out)
     if out.exists():
         if not (out / MARK).exists():
@@ -190,7 +195,25 @@ def build(out, files, timeline=web.tl.TIMELINE):
             write_json(
                 data / "word" / lang / f"{n}.json", part
             )
+    write_json(
+        data / "stats.json",
+        stats(out, words, time.monotonic() - start),
+    )
     return len(files), len(dirs), len(words)
+
+
+def stats(out, words, took, root=ROOT):
+    """The Statistics page with the size of the site
+    in out and the time it took to build; without
+    git (a copy of the files only) the page has no
+    git measures and says so."""
+    try:
+        m = lim.measure(root)
+    except (OSError, lim.subprocess.CalledProcessError):
+        return {"error": "measured without git"}
+    m["site"] = lim.folder_size(out)
+    m["build"] = round(took)
+    return lim.stats(m, lim.history(), len(words))
 
 
 def shelf_files():

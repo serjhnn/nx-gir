@@ -596,6 +596,175 @@ h1 {
 .tl.next h3 {
   color: var(--muted);
 }
+.more-link {
+  margin: 2rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.more-link a {
+  color: var(--accent-ink);
+  text-decoration: none;
+}
+
+/* the Statistics page: one meter per limit. The
+   level colors are a fixed status set (fine,
+   watch, near), the same in every theme, and
+   always come with the level in words */
+:root {
+  --ok: #0ca30c;
+  --watch: #fab219;
+  --near: #d03b3b;
+}
+.verdict {
+  margin: 0 0 0.5rem;
+  padding: 0.55rem 0.8rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--ok);
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+.verdict[data-level="watch"] {
+  border-left-color: var(--watch);
+}
+.verdict[data-level="near"] {
+  border-left-color: var(--near);
+}
+.limits {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.limit {
+  padding: 0.8rem 0;
+  border-top: 1px solid var(--rule);
+}
+.limit:first-child {
+  border-top: 0;
+}
+.limit-head,
+.limit-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.limit-head b {
+  font: 500 1.02rem/1.35 var(--serif);
+}
+.limit.closest .limit-head b::after {
+  content: "closest";
+  margin-left: 0.5rem;
+  padding: 0.05rem 0.45rem;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  font: 0.68rem/1.5 var(--sans);
+  vertical-align: 0.12rem;
+}
+.limit .pct {
+  font: 500 1.02rem/1.35 var(--sans);
+  font-variant-numeric: tabular-nums;
+}
+.meter {
+  display: block;
+  height: 8px;
+  margin: 0.45rem 0 0.35rem;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+}
+.meter span {
+  display: block;
+  height: 100%;
+  background: var(--ok);
+  border-radius: 999px;
+}
+.limit[data-level="watch"] .meter span {
+  background: var(--watch);
+}
+.limit[data-level="near"] .meter span {
+  background: var(--near);
+}
+.limit-foot {
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+.limit .level {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.limit .level::before {
+  content: "";
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  margin-right: 0.35rem;
+  background: var(--ok);
+  border-radius: 50%;
+}
+.limit[data-level="watch"] .level::before {
+  background: var(--watch);
+  border-radius: 1px;
+  transform: rotate(45deg) scale(0.85);
+}
+.limit[data-level="near"] .level::before {
+  background: var(--near);
+  border-radius: 1px;
+}
+.limit-by {
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.table-wrap {
+  overflow-x: auto;
+}
+.history {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+}
+.history th {
+  color: var(--muted);
+  font-weight: 500;
+  text-align: right;
+}
+.history th,
+.history td {
+  padding: 0.35rem 0.4rem;
+  border-bottom: 1px solid var(--rule);
+  white-space: nowrap;
+  text-align: right;
+}
+.history th:first-child,
+.history td:first-child,
+.history th:nth-child(2),
+.history td:nth-child(2) {
+  text-align: left;
+}
+.history code {
+  font-size: 0.78rem;
+}
+/* a phone: the dates and sizes, not the commits */
+@media (max-width: 520px) {
+  .history th:nth-child(2),
+  .history td:nth-child(2) {
+    display: none;
+  }
+  .history {
+    font-size: 0.72rem;
+  }
+  .history th,
+  .history td {
+    padding: 0.35rem 0.2rem;
+  }
+}
 
 .empty,
 .error {

@@ -1,12 +1,6 @@
-import importlib.util
 import subprocess
-from pathlib import Path
 
-ROOT = Path(__file__).parent.parent
-path = ROOT / "scripts/check-limits.py"
-spec = importlib.util.spec_from_file_location("cl", path)
-cl = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(cl)
+import nxgir_limits as cl
 
 
 def test_books(tmp_path):
@@ -115,3 +109,51 @@ def test_git_measures(tmp_path):
         "big.txt",
     )
     assert cl.history_size(tmp_path) > 0
+
+
+def test_level():
+    assert cl.level(10) == "ok"
+    assert cl.level(50) == "watch"
+    assert cl.level(80) == "near"
+
+
+def test_history(tmp_path):
+    tsv = tmp_path / "limits.tsv"
+    assert cl.history(tsv) == []
+    cl.record(measures(), tsv)
+    cl.record(measures(site=10, build=61.4), tsv)
+    rows = cl.history(tsv)
+    assert [r["site"] for r in rows] == ["", 10]
+    assert rows[1]["build"] == 61
+    assert rows[0]["books"] == 3
+
+
+def test_stats_takes_the_last_site_measured():
+    past = [
+        measures(date="2026-11-01", site=5 * cl.MB),
+        measures(date="2026-11-02", build=20),
+        measures(date="2026-11-03"),
+    ]
+    past = [{k: r[k] for k in cl.FIELDS} for r in past]
+    s = cl.stats(measures(folders={"grabar": 3}), past)
+    got = {x["key"]: x for x in s["limits"]}
+    assert got["site"]["value"] == 5 * cl.MB
+    assert got["site"]["since"] == "2026-11-01"
+    assert got["build"]["since"] == "2026-11-02"
+    assert got["git"]["since"] == ""
+    assert got["part"]["where"] == "grabar/a.txt"
+    assert got["part"]["level"] == "watch"
+    assert s["closest"] == "part"
+    assert s["folders"] == {"grabar": 3}
+    # newest first
+    assert [r["date"] for r in s["history"]] == [
+        "2026-11-03",
+        "2026-11-02",
+        "2026-11-01",
+    ]
+
+
+def test_stats_without_a_site():
+    s = cl.stats(measures(), [])
+    keys = [x["key"] for x in s["limits"]]
+    assert keys == ["git", "file", "part"]

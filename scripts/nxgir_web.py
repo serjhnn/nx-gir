@@ -11,6 +11,7 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/book?name=         a book, cut into words
   GET  /api/word?w=&lang=      abbreviation + meaning
   GET  /api/timeline           the main steps
+  GET  /api/stats              how close to the limits
   POST /api/position           {name, pos, lines}
   POST /api/mark               {name, pos}
   POST /api/note               {name, pos, text}
@@ -33,6 +34,7 @@ import json
 import mimetypes
 import os
 import re
+import subprocess
 import sys
 import tempfile
 from http.server import (
@@ -43,6 +45,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
 import nxgir_grabar as grabar
+import nxgir_limits as lim
 import nxgir_timeline as tl
 from nxgir_browse import (
     folder_count,
@@ -290,6 +293,18 @@ def timeline(app):
         "events": done[::-1],
         "next": events[len(done) :],
     }
+
+
+def stats(app, root=lim.ROOT):
+    """The Statistics page: how close the repository
+    at root is to its limits (nxgir_limits.py). The
+    site is not built here: its size and build time
+    are the last recorded in notes/limits.tsv."""
+    try:
+        m = lim.measure(root)
+    except (OSError, subprocess.CalledProcessError):
+        raise ApiError(500, "cannot measure: no git?")
+    return lim.stats(m, lim.history(lim.HISTORY))
 
 
 def first_line(path):
@@ -619,6 +634,8 @@ def get(app, route, query):
         return source(app, arg("name"))
     if route == "/api/timeline":
         return timeline(app)
+    if route == "/api/stats":
+        return stats(app)
     raise ApiError(404, f"no such page: {route}")
 
 

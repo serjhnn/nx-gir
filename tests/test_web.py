@@ -621,3 +621,19 @@ def test_wide_rules_leave_the_phone_view():
         ):
             for one in sel.split(","):
                 assert one.strip().startswith(".wide "), one
+
+
+def test_stats(app):
+    s = web.get(app, "/api/stats", {})
+    keys = [x["key"] for x in s["limits"]]
+    assert {"git", "file", "part"} <= set(keys)
+    assert s["closest"] in keys
+    assert s["words"] is None
+    for x in s["limits"]:
+        assert x["level"] in ("ok", "watch", "near")
+
+
+def test_stats_without_git(app, tmp_path):
+    with pytest.raises(ApiError) as e:
+        web.stats(app, root=tmp_path)
+    assert e.value.args[0] == 500 or "git" in str(e.value)

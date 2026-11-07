@@ -65,6 +65,14 @@ def test_build(tmp_path, files):
         (data / "timeline.json").read_text("utf-8")
     )
     assert tl["events"][0]["to"] == "read"
+    # the Statistics page, with this site's size
+    st = json.loads(
+        (data / "stats.json").read_text("utf-8")
+    )
+    got = {x["key"]: x for x in st["limits"]}
+    assert 0 < got["site"]["value"]
+    assert got["site"]["since"] == ""
+    assert st["words"] == words
     assert top["news"][0]["title"] == "John"
     assert book["pos"] is None and not book["editable"]
     # ած is an abbreviation: its file has it

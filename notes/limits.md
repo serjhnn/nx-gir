@@ -13,6 +13,13 @@ quick form without `--site` takes seconds; `--site`
 builds the Pages site in a temporary folder (about a
 quarter of a minute today).
 
+The same numbers are on the **Statistics** page of
+the web reader (`#/stats`, linked under the shelf
+and from the Timeline). On the Pages site they are
+measured at every publish, with the site's real size
+and build time; in `nxgir web` the site's size and
+build time are the last ones in `limits.tsv`.
+
 ## State on 2026-11-07 (commit 8dfe23d)
 
 Amaran hator parts 1–12 of 24 translated; 79 book

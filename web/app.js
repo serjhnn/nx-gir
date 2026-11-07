@@ -1,6 +1,7 @@
 // nx-gir web: the bookshelf and the theme button.
-// Pages are #/ (top), #/f/<folder>, #/read/<book>
-// and #/timeline; the data comes from /api/.
+// Pages are #/ (top), #/f/<folder>, #/read/<book>,
+// #/timeline and #/stats; the data comes from
+// /api/.
 "use strict";
 
 const main = document.getElementById("main");
@@ -224,6 +225,9 @@ async function staticApi(path) {
   }
   if (route === "timeline") {
     return json("data/timeline.json");
+  }
+  if (route === "stats") {
+    return json("data/stats.json");
   }
   if (route === "book") {
     const name = q.get("name");
@@ -539,7 +543,9 @@ async function shelf(folder) {
     // who made it, at the bottom of the top page
     folder ? null : h("footer", { class: "credit" },
       "Developed by S.O. and Claude · ",
-      h("a", { href: "#/timeline" }, "Timeline"))
+      h("a", { href: "#/timeline" }, "Timeline"),
+      " · ",
+      h("a", { href: "#/stats" }, "Statistics"))
   );
 }
 
@@ -665,7 +671,136 @@ async function timelinePage() {
     data.next.length ? h("section", {},
       h("h2", { class: "tl-next" }, "Next"),
       h("ol", { class: "tl next" },
-        data.next.map(eventItem))) : null
+        data.next.map(eventItem))) : null,
+    h("p", { class: "more-link" },
+      h("a", { href: "#/stats" },
+        "How close we are to the limits → Statistics"))
+  );
+}
+
+// -- statistics --
+
+// 16490140 bytes: "15.7 MB"; as human() in
+// nxgir_limits.py
+function size(n) {
+  for (const [unit, k] of [["GB", 2 ** 30],
+    ["MB", 2 ** 20], ["KB", 2 ** 10]]) {
+    if (n >= k) return (n / k).toFixed(1) + " " + unit;
+  }
+  return n + " B";
+}
+
+function secs(n) {
+  return n < 120 ? Math.round(n) + " s"
+    : (n / 60).toFixed(1) + " min";
+}
+
+// the limits explained (notes/limits.md)
+const NOTES = "https://github.com/serjhnn/nx-gir/"
+  + "blob/main/notes/limits.md";
+
+// the levels of LIMITS in nxgir_limits.py, shown
+// with a word, never by color alone
+const LEVELS = { ok: "Fine", watch: "Watch",
+  near: "Near the limit" };
+
+function amount(x, n) {
+  return x.unit === "s" ? secs(n) : size(n);
+}
+
+function limitRow(x, closest) {
+  const pct = Math.min(x.share, 100);
+  const shown = x.share < 1 ? "<1%"
+    : Math.round(x.share) + "%";
+  const bar = h("span", { class: "meter",
+      role: "meter", "aria-valuemin": "0",
+      "aria-valuemax": "100",
+      "aria-valuenow": String(Math.round(pct)),
+      "aria-label": x.label },
+    h("span", { style: "width:" +
+      Math.max(pct, 0.8) + "%" }));
+  const notes = [x.by];
+  if (x.where) notes.push(x.where);
+  if (x.since) notes.push("measured " + day(x.since));
+  return h("li", { class: "limit" +
+      (x.key === closest ? " closest" : ""),
+      "data-level": x.level },
+    h("div", { class: "limit-head" },
+      h("b", {}, x.label),
+      h("span", { class: "pct" }, shown)),
+    bar,
+    h("div", { class: "limit-foot" },
+      h("span", {}, amount(x, x.value) + " of " +
+        amount(x, x.limit)),
+      h("span", { class: "level" },
+        LEVELS[x.level])),
+    h("p", { class: "limit-by" }, notes.join(" · ")));
+}
+
+// the recorded measures, newest first, as a table
+function historyTable(rows) {
+  const cell = (v, f) => h("td", {},
+    v === "" ? "–" : f(v));
+  return h("div", { class: "table-wrap" },
+    h("table", { class: "history" },
+      h("thead", {}, h("tr", {},
+        ["Date", "Commit", "Text", "Site", "Git",
+          "Build"].map((t) => h("th", {}, t)))),
+      h("tbody", {}, rows.map((r) => h("tr", {},
+        h("td", {}, day(r.date, true)),
+        h("td", {}, h("code", {}, r.commit)),
+        cell(r.text, size), cell(r.site, size),
+        cell(r.git, size), cell(r.build, secs))))));
+}
+
+async function statsPage() {
+  const data = await api("stats");
+  document.title = "Statistics · nx-gir";
+  const head = [
+    h("p", { class: "crumbs" },
+      h("a", { href: "#/" }, "← Home")),
+    h("h1", {}, "Statistics"),
+  ];
+  if (data.error) {
+    show(...head, h("p", { class: "empty" },
+      "No statistics here: " + data.error + "."));
+    return;
+  }
+  const stat = (n, label) => h("div", {},
+    h("b", {}, String(n)), h("span", {}, label));
+  const f = data.folders || {};
+  const near = data.limits.find((x) =>
+    x.key === data.closest);
+  show(
+    ...head,
+    h("p", { class: "sub" },
+      "How much the library holds, and how close it"
+      + " is to the limits of GitHub and of a phone."
+      + " Measured " + day(data.date, true)
+      + " at commit ", h("code", {}, data.commit),
+      "."),
+    h("div", { class: "stats" },
+      stat(data.books, "book files"),
+      stat(size(data.text), "of text"),
+      data.words ? stat(data.words.toLocaleString(
+        "en"), "different words")
+        : stat(size(f.ashkharhabar || 0),
+          "translated")),
+    near ? h("p", { class: "verdict",
+        "data-level": near.level },
+      "Closest: ", h("b", {}, near.label),
+      " at " + Math.round(near.share) + "% of its"
+      + " limit.") : null,
+    h("h2", { class: "tl-next" }, "Limits"),
+    h("ul", { class: "limits" },
+      data.limits.map((x) =>
+        limitRow(x, data.closest))),
+    data.history.length ? h("section", {},
+      h("h2", { class: "tl-next" }, "History"),
+      historyTable(data.history)) : null,
+    h("p", { class: "more-link" },
+      "What each limit means: ",
+      h("a", { href: NOTES }, "notes/limits.md"))
   );
 }
 
@@ -1873,6 +2008,8 @@ async function route() {
       await newText(hash.slice(4));
     } else if (hash === "timeline") {
       await timelinePage();
+    } else if (hash === "stats") {
+      await statsPage();
     } else if (hash.startsWith("f/")) {
       await shelf(decodeURIComponent(hash.slice(2)));
     } else {
