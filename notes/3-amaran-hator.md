@@ -22,7 +22,7 @@ closing prayer with the doxology.
 
 ## How to do the next part
 
-Parts 1–6 are done. To do part N (07 next):
+Parts 1–7 are done. To do part N (08 next):
 
 1. Split the Grabar into sentences in place (the
    file from Digilib has long paragraphs):
@@ -476,6 +476,92 @@ of the book: "second volume" of Grigor's sermons
   the hydrus and the crocodile; ignorance; anger;
   malice). Goes on in part 7.
 
+## Part 7 · ԳԼՈՒԽ ԾԱ-ԾԵ and ԾԶ-Կ (sermons 51–60)
+
+- ԾԱ (line 5): mortal sin. Objections (the soul is
+  immortal; sinners still act well); four marks:
+  it destroys life (love of God as the heart's
+  warmth), takes away the power to rise (one can
+  throw oneself into a fire, not climb out),
+  leaves the way (Alpha and Omega; the narrow and
+  the broad way) and binds to Gehenna; why a short
+  pleasure earns endless pain (the offended
+  person's rank: a soldier, a king, God); good
+  works done in mortal sin are not remembered.
+- ԾԲ (line 54): venial sin, known by event, cause
+  and nature; wood, hay and reed; man cannot live
+  without it (1 John 1:8), and it is cleansed by
+  general confession, beating the breast, the
+  sign of the cross, the Trisagion, the Lord's
+  Prayer. Four harms of all sin: death and the
+  strife of the elements, a low place (the eye set
+  high, the rich man buried in hell), endless
+  pain, darkened sight.
+- ԾԳ (line 116): sinful thoughts, Wis 1:9. Ten
+  reasons to guard the mind (the root before the
+  shoot; the charioteer; eight thoughts as arrows;
+  the mind as lamp, mirror, judge, spring), then
+  ten from Scripture (adultery in the heart; Job's
+  daily sacrifices; the tray offered to a king;
+  the Spirit as watchman over word, anger and
+  desire; whitewashed tombs); the double trial of
+  thoughts, by God's word and in confession.
+- ԾԴ (line 208): the tongue, Prov 18:21 «Մահ եւ
+  կեանք ի ձեռն լեզուի». Why the tongue slips (quick,
+  shameless, walled in the mouth); the fear of God
+  as bridle and reins; ten goods of the tongue
+  (peace, prayer, praise, teaching, intercession)
+  and ten evils: lying, false witness (six rules
+  for a witness), heresy and apostasy (the
+  apostate is better: four reasons), false oaths,
+  idle talk and betrayal, slander and gossip,
+  buffoonery, anger, sorcery, cursing (no
+  communion and no blessed earth for those who
+  curse).
+- ԾԵ (line 354, "from another"): the tongue, Ps
+  33:14. Ten reasons to keep it (the gift of
+  speech; the mouth receives Christ's body; the
+  uncovered vessel and the flies; bridle and
+  rudder, Jas 3; fire of Pentecost against the fire
+  of the tongue; speech shows one's country);
+  Anthony's disciples "with no door"; Secundus the
+  philosopher and his mother; six rules for the
+  preacher (fit the hearers, plain words, the
+  right time, measured anger, tears, do first
+  what you preach).
+- ԾԶ (line 444; group ԳԼՈՒԽ ԾԶ-Կ starts): the evil
+  tongue, Ps 33:14 again. Hatred, blasphemy (worse
+  than the Jews' and the idolaters'; the son who
+  would not shoot at his father's body), anger and
+  slander announced; blasphemy of the heart and of
+  the tongue.
+- ԾԷ (line 512, "from another"): slander, Jas
+  4:11. Spiritual theft worse than bodily; the
+  slanderer like eight animals (dog, pig, snake,
+  bear, an evil brood, the dung beetle, Satan's
+  "priests" with the backgammon board and the dice
+  numbered against the Faith, Hanun who shaved
+  David's men); slandering a leader (Miriam, Ham,
+  Uzzah, David and Saul's robe); the listener sins
+  too (six reasons); six ways of slander.
+- ԾԸ (line 656): anger, Jas 3:6. Man as a city
+  (senses as gates and windows, the mouth a double
+  door); ten harms of anger; anger and wrath
+  compared; ten goods of a gentle tongue (the
+  peacemaker; a soft answer; Korah and Moses;
+  Zedekiah, Nabal and Abigail).
+- ԾԹ (line 796): patience, Prov 20:22. Four kinds
+  of revenge and four harms of taking it; why
+  patience is above the other virtues; ten fruits
+  of patience; patience and continence compared.
+- Կ (line 844): laughter, Luke 6:25. Laughter as
+  an accident, not the essence (David the
+  Invincible, eight proofs; Trophonius' cave);
+  from the breath, muscles and sinews; do animals
+  laugh; ten causes of laughter, ten harms, ten
+  punishments; Christ never laughed but wept; the
+  seven evils contained in "woe".
+
 ## Notes on the text
 
 - The Digilib text has many misprints; repeated
@@ -507,3 +593,12 @@ of the book: "second volume" of Grigor's sermons
 - Part 6 line 699 reads «կամ սիրով» ("or by
   love") among punishments: «սրով» (by the sword)
   is meant and translated.
+- Part 7 line 271 reads «սատանայն շահնա» ("Satan's
+  gain") where the liar is meant («ստախօսին
+  շահն»); translated so.
+- Part 7 line 561 ends in a stray `?` before a
+  paragraph break; kept.
+- Part 7 lines 863 and 882 (a definition of
+  laughter, «ստերիւրեցելոյ ... հագագի», and a
+  saying «մի ծաղր յանգուքն») are garbled;
+  translated by the sense.

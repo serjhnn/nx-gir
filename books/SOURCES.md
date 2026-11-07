@@ -141,7 +141,7 @@ How the files are made:
   have no text of their own.
 - Some paragraphs are very long (a whole sermon in the
   summer volume can be one paragraph), as on Digilib.
-- `3-amaran-hator/01.txt` to `06.txt` are cut
+- `3-amaran-hator/01.txt` to `07.txt` are cut
   further: one sentence per line (a sentence ends
   at `։`, as the reader counts them), with a blank
   line where a Digilib paragraph ended, to be read
@@ -149,14 +149,15 @@ How the files are made:
   words are as on Digilib; where a `։` had no space
   after it (6 times in part 1, 5 in part 2, 7 in
   part 3, 6 in part 4, 9 in part 5, 4 in part
-  6), the line break now stands there.
+  6, 11 in part 7), the line break now stands
+  there.
 
 ## ashkharhabar/grigor-tatevatsi/3-amaran-hator/
 
-`01.txt` to `06.txt`: a translation into modern
+`01.txt` to `07.txt`: a translation into modern
 Eastern Armenian of the same files in
 `grabar/grigor-tatevatsi/3-amaran-hator/` (parts 1
-to 6 of 24 of Ամառան հատոր: the sermons on Psalm
+to 7 of 24 of Ամառան հատոր: the sermons on Psalm
 118:35 and on the Ten Commandments, Գլուխ Ա–Ե; on
 visions and dreams, on Deuteronomy 15:9, on the Holy
 Trinity and on the Lord's Prayer, Գլուխ Զ–ԺԱ; on
@@ -166,9 +167,11 @@ marriage and justice, Գլուխ ԻԱ–Լ; on wrongs, on
 the sacraments of baptism, communion and
 ordination, and on monks, Գլուխ ԼԱ–Խ; on
 priests and confessors, on marriage and on sin,
-Գլուխ ԽԱ–Ծ), made by Claude (Anthropic's AI
-model) on 2026-11-06 and 2026-11-07 at the user's
-request. It is a machine translation, not a
+Գլուխ ԽԱ–Ծ; on mortal and venial sin, sinful
+thoughts, the tongue, slander, anger, patience
+and laughter, Գլուխ ԾԱ–Կ), made by Claude
+(Anthropic's AI model) on 2026-11-06 and
+2026-11-07 at the user's request. It is a machine translation, not a
 published or reviewed one: read it as a help to
 the Grabar, not in its place.
 
