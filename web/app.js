@@ -210,6 +210,27 @@ function readAt(name) {
   }
 }
 
+// the books read in this browser, newest first, as
+// /api/recent gives them: n of them, or all for 0
+function recentHere(n) {
+  const pre = "nxgir-read:";
+  const items = [];
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (!k.startsWith(pre)) continue;
+      const r = readAt(k.slice(pre.length));
+      if (!r) continue;
+      const name = k.slice(pre.length);
+      items.push({ name,
+        title: r.title || name.split("/").pop(),
+        progress: r.pct, seen: r.t || 0 });
+    }
+  } catch (e) {}
+  items.sort((a, b) => b.seen - a.seen);
+  return n > 0 ? items.slice(0, n) : items;
+}
+
 async function staticApi(path) {
   const [route, query] = path.split("?");
   const q = new URLSearchParams(query);
@@ -225,6 +246,10 @@ async function staticApi(path) {
   }
   if (route === "timeline") {
     return json("data/timeline.json");
+  }
+  if (route === "recent") {
+    return { items: recentHere(
+      Number(q.get("n")) || 0) };
   }
   if (route === "stats") {
     return json("data/stats.json");
@@ -521,7 +546,10 @@ function mail() {
 
 async function shelf(folder) {
   const q = encodeURIComponent(folder);
-  const data = await api("shelf?folder=" + q);
+  const [data, last] = await Promise.all([
+    api("shelf?folder=" + q),
+    folder ? null : api("recent?n=" + RECENT)
+      .catch(() => null)]);
   const title = folder
     ? folder.split("/").pop() : "Library";
   document.title = folder
@@ -534,7 +562,10 @@ async function shelf(folder) {
   const lang = folder.split("/")[1];
   show(
     folder ? crumbs(folder, false) : null,
-    // at the top the welcome comes first
+    // at the top: what was read last, then the
+    // welcome
+    last && last.items.length
+      ? recentCard(last.items) : null,
     folder ? null : intro(data.status, data.news),
     h("h1", {}, title),
     h("p", { class: "sub" }, plural(data.count,
@@ -550,8 +581,86 @@ async function shelf(folder) {
       "Developed by S.O. and Claude · ",
       h("a", { href: "#/timeline" }, "Timeline"),
       " · ",
-      h("a", { href: "#/stats" }, "Statistics"))
+      h("a", { href: "#/stats" }, "Statistics"),
+      " · ",
+      h("a", { href: "#/recent" }, "Readings"))
   );
+}
+
+// -- readings --
+
+// how many of the books read last the top page
+// shows; #/recent shows them all
+const RECENT = 3;
+
+// "seen" (seconds) as Armenian "how long ago"
+function ago(seen) {
+  if (!seen) return "";
+  const s = Date.now() / 1000 - seen;
+  const n = (k) => Math.max(1, Math.floor(s / k));
+  if (s < 60) return "հենց նոր";
+  if (s < 3600) return n(60) + " րոպե առաջ";
+  if (s < 86400) return n(3600) + " ժամ առաջ";
+  if (s < 2 * 86400) return "երեկ";
+  if (s < 30 * 86400) return n(86400) + " օր առաջ";
+  const d = new Date(seen * 1000);
+  return day(d.toISOString().slice(0, 10), true);
+}
+
+// the language of a book, from its top folder
+const SHELF_LANGS = { grabar: "Գրաբար",
+  ashkharhabar: "Աշխարհաբար" };
+
+// books read, newest first (/api/recent)
+function readingList(items) {
+  const list = h("ul", { class: "readings" });
+  for (const r of items) {
+    const pct = r.progress || 0;
+    const fill = h("span");
+    fill.style.width = pct + "%";
+    const lang = SHELF_LANGS[r.name.split("/")[0]];
+    const when = ago(r.seen);
+    list.append(h("li", {},
+      h("a", { href: "#/read/" + enc(r.name) },
+        r.title),
+      h("div", { class: "meta" },
+        lang ? h("span", { class: "tag" }, lang)
+          : null,
+        h("span", {}, pct + "%"),
+        when ? h("span", {}, "· " + when) : null),
+      h("span", { class: "progress", role: "img",
+        "aria-label": pct + "%" }, fill)));
+  }
+  return list;
+}
+
+// the top of the home page: the books read last
+function recentCard(items) {
+  return h("section", { class: "recent",
+    lang: "hy" },
+    h("h2", {}, "Շարունակել կարդալ"),
+    readingList(items),
+    h("p", { class: "more" },
+      h("a", { href: "#/recent" },
+        "Բոլոր ընթերցումները →")));
+}
+
+async function recentPage() {
+  const data = await api("recent");
+  document.title = "Readings · nx-gir";
+  show(
+    h("p", { class: "crumbs" },
+      h("a", { href: "#/" }, "← Home")),
+    h("h1", { lang: "hy" }, "Իմ ընթերցումները"),
+    h("p", { class: "sub", lang: "hy" },
+      STATIC ? "Պահված է միայն այս դիտարկիչում"
+        : "Այս համակարգչում"),
+    data.items.length
+      ? h("section", { class: "recent all",
+        lang: "hy" }, readingList(data.items))
+      : h("p", { class: "empty", lang: "hy" },
+        "Դեռ ոչինչ չեք կարդացել։ ",
+        h("a", { href: "#/" }, "Գրադարան")));
 }
 
 // -- timeline --
@@ -844,6 +953,7 @@ const R = {
   panel: null,
   tools: null,
   title: "", // of the book open
+  head: "", // its first line
   saved: "", // the position last saved
   timer: 0,
   par: null, // the other version: book() data
@@ -1580,7 +1690,9 @@ function savePos(keepalive) {
       Math.round(100 * (pos[0] + 1) / R.lines));
     try {
       localStorage.setItem("nxgir-read:" + R.name,
-        JSON.stringify({ at: top, pct }));
+        JSON.stringify({ at: top, pct,
+          t: Math.floor(Date.now() / 1000),
+          title: R.head }));
     } catch (e) {}
     return;
   }
@@ -1800,6 +1912,8 @@ async function book(name) {
   // from now on scrolling is saved
   R.name = name;
   R.title = title;
+  // the first line, for the list of readings
+  R.head = (data.lines[0] || []).join("").trim();
   stir();
   savePos();
 }
@@ -2015,6 +2129,8 @@ async function route() {
       await timelinePage();
     } else if (hash === "stats") {
       await statsPage();
+    } else if (hash === "recent") {
+      await recentPage();
     } else if (hash.startsWith("f/")) {
       await shelf(decodeURIComponent(hash.slice(2)));
     } else {

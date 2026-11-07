@@ -335,6 +335,15 @@ phone's browser.
   tools behind the settings button. Tap it again for
   the wide view; each browser keeps its choice. On
   a phone the button is hidden.
+- **Continue reading**: the top of the library
+  shows the last three books you opened, newest
+  first, with how far you got and when; tap one to
+  go on where you stopped. **Readings** (the link
+  under it and under the library, or `#/recent`)
+  lists all of them. `nxgir web` takes them from
+  the saved state, so the terminal reader's books
+  are there too; on nxgir.am each browser keeps its
+  own.
 - **Timeline** (the link under the library, or
   `#/timeline`): the main steps of the project,
   newest first, with filters by kind and what comes

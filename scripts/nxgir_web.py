@@ -11,6 +11,7 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/book?name=         a book, cut into words
   GET  /api/word?w=&lang=      abbreviation + meaning
   GET  /api/timeline           the main steps
+  GET  /api/recent?n=          the books read last
   GET  /api/stats              how close to the limits
   POST /api/position           {name, pos, lines}
   POST /api/mark               {name, pos}
@@ -345,6 +346,37 @@ def status(app):
     return list(books.values())
 
 
+def book_title(app, name):
+    """A book's title: its first line, without a
+    Markdown heading mark."""
+    try:
+        line = first_line(app.path(name))
+    except OSError:
+        line = ""
+    return line.lstrip("#").strip() or name
+
+
+def recent(app, n=0):
+    """The books read last, newest first ("seen" is
+    when, in seconds): n of them, or all for 0.
+    Only books on the shelf."""
+    st = app.state()
+    items = []
+    for name, b in st.books.items():
+        if name not in app.paths or "pos" not in b:
+            continue
+        items.append(
+            {
+                "name": name,
+                "title": book_title(app, name),
+                "progress": st.progress(name),
+                "seen": b.get("seen", 0),
+            }
+        )
+    items.sort(key=lambda x: -x["seen"])
+    return {"items": items[:n] if n > 0 else items}
+
+
 def book_text(app, name):
     """The text the reader shows: Markdown marks
     taken out of .md files."""
@@ -634,6 +666,11 @@ def get(app, route, query):
         return source(app, arg("name"))
     if route == "/api/timeline":
         return timeline(app)
+    if route == "/api/recent":
+        n = arg("n", "0")
+        if not n.isdigit():
+            raise ApiError(400, "n must be a number")
+        return recent(app, int(n))
     if route == "/api/stats":
         return stats(app)
     raise ApiError(404, f"no such page: {route}")

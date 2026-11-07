@@ -637,3 +637,26 @@ def test_stats_without_git(app, tmp_path):
     with pytest.raises(ApiError) as e:
         web.stats(app, root=tmp_path)
     assert e.value.args[0] == 500 or "git" in str(e.value)
+
+
+def test_recent(app):
+    assert web.recent(app) == {"items": []}
+    st = app.state()
+    st.set_position("grabar/john.txt", [1, 0], 2)
+    st.set_position("notes.md", [0, 0], 2)
+    st.books["notes.md"]["seen"] -= 60
+    # a book no longer on the shelf is left out
+    st.set_position("gone.txt", [0, 0], 1)
+    st.save()
+    got = web.recent(app)["items"]
+    assert [x["name"] for x in got] == [
+        "grabar/john.txt",
+        "notes.md",
+    ]
+    assert got[0]["title"] == "Ի սկզբանէ էր Բանն։"
+    assert got[0]["progress"] == 100
+    assert got[1]["title"] == "Title"
+    one = web.get(app, "/api/recent", {"n": ["1"]})
+    assert len(one["items"]) == 1
+    with pytest.raises(web.ApiError):
+        web.get(app, "/api/recent", {"n": ["x"]})
