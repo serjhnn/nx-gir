@@ -14,6 +14,9 @@ ABBREVIATIONS = ROOT / "grabar" / "abbreviations.tsv"
 VOCABULARY = ROOT / "grabar" / "vocabulary.tsv"
 FORMS = ROOT / "grabar" / "forms.tsv"
 VOCABULARY_HY = ROOT / "grabar" / "vocabulary-hy.tsv"
+# meanings written by Claude for the words the
+# dictionaries above do not have
+VOCABULARY_AI = ROOT / "grabar" / "vocabulary-claude.tsv"
 
 # kind -> heading, in the order they are listed
 KINDS = {
@@ -277,6 +280,43 @@ SOURCE = {
     "en": "Source: Wiktionary (CC BY-SA)",
     "hy": "Source: Armenian Wiktionary (CC BY-SA)",
 }
+SOURCE_AI = (
+    "Source: Claude (AI), not a dictionary; may be wrong"
+)
+# parts of speech of vocabulary-claude.tsv in Armenian
+POS_HY = {
+    "noun": "գոյական",
+    "verb": "բայ",
+    "adj": "ածական",
+    "adv": "մակբայ",
+    "pron": "դերանուն",
+    "num": "թվական",
+    "conj": "շաղկապ",
+    "prep": "կապ",
+    "part": "մասնիկ",
+    "intj": "ձայնարկություն",
+    "name": "հատուկ անուն",
+}
+
+
+@functools.cache
+def vocabulary_ai(lang="en", words=VOCABULARY_AI):
+    """Like vocabulary(), from the meanings Claude
+    wrote (in English, or with lang "hy" in
+    Armenian). Each line gives the meaning of one
+    form (յարութեան: of the resurrection), so it is
+    found by the form, shown under its headword."""
+    heads = {}
+    if not Path(words).exists():
+        return heads, {}
+    for form, head, pos, en, hy in tsv(words):
+        hy_ = lang == "hy"
+        ms = tuple((hy if hy_ else en).split(" | "))
+        if hy_:
+            pos = POS_HY.get(pos, pos)
+        w = Word(head, pos, ms)
+        heads.setdefault(key(form), []).append(w)
+    return heads, {}
 
 
 def head_line(w):
@@ -328,10 +368,17 @@ def define(word, vocab=None, lang="en"):
     """Lines saying what word means, in English or
     (lang "hy") Armenian; [] if it is not in the
     vocabulary."""
+    source = SOURCE[lang]
     if vocab is None:
         hy = lang == "hy"
         vocab = vocabulary_hy() if hy else vocabulary()
-    found = lookup(word, vocab)
+        found = lookup(word, vocab)
+        if not found:
+            # what the dictionaries lack, from Claude
+            found = lookup(word, vocabulary_ai(lang))
+            source = SOURCE_AI
+    else:
+        found = lookup(word, vocab)
     if not found:
         return []
     out = []
@@ -342,5 +389,5 @@ def define(word, vocab=None, lang="en"):
     if notes:
         out.append(f"{word}:")
         out += [f"  {n}" for n in notes]
-    out.append(SOURCE[lang])
+    out.append(source)
     return out

@@ -46,7 +46,14 @@
   `vocabulary-hy.tsv` (Armenian meanings) from the
   Armenian Wiktionary by
   `scripts/fetch-vocabulary-hy.py`; none of them is
-  edited by hand)
+  edited by hand). `vocabulary-claude.tsv` is
+  different: meanings Claude wrote (English and
+  Armenian, one line per word form) for words the
+  Wiktionary lists lack, most frequent first; shown
+  only when Wiktionary has nothing, always marked
+  `SOURCE_AI`. Add to it by hand, in batches; a test
+  checks the format and that it never repeats a
+  Wiktionary word
 - `sources/`: copies of the sources (page scans, entry
   texts) behind the `grabar/` data; add the copy and a
   note in `sources/README.md` with every new source

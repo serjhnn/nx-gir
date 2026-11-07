@@ -1,0 +1,908 @@
+# Meanings of Grabar words written by Claude
+# (Anthropic's AI model) at the user's request, for
+# the words of books/grabar/ that the Wiktionary lists
+# (vocabulary.tsv, vocabulary-hy.tsv) do not have; the
+# most frequent first. NOT from a published dictionary
+# and not checked by a scholar: the readers show them
+# with "Source: Claude (AI), not a dictionary; may be
+# wrong". Fix a wrong line by hand, or delete it.
+#
+# Every word form is glossed as it stands, without its
+# sentence, so a form with more than one reading gets
+# the likeliest ones. Letter numbers (ա = 1, ժ = 10,
+# …) are glossed as numbers.
+#
+# Columns: form, headword, pos (noun, verb, adj, adv,
+# pron, num, conj, prep, part, intj, name), English
+# meanings, Armenian meanings (reformed spelling);
+# meanings split by ' | '
+#
+իսկ	իսկ	conj	but, and; indeed, truly (stressing)	իսկ, բայց | իսկապես, հենց
+ապա	ապա	adv	then, afterwards; therefore	ապա, հետո | ուրեմն
+վերայ	վերայ	prep	on, upon, over; about (with ի: ի վերայ)	վրա | մասին (ի վերայ)
+այլեւ	այլեւ	conj	but also, and also	այլև, նաև
+բայց	բայց	conj	but; except	բայց | բացի
+նախզի	նախ զի	conj	first, that…; first because	նախ որ, առաջին՝ որովհետև
+գիտելի	գիտելի	adj	to be known; it must be known that	իմանալի | պետք է իմանալ, որ
+հոգեւոր	հոգեւոր	adj	spiritual	հոգևոր
+յաւիտենից	յաւիտեան	noun	(of) the ages; for ever (յաւիտեանս յաւիտենից: for ever and ever)	հավիտենականության | հավիտյանս հավիտենից՝ հավիտյան
+գ	գ	num	3; third (letter number)	3, երրորդ (տառով գրված թիվ)
+քանզի	քանզի	conj	for, because, since	քանի որ, որովհետև
+այնպէս	այնպէս	adv	so, thus, in that way	այնպես, այդպես
+մարմնաւոր	մարմնաւոր	adj	bodily, corporeal, carnal	մարմնավոր, մարմնական
+ութներորդ	ութներորդ	num	eighth	ութերորդ
+բ	բ	num	2; second (letter number)	2, երկրորդ (տառով գրված թիվ)
+ե	ե	num	5; fifth (letter number)	5, հինգերորդ (տառով գրված թիվ)
+աստուածային	աստուածային	adj	divine, of God	աստվածային
+ուստի	ուստի	adv	whence, from where; therefore	որտեղից | ուստի, այդ պատճառով
+մինն	մի	num	the one (with article -ն)	մեկը
+ներքոյ	ներքոյ	prep	under, below, beneath	ներքո, տակ
+յարութեանն	յարութիւն	noun	of the resurrection	հարության
+յարութեան	յարութիւն	noun	of the resurrection	հարության
+դ	դ	num	4; fourth (letter number)	4, չորրորդ (տառով գրված թիվ)
+մեղօք	մեղք	noun	with / by sins	մեղքերով
+մարմնական	մարմնական	adj	bodily, corporeal	մարմնական
+որքան	որքան	adv	how much, as much as	որքան, ինչքան
+առաքելոցն	առաքեալ	noun	of the apostles	առաքյալների
+կատարումն	կատարումն	noun	fulfilment, completion, end	կատարում, ավարտ
+զ	զ	num	6; sixth (letter number); also the object mark զ-	6, վեցերորդ (տառով գրված թիվ) | զ- նախդիր
+մտօք	միտք	noun	with / in the mind	մտքով
+առաքեալքն	առաքեալ	noun	the apostles	առաքյալները
+պահել	պահել	verb	to keep, guard; to fast	պահել | պահք պահել
+հակառակ	հակառակ	adj	opposite, contrary; against	հակառակ
+անտի	անտի	adv	from there, thence	այնտեղից
+ժ	ժ	num	10; tenth (letter number)	10, տասներորդ (տառով գրված թիվ)
+սողոմօն	Սողոմօն	name	Solomon	Սողոմոն
+նաեւ	նաեւ	adv	also, too	նաև
+մեղաւորաց	մեղաւոր	noun	of / to the sinners	մեղավորների
+սրբութիւն	սրբութիւն	noun	holiness; sanctuary, holy thing	սրբություն
+ծածուկ	ծածուկ	adj	hidden, secret; secretly	ծածուկ, գաղտնի
+սակայն	սակայն	conj	but, yet, however	սակայն, բայց
+փրկութեան	փրկութիւն	noun	of salvation	փրկության
+երկնաւոր	երկնաւոր	adj	heavenly	երկնավոր, երկնային
+դատաստան	դատաստան	noun	judgement, trial	դատաստան
+բանական	բանական	adj	rational, reasoning	բանական
+ա	ա	num	1; first (letter number)	1, առաջին (տառով գրված թիվ)
+մովսէսի	Մովսէս	name	of / to Moses	Մովսեսի
+դատաստանին	դատաստան	noun	of / to the judgement	դատաստանի
+ընկալաւ	ընդունիմ	verb	received, accepted (he/she)	ընդունեց
+իմանալի	իմանալի	adj	intelligible, perceived by the mind (not the senses)	իմանալի, մտքով ընկալելի
+իսրայէլի	Իսրայէլ	name	of / to Israel	Իսրայելի
+այսաւր	այսօր	adv	today	այսօր
+որչափ	որչափ	adv	how much, as much as	որչափ, որքան
+սրբութեան	սրբութիւն	noun	of holiness	սրբության
+միասին	միասին	adv	together	միասին
+ընդունի	ընդունիմ	verb	receives, accepts	ընդունում է
+որեւ	որ եւ	pron	which also, who also	որը նաև
+կատարածի	կատարած	noun	of the end (of the world)	վախճանի, կատարածի
+յօհաննէս	Յովհաննէս	name	John	Հովհաննես
+տանջանս	տանջանք	noun	torments (object)	տանջանքներ
+ը	ը	num	8; eighth (letter number)	8, ութերորդ (տառով գրված թիվ)
+սրբութեամբ	սրբութիւն	noun	with holiness, in holiness	սրբությամբ
+զիարդ	զիարդ	adv	how; in what way	ինչպես
+յոբ	Յոբ	name	Job	Հոբ
+սիրելի	սիրելի	adj	beloved, dear	սիրելի
+լինելոց	լինիմ	verb	of things to come, future (lit. of those to be)	լինելիքների, գալիքների
+հաւատացելոց	հաւատացեալ	noun	of / to the believers	հավատացյալների
+անմարմին	անմարմին	adj	bodiless, incorporeal	անմարմին
+զգալի	զգալի	adj	perceptible to the senses, sensible	զգալի, զգայարաններով ընկալելի
+շաբաթի	շաբաթ	noun	of the Sabbath; of the week	շաբաթի
+յառաջագոյն	յառաջագոյն	adv	beforehand, earlier, first	նախապես, առաջուց
+դատաստանի	դատաստան	noun	of / to judgement	դատաստանի
+տանջանաց	տանջանք	noun	of torments	տանջանքների
+պահեաց	պահեմ	verb	kept, guarded (he/she)	պահեց
+միածին	միածին	adj	only-begotten	միածին
+խ	խ	num	40; fortieth (letter number)	40 (տառով գրված թիվ)
+մեղաւորք	մեղաւոր	noun	sinners	մեղավորներ
+ծածկեալ	ծածկեմ	verb	covered, hidden	ծածկված
+ազատեաց	ազատեմ	verb	freed, saved (he/she)	ազատեց
+յայտնապէս	յայտնապէս	adv	openly, clearly	հայտնապես, բացահայտ
+աչօք	ակն	noun	with the eyes	աչքերով
+աստուածածին	աստուածածին	noun	Mother of God, Theotokos	Աստվածածին
+խառնեալ	խառնեմ	verb	mixed, mingled	խառնված
+ժողովեալ	ժողովեմ	verb	gathered, assembled	հավաքված
+երկնային	երկնային	adj	heavenly	երկնային
+վաղվաղակի	վաղվաղակի	adv	at once, immediately	իսկույն, անմիջապես
+օգնական	օգնական	noun	helper	օգնական
+ընդունելի	ընդունելի	adj	acceptable, pleasing	ընդունելի
+առաքինութեան	առաքինութիւն	noun	of virtue	առաքինության
+ւ	եւ	conj	and (short for եւ)	և
+անմեղ	անմեղ	adj	innocent, sinless	անմեղ
+տօնեմք	տօնեմ	verb	we celebrate	տոնում ենք
+երրորդութեանն	երրորդութիւն	noun	of the Trinity	Երրորդության
+զմինն	մի	num	the one (object)	մեկին
+պահօք	պահք	noun	with fasting	պահքով
+իմացումն	իմացումն	noun	understanding, knowledge	իմացում, գիտակցություն
+փրկչին	փրկիչ	noun	of / to the Saviour	Փրկչի
+ընդաջմէ	ընդ աջմէ	prep	on the right side (of)	աջ կողմում
+չարչարանս	չարչարանք	noun	sufferings, the Passion (object)	չարչարանքներ
+խոստովանի	խոստովանիմ	verb	confesses	խոստովանում է
+ն	ն	num	400 (letter number)	400 (տառով գրված թիվ)
+առաքինութիւն	առաքինութիւն	noun	virtue	առաքինություն
+զղջումն	զղջումն	noun	repentance, contrition	զղջում
+կատարած	կատարած	noun	end, consummation (of the world)	վախճան, կատարած
+պահեն	պահեմ	verb	they keep, guard; they fast	պահում են | պահք են պահում
+երեսաց	երես	noun	of the face	երեսի, դեմքի
+անվախճան	անվախճան	adj	endless	անվախճան, անվերջ
+սոյնպէս	սոյնպէս	adv	likewise, in the same way	նույնպես
+ճշմարտութեան	ճշմարտութիւն	noun	of truth	ճշմարտության
+անբաժանելի	անբաժանելի	adj	indivisible, inseparable	անբաժանելի
+խոստովանիլ	խոստովանիմ	verb	to confess	խոստովանել
+լ	լ	num	30 (letter number)	30 (տառով գրված թիվ)
+ժողովէ	ժողովեմ	verb	gathers	հավաքում է
+կորուսանէ	կորուսանեմ	verb	loses; destroys	կորցնում է | կործանում է
+մեղաւորին	մեղաւոր	noun	of / to the sinner	մեղավորի
+չարչարանաց	չարչարանք	noun	of the sufferings, of the Passion	չարչարանքների
+պահեմք	պահեմ	verb	we keep, guard; we fast	պահում ենք | պահք ենք պահում
+չարչարանացն	չարչարանք	noun	of the sufferings, of the Passion	չարչարանքների
+չարութեան	չարութիւն	noun	of evil, of wickedness	չարության
+համբարձաւ	համբառնամ	verb	ascended, was lifted up	համբարձավ
+փրկիչն	փրկիչ	noun	the Saviour	Փրկիչը
+մեղաւորն	մեղաւոր	noun	the sinner	մեղավորը
+ասելի	ասելի	adj	to be said; it should be said	ասելի, պետք է ասել
+օրհնութեան	օրհնութիւն	noun	of blessing, of praise	օրհնության
+աղօթեմք	աղօթեմ	verb	we pray	աղոթում ենք
+ընկալան	ընդունիմ	verb	they received	ընդունեցին
+ակամայ	ակամայ	adv	unwillingly, against one's will	ակամա
+հատուցանէ	հատուցանեմ	verb	repays, rewards	հատուցում է
+երբ	երբ	adv	when	երբ
+առանձին	առանձին	adv	apart, alone, separately	առանձին
+հատուցումն	հատուցումն	noun	repayment, reward, retribution	հատուցում
+մեղաւոր	մեղաւոր	adj	sinful; a sinner	մեղավոր
+հաւատայ	հաւատամ	verb	believes	հավատում է
+խոստովանութեամբ	խոստովանութիւն	noun	with confession	խոստովանությամբ
+տանջանացն	տանջանք	noun	of the torments	տանջանքների
+բռնութեամբ	բռնութիւն	noun	by force, violently	բռնությամբ, ուժով
+աստուածութեանն	աստուածութիւն	noun	of the divinity	աստվածության
+զհոգեւոր	հոգեւոր	adj	the spiritual (object)	հոգևորը
+տանջանք	տանջանք	noun	torments	տանջանքներ
+քահանայապետն	քահանայապետ	noun	the high priest	քահանայապետը
+անփոփոխ	անփոփոխ	adj	unchangeable	անփոփոխ
+քարոզութեան	քարոզութիւն	noun	of preaching, of the sermon	քարոզության
+խոստովանին	խոստովանիմ	verb	they confess	խոստովանում են
+ձգէ	ձգեմ	verb	draws, pulls; stretches	ձգում է, քաշում է
+մինչդեռ	մինչդեռ	conj	while, whilst	մինչդեռ, մինչ
+ուրախութեամբ	ուրախութիւն	noun	with joy	ուրախությամբ
+թ	թ	num	9; ninth (letter number)	9, իններորդ (տառով գրված թիվ)
+գոյացութիւն	գոյացութիւն	noun	substance, essence (philosophy)	գոյացություն, էություն
+գերագոյն	գերագոյն	adj	supreme, highest	գերագույն
+մեղաւորացն	մեղաւոր	noun	of the sinners	մեղավորների
+հոգեւորն	հոգեւոր	adj	the spiritual (one)	հոգևորը
+խոստովանութեան	խոստովանութիւն	noun	of confession	խոստովանության
+շուտով	շուտով	adv	soon, quickly	շուտով
+դատարկ	դատարկ	adj	empty, vain	դատարկ
+յօհաննու	Յովհաննէս	name	of / to John	Հովհաննեսի
+չէր	չէր	verb	was not	չէր
+քահանայութեան	քահանայութիւն	noun	of the priesthood	քահանայության
+սկզբնական	սկզբնական	adj	original, first, primordial	սկզբնական
+բարկութեան	բարկութիւն	noun	of anger, of wrath	բարկության
+աստիճան	աստիճան	noun	step, degree, rank	աստիճան
+ծածկէ	ծածկեմ	verb	covers, hides	ծածկում է
+ձեռօք	ձեռն	noun	with the hands, by the hand of	ձեռքերով
+հաստատուն	հաստատուն	adj	firm, steadfast	հաստատուն
+զմեղաւորս	մեղաւոր	noun	the sinners (object)	մեղավորներին
+յանկարծակի	յանկարծակի	adv	suddenly	հանկարծակի
+չորեք	չորք	num	four	չորս
+յարոյց	յարուցանեմ	verb	raised (from the dead)	հարություն տվեց, հարուցեց
+մկրտութեան	մկրտութիւն	noun	of baptism	մկրտության
+ուրախութեան	ուրախութիւն	noun	of joy	ուրախության
+մկրտութեանն	մկրտութիւն	noun	of the baptism	մկրտության
+թեթեւ	թեթեւ	adj	light, easy	թեթև
+լրումն	լրումն	noun	fullness, fulfilment	լրում, լիություն
+ողորմած	ողորմած	adj	merciful	ողորմած
+ննջեցելոց	ննջեցեալ	noun	of the dead (those fallen asleep)	ննջեցյալների
+անձնիշխան	անձնիշխան	adj	free-willed, master of oneself	ազատ կամքով, անձնիշխան
+աստուածութեան	աստուածութիւն	noun	of the divinity	աստվածության
+ճշմարտութեամբ	ճշմարտութիւն	noun	in truth, truly	ճշմարտությամբ
+մեծամեծ	մեծամեծ	adj	very great; the great ones	մեծամեծ
+պատասխանեմք	պատասխանեմ	verb	we answer	պատասխանում ենք
+հաւատացեալք	հաւատացեալ	noun	believers	հավատացյալներ
+փորձէ	փորձեմ	verb	tests, tempts	փորձում է
+խոստովանիմք	խոստովանիմ	verb	we confess	խոստովանում ենք
+ներգործութեամբ	ներգործութիւն	noun	by operation, in act (philosophy)	ներգործությամբ
+պատահումն	պատահումն	noun	accident, chance event	պատահում, պատահար
+բղխումն	բղխումն	noun	procession, outpouring (of the Spirit)	բխում
+կորոյս	կորուսանեմ	verb	lost; destroyed (he/she)	կորցրեց | կործանեց
+առաջնորդ	առաջնորդ	noun	leader, guide	առաջնորդ
+ժողովին	ժողով	noun	of / to the assembly	ժողովի
+երրորդութիւնն	երրորդութիւն	noun	the Trinity	Երրորդությունը
+օգտութիւն	օգտութիւն	noun	benefit, profit	օգուտ
+ցասումն	ցասումն	noun	anger, wrath	ցասում, բարկություն
+մասնաւոր	մասնաւոր	adj	partial, particular	մասնավոր
+դատաստանն	դատաստան	noun	the judgement	դատաստանը
+հետեւի	հետեւիմ	verb	follows	հետևում է
+զտանջանս	տանջանք	noun	the torments (object)	տանջանքները
+հաւատացին	հաւատամ	verb	they believed	հավատացին
+յակօբայ	Յակոբ	name	of / to Jacob, James	Հակոբի
+էն	է	noun	the One who is (God); being	Էակը (Աստված) | եղողը
+առաւելու	առաւելում	verb	increases, abounds	ավելանում է
+մարդացեալ	մարդանամ	verb	become man, incarnate	մարդացած
+անպտուղ	անպտուղ	adj	fruitless, barren	անպտուղ
+մարմնացեալ	մարմնանամ	verb	incarnate, made flesh	մարմնացած
+ընկալեալ	ընդունիմ	verb	received	ընդունած, ընդունված
+չարչարանօք	չարչարանք	noun	by sufferings, by the Passion	չարչարանքներով
+վերնատունն	վերնատուն	noun	the upper room	վերնատունը
+գալոց	գամ	verb	of things to come, coming	գալիքի, գալիքների
+համանգամայն	համանգամայն	adv	all together, at once	միաժամանակ, միասին
+առաքինութեամբ	առաքինութիւն	noun	with virtue	առաքինությամբ
+կարգեալ	կարգեմ	verb	ordained, appointed, set in order	կարգված, նշանակված
+միջնորդ	միջնորդ	noun	mediator	միջնորդ
+չեւ	չեւ	adv	not yet	դեռ ոչ, դեռևս չ-
+յոբայ	Յոբ	name	of / to Job	Հոբի
+իմանի	իմանամ	verb	is understood, is known	իմացվում է, հասկացվում է
+աստուածութեամբն	աստուածութիւն	noun	by / in the divinity	աստվածությամբ
+տրտմութեան	տրտմութիւն	noun	of sorrow	տրտմության
+օծումն	օծումն	noun	anointing	օծում
+մեծատունն	մեծատուն	noun	the rich man	մեծատունը, հարուստը
+իշխանութեամբ	իշխանութիւն	noun	with authority, by power	իշխանությամբ
+մէկ	մէկ	num	one	մեկ
+յեգիպտոս	Եգիպտոս	name	into / to Egypt	Եգիպտոս, դեպի Եգիպտոս
+միւսանգամ	միւսանգամ	adv	again, a second time	մյուս անգամ, կրկին
+չեն	չեն	verb	(they) are not	չեն
+առհասարակ	առհասարակ	adv	all together, generally	առհասարակ, ընդհանրապես
+ըմբռնէ	ըմբռնեմ	verb	seizes, grasps; comprehends	բռնում է | ըմբռնում է
+ստեփաննոս	Ստեփաննոս	name	Stephen	Ստեփանոս
+դարձուցանէ	դարձուցանեմ	verb	turns back, converts	դարձնում է, ետ է դարձնում
+ագահութեան	ագահութիւն	noun	of greed	ագահության
+առաքինութիւնս	առաքինութիւն	noun	virtues (object)	առաքինություններ
+դեռեւս	դեռեւս	adv	still, yet	դեռևս
+խոնարհութեամբ	խոնարհութիւն	noun	with humility	խոնարհությամբ
+յակօբ	Յակոբ	name	Jacob, James	Հակոբ
+փրկիչ	փրկիչ	noun	saviour	փրկիչ
+անցաւոր	անցաւոր	adj	passing, transient	անցավոր
+որպիսի	որպիսի	pron	what kind of, such as	ինչպիսի
+աւետարանիչն	աւետարանիչ	noun	the evangelist	ավետարանիչը
+առաքինութեանց	առաքինութիւն	noun	of virtues	առաքինությունների
+յաստուածային	աստուածային	adj	into / from the divine	աստվածայինի մեջ, աստվածայինից
+ամենեւիմբ	ամենեւին	adv	entirely, altogether	ամբողջովին, բոլորովին
+միջնորդութեամբ	միջնորդութիւն	noun	through mediation	միջնորդությամբ
+ընդառաջ	ընդառաջ	adv	to meet, towards	ընդառաջ
+մըկրտութեան	մկրտութիւն	noun	of baptism	մկրտության
+ամենասուրբ	ամենասուրբ	adj	all-holy, most holy	ամենասուրբ
+խոնարհութեան	խոնարհութիւն	noun	of humility	խոնարհության
+անտես	անտես	adj	invisible, unseen	անտեսանելի
+ընդունիլ	ընդունիմ	verb	to receive, to accept	ընդունել
+հաւատան	հաւատամ	verb	they believe	հավատում են
+օրհնութեամբ	օրհնութիւն	noun	with blessing	օրհնությամբ
+վարուք	վարք	noun	by conduct, in way of life	վարքով
+հանդիպի	հանդիպիմ	verb	meets, happens upon	հանդիպում է
+գոհութիւն	գոհութիւն	noun	thanksgiving, gratitude	գոհություն, շնորհակալություն
+եւա	Եւա	name	Eve	Եվա
+տանջանքն	տանջանք	noun	the torments	տանջանքները
+անսկիզբն	անսկիզբն	adj	without beginning	անսկիզբ
+զչարչարանս	չարչարանք	noun	the sufferings, the Passion (object)	չարչարանքները
+թողութեան	թողութիւն	noun	of forgiveness, of remission	թողության, ներման
+չունի	չունիմ	verb	has not	չունի
+իմացմամբ	իմացումն	noun	by understanding	իմացությամբ
+անմիտ	անմիտ	adj	foolish, senseless	անմիտ
+ոչինչ	ոչինչ	pron	nothing	ոչինչ
+բժշկեաց	բժշկեմ	verb	healed	բժշկեց
+երրորդութեան	երրորդութիւն	noun	of the Trinity	Երրորդության
+յիշեա	յիշեմ	verb	remember! (command)	հիշի՛ր
+դանիէլ	Դանիէլ	name	Daniel	Դանիել
+անարգ	անարգ	adj	contemptible, base	անարգ, արհամարհելի
+գարշելի	գարշելի	adj	abominable, loathsome	գարշելի
+ապականէ	ապականեմ	verb	corrupts, spoils	ապականում է
+զորօրինակ	զորօրինակ	adv	just as, in the way that	ինչպես որ
+ջուրց	ջուր	noun	of the waters	ջրերի
+սիրելեաց	սիրելի	noun	of / to the beloved	սիրելիների
+առաքելոց	առաքեալ	noun	of / to the apostles	առաքյալների
+մարդասէր	մարդասէր	adj	loving mankind	մարդասեր
+դարձոյց	դարձուցանեմ	verb	turned back, converted	դարձրեց
+ս	ս	num	2000 (letter number); also Ս. = սուրբ, saint	2000 (տառով գրված թիվ) | Ս.՝ սուրբ
+կանգուն	կանգուն	adj	standing, upright	կանգուն
+անպիտան	անպիտան	adj	useless, worthless	անպիտան
+զղջմամբ	զղջումն	noun	with repentance	զղջումով
+սողոմօնի	Սողոմօն	name	of / to Solomon	Սողոմոնի
+շրջի	շրջիմ	verb	walks about, goes round	շրջում է
+երորդ	-երորդ	part	-th (ending of an ordinal number, written apart after a letter number)	-րդ (դասական թվի վերջավորություն)
+հատուցման	հատուցումն	noun	of repayment, of reward	հատուցման
+ապականութեան	ապականութիւն	noun	of corruption	ապականության
+ընկալցի	ընդունիմ	verb	may receive, will receive	թող ընդունի, կընդունի
+զգայութեանց	զգայութիւն	noun	of the senses	զգայարանների, զգայությունների
+իդ	իդ	num	24 (letter number)	24 (տառով գրված թիվ)
+մ	մ	num	200 (letter number)	200 (տառով գրված թիվ)
+հեշտանայ	հեշտանամ	verb	takes pleasure, delights	հաճույք է ստանում
+ընդիս	ընդ իս	pron	with me	ինձ հետ
+արտասուօք	արտասուք	noun	with tears	արցունքներով
+ուրախանան	ուրախանամ	verb	they rejoice	ուրախանում են
+փորձութիւն	փորձութիւն	noun	temptation, trial	փորձություն
+միանգամ	միանգամ	adv	once; once for all	մեկ անգամ, միանգամայն
+գլխաւոր	գլխաւոր	adj	chief, principal	գլխավոր
+յարութեամբն	յարութիւն	noun	by / in the resurrection	հարությամբ
+տեսական	տեսական	adj	contemplative, theoretical	տեսական, խորհրդածական
+ներգործական	ներգործական	adj	active, operative	ներգործական
+զաստուածային	աստուածային	adj	the divine (object)	աստվածայինը
+ժե	ժե	num	15 (letter number)	15 (տառով գրված թիվ)
+ներելի	ներելի	adj	pardonable, permitted	ներելի
+բարութեան	բարութիւն	noun	of goodness	բարության
+երեսացն	երես	noun	of the face	երեսի, դեմքի
+հարցանելի	հարցանելի	adj	to be asked; it is to be asked	հարցնելի, պետք է հարցնել
+զսրբութիւն	սրբութիւն	noun	holiness, the holy thing (object)	սրբությունը
+գերազանց	գերազանց	adj	surpassing, excellent	գերազանց
+անողորմ	անողորմ	adj	merciless	անողորմ
+հերձուածողաց	հերձուածող	noun	of the heretics, of the schismatics	հերձվածողների
+գթած	գթած	adj	compassionate, merciful	գթասիրտ, ողորմած
+կացոյց	կացուցանեմ	verb	set, established, appointed	կանգնեցրեց, հաստատեց, նշանակեց
+պահեսցէ	պահեմ	verb	may he keep, will keep	թող պահի, կպահի
+օրեայ	օրեայ	adj	of … days (e.g. քառասնօրեայ: of forty days)	օրյա
+ըմպելի	ըմպելի	noun	drink	ըմպելիք
+բաշխեաց	բաշխեմ	verb	distributed, gave out	բաշխեց
+առաջնորդն	առաջնորդ	noun	the leader, the guide	առաջնորդը
+ծ	ծ	num	50 (letter number)	50 (տառով գրված թիվ)
+անգիտելի	անգիտելի	adj	unknowable	անճանաչելի
+կուսանացն	կոյս	noun	of the virgins	կույսերի
+խոնարհութիւն	խոնարհութիւն	noun	humility	խոնարհություն
+իսահակ	Իսահակ	name	Isaac	Իսահակ
+մեղաւորքն	մեղաւոր	noun	the sinners	մեղավորները
+անուշահոտ	անուշահոտ	adj	fragrant, sweet-smelling	անուշահոտ
+ուրախանայ	ուրախանամ	verb	rejoices	ուրախանում է
+ներգործէ	ներգործեմ	verb	acts, works, operates	ներգործում է
+գեհենին	գեհեն	noun	of Gehenna, of hell	գեհենի, դժոխքի
+սիրաք	Սիրաք	name	Sirach	Սիրաք
+բաժան	բաժան	adj	divided, separate	բաժան, բաժանված
+փոփոխի	փոփոխիմ	verb	is changed, changes	փոփոխվում է
+լուսաւորեաց	լուսաւորեմ	verb	enlightened	լուսավորեց
+առաքինութիւնն	առաքինութիւն	noun	the virtue	առաքինությունը
+էութեամբ	էութիւն	noun	in essence, by being	էությամբ
+մըկրտութիւն	մկրտութիւն	noun	baptism	մկրտություն
+բղխէ	բղխեմ	verb	flows forth, proceeds	բխում է
+մեծատանց	մեծատուն	noun	of the rich	մեծատուների, հարուստների
+չարչարանք	չարչարանք	noun	sufferings, the Passion	չարչարանքներ
+խոստովան	խոստովան	adj	confessing, acknowledging (խոստովան լինել: to confess)	խոստովանող
+դիոնէսիոս	Դիոնէսիոս	name	Dionysius (the Areopagite)	Դիոնիսիոս
+կուսանքն	կոյս	noun	the virgins	կույսերը
+ժառանգութիւն	ժառանգութիւն	noun	inheritance	ժառանգություն
+առաջնորդաց	առաջնորդ	noun	of / to the leaders	առաջնորդների
+հալալ	հալալ	adj	lawful, rightful (from Arabic)	հալալ, օրինավոր
+էութեան	էութիւն	noun	of essence, of being	էության
+առաջնորդք	առաջնորդ	noun	leaders	առաջնորդներ
+ննջեցելոցն	ննջեցեալ	noun	of the dead	ննջեցյալների
+առաքեալք	առաքեալ	noun	apostles	առաքյալներ
+տրտմութեամբ	տրտմութիւն	noun	with sorrow	տրտմությամբ
+կենդանութեան	կենդանութիւն	noun	of life	կենդանության, կյանքի
+անարգէ	անարգեմ	verb	dishonours, despises	անարգում է
+եւայի	Եւա	name	of / to Eve	Եվայի
+ան	ան-	part	un-, without (prefix, here written apart)	ան- (ժխտական նախածանց)
+յակօբոս	Յակոբոս	name	James	Հակոբոս
+գիրկս	գիրկ	noun	arms, embrace (object)	գիրկ
+արժանաւոր	արժանաւոր	adj	worthy	արժանավոր
+անչափ	անչափ	adj	immeasurable; beyond measure	անչափ
+յառաքեալսն	առաքեալ	noun	to / upon the apostles	առաքյալներին
+ընդունին	ընդունիմ	verb	they receive	ընդունում են
+ժբ	ժբ	num	12 (letter number)	12 (տառով գրված թիվ)
+վարդապետութեան	վարդապետութիւն	noun	of teaching, of doctrine	վարդապետության, ուսմունքի
+յակոբոս	Յակոբոս	name	James	Հակոբոս
+անհնազանդ	անհնազանդ	adj	disobedient	անհնազանդ
+համարձակ	համարձակ	adj	bold, free to speak	համարձակ
+ըզմեզ	մեք	pron	us (object)	մեզ
+ահարօնի	Ահարօն	name	of / to Aaron	Ահարոնի
+կենօք	կեանք	noun	with life, in life	կյանքով
+զրկէ	զրկեմ	verb	deprives, robs	զրկում է
+վերացաւ	վերանամ	verb	was taken up, rose	վերացավ, բարձրացավ
+յարուցանէ	յարուցանեմ	verb	raises (up, from the dead)	հարություն է տալիս, հարուցում է
+ապականի	ապականիմ	verb	is corrupted, decays	ապականվում է
+քառասնօրեայ	քառասնօրեայ	adj	of forty days	քառասնօրյա
+չափաւոր	չափաւոր	adj	moderate	չափավոր
+քահանայապետին	քահանայապետ	noun	of / to the high priest	քահանայապետի
+զգայութիւնս	զգայութիւն	noun	the senses (object)	զգայարանները
+մեծատանն	մեծատուն	noun	of / to the rich man	մեծատան
+տրտմի	տրտմիմ	verb	is sad, grieves	տրտմում է
+անիրաւ	անիրաւ	adj	unjust	անիրավ, անարդար
+զգուշանալ	զգուշանամ	verb	to beware, take care	զգուշանալ
+աշխարհական	աշխարհական	adj	worldly; a layman	աշխարհիկ | աշխարհական
+ռ	ռ	num	1000 (letter number)	1000 (տառով գրված թիվ)
+խոնարհեցաւ	խոնարհիմ	verb	bowed down, humbled himself	խոնարհվեց
+բանականն	բանական	adj	the rational (one)	բանականը
+ատելի	ատելի	adj	hateful	ատելի
+առատ	առատ	adj	abundant, generous	առատ
+հ	հ	num	70 (letter number)	70 (տառով գրված թիվ)
+փրկական	փրկական	adj	saving, of salvation	փրկարար
+քաղցրութեամբ	քաղցրութիւն	noun	with sweetness, gently	քաղցրությամբ
+երանելի	երանելի	adj	blessed	երանելի
+կարգեաց	կարգեմ	verb	ordained, appointed, arranged	կարգեց, նշանակեց
+յեգիպտոսէ	Եգիպտոս	name	from Egypt	Եգիպտոսից
+նախքան	նախքան	prep	before	նախքան, մինչ
+պատեալ	պատեմ	verb	wrapped, surrounded	պատված
+հաշտութեան	հաշտութիւն	noun	of reconciliation	հաշտության
+բժշկել	բժշկեմ	verb	to heal	բժշկել
+մահացու	մահացու	adj	mortal; deadly	մահկանացու | մահացու
+անհնար	անհնար	adj	impossible	անհնար
+հակառակն	հակառակ	adj	the opposite, the adversary	հակառակը
+անընդմիջաբար	անընդմիջաբար	adv	without interval, immediately	անընդմեջ, անմիջաբար
+դատել	դատեմ	verb	to judge	դատել
+կազմեաց	կազմեմ	verb	formed, made, prepared	կազմեց
+աստուածածինն	աստուածածին	noun	the Mother of God	Աստվածածինը
+զգայութեամբ	զգայութիւն	noun	by the senses	զգայությամբ
+յօժարութեամբ	յօժարութիւն	noun	willingly, with good will	հոժարությամբ
+բեմն	բեմ	noun	the altar platform, the bema	բեմը
+կ	կ	num	60 (letter number)	60 (տառով գրված թիվ)
+երկրպագութիւն	երկրպագութիւն	noun	worship	երկրպագություն
+հաղորդ	հաղորդ	adj	partaking, sharing in	հաղորդ, մասնակից
+հաւատաց	հաւատամ	verb	believed	հավատաց
+լսելի	լսելի	adj	audible	լսելի
+զգայութիւն	զգայութիւն	noun	sense, sensation	զգայություն, զգայարան
+իշխէ	իշխեմ	verb	rules; dares	իշխում է | համարձակվում է
+մի'	մի	part	do not (with a command)	մի՛
+չարչարեցաւ	չարչարիմ	verb	suffered	չարչարվեց
+խաչեցաւ	խաչիմ	verb	was crucified	խաչվեց
+վ	վ	num	3000 (letter number)	3000 (տառով գրված թիվ)
+ընդունայն	ընդունայն	adj	vain, empty; in vain	ունայն, զուր
+դադարի	դադարեմ	verb	ceases, rests	դադարում է
+ք	ք	num	9000 (letter number)	9000 (տառով գրված թիվ)
+ցանկալի	ցանկալի	adj	desirable	ցանկալի
+պահեա	պահեմ	verb	keep! (command)	պահի՛ր
+փառաւորեալ	փառաւորեմ	verb	glorified	փառավորված
+երեւելի	երեւելի	adj	visible; eminent	երևելի, տեսանելի | նշանավոր
+յ	յ	num	300 (letter number); or the preposition յ-	300 (տառով գրված թիվ) | յ- նախդիր
+ապականեալ	ապականեմ	verb	corrupted	ապականված
+քահանայութիւն	քահանայութիւն	noun	priesthood	քահանայություն
+ժողովել	ժողովեմ	verb	to gather	հավաքել
+յիշատակի	յիշատակ	noun	of the memory, of remembrance	հիշատակի
+այնպիսիքն	այնպիսի	pron	such people	այնպիսիները
+իե	իե	num	25 (letter number)	25 (տառով գրված թիվ)
+երկնաւորաց	երկնաւոր	adj	of the heavenly ones	երկնավորների
+կորնթացւոց	կորնթացի	name	of / to the Corinthians	կորնթացիների
+աղօթէ	աղօթեմ	verb	prays	աղոթում է
+անմահութեան	անմահութիւն	noun	of immortality	անմահության
+հոմանուն	հոմանուն	adj	of the same name, homonymous	համանուն
+մտօքն	միտք	noun	with the mind	մտքով
+ժողովի	ժողովիմ	verb	is gathered	հավաքվում է
+բաժանումն	բաժանումն	noun	division	բաժանում
+իսկապէս	իսկապէս	adv	really, truly	իսկապես
+քահանայական	քահանայական	adj	priestly	քահանայական
+տեսանելի	տեսանելի	adj	visible	տեսանելի
+դատապարտեաց	դատապարտեմ	verb	condemned	դատապարտեց
+բղխեալ	բղխեմ	verb	proceeded, flowed forth	բխած
+յերեսաց	երես	noun	from the face (of), from before	երեսից, առջևից
+ժդ	ժդ	num	14 (letter number)	14 (տառով գրված թիվ)
+զգայական	զգայական	adj	sensory, of the senses	զգայական
+մատնեաց	մատնեմ	verb	betrayed, handed over	մատնեց
+տապանակն	տապանակ	noun	the ark (of the covenant)	տապանակը
+չարչարանքն	չարչարանք	noun	the sufferings, the Passion	չարչարանքները
+զառաքեալսն	առաքեալ	noun	the apostles (object)	առաքյալներին
+չեմ	չեմ	verb	I am not	չեմ
+չարչարի	չարչարիմ	verb	suffers, is tormented	չարչարվում է
+քաւութիւն	քաւութիւն	noun	atonement, expiation	քավություն
+տկարութեան	տկարութիւն	noun	of weakness	տկարության
+միաւորի	միաւորիմ	verb	is united	միավորվում է
+հոգեկան	հոգեկան	adj	of the soul, psychic	հոգեկան
+տղայութեան	տղայութիւն	noun	of childhood	մանկության
+տէրանց	տէրունական	adj	of the Lord, Dominical (e.g. feasts)	տերունական
+ուրանան	ուրանամ	verb	they deny	ուրանում են
+գովելի	գովելի	adj	praiseworthy	գովելի
+փարիսեցիքն	փարիսեցի	noun	the Pharisees	փարիսեցիները
+ժա	ժա	num	11 (letter number)	11 (տառով գրված թիվ)
+իբ	իբ	num	22 (letter number)	22 (տառով գրված թիվ)
+հատուսցէ	հատուցանեմ	verb	will repay, may he repay	կհատուցի, թող հատուցի
+առաջնորդին	առաջնորդ	noun	of / to the leader	առաջնորդի
+պատասխանեն	պատասխանեմ	verb	they answer	պատասխանում են
+մեծատուն	մեծատուն	noun	rich man	մեծատուն, հարուստ
+հերձուածօղք	հերձուածող	noun	heretics, schismatics	հերձվածողներ
+զհոգեւորն	հոգեւոր	adj	the spiritual (object)	հոգևորը
+զդատաստանն	դատաստան	noun	the judgement (object)	դատաստանը
+աստիճանք	աստիճան	noun	steps, degrees, ranks	աստիճաններ
+ժառանգեն	ժառանգեմ	verb	they inherit	ժառանգում են
+բժշկութիւն	բժշկութիւն	noun	healing, medicine	բժշկություն
+հեշտութեան	հեշտութիւն	noun	of pleasure	հեշտության, հաճույքի
+հատուցանել	հատուցանեմ	verb	to repay, to reward	հատուցել
+հաղորդին	հաղորդիմ	verb	they partake, take communion	հաղորդվում են
+գողութիւն	գողութիւն	noun	theft	գողություն
+զհատուցումն	հատուցումն	noun	the reward, the retribution (object)	հատուցումը
+առաքինութիւնք	առաքինութիւն	noun	virtues	առաքինություններ
+անիրաւութեան	անիրաւութիւն	noun	of injustice	անիրավության
+մանկութեան	մանկութիւն	noun	of childhood	մանկության
+հանապազորդ	հանապազորդ	adj	daily; continual	ամենօրյա | մշտական
+տեսականն	տեսական	adj	the contemplative (one)	տեսականը
+շրջէր	շրջիմ	verb	was going about	շրջում էր
+պայծառանայ	պայծառանամ	verb	becomes bright, shines	պայծառանում է
+դիմօք	դէմ	noun	with the face	դեմքով
+փորձութեան	փորձութիւն	noun	of temptation	փորձության
+գործօք	գործ	noun	by deeds, with works	գործերով
+իսահակայ	Իսահակ	name	of / to Isaac	Իսահակի
+վայելէ	վայելեմ	verb	enjoys; befits	վայելում է | վայել է
+սողոմոնի	Սողոմոն	name	of / to Solomon	Սողոմոնի
+փարաւօն	Փարաւօն	name	Pharaoh	փարավոն
+մկրտութեամբն	մկրտութիւն	noun	by the baptism	մկրտությամբ
+ըզփառս	փառք	noun	the glory (object)	փառքը
+ճանաչումն	ճանաչումն	noun	knowledge, recognition	ճանաչում
+սրբութիւնն	սրբութիւն	noun	the holiness, the holy thing	սրբությունը
+մխիթարութեան	մխիթարութիւն	noun	of consolation	մխիթարության
+զղջման	զղջումն	noun	of repentance	զղջման
+գոյացեալ	գոյանամ	verb	come into being, existing	գոյացած
+կանգնեաց	կանգնեմ	verb	set up, raised	կանգնեցրեց
+բարերար	բարերար	noun	benefactor	բարերար
+կորուսանեն	կորուսանեմ	verb	they lose; they destroy	կորցնում են | կործանում են
+աւետի	աւետեմ	verb	is announced; announces good news	ավետվում է
+ստեղծեաց	ստեղծանեմ	verb	created	ստեղծեց
+անօրէն	անօրէն	adj	lawless, wicked	անօրեն
+անգիտութեամբ	անգիտութիւն	noun	in ignorance	անգիտությամբ
+տնկականն	տնկական	adj	the vegetative (soul) (philosophy)	բուսական (հոգին)
+սնուցանէ	սնուցանեմ	verb	nourishes	սնուցում է
+կատարման	կատարումն	noun	of the fulfilment, of the end	կատարման
+ովհաննէս	Յովհաննէս	name	John	Հովհաննես
+խառնեաց	խառնեմ	verb	mixed	խառնեց
+իա	իա	num	21 (letter number)	21 (տառով գրված թիվ)
+չարաչար	չարաչար	adv	cruelly, grievously	չարաչար
+կուսական	կուսական	adj	virginal	կուսական
+թերեւս	թերեւս	adv	perhaps	թերևս
+ծնունդք	ծնունդ	noun	offspring, births	ծնունդներ
+միջակ	միջակ	adj	middle, average	միջակ, միջին
+վնասակար	վնասակար	adj	harmful	վնասակար
+խաչեալ	խաչեմ	verb	crucified	խաչված
+կենդանարար	կենդանարար	adj	life-giving	կենդանարար
+սերմանել	սերմանեմ	verb	to sow	սերմանել
+պատուիրանացն	պատուիրան	noun	of the commandments	պատվիրանների
+չկայ	չկամ	verb	is not (there), does not exist	չկա
+վերնատանն	վերնատուն	noun	of / in the upper room	վերնատան
+իմացական	իմացական	adj	intellectual, of the mind	իմացական
+մարմնաւորն	մարմնաւոր	adj	the bodily (one)	մարմնավորը
+եռակի	եռակի	adj	threefold	եռակի
+զիմանալի	իմանալի	adj	the intelligible (object)	իմանալին
+հակառակի	հակառակիմ	verb	opposes	հակառակվում է
+ուղղութեան	ուղղութիւն	noun	of uprightness, of right direction	ուղղության
+խաւարեալ	խաւարեմ	verb	darkened	խավարած
+մարդեղութեան	մարդեղութիւն	noun	of the Incarnation	մարդեղության
+զո	ո	pron	whom (object)	ում
+զմարմնաւոր	մարմնաւոր	adj	the bodily (object)	մարմնավորը
+սիօն	Սիօն	name	Zion	Սիոն
+առանձնակի	առանձնակի	adv	separately, apart	առանձնակի
+կրօնաւորաց	կրօնաւոր	noun	of / to the monks	կրոնավորների, միաբանների
+անիրաւութիւն	անիրաւութիւն	noun	injustice	անիրավություն
+կազմեալ	կազմեմ	verb	formed, made	կազմված
+կոխան	կոխան	adj	trodden under foot	ոտնակոխ
+ղուկ	Ղուկաս	name	Luke (short form)	Ղուկաս
+բժշկութեան	բժշկութիւն	noun	of healing	բժշկության
+փոփոխումն	փոփոխումն	noun	change	փոփոխություն
+մարդիկք	մարդ	noun	people, men	մարդիկ
+իշխանութեան	իշխանութիւն	noun	of authority, of power	իշխանության
+հեռաստանէ	հեռաստան	noun	from afar	հեռվից
+բարձրացոյց	բարձրացուցանեմ	verb	raised up, exalted	բարձրացրեց
+անկարօտ	անկարօտ	adj	needing nothing	անկարոտ
+անառակ	անառակ	adj	prodigal, dissolute	անառակ
+պահպանութիւն	պահպանութիւն	noun	protection, keeping	պահպանություն
+հաւատացելոցն	հաւատացեալ	noun	of the believers	հավատացյալների
+պատւական	պատուական	adj	honourable, precious	պատվական
+կարողութեան	կարողութիւն	noun	of power, of ability	կարողության
+զգայարանօք	զգայարան	noun	with the sense organs	զգայարաններով
+երկնաւորի	երկնաւոր	adj	of / to the heavenly (one)	երկնավորի
+առաքեալսն	առաքեալ	noun	the apostles (object)	առաքյալներին
+զրկեցաւ	զրկիմ	verb	was deprived	զրկվեց
+ձգեաց	ձգեմ	verb	drew, stretched	ձգեց, քաշեց
+տկարանայ	տկարանամ	verb	grows weak	տկարանում է
+զարմանալի	զարմանալի	adj	wonderful, astonishing	զարմանալի
+ընդունակ	ընդունակ	adj	capable, receptive	ընդունակ
+հաղորդիլ	հաղորդիմ	verb	to partake, to take communion	հաղորդվել
+կորուսանել	կորուսանեմ	verb	to lose; to destroy	կորցնել | կործանել
+ժամայն	ժամայն	adv	at once, at that hour	իսկույն, նույն ժամին
+պահէին	պահեմ	verb	they were keeping	պահում էին
+ենովք	Ենովք	name	Enoch	Ենոք
+մեղանչեաց	մեղանչեմ	verb	sinned	մեղանչեց
+զազիր	զազիր	adj	abominable, foul	զազրելի
+քարոզութիւն	քարոզութիւն	noun	preaching, sermon	քարոզություն
+գործնական	գործնական	adj	practical, active	գործնական
+անհնարին	անհնարին	adj	impossible	անհնարին
+ժառանգեցէք	ժառանգեմ	verb	inherit! (command, plural)	ժառանգեցե՛ք
+երեսք	երես	noun	faces; surfaces	երեսներ
+սիրելիք	սիրելի	noun	beloved ones	սիրելիներ
+այսպիսիքս	այսպիսի	pron	such ones as these	այսպիսիները
+դանիէլի	Դանիէլ	name	of / to Daniel	Դանիելի
+սողոմոն	Սողոմոն	name	Solomon	Սողոմոն
+քաւութեան	քաւութիւն	noun	of atonement	քավության
+ոպէս	որպէս	conj	as, like (a slip for որպէս)	որպես
+արդարացոյց	արդարացուցանեմ	verb	justified	արդարացրեց
+ժողովօղն	ժողովող	noun	the gatherer; Ecclesiastes	ժողովողը | Ժողովող (գիրքը)
+արգիլէ	արգելեմ	verb	hinders, forbids	արգելում է
+քահանայապետ	քահանայապետ	noun	high priest	քահանայապետ
+պահելով	պահեմ	verb	by keeping	պահելով
+յառաջիկայդ	յառաջիկայ	adj	the coming, the following	առաջիկա
+անօթ	անօթ	noun	vessel	անոթ
+ո'չ	ոչ	part	no, not	ո՛չ
+խոստովանութեանն	խոստովանութիւն	noun	of the confession	խոստովանության
+ժողովեաց	ժողովեմ	verb	gathered	հավաքեց
+թաբօր	Թաբօր	name	Tabor	Թաբոր
+բարութեամբ	բարութիւն	noun	with goodness	բարությամբ
+տգիտութեամբ	տգիտութիւն	noun	in ignorance	տգիտությամբ
+պահեալ	պահեմ	verb	kept	պահված
+բազմանայ	բազմանամ	verb	multiplies	բազմանում է
+սքանչելի	սքանչելի	adj	wonderful, marvellous	սքանչելի
+սերմանեն	սերմանեմ	verb	they sow	սերմանում են
+մերձաւոր	մերձաւոր	adj	near; neighbour	մերձավոր
+աղքատութեան	աղքատութիւն	noun	of poverty	աղքատության
+շուրջանակի	շուրջանակի	adv	round about	շուրջբոլորը
+զգեցոյց	զգեցուցանեմ	verb	clothed	հագցրեց
+առաջնորդէ	առաջնորդեմ	verb	leads, guides	առաջնորդում է
+խոհեմութիւն	խոհեմութիւն	noun	prudence	խոհեմություն
+հեշտութեամբ	հեշտութիւն	noun	with pleasure, easily	հաճույքով | հեշտությամբ
+տանջանսն	տանջանք	noun	the torments (object)	տանջանքները
+խորհիլ	խորհիմ	verb	to think, to consider	խորհել, մտածել
+պակասութեան	պակասութիւն	noun	of lack, of deficiency	պակասության
+անշէջ	անշէջ	adj	unquenchable	անշեջ
+սքանչելիք	սքանչելիք	noun	wonders, miracles	սքանչելիքներ, հրաշքներ
+շաբաթին	շաբաթ	noun	of / on the Sabbath, of the week	շաբաթի
+զմեղաւորն	մեղաւոր	noun	the sinner (object)	մեղավորին
+հայրական	հայրական	adj	fatherly, paternal	հայրական
+ամեայ	ամեայ	adj	of … years (e.g. երեսնամեայ: thirty years old)	ամյա
+հեշտութեանց	հեշտութիւն	noun	of pleasures	հաճույքների
+արարչութեան	արարչութիւն	noun	of creation	արարչության
+ձգեն	ձգեմ	verb	they draw, pull	ձգում են, քաշում են
+մատ	մատն	noun	finger	մատ
+կանգնեալ	կանգնեմ	verb	standing; set up	կանգնած | կանգնեցված
+զխոնարհութիւն	խոնարհութիւն	noun	humility (object)	խոնարհությունը
+թագաւորեաց	թագաւորեմ	verb	reigned	թագավորեց
+զգայականն	զգայական	adj	the sensory (one)	զգայականը
+պատուիրանաց	պատուիրան	noun	of the commandments	պատվիրանների
+հրեշտակապետն	հրեշտակապետ	noun	the archangel	հրեշտակապետը
+բնակութիւն	բնակութիւն	noun	dwelling	բնակություն, կացարան
+չարչարին	չարչարիմ	verb	they suffer, are tormented	չարչարվում են
+մեծամեծք	մեծամեծ	adj	the great ones, nobles	մեծամեծներ
+ըմբռնեալ	ըմբռնեմ	verb	seized, grasped	բռնված | ըմբռնված
+չարչարեալ	չարչարեմ	verb	tormented, having suffered	չարչարված
+գործակից	գործակից	noun	co-worker, helper	գործակից
+երեւեցոյց	երեւեցուցանեմ	verb	showed, made appear	երևացրեց, ցույց տվեց
+աներեւոյթ	աներեւոյթ	adj	invisible	աներևույթ, անտեսանելի
+ցանկէն	ցանկ	noun	from the list, from the index	ցանկից
+միանգամայն	միանգամայն	adv	at once, altogether	միանգամայն, միաժամանակ
+կորուսցէ	կորուսանեմ	verb	will lose, may lose; will destroy	կկորցնի | կկործանի
+ճաշակել	ճաշակեմ	verb	to taste	ճաշակել
+անխտիր	անխտիր	adv	without distinction	անխտիր
+եղական	եղական	adj	created, that came to be	եղական, ստեղծված
+սիմովն	Սիմովն	name	Simon	Սիմոն
+զօրանայ	զօրանամ	verb	grows strong	զորանում է
+չարչարէ	չարչարեմ	verb	torments	չարչարում է
+սաղմոսին	սաղմոս	noun	of the psalm	սաղմոսի
+մկրտութեամբ	մկրտութիւն	noun	by baptism	մկրտությամբ
+պահեցին	պահեմ	verb	they kept	պահեցին
+զառաքինութիւն	առաքինութիւն	noun	virtue (object)	առաքինությունը
+կարօտելոց	կարօտեալ	noun	of / to the needy	կարոտյալների
+անհաս	անհաս	adj	unattainable, beyond reach	անհաս
+ժողովեցան	ժողովիմ	verb	they gathered	հավաքվեցին
+բեթանիա	Բեթանիա	name	Bethany	Բեթանիա
+զմարմնական	մարմնական	adj	the bodily (object)	մարմնականը
+կատարեալք	կատարեալ	adj	the perfect (ones)	կատարյալները
+քաւարան	քաւարան	noun	mercy seat; place of atonement	քավարան
+եգիպտոսի	Եգիպտոս	name	of / to Egypt	Եգիպտոսի
+ժգ	ժգ	num	13 (letter number)	13 (տառով գրված թիվ)
+պղնձի	պղինձ	noun	of bronze, of copper	պղնձի
+միաբան	միաբան	adj	of one mind, united; together	միաբան | միասին
+ուրանայ	ուրանամ	verb	denies	ուրանում է
+անդամօք	անդամ	noun	with the limbs, with the members	անդամներով
+կատարելոցն	կատարեալ	adj	of the perfect	կատարյալների
+տապանակին	տապանակ	noun	of / to the ark	տապանակի
+ազատեցան	ազատիմ	verb	they were freed	ազատվեցին
+երկրաւորաց	երկրաւոր	adj	of the earthly ones	երկրավորների
+անբանից	անբան	adj	of the irrational (animals)	անբանների, կենդանիների
+պայծառացեալ	պայծառանամ	verb	made bright, shining	պայծառացած
+լսելիս	լսելիք	noun	the ears, hearing (object)	ականջները, լսողությունը
+սաստեաց	սաստեմ	verb	rebuked	սաստեց
+շրջին	շրջիմ	verb	they go about	շրջում են
+ցաւի	ցաւ	noun	of pain	ցավի
+բարկանայ	բարկանամ	verb	becomes angry	բարկանում է
+պատահական	պատահական	adj	accidental	պատահական
+բոլորապէս	բոլորապէս	adv	wholly, entirely	բոլորովին
+բազմապատիկ	բազմապատիկ	adj	manifold	բազմապատիկ
+դարձուցանել	դարձուցանեմ	verb	to turn back, to convert	դարձնել
+գոյանայ	գոյանամ	verb	comes into being	գոյանում է
+անհաւատութեան	անհաւատութիւն	noun	of unbelief	անհավատության
+հակառակին	հակառակ	adj	of / to the adversary	հակառակորդի
+պահէր	պահեմ	verb	was keeping	պահում էր
+գործնականն	գործնական	adj	the practical (one)	գործնականը
+բնակարան	բնակարան	noun	dwelling place	բնակարան, կացարան
+աշխատութեամբ	աշխատութիւն	noun	with labour	աշխատանքով
+առանձինն	առանձին	adv	apart, separately	առանձին
+որր	որ	pron	who, which (a slip for որ)	որ
+թլփատեցաւ	թլփատիմ	verb	was circumcised	թլփատվեց
+աճումն	աճումն	noun	growth	աճ
+ժզ	ժզ	num	16 (letter number)	16 (տառով գրված թիվ)
+հաղորդի	հաղորդիմ	verb	partakes, takes communion	հաղորդվում է
+միաւորեաց	միաւորեմ	verb	united	միավորեց
+ծածկեաց	ծածկեմ	verb	covered, hid	ծածկեց
+նմանեցաւ	նմանիմ	verb	became like	նմանվեց
+իգ	իգ	num	23 (letter number)	23 (տառով գրված թիվ)
+հռօմայեցւոց	հռովմայեցի	name	of / to the Romans	հռոմեացիների
+քննութեան	քննութիւն	noun	of examination	քննության
+ր	ր	num	5000 (letter number)	5000 (տառով գրված թիվ)
+ժը	ժը	num	18 (letter number)	18 (տառով գրված թիվ)
+աղօթէր	աղօթեմ	verb	was praying	աղոթում էր
+վասնորոյ	վասն որոյ	conj	therefore, because of which	ուստի, որի պատճառով
+կակուղ	կակուղ	adj	soft	փափուկ
+կատարելոց	կատարեալ	adj	of the perfect	կատարյալների
+ունակութիւն	ունակութիւն	noun	habit, disposition	ունակություն
+սոյնպիսիք	սոյնպիսի	pron	such ones	այդպիսիները
+գրիգորիոս	Գրիգորիոս	name	Gregory	Գրիգոր
+զմարմնաւորն	մարմնաւոր	adj	the bodily (object)	մարմնավորը
+բարձրելոյն	բարձրեալ	noun	of the Most High	Բարձրյալի
+խոստովանահայրն	խոստովանահայր	noun	the confessor	խոստովանահայրը
+քահանայապետքն	քահանայապետ	noun	the high priests	քահանայապետները
+այ	Աստուած	name	of God (abbreviation of Աստուծոյ)	Աստծո (համառոտագրություն)
+սերմանի	սերմանիմ	verb	is sown	սերմանվում է
+իմանալեացն	իմանալի	adj	of the intelligible things	իմանալիների
+փորձեաց	փորձեմ	verb	tested, tempted	փորձեց
+ընկալաք	ընդունիմ	verb	we received	ընդունեցինք
+հաւատացեալքն	հաւատացեալ	noun	the believers	հավատացյալները
+կարելի	կարելի	adj	possible	կարելի, հնարավոր
+սիրելին	սիրելի	noun	the beloved	սիրելին
+պատուիրանին	պատուիրան	noun	of / to the commandment	պատվիրանի
+պիտի	պիտի	verb	must, it is needed	պիտի, պետք է
+ուսման	ուսումն	noun	of learning, of teaching	ուսման
+զկատարումն	կատարումն	noun	the fulfilment, the end (object)	կատարումը
+արժանապէս	արժանապէս	adv	worthily	արժանապես
+ընկալցին	ընդունիմ	verb	they will receive, may receive	կընդունեն, թող ընդունեն
+չարչարակից	չարչարակից	adj	fellow sufferer	չարչարակից
+եղելոց	եղեալ	verb	of things that happened, of those who were	եղածների
+կռապաշտութեան	կռապաշտութիւն	noun	of idolatry	կռապաշտության
+ստեփաննոսի	Ստեփաննոս	name	of / to Stephen	Ստեփանոսի
+զանազանապէս	զանազանապէս	adv	in various ways	զանազան կերպով
+օգտակար	օգտակար	adj	useful	օգտակար
+սամփսոն	Սամփսոն	name	Samson	Սամսոն
+շինութիւն	շինութիւն	noun	building, edification	շինություն
+եեւ	եւ	conj	and (a slip for եւ)	և
+հռօմ	Հռոմ	name	Rome	Հռոմ
+գոյացան	գոյանամ	verb	they came into being	գոյացան
+էութեանն	էութիւն	noun	of the essence	էության
+ըմբռնել	ըմբռնեմ	verb	to seize, to grasp	բռնել | ըմբռնել
+հոգեւորապէս	հոգեւորապէս	adv	spiritually	հոգևորապես
+լուծումն	լուծումն	noun	solution, answer; release	լուծում
+ճշմարտութեանն	ճշմարտութիւն	noun	of the truth	ճշմարտության
+հրեշտակօք	հրեշտակ	noun	with / by angels	հրեշտակներով
+միածնին	միածին	adj	of / to the Only-begotten	Միածնի
+մեղօքն	մեղք	noun	with / by the sins	մեղքերով
+անկենդան	անկենդան	adj	lifeless	անկենդան
+նմանիլ	նմանիմ	verb	to be like, to resemble	նմանվել
+գոյացութեան	գոյացութիւն	noun	of substance, of essence	գոյացության
+բարոյական	բարոյական	adj	moral	բարոյական
+բեւեռեալ	բեւեռեմ	verb	nailed	բևեռված, մեխված
+ողորմելի	ողորմելի	adj	pitiable, wretched	ողորմելի
+հաղորդիմք	հաղորդիմ	verb	we partake, take communion	հաղորդվում ենք
+ծածկապէս	ծածկապէս	adv	secretly	ծածկաբար, գաղտնի
+երկայնամիտ	երկայնամիտ	adj	long-suffering, patient	համբերատար
+իսպառ	իսպառ	adv	utterly, completely	իսպառ, ամբողջովին
+եպիսկոպոսութեան	եպիսկոպոսութիւն	noun	of the episcopate	եպիսկոպոսության
+առատապէս	առատապէս	adv	abundantly	առատորեն
+հետեւիլ	հետեւիմ	verb	to follow	հետևել
+ժթ	ժթ	num	19 (letter number)	19 (տառով գրված թիվ)
+դառնութեան	դառնութիւն	noun	of bitterness	դառնության
+կատարածն	կատարած	noun	the end (of the world)	վախճանը
+փառաւք	փառք	noun	with glory	փառքով
+խորհելով	խորհիմ	verb	by thinking	խորհելով, մտածելով
+մեծատունք	մեծատուն	noun	the rich	մեծատուններ, հարուստներ
+ծանրագոյն	ծանրագոյն	adj	heaviest, most grievous	ամենածանր
+հերձուած	հերձուած	noun	schism, heresy	հերձված
+կենայ	կամ	verb	stays, remains	մնում է
+ուսումն	ուսումն	noun	learning, study, teaching	ուսում
+պահանջէ	պահանջեմ	verb	demands	պահանջում է
+խոստովանեալ	խոստովանիմ	verb	confessed	խոստովանած
+երրորդութիւն	երրորդութիւն	noun	Trinity	Երրորդություն
+պղծէ	պղծեմ	verb	defiles	պղծում է
+տեսօղ	տեսող	noun	seer, one who sees	տեսնող
+նըման	նման	adj	like, similar	նման
+տարաժամ	տարաժամ	adj	untimely	անժամանակ
+յաղթութիւն	յաղթութիւն	noun	victory	հաղթություն
+այլազգիք	այլազգի	noun	foreigners, gentiles	այլազգիներ
+խաչեցին	խաչեմ	verb	they crucified	խաչեցին
+անյագ	անյագ	adj	insatiable	անհագ
+կարգեցին	կարգեմ	verb	they ordained, appointed	կարգեցին, սահմանեցին
+միաւորութեան	միաւորութիւն	noun	of union	միավորության
+ճաշակեմք	ճաշակեմ	verb	we taste	ճաշակում ենք
+մարդկութեանն	մարդկութիւն	noun	of humanity	մարդկության
+յափշտակէ	յափշտակեմ	verb	seizes, snatches	հափշտակում է
+քաղցրութեան	քաղցրութիւն	noun	of sweetness	քաղցրության
+բարկացեալ	բարկանամ	verb	angered	բարկացած
+մասնակից	մասնակից	adj	partaker	մասնակից
+մեծամեծս	մեծամեծ	adj	great things (object)	մեծամեծ բաներ
+աստուածածնին	աստուածածին	noun	of / to the Mother of God	Աստվածածնի
+պահելն	պահեմ	verb	the keeping, the fasting	պահելը
+իզ	իզ	num	26 (letter number)	26 (տառով գրված թիվ)
+ճաշակեաց	ճաշակեմ	verb	tasted	ճաշակեց
+ծածկել	ծածկեմ	verb	to cover, to hide	ծածկել
+կուսանաց	կոյս	noun	of / to the virgins	կույսերի
+սիօնի	Սիօն	name	of / to Zion	Սիոնի
+միաւորութեամբ	միաւորութիւն	noun	by union	միավորությամբ
+յարմարի	յարմարիմ	verb	fits, suits	հարմարվում է
+փարաւօնի	Փարաւօն	name	of / to Pharaoh	փարավոնի
+լուսատու	լուսատու	adj	light-giving; a luminary	լուսատու
+մեղաւորս	մեղաւոր	noun	sinners (object)	մեղավորներին
+անմատոյց	անմատոյց	adj	unapproachable	անմատչելի
+տիրէ	տիրեմ	verb	rules, masters	տիրում է
+փափկութեան	փափկութիւն	noun	of luxury, of softness	փափկության, վայելքի
+թեւօք	թեւ	noun	with wings	թևերով
+սատակեաց	սատակեմ	verb	destroyed, killed	սատկեցրեց, կոտորեց
+ակամայն	ակամայ	adv	unwillingly	ակամա
+արդարապէս	արդարապէս	adv	justly	արդարացիորեն
+քննութեամբ	քննութիւն	noun	by examination	քննությամբ
+անօգուտ	անօգուտ	adj	useless	անօգուտ
+պատժեցաւ	պատժիմ	verb	was punished	պատժվեց
+աղօթեն	աղօթեմ	verb	they pray	աղոթում են
+միաւորութեանն	միաւորութիւն	noun	of the union	միավորության
+զչարչարանսն	չարչարանք	noun	the sufferings, the Passion (object)	չարչարանքները
+խոկումն	խոկումն	noun	meditation	խոկում, խորհրդածություն
+գոյացական	գոյացական	adj	substantial, essential	էական
+լուսափայլ	լուսափայլ	adj	shining with light	լուսափայլ
+խոստովանիլն	խոստովանիմ	verb	the confessing	խոստովանելը
+յորդորէ	յորդորեմ	verb	exhorts	հորդորում է
+թուէ	թուիմ	verb	seems	թվում է
+ընդունիմք	ընդունիմ	verb	we receive	ընդունում ենք
+շրջեցաւ	շրջիմ	verb	went about	շրջեց
+զգոյշ	զգոյշ	adj	careful, watchful	զգույշ
+ահարկու	ահարկու	adj	terrible, fearful	ահարկու
+կարգաւոր	կարգաւոր	adj	orderly	կարգավոր
+խնդութեամբ	խնդութիւն	noun	with joy	խնդությամբ
+անպարշտաց	ամպարիշտ	adj	of the ungodly	ամբարիշտների
+հոգեւորս	հոգեւոր	adj	spiritual things (object)	հոգևոր բաներ
+համագոյ	համագոյ	adj	consubstantial	համագո
+բղխի	բղխիմ	verb	proceeds, flows	բխում է
+հետեւին	հետեւիմ	verb	they follow	հետևում են
+պատարագօք	պատարագ	noun	with sacrifices, with liturgies	պատարագներով
+յովսէփայ	Յովսէփ	name	of / to Joseph	Հովսեփի
+զգայութեանցն	զգայութիւն	noun	of the senses	զգայարանների
+մինչչեւ	մինչ չեւ	conj	before (lit. while not yet)	նախքան, դեռ չ-
+ծանրացեալ	ծանրանամ	verb	weighed down	ծանրացած
+արբեցութիւն	արբեցութիւն	noun	drunkenness	հարբեցողություն
+բաշխել	բաշխեմ	verb	to distribute	բաշխել
+լուսաւորեն	լուսաւորեմ	verb	they enlighten	լուսավորում են
+փորձութեանց	փորձութիւն	noun	of temptations	փորձությունների
+խաչաձեւ	խաչաձեւ	adj	cross-shaped	խաչաձև
+զչորեք	չորք	num	the four (object)	չորսին
+երկնայնոցն	երկնային	adj	of the heavenly ones	երկնայինների
+զանմահութիւն	անմահութիւն	noun	immortality (object)	անմահությունը
+մսուր	մսուր	noun	manger	մսուր
+բարկութեամբ	բարկութիւն	noun	with anger	բարկությամբ
+քահանայապետութեան	քահանայապետութիւն	noun	of the high priesthood	քահանայապետության
+յիմանալի	իմանալի	adj	into / from the intelligible	իմանալիի մեջ
+տնօրէնութեանն	տնօրէնութիւն	noun	of the divine plan, of the dispensation	տնօրինության
+խոտան	խոտան	adj	rejected, defective	խոտան
+անմահութիւն	անմահութիւն	noun	immortality	անմահություն
+իէ	իէ	num	27 (letter number)	27 (տառով գրված թիվ)
+ծառայել	ծառայեմ	verb	to serve	ծառայել
+բղխեաց	բղխեմ	verb	flowed forth	բխեց
+յաւիտենին	յաւիտեան	noun	of the age, of eternity	հավիտենականության
+զծածուկ	ծածուկ	adj	the hidden (thing) (object)	ծածուկը
+փոփոխման	փոփոխումն	noun	of change	փոփոխության
+երեսօք	երես	noun	with the face	երեսով
+լգ	լգ	num	33 (letter number)	33 (տառով գրված թիվ)
+կարօտութեան	կարօտութիւն	noun	of need, of want	կարիքի
+սինայ	Սինա	name	Sinai	Սինա
+չունին	չունիմ	verb	they have not	չունեն
+պարունակէ	պարունակեմ	verb	contains	պարունակում է
+համբարձմանն	համբարձումն	noun	of the Ascension	Համբարձման
+ծածկի	ծածկիմ	verb	is covered, is hidden	ծածկվում է
+ուրացաւ	ուրանամ	verb	denied	ուրացավ
+խառնել	խառնեմ	verb	to mix	խառնել
+լուսաւորչին	լուսաւորիչ	noun	of the Illuminator (St Gregory)	Լուսավորչի
+մըկրտեցաւ	մկրտիմ	verb	was baptized	մկրտվեց
+տօնել	տօնեմ	verb	to celebrate	տոնել
+փորձութիւնս	փորձութիւն	noun	temptations (object)	փորձություններ
+առաքելական	առաքելական	adj	apostolic	առաքելական
+կարգաւորէ	կարգաւորեմ	verb	puts in order	կարգավորում է
+պատեաց	պատեմ	verb	wrapped, surrounded	պատեց
+անգիտութեան	անգիտութիւն	noun	of ignorance	անգիտության
+ժողովեն	ժողովեմ	verb	they gather	հավաքում են
+առողջանայ	առողջանամ	verb	becomes healthy, recovers	առողջանում է
+անուշ	անուշ	adj	sweet	անուշ
+զբանական	բանական	adj	the rational (object)	բանականը
+ըմբռնի	ըմբռնիմ	verb	is seized; is comprehended	բռնվում է | ըմբռնվում է
+զանօրէնութիւն	անօրէնութիւն	noun	lawlessness (object)	անօրենությունը
+ճ	ճ	num	100 (letter number)	100 (տառով գրված թիվ)
+բաբիլօն	Բաբելոն	name	Babylon	Բաբելոն
+անօրէնութեան	անօրէնութիւն	noun	of lawlessness	անօրենության
+թաղումն	թաղումն	noun	burial	թաղում
+բաժինն	բաժին	noun	the portion, the share	բաժինը
+ժառանգութեան	ժառանգութիւն	noun	of inheritance	ժառանգության
+բնակութեան	բնակութիւն	noun	of dwelling	բնակության
+լնանի	լնանիմ	verb	is filled	լցվում է
+կարողութեամբ	կարողութիւն	noun	with power	կարողությամբ
+ազատեալ	ազատեմ	verb	freed	ազատված
+վարուց	վարք	noun	of conduct, of life	վարքի
+կոտորեաց	կոտորեմ	verb	slaughtered	կոտորեց
+հեշտացեալ	հեշտանամ	verb	delighted	հաճույք զգացած
+արդարանամք	արդարանամ	verb	we are justified	արդարանում ենք
+ձեռօքն	ձեռն	noun	with the hands	ձեռքերով
+համեմատի	համեմատիմ	verb	is compared	համեմատվում է
+յիշեցէք	յիշեմ	verb	remember! (plural)	հիշե՛ք
+խռովութեան	խռովութիւն	noun	of disturbance	խռովության
+արդարանալ	արդարանամ	verb	to be justified	արդարանալ
+ազատեսցէ	ազատեմ	verb	may he free, will free	թող ազատի, կազատի
+խրատել	խրատեմ	verb	to admonish	խրատել
+առաքինութիւնքն	առաքինութիւն	noun	the virtues	առաքինությունները
+ապականեցաւ	ապականիմ	verb	was corrupted	ապականվեց
+յէութենէ	էութիւն	noun	from the essence, from being	էությունից

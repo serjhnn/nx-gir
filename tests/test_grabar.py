@@ -217,3 +217,56 @@ def test_define_hy_real_words():
     assert out[0] == "սիրեմ (սիրել) · բայ"
     out = grabar.define("զլուսինն", lang="hy")
     assert out[0] == "լուսին · գոյական"
+
+
+def test_vocabulary_ai_is_well_formed():
+    rows = list(grabar.tsv(grabar.VOCABULARY_AI))
+    assert len(rows) > 500
+    forms = [grabar.key(r[0]) for r in rows]
+    assert len(forms) == len(set(forms))
+    for row in rows:
+        assert len(row) == 5
+        form, head, pos, en, hy = row
+        assert form and head
+        assert pos in grabar.POS_HY
+        for ms in (en, hy):
+            assert "" not in ms.split(" | ")
+
+
+def test_vocabulary_ai_only_fills_gaps():
+    # a form Wiktionary has is never glossed again
+    wikt = grabar.vocabulary()
+    for row in grabar.tsv(grabar.VOCABULARY_AI):
+        assert not grabar.lookup(row[0], wikt), row[0]
+
+
+def test_define_ai(tmp_path):
+    words = tmp_path / "vocabulary-claude.tsv"
+    words.write_text(
+        "# test\n"
+        "յարութեան\tյարութիւն\tnoun"
+        "\tof the resurrection\tհարության\n",
+        encoding="utf-8",
+    )
+    vocab = grabar.vocabulary_ai("en", words)
+    out = grabar.define("զյարութեան", vocab)
+    assert out[:2] == [
+        "յարութիւն · noun",
+        "  of the resurrection",
+    ]
+    vocab = grabar.vocabulary_ai("hy", words)
+    out = grabar.define("յարութեան", vocab, "hy")
+    assert out[:2] == ["յարութիւն · գոյական", "  հարության"]
+
+
+def test_define_falls_back_to_ai():
+    # not in Wiktionary: Claude's meaning, marked
+    out = grabar.define("սակայն")
+    assert out[0] == "սակայն · conj"
+    assert out[-1] == grabar.SOURCE_AI
+    out = grabar.define("սակայն", lang="hy")
+    assert out[0] == "սակայն · շաղկապ"
+    assert out[-1] == grabar.SOURCE_AI
+    # Wiktionary first
+    out = grabar.define("սիրեաց")
+    assert out[-1] == grabar.SOURCE["en"]
