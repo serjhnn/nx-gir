@@ -1,6 +1,6 @@
 // nx-gir web: the bookshelf and the theme button.
-// Pages are #/ (top), #/f/<folder> and
-// #/read/<book>; the data comes from /api/.
+// Pages are #/ (top), #/f/<folder>, #/read/<book>
+// and #/timeline; the data comes from /api/.
 "use strict";
 
 const main = document.getElementById("main");
@@ -212,6 +212,9 @@ async function staticApi(path) {
     }
     return data;
   }
+  if (route === "timeline") {
+    return json("data/timeline.json");
+  }
   if (route === "book") {
     const name = q.get("name");
     const data = await json("data/book/" + enc(name)
@@ -365,7 +368,7 @@ const CONTACT = ["serj.hnn13", "gmail.com"];
 
 // the welcome above the library, in Armenian:
 // questions a first-time visitor may ask
-function intro(status) {
+function intro(status, news) {
   status = (status || []).filter(
     (b) => b.folder.startsWith(FRONT));
   const qa = (q, ...a) => [h("h3", {}, q),
@@ -392,6 +395,12 @@ function intro(status) {
     status.length ? [
       h("h3", {}, "Ի՞նչ է արդեն թարգմանված։"),
       statusList(status)] : null,
+    news && news.length ? [
+      h("h3", {}, "Թարմացումներ"),
+      newsList(news),
+      h("p", { class: "more" },
+        h("a", { href: "#/timeline" },
+          "All events → Timeline"))] : null,
     qa("Ո՞վ է թարգմանել։",
       "Թարգմանությունը մեքենայական է և դեռ "
       + "ստուգված չէ մասնագետի կողմից։"),
@@ -416,6 +425,24 @@ function statusList(status) {
         b.done + " / " + b.parts + " մաս"),
       h("span", { class: "progress", role: "img",
         "aria-label": pct + "%" }, fill)));
+  }
+  return list;
+}
+
+// the newest steps of the timeline, in English
+// for now (timeline.tsv)
+function newsList(news) {
+  const list = h("ul", { class: "news",
+    lang: "en" });
+  for (const e of news) {
+    const to = eventHref(e);
+    list.append(h("li", {},
+      h("time", { datetime: e.date },
+        day(e.date)),
+      h("div", {},
+        to ? h("a", { href: to }, e.title)
+          : h("b", {}, e.title),
+        e.text ? h("span", {}, e.text) : null)));
   }
   return list;
 }
@@ -448,7 +475,7 @@ async function shelf(folder) {
   show(
     folder ? crumbs(folder, false) : null,
     // at the top the welcome comes first
-    folder ? null : intro(data.status),
+    folder ? null : intro(data.status, data.news),
     h("h1", {}, title),
     h("p", { class: "sub" }, plural(data.count,
       data.unit)),
@@ -460,7 +487,134 @@ async function shelf(folder) {
       : h("p", { class: "empty" }, "No books here."),
     // who made it, at the bottom of the top page
     folder ? null : h("footer", { class: "credit" },
-      "Developed by S.O. and Claude")
+      "Developed by S.O. and Claude · ",
+      h("a", { href: "#/timeline" }, "Timeline"))
+  );
+}
+
+// -- timeline --
+
+// the kinds of events: KINDS in nxgir_timeline.py
+const KINDS = ["Start", "Books", "Translation",
+  "Reader", "Dictionary", "Texts", "Site"];
+
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May",
+  "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// "2026-11-07" as a date at noon UTC, so the day
+// is the same in every time zone
+function isoDate(iso) {
+  return new Date(iso + "T12:00:00Z");
+}
+
+// "2026-11-07": "7 Nov", or "7 Nov 2026"
+function day(iso, year) {
+  const d = isoDate(iso);
+  return d.getUTCDate() + " " +
+    MONTHS[d.getUTCMonth()] +
+    (year ? " " + d.getUTCFullYear() : "");
+}
+
+// days from start to iso (or today), the first 1
+function dayNo(start, iso) {
+  const end = iso ? isoDate(iso)
+    : isoDate(new Date().toISOString().slice(0, 10));
+  return Math.round((end - isoDate(start)) /
+    86400000) + 1;
+}
+
+// where an event's link goes (link_to() in
+// nxgir_web.py), or ""
+function eventHref(e) {
+  if (e.to === "read") return "#/read/" + enc(e.link);
+  if (e.to === "folder") return "#/f/" + enc(e.link);
+  if (e.to === "url") return e.link;
+  return "";
+}
+
+function eventLink(e) {
+  const to = eventHref(e);
+  if (!to) return null;
+  const label = e.to === "url"
+    ? e.link.replace(/^https:\/\//, "")
+      .replace(/\/$/, "")
+    : e.to === "read" ? "Read →" : "Open →";
+  return h("p", { class: "links" },
+    h("a", { href: to }, label));
+}
+
+function eventItem(e) {
+  return h("li", { class: "ev" +
+      (e.big ? " big" : ""), "data-kind": e.kind },
+    h("h3", {},
+      h("span", { class: "chip" }, e.kind),
+      e.title),
+    e.text ? h("p", {}, e.text) : null,
+    eventLink(e));
+}
+
+// the events, newest first, under their days;
+// only those of kind, if one is given
+function eventList(data, kind) {
+  const list = h("ol", { class: "tl" });
+  let last = "";
+  for (const e of data.events) {
+    if (kind && e.kind !== kind) continue;
+    if (e.date !== last) {
+      last = e.date;
+      list.append(h("li", { class: "day" },
+        h("b", {}, day(e.date, true)),
+        " · day " + dayNo(data.start, e.date)));
+    }
+    list.append(eventItem(e));
+  }
+  return list;
+}
+
+async function timelinePage() {
+  const data = await api("timeline");
+  document.title = "Timeline · nx-gir";
+  const stat = (n, label) => h("div", {},
+    h("b", {}, String(n)), h("span", {}, label));
+  // a filter for each kind with more than one
+  // event, in the order of KINDS
+  const kinds = KINDS.filter((k) => data.events
+    .filter((e) => e.kind === k).length > 1);
+  let list = eventList(data, "");
+  const filters = h("div", { class: "filters",
+    role: "group", "aria-label": "Show" });
+  for (const k of ["", ...kinds]) {
+    const b = h("button", { type: "button",
+      "aria-pressed": String(!k) }, k || "All");
+    b.addEventListener("click", () => {
+      for (const o of filters.children) {
+        o.setAttribute("aria-pressed",
+          String(o === b));
+      }
+      const next = eventList(data, k);
+      list.replaceWith(next);
+      list = next;
+    });
+    filters.append(b);
+  }
+  show(
+    h("p", { class: "crumbs" },
+      h("a", { href: "#/" }, "← Home")),
+    h("h1", {}, "Timeline"),
+    h("p", { class: "sub" },
+      "How nx-gir grew, from the first line"
+      + " to today"),
+    data.start ? h("div", { class: "stats" },
+      stat(dayNo(data.start), "days"),
+      stat(data.books, "Grabar books"),
+      stat(data.parts, "parts translated"))
+      : null,
+    kinds.length > 1 ? filters : null,
+    list,
+    data.next.length ? h("section", {},
+      h("h2", { class: "tl-next" }, "Next"),
+      h("ol", { class: "tl next" },
+        data.next.map(eventItem))) : null
   );
 }
 
@@ -1633,6 +1787,8 @@ async function route() {
     } else if (hash.startsWith("new/")) {
       E.hash = location.hash;
       await newText(hash.slice(4));
+    } else if (hash === "timeline") {
+      await timelinePage();
     } else if (hash.startsWith("f/")) {
       await shelf(decodeURIComponent(hash.slice(2)));
     } else {

@@ -89,6 +89,15 @@
   60-character limit applies here too. `wordKey()`
   in `app.js` must match `normalize()` in the reader
   (a test checks it)
+- `timeline.tsv`: the main steps of the project
+  (content, exempt from the line limit; its head
+  explains the fields), read by
+  `scripts/nxgir_timeline.py` (tested in
+  `tests/test_timeline.py`); shown on the Timeline
+  page (`#/timeline`) and, the newest three, in the
+  welcome. Add a line with every milestone, in
+  English for now. `KINDS` must match `app.js` (a
+  test checks it)
 - `scripts/build-site.py`: the read-only copy of the
   web reader for GitHub Pages (`site/`, published by
   `.github/workflows/pages.yml`): the answers of the

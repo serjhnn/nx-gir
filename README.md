@@ -322,6 +322,20 @@ phone's browser.
   reading at night); until you pick one, the page
   starts in your system's light or dark.
 
+- **Timeline** (the link under the library, or
+  `#/timeline`): the main steps of the project,
+  newest first, with filters by kind and what comes
+  next; the newest three are also in the welcome
+  above the library, under **Թարմացումներ**. They
+  come from `timeline.tsv`, one line per event (its
+  head explains the fields); add a line with every
+  milestone.
+
+<p align="center">
+  <img src="docs/web-timeline.png" width="300"
+       alt="The Timeline page on a phone">
+</p>
+
 Positions, bookmarks and notes are the same ones the
 terminal reader keeps, so a book can be started in one
 and finished in the other.
@@ -330,13 +344,15 @@ It needs nothing beyond Python, and works offline. It
 is for this computer only: it listens on `127.0.0.1`
 and does not answer to other machines. Ctrl-C stops it.
 
-### Published copy (GitHub Pages)
+### Published copy (nxgir.am)
 
-A read-only copy of the web reader can be published
-as plain files, with no server: the library, the
-books, word lookups and the text settings. It has no
-bookmarks, notes or editing, and where you stopped is
-kept in each browser. The test texts of `data/`,
+The published copy is at
+**[nxgir.am](https://nxgir.am)** (served by GitHub
+Pages). A read-only copy of the web reader can be
+published as plain files, with no server: the
+library, the books, word lookups and the text
+settings. It has no bookmarks, notes or editing,
+and where you stopped is kept in each browser. The test texts of `data/`,
 your own texts in `interpretations/` and your saved
 state are left out; the rest of the shelf goes in,
 and a GitHub Pages site can be seen by anyone.
@@ -364,7 +380,8 @@ nothing.
 `.github/workflows/pages.yml` builds and publishes it
 on every push to `main`. Turn it on once: in the
 repository's **Settings → Pages**, set **Source** to
-**GitHub Actions**. To build it here and look at it
+**GitHub Actions**. The address nxgir.am is set
+there too, under **Custom domain**. To build it here and look at it
 (about a minute, 50 MB in `site/`):
 
 ```sh

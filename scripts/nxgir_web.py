@@ -10,6 +10,7 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/shelf?folder=      one folder of the shelf
   GET  /api/book?name=         a book, cut into words
   GET  /api/word?w=&lang=      abbreviation + meaning
+  GET  /api/timeline           the main steps
   POST /api/position           {name, pos, lines}
   POST /api/mark               {name, pos}
   POST /api/note               {name, pos, text}
@@ -42,6 +43,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
 import nxgir_grabar as grabar
+import nxgir_timeline as tl
 from nxgir_browse import (
     folder_count,
     folder_exists,
@@ -107,13 +109,34 @@ class App:
     files is [(name, size, path)], as shelf_files()
     in nxgir-cli.py gives it."""
 
-    def __init__(self, files, state_path=None, notes=None):
+    def __init__(
+        self,
+        files,
+        state_path=None,
+        notes=None,
+        timeline=tl.TIMELINE,
+    ):
         self.files = list(files)
         self.paths = {n: p for n, _, p in self.files}
         self.state_path = state_path
         # (folder, shelf prefix) of the texts that
         # can be edited: interpretations/
         self.notes = notes
+        # timeline.tsv, or None for no events
+        self.timeline = timeline
+
+    def events(self):
+        """The events of the timeline, oldest first,
+        their links checked (link_to())."""
+        if not self.timeline:
+            return []
+        out = []
+        for e in tl.read(self.timeline):
+            e["to"] = link_to(self, e["link"])
+            if not e["to"]:
+                e["link"] = ""
+            out.append(e)
+        return out
 
     def state(self):
         """The state, read fresh: the terminal reader
@@ -233,6 +256,39 @@ def shelf(app, folder=""):
         "items": items,
         "editable": app.in_notes(folder),
         "status": [] if folder else status(app),
+        "news": [] if folder else tl.news(app.events()),
+    }
+
+
+def link_to(app, link):
+    """What a timeline link opens: "read" for a book
+    on the shelf, "folder" for a folder, "url" for
+    an https:// address, "" for nothing (a book left
+    out of this shelf, e.g. on the published copy)."""
+    if link.startswith("https://"):
+        return "url"
+    if link in app.paths:
+        return "read"
+    if link and folder_exists(app.files, link):
+        return "folder"
+    return ""
+
+
+def timeline(app):
+    """The Timeline page: the events, newest first,
+    the plans apart, and counts for its top: the
+    Grabar books and the parts translated."""
+    events = app.events()
+    done = tl.done(events)
+    books = 0
+    if folder_exists(app.files, PARALLEL[0]):
+        books = folder_count(app.files, PARALLEL[0])[0]
+    return {
+        "start": done[0]["date"] if done else "",
+        "books": books,
+        "parts": sum(b["done"] for b in status(app)),
+        "events": done[::-1],
+        "next": events[len(done) :],
     }
 
 
@@ -561,6 +617,8 @@ def get(app, route, query):
         return word(arg("w"), arg("lang", "en"))
     if route == "/api/source":
         return source(app, arg("name"))
+    if route == "/api/timeline":
+        return timeline(app)
     raise ApiError(404, f"no such page: {route}")
 
 

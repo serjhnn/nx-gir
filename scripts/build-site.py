@@ -13,6 +13,7 @@ the same functions (nxgir_web.py):
     data/word/<lang>/<n>.json       /api/word, the
         words of the books that the Grabar helpers
         know, spread over BUCKETS files by bucket()
+    data/timeline.json              /api/timeline
 
 The test texts of data/ and the user's own texts in
 interpretations/ are left out.
@@ -111,9 +112,10 @@ def pages(out, counter=GOATCOUNTER):
     (out / ".nojekyll").write_text("")
 
 
-def build(out, files):
+def build(out, files, timeline=web.tl.TIMELINE):
     """Write the site for files [(name, size, path)]
-    into out. Returns (books, folders, words)."""
+    and the events of timeline (timeline.tsv) into
+    out. Returns (books, folders, words)."""
     out = Path(out)
     if out.exists():
         if not (out / MARK).exists():
@@ -129,8 +131,13 @@ def build(out, files):
     with tempfile.TemporaryDirectory() as tmp:
         # an empty state: positions stay at home
         state = Path(tmp) / "state.json"
-        app = web.App(files, state_path=state)
+        app = web.App(
+            files, state_path=state, timeline=timeline
+        )
         dirs = folders(files)
+        write_json(
+            data / "timeline.json", web.timeline(app)
+        )
         for f in dirs:
             path = data / "shelf" / f / "index.json"
             write_json(path, web.shelf(app, f))

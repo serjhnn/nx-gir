@@ -65,6 +65,17 @@ const url = "http://localhost:" + port +
     .click();
   await p.waitForSelector(".items");
   await p.screenshot({ path: docs + "/web-dark.png" });
+  // phone, light: the timeline
+  p = await b.newPage({
+    viewport: { width: 390, height: 760 },
+    deviceScaleFactor: 2,
+    colorScheme: "light",
+  });
+  await p.goto("http://localhost:" + port +
+    "/#/timeline");
+  await p.waitForSelector(".tl .ev");
+  await p.screenshot({
+    path: docs + "/web-timeline.png" });
   await b.close();
 })().catch((e) => {
   console.error(e);
@@ -136,7 +147,11 @@ def main():
             srv.server_close()
     if r.returncode:
         return r.returncode
-    for name in ("web-light.png", "web-dark.png"):
+    for name in (
+        "web-light.png",
+        "web-dark.png",
+        "web-timeline.png",
+    ):
         size = (DOCS / name).stat().st_size
         print(f"docs/{name}: {size // 1024} KB")
     return 0

@@ -1,0 +1,35 @@
+# The timeline of nx-gir: the main steps, shown on
+# the Timeline page and, the newest three, on the
+# home page (nxgir_timeline.py). One line per event,
+# oldest first, fields split by tabs:
+#
+#   date   YYYY-MM-DD, or "next" for a plan (at the end)
+#   kind   Start, Books, Translation, Reader,
+#          Dictionary, Texts or Site
+#   big    * for a main milestone, else empty
+#   title  a few words
+#   text   one sentence
+#   link   a book or folder on the shelf, or an
+#          https:// address; may be empty
+#
+# Add a line with every milestone. English for now.
+2026-10-18	Start	*	nx-gir begins	A README with the goals: read books in Grabar, classical Armenian, and understand every word.	
+2026-10-18	Reader		A reader in the terminal	The nxgir shell and a reader with a word cursor, themes and saved places, made to work on a phone.	
+2026-10-18	Books	*	The first book: the Gospel of John	From the 1895 Grabar Bible; the four Gospels were on the shelf the same day.	grabar/bible/new-testament/4-john.txt
+2026-10-21	Books	*	First works from Digilib	Three works of Grigor Tatevatsi, Amaran hator among them.	grabar/grigor-tatevatsi
+2026-10-21	Dictionary		Manuscript abbreviations	The shortened words of the manuscripts, with their full forms and sources.	
+2026-10-22	Dictionary		A Grabar vocabulary	Meanings of words from Wiktionary, shown when a word is looked up.	
+2026-10-25	Dictionary		Meanings in Armenian	The vocabulary in Armenian too, from the Armenian Wiktionary.	
+2026-11-04	Reader	*	The web reader	Reading in the browser: tap a word to look it up; bookmarks, notes and themes.	
+2026-11-04	Texts		Interpretations	Our own texts on the books, in Russian, English and Armenian.	
+2026-11-05	Site	*	The site goes online	A read-only copy of the web reader on GitHub Pages, open to anyone.	
+2026-11-05	Translation	*	Parallel reading begins	Psalm 118 in Grabar and in Eastern Armenian, side by side, line by line.	grabar/bible/old-testament/psalm-118.txt
+2026-11-06	Reader		Old book fonts	Arian Grqi and other Armenian book fonts for the text.	
+2026-11-06	Translation	*	Amaran hator, part 1 in modern Armenian	Grigor Tatevatsi in Grabar and in modern Armenian side by side, one sentence per line.	grabar/grigor-tatevatsi/3-amaran-hator/01.txt
+2026-11-06	Site		A welcome on the home page	Questions and answers in Armenian for first-time visitors, and how far each translation has got.	
+2026-11-07	Dictionary		Meanings for 900 more words	The most frequent words Wiktionary lacks; their meanings are written by Claude and marked so.	
+2026-11-07	Books		Seven works of Nerses Shnorhali	New on the shelf, from Digilib.	grabar/nerses-shnorhali
+2026-11-07	Translation	*	Amaran hator, parts 2–5	Four more parts in modern Armenian.	grabar/grigor-tatevatsi/3-amaran-hator/02.txt
+2026-11-07	Site	*	nxgir.am is live	The site gets its own address, a day after the domain was requested.	https://nxgir.am
+next	Translation		All of Amaran hator in modern Armenian	Then the other works of Grigor Tatevatsi.	
+next	Site		A contents page for each book	What each part of a book is about.	

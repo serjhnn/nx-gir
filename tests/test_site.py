@@ -26,7 +26,12 @@ def files(tmp_path):
 
 def test_build(tmp_path, files):
     out = tmp_path / "site"
-    books, dirs, words = bs.build(out, files)
+    tsv = tmp_path / "timeline.tsv"
+    tsv.write_text(
+        "2026-10-18\tBooks\t*\tJohn\t\tgrabar/john.txt\n",
+        encoding="utf-8",
+    )
+    books, dirs, words = bs.build(out, files, tsv)
     assert (books, dirs) == (1, 2)
     html = (out / "index.html").read_text("utf-8")
     assert '<script src="static.js">' in html
@@ -46,6 +51,12 @@ def test_build(tmp_path, files):
         )
     )
     assert book["lines"][0][1] == "Ի"
+    # the timeline, and its newest on the top page
+    tl = json.loads(
+        (data / "timeline.json").read_text("utf-8")
+    )
+    assert tl["events"][0]["to"] == "read"
+    assert top["news"][0]["title"] == "John"
     assert book["pos"] is None and not book["editable"]
     # ած is an abbreviation: its file has it
     part = data / f"word/en/{bs.bucket('ած')}.json"
