@@ -22,7 +22,7 @@ closing prayer with the doxology.
 
 ## How to do the next part
 
-Parts 1–7 are done. To do part N (08 next):
+Parts 1–8 are done. To do part N (09 next):
 
 1. Split the Grabar into sentences in place (the
    file from Digilib has long paragraphs):
@@ -562,6 +562,107 @@ of the book: "second volume" of Grigor's sermons
   punishments; Christ never laughed but wept; the
   seven evils contained in "woe".
 
+## Part 8 · ԳԼՈՒԽ ԿԱ-ԿԵ and ԿԶ-Հ (sermons 61–70)
+
+- ԿԱ (line 5): pride and humility, Prov 3:34
+  «Տէր ամբարտաւանաց հակառակ կայ». Satan's fall
+  and Adam's; Korah burnt, Dathan swallowed
+  (priesthood heavenly, rule earthly); ten reasons
+  God forgives all sinners but the proud; four
+  words: ամբարհաւաճ, հպարտ, ամբարտաւան, սնափառ;
+  natural, contemplative and practical humility;
+  ten goods of humility (the valley gathers the
+  rain, the bough with fruit hangs low, the bush
+  of Moses).
+- ԿԲ (line 113): envy, Ps 36:1 «Մի նախանձիր ընդ
+  չարս». Seven deadly sins, pride and envy the
+  devil's own; good and evil envy; five marks of
+  envy (it eats the envier first; it is toward
+  equals and betters; all toil is for envy; root
+  of all crimes; "eats his own arm": Cain,
+  Absalom); the envier like a silent dog, fire
+  under straw, a dying man; ten ways envy is worse
+  than anger (the man who asked to lose one eye so
+  his enemy lost two); չարակնութիւն, նախանձ,
+  մախանք (Saul and David); "better one handful
+  with quiet".
+- ԿԳ (line 261): greed, Prov 27:20 «Դժոխք եւ
+  կորուստ ոչ յագի». Five senses, four elements;
+  eye and ear never full; greed of heart and of
+  belly compared; three degrees (want, greed,
+  plunder); the greedy poor and the greedy rich
+  (dropsy, a holed jar, fire, a hungry wolf); two
+  causes (lost dominion of Adam; natural need,
+  which is good: six reasons); measure, time and
+  command make an act sin or justice (Hosea,
+  Elijah, Phinehas; Saul's and Uzziah's
+  offerings). Breaks off mid-sentence.
+- ԿԴ (line 371): love of money, Eccl 5:9. Plato's
+  three parts of the soul; silver neither food nor
+  clothing; greed as idolatry in ten ways; the
+  miser cannot sleep (Judith and Holofernes);
+  riches lost or losing their owner
+  (Sennacherib, Belshazzar); left to strangers;
+  the miser, the twice robbed, the hoarder (Nabal,
+  Ahab and Jezebel, Judas without a grave); the
+  miser and the stillborn child (six likenesses);
+  the rich man and Lazarus.
+- ԿԵ (line 492, "from another"): gluttony, Phil
+  3:19 and Luke 21:34. Against nature, the
+  brother and God (the belly as god, the kitchen
+  for a temple); six harms like six diseases, with
+  the physicians' remedies read spiritually
+  (bleeding and wormwood: Christ's blood and gall;
+  the elephants shown mulberry juice in
+  Maccabees; "dog's stomach"); poverty and
+  sickness; eating and drinking.
+- ԿԶ (line 562; group ԳԼՈՒԽ ԿԶ-Հ starts):
+  drunkenness, Eph 5:18. Four drunkennesses (of
+  wisdom, of God's mercy, of the joy of the
+  kingdom, of wine); Noah and Lot; worst in
+  clergy, bishops and kings; Evagrius: no wine for
+  monks, measure for lay people; wine changes and
+  stirs; four may drink (the poor, mourners, the
+  sick, the old). Then (line 624) on prodigality,
+  opposed to liberality in four ways; worse in
+  priests (Chrysostom: feed the poor rather than
+  gild stones).
+- ԿԷ (line 650): Satan's snares and fornication,
+  Prov 30:15 "the leech has three daughters".
+  Why Moses was silent about Satan; Satan named
+  lion, dog, bull, adder, leech (ten likenesses);
+  the three daughters: grave, love of women,
+  Tartarus; why "daughters"; Adam ate for love of
+  Eve; the flood, Dinah, Baal-peor, Gibeah,
+  Samson, David, Solomon, John the Baptist; earth
+  never full of water, fire never says enough:
+  good and evil knowledge, good and evil love.
+- ԿԸ (line 782): the harms of harlots (Proverbs):
+  ten harms, from the look to the fire; God sees
+  through distance, house, dark and body. Then
+  (line 838) on fornication: ten reasons God told
+  Hosea to take a harlot; harlotry and adultery
+  compared; why the holy is not defiled by the
+  unclean.
+- ԿԹ (line 879): the yoke of the law, Hos 10:11
+  "Ephraim is a trained heifer" (ten marks); "give
+  them a miscarrying womb" (Hos 9:14). Then short
+  pieces: why the prophets threatened (line 913);
+  Amos 3:12, two legs and a piece of an ear (line
+  928); Habakkuk 2:14 and 1:5, the knowledge and
+  glory of God and "behold, you scoffers" (line
+  950).
+- Հ (line 1010): idolatry, Hos 13:4. Ten reasons
+  not to worship creatures; how priests urged
+  human sacrifice; why idolatry is the worst sin;
+  its beginnings (a father's image of a dead son),
+  causes (demons, sorcerers like Aramazd, Kronos,
+  Aphrodite; kings; the possessed) and supports;
+  the meaning of կուռք; six materials and ten
+  degrees; holy images are not idols, and God
+  asks no soul of the painter (the cherubim, the
+  image on the cloth).
+
 ## Notes on the text
 
 - The Digilib text has many misprints; repeated
@@ -602,3 +703,17 @@ of the book: "second volume" of Grigor's sermons
   laughter, «ստերիւրեցելոյ ... հագագի», and a
   saying «մի ծաղր յանգուքն») are garbled;
   translated by the sense.
+- Part 8 line 263 reads «2Օ» (an Armenian Օ for
+  the zero); written as 20.
+- Part 8 line 369: sermon ԿԳ breaks off in the
+  middle of a sentence («զի ախտիւ»); the next line
+  is the heading of ԿԴ. Kept as it stands.
+- Part 8 lines 518 and 552 open a quotation that
+  is never closed; the parentheses are kept as in
+  the Grabar.
+- Part 8 line 711 reads «եհար» ("struck") where
+  «եհան» ("brought out") is meant; translated so.
+- Part 8 line 905 starts «Երրորդ՝ կերակրէ.
+  հերծուածօղքն»; the stray verb is left out.
+- Part 8 line 1126 ends in the abbreviation «յաւ»
+  (for յաւիտեանս); written out in full.
