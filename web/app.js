@@ -442,7 +442,8 @@ function intro(status, news) {
       h("h3", {}, "Ի՞նչ է արդեն թարգմանված։"),
       statusList(status)] : null,
     news && news.length ? [
-      h("h3", {}, "Թարմացումներ"),
+      h("h3", {},
+        "Ի՞նչ փոփոխություններ կան կայքում։"),
       newsList(news),
       h("p", { class: "more" },
         h("a", { href: "#/timeline" },

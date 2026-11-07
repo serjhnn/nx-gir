@@ -336,7 +336,8 @@ phone's browser.
   `#/timeline`): the main steps of the project,
   newest first, with filters by kind and what comes
   next; the newest three are also in the welcome
-  above the library, under **Թարմացումներ**. They
+  above the library, under **Ի՞նչ փոփոխություններ կան
+  կայքում։** They
   come from `timeline.tsv`, one line per event (its
   head explains the fields); add a line with every
   milestone.
