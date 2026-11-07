@@ -255,6 +255,64 @@ Other sources, not used now; for later:
 - [ ] Show which senses are old (`{{հնց}}`, `{{գրբ}}`)
       first, or only those
 
+## Plan: Claude's meanings for the rest
+
+`grabar/vocabulary-claude.tsv` has meanings written
+by Claude (English and Armenian, one line per word
+form) for the words of `books/grabar/` that the
+Wiktionary lists lack. Shown only when Wiktionary has
+nothing, always marked as written by an AI.
+
+Done (2026-11-07): the 889 most frequent of these
+forms. Words with a meaning in the books went from
+84.9% to 91.5%.
+
+What is left: about 46,000 forms, most of them rare
+(30,000 appear only once). Counted on 2026-11-07:
+
+| Forms glossed | Words with a meaning |
+|--------------:|---------------------:|
+| 900 (now) | 91.5% |
+| 2,000 | about 92.7% |
+| 5,000 | about 94.8% |
+| 10,000 | about 96.3% |
+| 20,000 | about 97.7% |
+
+How each batch is made:
+
+1. List the missing forms, most frequent first
+   (every word of `books/grabar/` that neither
+   Wiktionary list nor the file has).
+2. Write about 300 lines: form, headword, pos,
+   English, Armenian (reformed spelling).
+3. Leave out forms that cannot be read with
+   confidence (fragments, typing slips).
+4. Letter numbers by their real values (ա 1 … թ 9,
+   ժ 10 … ղ 90, ճ 100 … ջ 900, ռ 1000 … ք 9000).
+5. Run the tests, measure the coverage again,
+   commit.
+
+TODO:
+
+- [ ] Batches up to 2,000 forms
+- [ ] Batches up to 5,000 forms
+- [ ] Then by book: the forms of one book at a time
+      (the Shnorhali poems lack the most: 23–33% of
+      their words), so a book reads fully
+- [ ] A script that lists the missing forms (now a
+      one-off in the session), with their count and
+      one example sentence each, so a form is glossed
+      in context
+- [ ] Recheck the most frequent lines with their
+      sentences; a form with two readings gets both
+- [ ] When the Wiktionary lists are built again, drop
+      the lines Wiktionary now has (a test fails on
+      them)
+- [ ] Ask someone who reads Grabar to check a sample;
+      note in the file which lines were checked
+- [ ] New books (the Digilib authors): add their
+      missing frequent forms after each download
+
 ## Plan: Grigor Tatevatsi in modern Armenian
 
 Translate the three works of Grigor Tatevatsi in
