@@ -329,6 +329,15 @@ button.addEventListener("click", () => {
 
 const viewBtn = document.getElementById("view");
 
+// .wide or .phone, if theme.js did not set one (an
+// old copy of it, kept by the browser)
+{
+  const html = document.documentElement;
+  if (!html.classList.contains("phone")) {
+    html.classList.add("wide");
+  }
+}
+
 function drawView() {
   const on = document.documentElement.classList
     .contains("phone");

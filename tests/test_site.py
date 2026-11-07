@@ -1,5 +1,6 @@
 import importlib.util
 import json
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -34,8 +35,16 @@ def test_build(tmp_path, files):
     books, dirs, words = bs.build(out, files, tsv)
     assert (books, dirs) == (1, 2)
     html = (out / "index.html").read_text("utf-8")
-    assert '<script src="static.js">' in html
+    assert '<script src="static.js?v=' in html
     assert html.index("static.js") < html.index("app.js")
+    # each file with the hash of its content, so a
+    # browser never mixes old and new ones
+    for name in bs.VERSIONED:
+        m = re.search(
+            rf'"{re.escape(name)}\?v=([0-9a-f]{{10}})"',
+            html,
+        )
+        assert m, name
     # the fonts, in their folder
     assert (out / "fonts.css").is_file()
     assert list((out / "fonts").glob("*.woff2"))

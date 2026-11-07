@@ -27,6 +27,7 @@ saved state on this computer goes into it.
 to main and publishes OUT.
 """
 
+import hashlib
 import importlib.util
 import json
 import shutil
@@ -46,6 +47,15 @@ BUCKETS = 256
 # marks a folder this script made, so it may be
 # emptied and made again
 MARK = ".nxgir-site"
+# the files index.html loads, given a ?v= of their
+# content (versioned())
+VERSIONED = (
+    "theme.js",
+    "fonts.css",
+    "style.css",
+    "static.js",
+    "app.js",
+)
 # GoatCounter (goatcounter.com): the site's code,
 # CODE.goatcounter.com, where the published copy
 # counts its visits; "" counts nothing
@@ -107,9 +117,28 @@ def pages(out, counter=GOATCOUNTER):
     html = html.replace(
         tag, '<script src="static.js"></script>\n' + tag
     )
-    index.write_text(html, encoding="utf-8")
+    index.write_text(versioned(html, out), "utf-8")
     # GitHub Pages: serve the files as they are
     (out / ".nojekyll").write_text("")
+
+
+def versioned(html, out):
+    """html with ?v=<hash of the file> after each of
+    VERSIONED: GitHub Pages lets browsers keep a
+    file for 10 minutes, and a new page with an old
+    app.js or theme.js would be broken. With a new
+    name for each change the page and its files go
+    together."""
+    for name in VERSIONED:
+        data = (out / name).read_bytes()
+        v = hashlib.sha256(data).hexdigest()[:10]
+        for attr in ("src", "href"):
+            old = f'{attr}="{name}"'
+            if old not in html:
+                continue
+            new = f'{attr}="{name}?v={v}"'
+            html = html.replace(old, new)
+    return html
 
 
 def build(out, files, timeline=web.tl.TIMELINE):
