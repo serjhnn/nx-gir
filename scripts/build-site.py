@@ -118,7 +118,14 @@ def folders(files):
 def pages(out, counter=GOATCOUNTER):
     """The pages of web/, told to read the files, and
     where to count visits (counter: a GoatCounter
-    code, or "")."""
+    code, or "").
+
+    static.js also names this build, which app.js
+    puts after the address of each file of data/
+    (?b=): a browser may keep a file for 10
+    minutes, and a new app.js must not read an old
+    blog.json (or the other way round). static.js
+    is versioned, so a new build is a new page."""
     for p in web.WEB_DIR.iterdir():
         if p.is_file():
             shutil.copy2(p, out / p.name)
@@ -130,9 +137,11 @@ def pages(out, counter=GOATCOUNTER):
     if counter:
         url = f"https://{counter}.goatcounter.com/count"
         count = f'window.NXGIR_COUNT = "{url}";\n'
+    build = f"{time.time_ns():x}"
     (out / "static.js").write_text(
         "// the published copy: app.js reads data/\n"
-        "window.NXGIR_STATIC = true;\n" + count,
+        "window.NXGIR_STATIC = true;\n"
+        f'window.NXGIR_BUILD = "{build}";\n' + count,
         encoding="utf-8",
     )
     index = out / "index.html"

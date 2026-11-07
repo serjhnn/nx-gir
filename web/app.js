@@ -126,6 +126,10 @@ async function api(path) {
 // kept in this browser.
 
 const STATIC = window.NXGIR_STATIC === true;
+// this build of the published copy: after each
+// file's address, so that a browser never mixes
+// this app.js with data of another build
+const BUILD = window.NXGIR_BUILD || "";
 
 // Visits to the published copy are counted by
 // GoatCounter (NXGIR_COUNT, set by static.js when
@@ -195,6 +199,7 @@ const buckets = new Map();
 // a file of the published copy; tried twice, as a
 // network may drop a request
 async function json(url) {
+  if (BUILD) url += "?b=" + BUILD;
   let r;
   try {
     r = await fetch(url);

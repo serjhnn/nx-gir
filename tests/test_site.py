@@ -162,6 +162,8 @@ def test_pages_count_visits(tmp_path):
     on.mkdir()
     bs.pages(on, counter="nxgir")
     js = (on / "static.js").read_text("utf-8")
+    # the build, which app.js puts after data/
+    assert re.search(r'NXGIR_BUILD = "[0-9a-f]+"', js)
     assert "https://nxgir.goatcounter.com/count" in js
     off = tmp_path / "off"
     off.mkdir()
