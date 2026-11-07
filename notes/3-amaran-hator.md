@@ -22,7 +22,7 @@ closing prayer with the doxology.
 
 ## How to do the next part
 
-Parts 1–9 are done. To do part N (10 next):
+Parts 1–10 are done. To do part N (11 next):
 
 1. Split the Grabar into sentences in place (the
    file from Digilib has long paragraphs):
@@ -725,6 +725,74 @@ Only one chapter group; the file is 669 lines.
   the wise virgins); five ways: confession,
   prayer, humility, alms, forgiving debts.
 
+## Part 10 · ԳԼՈՒԽ ՀԶ-Ձ (sermons 76–80)
+
+One chapter group, 823 lines. The Digilib text has
+two stray pieces from elsewhere inside sermon ՀԸ
+(see "Notes on the text").
+
+- ՀԶ (line 5): repentance again, Matt 3:2. God
+  willed it in word and deed (Enoch, Manasseh,
+  David, the publican, the harlot, the thief,
+  Peter); images of repentance: the waning and
+  waxing moon, the new tablets, Moses' rod and
+  hand, Aaron's rod, the eagle renewed, the bear
+  that drinks before sleep, the snake's skin,
+  trees and the earth in spring; animals and
+  evergreens as images of steady virtue;
+  repentance as a second font; "if the spirit of
+  the ruler rises against you" (Eccl 10:4):
+  against despair, keep both your sins and
+  Christ's grace in mind.
+- ՀԷ (line 151): remorse, Ps 118:163 «Զմեղս
+  ատեցի եւ անարգեցի». Willing and unwilling sin;
+  remorse, conscience and the "complaining" part;
+  "where sin abounded"; the sinful woman in
+  Simon's house (three ways Christ comes to a
+  house; the two debtors; six lessons); six
+  causes of remorse; where sins are forgiven: in
+  remorse (God), in confession (the soul, the
+  priest's loosing), in penance (the punishment);
+  the unjust steward; David and Nathan.
+- ՀԸ (line 269): confession, Jas 5:16. Why to a
+  priest (ten reasons: he binds and looses,
+  "priest" means atoner, the angel of the Lord,
+  judge of clean and unclean); ten mysteries of
+  confession (the thief who flees when you cry
+  out, the beast's mouth, the wound shown to the
+  physician, the pit); ten gains; its power in
+  the Law (the thief's fifth, the hand on the
+  victim, the leper); the sinful woman's three
+  parts of repentance. After the doxology (line
+  378) two stray pieces follow: lines 380–420 on
+  greed (Adam, Cain, the flood, Achan, Saul,
+  Ahab, Gehazi, Ananias, Judas), and lines
+  422–510 on the creation of woman from Adam's
+  rib and on marriage (why the rib, the left
+  side, the rite at the church door, "one
+  flesh").
+- ՀԹ (line 512): confession again, Jas 5:16.
+  Gold refined in the furnace; confession and
+  penance as a second cleansing (the mirror,
+  oil and emery); ten likenesses of sin and
+  rust; the dog and its vomit; baptism and
+  confession compared in ten ways; good and evil
+  shame (Joseph and Susanna, Achan and Gehazi);
+  why penance after confession (six reasons);
+  against money for confession.
+- Ձ (line 645, "from another"): confession, 1 John
+  1:9. The world's court and God's (Achan);
+  twelve things a full confession needs (the
+  bloodletter and the lancet, the hundred holes
+  in a ship, the widow who hid her sin and the
+  two dragons, the beggar who shows his wound,
+  the seal of confession); why not to delay
+  (fire, the open prison, the money-changer, the
+  bow of God; not till sickness: myrrh that flows
+  of itself; not till the last week of Lent);
+  Ezekiel 5 read as confession. Ends with a line
+  announcing sermons on prayer, fasting and alms.
+
 ## Notes on the text
 
 - The Digilib text has many misprints; repeated
@@ -795,3 +863,26 @@ Only one chapter group; the file is 669 lines.
   միաբանություն ունեն»).
 - Part 9 line 668 opens a quotation that is never
   closed; kept.
+- Part 10 line 6 has the verse and `(Գլուխ. ՀԶ)`
+  on one line (no `։` after the verse); kept.
+- Part 10 line 75 again reads «ըստ գտանք»
+  (as part 9 line 583); translated «զղջում».
+- Part 10 lines 380–420 (on greed, starting in
+  the middle of a sentence) and 422–510 (on the
+  creation of woman and on marriage, starting
+  with a stray «ւ») stand after the doxology of
+  ՀԸ; they belong elsewhere but are kept and
+  translated where they stand. Line 389 is a
+  broken repeat of line 390; kept.
+- Part 10 line 391 reads "for Ս reasons"; two
+  follow, so «Բ» is meant: translated «երկու».
+- Part 10 line 620 repeats «Երկրորդ» for the
+  third; kept.
+- Part 10 lines 190 and 548 and 555 open
+  quotations closed on a later line or not at
+  all (lines 191, 556; 548 never); kept.
+- Part 10 line 725 reads «Մետանասերորդ» for
+  «Մետասաներորդ»: translated «Տասնմեկերորդ».
+- Part 10 line 818 reads «պատարագս» where
+  «պարագայս» (circumstances) is meant;
+  translated so.
