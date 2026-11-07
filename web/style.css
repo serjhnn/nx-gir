@@ -1224,14 +1224,14 @@ body.panel-open main {
    (a Galaxy Fold is about 53rem wide) or a phone on
    its side */
 @media (min-width: 40rem) {
-  .wide .text.parallel {
+  .wide .text.parallel:not(.stacked) {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.4em 1.5rem;
     max-width: none;
   }
 
-  .wide .text.parallel .par:not(.par-head) {
+  .wide .text.parallel:not(.stacked) .par:not(.par-head) {
     margin: 0;
     padding: 0;
     border: 0;
@@ -1240,9 +1240,21 @@ body.panel-open main {
   }
 
   /* both columns need every row, empty or not */
-  .wide .text.parallel .par:empty,
-  .wide .text.parallel .par-head:first-child {
+  .wide .text.parallel:not(.stacked) .par:empty,
+  .wide .text.parallel:not(.stacked) .par-head:first-child {
     display: block;
+  }
+}
+
+/* the button for the lines under each other
+   (.stacked): only where they can be beside */
+.icon-btn.par-layout {
+  display: none;
+}
+
+@media (min-width: 40rem) {
+  .wide .icon-btn.par-layout {
+    display: inline-flex;
   }
 }
 
@@ -1257,7 +1269,7 @@ body.panel-open main {
     grid-template-columns: minmax(0, 1fr) 20rem;
   }
 
-  .wide .text.parallel {
+  .wide .text.parallel:not(.stacked) {
     column-gap: 2.5rem;
   }
 }

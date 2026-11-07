@@ -288,8 +288,11 @@ phone's browser.
   `ashkharhabar/`) is shown with it, line by line:
   beside it on a screen at least 640 pixels wide
   (a computer, an open folding phone, a phone on
-  its side), each line under its pair on a phone. The name of the other version,
-  above the text, opens it.
+  its side), each line under its pair on a phone. On a
+  wide screen the button beside **Parallel** puts
+  each line under its pair there too, as on a phone
+  (tap again for side by side). The name of the
+  other version, above the text, opens it.
 - **A− / A+** make the text smaller or bigger; the
   buttons beside them center it and space the lines
   (each tap more, then back to normal), the

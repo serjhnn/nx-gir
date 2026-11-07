@@ -79,6 +79,10 @@ const ICONS = {
   sliders: ["M4 7h9M17 7h3M4 17h3M11 17h9",
     "M15 5a2 2 0 1 0 0 4a2 2 0 1 0 0-4z",
     "M9 15a2 2 0 1 0 0 4a2 2 0 1 0 0-4z"],
+  // two columns: the versions side by side
+  columns: ["M4 5h7v14H4zM13 5h7v14h-7z"],
+  // two rows: each line under its pair
+  rows: ["M4 4h16v7H4zM4 13h16v7H4z"],
   // arrows out to both sides: full width
   width: ["M3 12h18M7 8l-4 4l4 4M17 8l4 4l-4 4"],
 };
@@ -1017,6 +1021,19 @@ function decorate() {
       "aria-label": "Show the two versions",
       title: "Side by side with "
         + parLabel(R.par.name) }) : null,
+    // on a wide screen: each line under its pair,
+    // as on a phone, or beside it
+    R.par && view.parallel ? btn(icon(ICONS[
+      view.stacked ? "rows" : "columns"]),
+    () => setView({ stacked: !view.stacked }), {
+      class: "icon-btn par-layout",
+      "aria-label": "Each line under its pair",
+      "aria-pressed": String(view.stacked),
+      title: view.stacked
+        ? "Lines under each other (click for"
+          + " side by side)"
+        : "Side by side (click for lines under"
+          + " each other)" }) : null,
     // on a phone the text tools hide behind this
     btn(icon(ICONS.sliders), () => {
       const open = R.tools.classList.toggle("open");
@@ -1059,7 +1076,7 @@ const FONT_NAMES = { grqi: "Arian Grqi",
   oldstandard: "Old Standard" };
 const view = { size: SIZE, center: false, line: 0,
   font: 0, parallel: true, sentences: false,
-  full: false };
+  full: false, stacked: false };
 try {
   const v = JSON.parse(
     localStorage.getItem("nxgir-view") || "{}");
@@ -1074,6 +1091,7 @@ try {
   view.parallel = v.parallel !== false;
   view.sentences = v.sentences === true;
   view.full = v.full === true;
+  view.stacked = v.stacked === true;
 } catch (e) {}
 
 function applyView() {
@@ -1098,7 +1116,11 @@ function applyView() {
   document.body.classList.toggle("full", view.full);
   const par = Boolean(R.par && view.parallel);
   R.text.classList.toggle("parallel", par);
-  document.body.classList.toggle("parallel", par);
+  R.text.classList.toggle("stacked",
+    par && view.stacked);
+  // the page widens for two columns only
+  document.body.classList.toggle("parallel",
+    par && !view.stacked);
 }
 
 function setView(change) {
@@ -1115,7 +1137,8 @@ function setView(change) {
         font: FONTS[view.font],
         parallel: view.parallel,
         sentences: view.sentences,
-        full: view.full }));
+        full: view.full,
+        stacked: view.stacked }));
   } catch (e) {}
   applyView();
   if (i >= 0) {
