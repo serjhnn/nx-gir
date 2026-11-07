@@ -1,6 +1,7 @@
 // nx-gir web: the bookshelf and the theme button.
 // Pages are #/ (top), #/f/<folder>, #/read/<book>,
-// #/library, #/timeline and #/stats; the data
+// #/library, #/timeline, #/blog and #/stats; the
+// data
 // comes from
 // /api/.
 "use strict";
@@ -52,6 +53,11 @@ const ICONS = {
   book: [
     "M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z",
     "M5 18a2 2 0 0 1 2-2h11",
+  ],
+  // a pen: the blog
+  pen: [
+    "M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z",
+    "M13.5 6.5l4 4",
   ],
   sun: [
     "M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8z",
@@ -256,6 +262,9 @@ async function staticApi(path) {
   }
   if (route === "timeline") {
     return json("data/timeline.json");
+  }
+  if (route === "blog") {
+    return json("data/blog.json");
   }
   if (route === "recent") {
     return { items: await recentHere(
@@ -581,7 +590,10 @@ async function shelf(folder) {
       lang: "hy" },
     h("a", { class: "icon-btn",
       href: "#/library" },
-    icon(ICONS.book), "Գրադարան")),
+    icon(ICONS.book), "Գրադարան"),
+    h("a", { class: "icon-btn",
+      href: "#/blog" },
+    icon(ICONS.pen), "Բլոգ")),
     last && last.items.length
       ? recentCard(last.items) : null,
     folder ? null : intro(data.status, data.news),
@@ -598,6 +610,8 @@ async function shelf(folder) {
     folder ? null : h("footer", { class: "credit" },
       "Developed by S.O. and Claude · ",
       h("a", { href: "#/timeline" }, "Timeline"),
+      " · ",
+      h("a", { href: "#/blog" }, "Blog"),
       " · ",
       h("a", { href: "#/stats" }, "Statistics"),
       " · ",
@@ -888,6 +902,45 @@ async function timelinePage() {
       h("a", { href: "#/stats" },
         "How close we are to the limits → Statistics"))
   );
+}
+
+// -- blog --
+
+// one post: its date, title and text (parse()
+// in nxgir_blog.py: ["p", text] or ["h", text])
+function postItem(p) {
+  return h("article", { class: "post",
+    id: "post-" + p.slug, lang: "en" },
+  h("time", { datetime: p.date }, day(p.date, true)),
+  h("h2", {},
+    h("a", { href: "#/blog/" + p.slug }, p.title)),
+  p.blocks.map(([kind, text]) =>
+    h(kind === "h" ? "h3" : "p", {}, text)));
+}
+
+// #/blog: every post, newest first; #/blog/<slug>:
+// that one post
+async function blogPage(slug) {
+  const data = await api("blog");
+  const one = slug
+    ? data.posts.find((p) => p.slug === slug) : null;
+  if (slug && !one) throw new Error("No such post");
+  document.title = (one ? one.title + " · " : "")
+    + "Blog · nx-gir";
+  show(
+    h("p", { class: "crumbs" },
+      h("a", { href: "#/" }, "← Home"),
+      one ? [" · ", h("a", { href: "#/blog" },
+        "Blog")] : null),
+    one ? null : h("h1", {}, "Blog"),
+    one ? null : h("p", { class: "sub" },
+      "News and notes from nx-gir"),
+    h("div", { class: "blog" + (one ? " one" : "") },
+      one ? postItem(one)
+        : data.posts.length
+          ? data.posts.map(postItem)
+          : h("p", { class: "empty" },
+            "No posts yet.")));
 }
 
 // -- statistics --
@@ -2225,6 +2278,10 @@ async function route() {
       await newText(hash.slice(4));
     } else if (hash === "timeline") {
       await timelinePage();
+    } else if (hash === "blog"
+      || hash.startsWith("blog/")) {
+      await blogPage(decodeURIComponent(
+        hash.slice(5)));
     } else if (hash === "stats") {
       await statsPage();
     } else if (hash === "recent") {

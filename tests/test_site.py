@@ -73,6 +73,11 @@ def test_build(tmp_path, files):
         (data / "library.json").read_text("utf-8")
     )
     assert lib == {"authors": []}
+    # the blog, from blog/
+    blog = json.loads(
+        (data / "blog.json").read_text("utf-8")
+    )
+    assert blog["posts"][-1]["slug"] == "welcome"
     tl = json.loads(
         (data / "timeline.json").read_text("utf-8")
     )

@@ -16,7 +16,7 @@
 
 - `ruff format` cannot split long strings, comments or
   docstrings; shorten or wrap those by hand.
-- Text files in `data/`, `grabar/` and
+- Text files in `data/`, `grabar/`, `blog/` and
   `interpretations/` are content, not code, and are
   exempt.
 
@@ -72,6 +72,12 @@
   (`#/library`, `/api/library`): author names and
   short book names for `books/grabar/` (content; a
   test checks every path and author)
+- `blog/`: the Blog page (`#/blog`, `#/blog/<slug>`,
+  `/api/blog`): one `YYYY-MM-DD-slug.md` per post,
+  read by `scripts/nxgir_blog.py` (tested in
+  `tests/test_blog.py`; the format is in
+  `blog/README.md`); content, exempt from the line
+  limit; on the site as `data/blog.json`
 - `notes/`: working notes, e.g. what each part of a
   book covers (`notes/3-amaran-hator.md`, added to
   with every translated part); not on the shelf and

@@ -14,6 +14,7 @@ the same functions (nxgir_web.py):
         words of the books that the Grabar helpers
         know, spread over BUCKETS files by bucket()
     data/timeline.json              /api/timeline
+    data/blog.json                  /api/blog
     data/titles.json                each book's title,
         for /api/recent (the rest is in the browser)
     data/library.json               /api/library
@@ -164,10 +165,16 @@ def versioned(html, out):
     return html
 
 
-def build(out, files, timeline=web.tl.TIMELINE):
-    """Write the site for files [(name, size, path)]
-    and the events of timeline (timeline.tsv) into
-    out. Returns (books, folders, words)."""
+def build(
+    out,
+    files,
+    timeline=web.tl.TIMELINE,
+    blog=web.blog_posts.BLOG,
+):
+    """Write the site for files [(name, size, path)],
+    the events of timeline (timeline.tsv) and the
+    posts in blog (blog/) into out. Returns (books,
+    folders, words)."""
     start = time.monotonic()
     out = Path(out)
     if out.exists():
@@ -185,13 +192,17 @@ def build(out, files, timeline=web.tl.TIMELINE):
         # an empty state: positions stay at home
         state = Path(tmp) / "state.json"
         app = web.App(
-            files, state_path=state, timeline=timeline
+            files,
+            state_path=state,
+            timeline=timeline,
+            blog=blog,
         )
         dirs = folders(files)
         write_json(
             data / "timeline.json", web.timeline(app)
         )
         write_json(data / "library.json", web.library(app))
+        write_json(data / "blog.json", web.blog(app))
         # for the list of readings, which only has
         # the names (recentHere() in app.js)
         write_json(

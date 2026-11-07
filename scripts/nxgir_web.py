@@ -11,6 +11,7 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/book?name=         a book, cut into words
   GET  /api/word?w=&lang=      abbreviation + meaning
   GET  /api/timeline           the main steps
+  GET  /api/blog               the blog posts
   GET  /api/recent?n=          the books read last
   GET  /api/stats              how close to the limits
   GET  /api/library            the Grabar books
@@ -47,6 +48,7 @@ from http.server import (
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
+import nxgir_blog as blog_posts
 import nxgir_grabar as grabar
 import nxgir_limits as lim
 import nxgir_timeline as tl
@@ -124,6 +126,7 @@ class App:
         notes=None,
         timeline=tl.TIMELINE,
         library=LIBRARY,
+        blog=blog_posts.BLOG,
     ):
         self.files = list(files)
         self.paths = {n: p for n, _, p in self.files}
@@ -135,6 +138,8 @@ class App:
         self.timeline = timeline
         # LIBRARY.tsv, or None for no names
         self.library = library
+        # blog/, or None for no posts
+        self.blog = blog
 
     def events(self):
         """The events of the timeline, oldest first,
@@ -301,6 +306,14 @@ def timeline(app):
         "events": done[::-1],
         "next": events[len(done) :],
     }
+
+
+def blog(app):
+    """The Blog page: the posts, newest first
+    (nxgir_blog.py)."""
+    if not app.blog:
+        return {"posts": []}
+    return {"posts": blog_posts.read(app.blog)}
 
 
 def stats(app, root=lim.ROOT):
@@ -762,6 +775,8 @@ def get(app, route, query):
         return source(app, arg("name"))
     if route == "/api/timeline":
         return timeline(app)
+    if route == "/api/blog":
+        return blog(app)
     if route == "/api/recent":
         n = arg("n", "0")
         if not n.isdigit():
