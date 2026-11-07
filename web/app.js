@@ -419,7 +419,10 @@ async function shelf(folder) {
         href: "#/new/" + (lang || "ru") },
       "+ New text")) : null,
     data.items.length ? list
-      : h("p", { class: "empty" }, "No books here.")
+      : h("p", { class: "empty" }, "No books here."),
+    // who made it, at the bottom of the top page
+    folder ? null : h("footer", { class: "credit" },
+      "Developed by S.O. and Claude")
   );
 }
 

@@ -403,6 +403,16 @@ h1 {
   background: var(--accent);
 }
 
+/* who made it, below the library */
+.credit {
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
 .empty,
 .error {
   padding: 2rem 0;
