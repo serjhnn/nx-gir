@@ -81,6 +81,11 @@ LANGS = ("en", "hy")
 # other folder, e.g. grabar/bible/x.txt and
 # ashkharhabar/bible/x.txt, read side by side
 PARALLEL = ("grabar", "ashkharhabar")
+# the first line of a part of a long book:
+# "title · 2/24" (see fetch-digilib.py)
+PART_RE = re.compile(r"^(.+) · (\d+)/(\d+)$")
+# left out of the translation status
+NOT_COUNTED = ("grabar/bible/",)
 # pages load only their own files: no inline scripts
 # or styles, nothing from other sites
 CSP = (
@@ -227,7 +232,46 @@ def shelf(app, folder=""):
         "unit": unit,
         "items": items,
         "editable": app.in_notes(folder),
+        "status": [] if folder else status(app),
     }
+
+
+def first_line(path):
+    """The first line of a file, read alone."""
+    with open(path, encoding="utf-8") as f:
+        return f.readline().strip()
+
+
+def status(app):
+    """How much of each long book in grabar/ is
+    translated: its parts with a translation at the
+    same path in the other PARALLEL folders. The
+    Bible is left out (NOT_COUNTED)."""
+    top = PARALLEL[0] + "/"
+    books = {}
+    for name, _, path in app.files:
+        if not name.startswith(top) or name.startswith(
+            NOT_COUNTED
+        ):
+            continue
+        m = PART_RE.match(first_line(path))
+        if not m:
+            continue
+        folder = name.rpartition("/")[0]
+        b = books.setdefault(
+            folder,
+            {
+                "title": m.group(1),
+                "folder": folder,
+                "parts": int(m.group(3)),
+                "done": 0,
+                "first": "",
+            },
+        )
+        if app.parallel(name):
+            b["done"] += 1
+            b["first"] = b["first"] or name
+    return list(books.values())
 
 
 def book_text(app, name):

@@ -305,6 +305,28 @@ h1 {
   line-height: 1.6;
 }
 
+/* how much of each book is translated */
+.intro .status {
+  margin: 0.3rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.88rem;
+}
+
+.intro .status li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.3rem 0;
+}
+
+.intro .status .progress {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin: 0.25rem 0 0;
+}
+
 .intro .intro-btn {
   margin: 0.75rem 0 0.25rem;
 }

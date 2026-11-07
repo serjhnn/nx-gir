@@ -569,3 +569,35 @@ def test_book_format(app):
     line = "".join(md["lines"][1])
     assert line[0:5] == "quote"
     assert web.book(app, "grabar/john.txt")["format"] == {}
+
+
+def test_status_counts_translated_parts(tmp_path):
+    files = []
+
+    def add(name, first):
+        p = tmp_path / name
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(first + "\nտեքստ\n", encoding="utf-8")
+        files.append((name, 10, p))
+
+    d = "grabar/author/book/"
+    add(d + "01.txt", "Գիրք · 1/3")
+    add(d + "02.txt", "Գիրք · 2/3")
+    add(d + "03.txt", "Գիրք · 3/3")
+    add("ashkharhabar/author/book/02.txt", "Գիրք · 2/3")
+    # the Bible and books not in parts don't count
+    add("grabar/bible/ps/01.txt", "Սաղմոս · 1/1")
+    add("ashkharhabar/bible/ps/01.txt", "Սաղմոս · 1/1")
+    add("grabar/john.txt", "Ի սկզբանէ էր Բանն։")
+    app = App(files, tmp_path / "state.json")
+    assert web.status(app) == [
+        {
+            "title": "Գիրք",
+            "folder": "grabar/author/book",
+            "parts": 3,
+            "done": 1,
+            "first": d + "02.txt",
+        }
+    ]
+    assert web.shelf(app)["status"] == web.status(app)
+    assert web.shelf(app, "grabar")["status"] == []

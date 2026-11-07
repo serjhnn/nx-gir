@@ -329,7 +329,7 @@ const CONTACT = ["serj.hnn13", "gmail.com"];
 
 // the welcome above the library, in Armenian:
 // questions a first-time visitor may ask
-function intro() {
+function intro(status) {
   const qa = (q, ...a) => [h("h3", {}, q),
     h("p", {}, ...a)];
   return h("section", { class: "intro", lang: "hy" },
@@ -351,12 +351,35 @@ function intro() {
       h("a", { class: "icon-btn primary",
         href: "#/read/" + enc(START) },
       "Կարդալ «Ամառան հատոր», մաս 1 →")),
+    status && status.length ? [
+      h("h3", {}, "Ի՞նչ է արդեն թարգմանված։"),
+      statusList(status)] : null,
     qa("Ո՞վ է թարգմանել։",
       "Թարգմանությունը մեքենայական է և դեռ "
       + "ստուգված չէ մասնագետի կողմից։"),
     qa("Ինչպե՞ս կապվել։",
       "Հարցերի, առաջարկների կամ սխալների մասին "
       + "գրեք նախագծի հեղինակին՝ ", mail(), "։"));
+}
+
+// the long books and how many of their parts
+// have a translation (status() in nxgir_web.py)
+function statusList(status) {
+  const list = h("ul", { class: "status" });
+  for (const b of status) {
+    const pct = Math.round(100 * b.done / b.parts);
+    const fill = h("span");
+    fill.style.width = pct + "%";
+    const to = b.first ? "#/read/" + enc(b.first)
+      : "#/f/" + enc(b.folder);
+    list.append(h("li", {},
+      h("a", { href: to }, b.title),
+      h("span", { class: "meta" },
+        b.done + " / " + b.parts + " մաս"),
+      h("span", { class: "progress", role: "img",
+        "aria-label": pct + "%" }, fill)));
+  }
+  return list;
 }
 
 // the contact address as a link, made in the page
@@ -387,7 +410,7 @@ async function shelf(folder) {
   show(
     folder ? crumbs(folder, false) : null,
     // at the top the welcome comes first
-    folder ? null : intro(),
+    folder ? null : intro(data.status),
     h("h1", {}, title),
     h("p", { class: "sub" }, plural(data.count,
       data.unit)),
