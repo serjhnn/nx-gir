@@ -909,6 +909,18 @@ h1 {
 }
 
 .empty,
+/* index.html's own words, until the app draws
+   the page, and under an error */
+.about {
+  padding: 1rem 0;
+}
+.about h1 {
+  margin: 0 0 0.6rem;
+}
+.about p {
+  line-height: 1.6;
+}
+
 .error {
   padding: 2rem 0;
   color: var(--muted);

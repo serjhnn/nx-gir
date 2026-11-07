@@ -189,6 +189,13 @@ def test_searchable(tmp_path, files):
     assert f"Sitemap: {bs.SITE}/sitemap.xml" in robots
     index = (out / "index.html").read_text("utf-8")
     assert '<a href="read/grabar/john.html">' in index
+    # its own words, which app.js replaces, and
+    # the list among them
+    about = index.index('id="about"')
+    noscript = index.index("<noscript>")
+    assert about < noscript < index.index("</main>")
+    assert "Grabar (Classical Armenian)" in index
+    assert '<header class="bar" data-nosnippet>' in index
     # the blog posts, each language on its own
     # page, with their dates; drafts left out
     post = out / "blog/welcome.en.html"

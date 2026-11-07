@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="bar">
+<header class="bar" data-nosnippet>
   <a class="brand" href="#/" aria-label="նղ֊գիր">
     <svg class="brand-mark" viewBox="4 3 24 26"
       aria-hidden="true">
@@ -39,7 +39,21 @@
       type="button"></button>
   </div>
 </header>
-<main id="main" tabindex="-1"></main>
+<main id="main" tabindex="-1">
+<!-- what the page says before the app draws it,
+and under an error: for search engines too -->
+<section class="about" id="about">
+<h1>nx-gir · նղ֊գիր</h1>
+<p lang="hy">Գրաբար գրքեր՝ ժամանակակից
+հայերեն թարգմանության հետ կողք կողքի, և ամեն
+բառի իմաստը՝ մեկ հպումով. Գրիգոր Տաթևացի,
+Ներսես Շնորհալի, Աստվածաշունչ։</p>
+<p>Grabar (Classical Armenian) books with Modern
+Armenian translations side by side, and the
+meaning of every word a tap away: Grigor
+Tatevatsi, Nerses Shnorhali, the Bible.</p>
+</section>
+</main>
 <script src="app.js"></script>
 </body>
 </html>

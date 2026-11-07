@@ -431,8 +431,9 @@ def searchable(out, app, files):
     )
     index = out / "index.html"
     html = index.read_text("utf-8")
-    tag = '<main id="main" tabindex="-1"></main>'
-    if tag not in html:
+    # the list goes in main, after its own words
+    tag = "</main>"
+    if html.count(tag) != 1:
         raise SystemExit("index.html: no main")
     nav = "".join(
         f'<li><a href="{esc(p)}">{esc(t)}</a></li>\n'
@@ -440,10 +441,10 @@ def searchable(out, app, files):
     )
     html = html.replace(
         tag,
-        tag
-        + "\n<noscript><ul>\n"
+        "<noscript><ul>\n"
         + nav
-        + "</ul></noscript>",
+        + "</ul></noscript>\n"
+        + tag,
     )
     canon = f'<link rel="canonical" href="{SITE}/">\n'
     html = html.replace("</head>", canon + "</head>")

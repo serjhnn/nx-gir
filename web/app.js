@@ -7,6 +7,9 @@
 "use strict";
 
 const main = document.getElementById("main");
+// the words index.html has before the app draws
+// the page: shown again under an error
+const ABOUT = document.getElementById("about");
 
 // -- small helpers --
 
@@ -189,8 +192,16 @@ function depth(title) {
 const BUCKETS = 256;
 const buckets = new Map();
 
+// a file of the published copy; tried twice, as a
+// network may drop a request
 async function json(url) {
-  const r = await fetch(url);
+  let r;
+  try {
+    r = await fetch(url);
+  } catch (e) {
+    await new Promise((ok) => setTimeout(ok, 1000));
+    r = await fetch(url);
+  }
   if (!r.ok) {
     throw new Error(r.status === 404
       ? "Not in the published copy" : r.status);
@@ -318,10 +329,15 @@ function show(...kids) {
   window.scrollTo(0, 0);
 }
 
+// an error, and under it what the site is: a
+// search engine that hits an error quotes that,
+// not the error (data-nosnippet)
 function showError(msg) {
   show(
-    h("p", { class: "error" }, msg + ". ",
-      h("a", { href: "#/" }, "Back to the library"))
+    h("p", { class: "error", "data-nosnippet": "" },
+      msg + ". ",
+      h("a", { href: "#/" }, "Back to the library")),
+    ABOUT
   );
 }
 
