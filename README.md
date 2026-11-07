@@ -353,8 +353,13 @@ counted too: the first time a browser shows the end
 of a quarter of a book, an event
 `/read/<book>/25%` (50%, 75%, 100%) is sent, once
 per browser and book, so the events of a book show
-how many readers got how far. The local `nxgir web`
-counts nothing.
+how many readers got how far. So is how long they
+read: the time a book is open, in front and in use
+(a scroll, tap or key in the last two minutes) is
+added up per browser and book, and passing 1, 5,
+15, 30 and 60 minutes sends `/read/<book>/5min` and
+so on, once each. The local `nxgir web` counts
+nothing.
 
 `.github/workflows/pages.yml` builds and publishes it
 on every push to `main`. Turn it on once: in the

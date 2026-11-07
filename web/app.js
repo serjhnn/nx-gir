@@ -1125,6 +1125,53 @@ function topWord() {
   return lo;
 }
 
+// How long readers stay with a book: the time a
+// book is open, the page in front and the reader
+// active (a scroll, tap or key in the last two
+// minutes) is added up per browser and book; when
+// it passes 1, 5, 15, 30 or 60 minutes, an event
+// "/read/<book>/5min" is counted (titled
+// "<title> · 5 min"), once each.
+const MINUTES = [1, 5, 15, 30, 60];
+const TICK = 10; // seconds
+const IDLE = 120; // seconds without a sign of life
+let alive = 0; // when the reader last did something
+function stir() {
+  alive = Date.now();
+}
+for (const ev of ["scroll", "pointerdown",
+  "keydown"]) {
+  window.addEventListener(ev, stir,
+    { passive: true });
+}
+function tick() {
+  if (!R.name || document.hidden) return;
+  if (Date.now() - alive > IDLE * 1000) return;
+  const key = "nxgir-time:" + R.name;
+  let was = 0;
+  try {
+    was = Number(localStorage.getItem(key)) || 0;
+  } catch (e) {
+    return; // nowhere to keep it
+  }
+  const now = was + TICK;
+  try {
+    localStorage.setItem(key, String(now));
+  } catch (e) {
+    return;
+  }
+  for (const m of MINUTES) {
+    if (was < m * 60 && now >= m * 60) {
+      const t = R.title || R.name;
+      beacon({ p: `/read/${R.name}/${m}min`,
+        t: `${t} · ${m} min`, e: "true" });
+    }
+  }
+}
+if (STATIC && window.NXGIR_COUNT) {
+  setInterval(tick, TICK * 1000);
+}
+
 // the last word on the screen
 function lastWord() {
   const edge = window.innerHeight;
@@ -1375,6 +1422,7 @@ async function book(name) {
   // from now on scrolling is saved
   R.name = name;
   R.title = title;
+  stir();
   savePos();
 }
 
