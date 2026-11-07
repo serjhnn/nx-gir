@@ -322,6 +322,13 @@ phone's browser.
   reading at night); until you pick one, the page
   starts in your system's light or dark.
 
+- **Phone view**: on a wide screen, the phone button
+  at the top right shows the pages as on a phone, in
+  a column a phone wide: parallel lines one under
+  the other, the word panel at the bottom, the text
+  tools behind the settings button. Tap it again for
+  the wide view; each browser keeps its choice. On
+  a phone the button is hidden.
 - **Timeline** (the link under the library, or
   `#/timeline`): the main steps of the project,
   newest first, with filters by kind and what comes

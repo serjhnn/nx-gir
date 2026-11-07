@@ -601,3 +601,23 @@ def test_status_counts_translated_parts(tmp_path):
     ]
     assert web.shelf(app)["status"] == web.status(app)
     assert web.shelf(app, "grabar")["status"] == []
+
+
+def test_wide_rules_leave_the_phone_view():
+    # the phone view (.phone on <html>) must not get
+    # the rules for wide screens: every selector in
+    # a min-width block starts with .wide
+    css = (web.WEB_DIR / "style.css").read_text()
+    blocks = re.findall(
+        r"@media \(min-width[^{]*\{(.*?)\n\}",
+        css,
+        re.S,
+    )
+    assert blocks
+    for block in blocks:
+        block = re.sub(r"/\*.*?\*/", "", block, flags=re.S)
+        for sel in re.findall(
+            r"\n  ([^ \n}][^{}]*)\{", block
+        ):
+            for one in sel.split(","):
+                assert one.strip().startswith(".wide "), one

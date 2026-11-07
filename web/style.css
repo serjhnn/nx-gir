@@ -679,6 +679,12 @@ body.reading .bar {
   }
 }
 
+/* the same in the phone view (the view
+   button), on a wide screen */
+.phone .tools .long {
+  display: none;
+}
+
 .view .icon-btn {
   min-width: 2.5rem;
   justify-content: center;
@@ -1142,7 +1148,7 @@ body.panel-open main {
 }
 
 @media (min-width: 64rem) {
-  .reader {
+  .wide .reader {
     display: grid;
     grid-template-columns: minmax(0, 34em) 20rem;
     justify-content: space-between;
@@ -1150,7 +1156,7 @@ body.panel-open main {
     align-items: start;
   }
 
-  .panel {
+  .wide .panel {
     position: sticky;
     top: 68px; /* below the toolbar */
     max-height: calc(100vh - 84px);
@@ -1159,17 +1165,17 @@ body.panel-open main {
     box-shadow: none;
   }
 
-  body.panel-open main {
+  .wide body.panel-open main {
     padding-bottom: 4rem;
   }
 }
 
 @media (min-width: 40rem) {
-  h1 {
+  .wide h1 {
     font-size: 2.4rem;
   }
 
-  .crumbs {
+  .wide .crumbs {
     margin-top: 2.5rem;
   }
 }
@@ -1218,14 +1224,14 @@ body.panel-open main {
    (a Galaxy Fold is about 53rem wide) or a phone on
    its side */
 @media (min-width: 40rem) {
-  .text.parallel {
+  .wide .text.parallel {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.4em 1.5rem;
     max-width: none;
   }
 
-  .text.parallel .par:not(.par-head) {
+  .wide .text.parallel .par:not(.par-head) {
     margin: 0;
     padding: 0;
     border: 0;
@@ -1234,24 +1240,24 @@ body.panel-open main {
   }
 
   /* both columns need every row, empty or not */
-  .text.parallel .par:empty,
-  .text.parallel .par-head:first-child {
+  .wide .text.parallel .par:empty,
+  .wide .text.parallel .par-head:first-child {
     display: block;
   }
 }
 
 /* a computer: room for the word panel beside */
 @media (min-width: 64rem) {
-  body.reading.parallel main,
-  body.reading.parallel .bar {
+  .wide body.reading.parallel main,
+  .wide body.reading.parallel .bar {
     max-width: 100rem;
   }
 
-  body.parallel .reader {
+  .wide body.parallel .reader {
     grid-template-columns: minmax(0, 1fr) 20rem;
   }
 
-  .text.parallel {
+  .wide .text.parallel {
     column-gap: 2.5rem;
   }
 }
@@ -1319,4 +1325,68 @@ body.panel-open main {
     flex-basis: 100%;
     justify-content: flex-end;
   }
+}
+
+/* the same in the phone view (the view
+   button), on a wide screen */
+.phone .tools {
+  gap: 0.35rem;
+}
+
+.phone .tools .more {
+  display: inline-flex;
+  margin-left: auto;
+}
+
+.phone .tools .view {
+  display: none;
+}
+
+.phone .tools.open .view {
+  display: flex;
+  flex-basis: 100%;
+  justify-content: flex-end;
+}
+
+/* -- the phone view --
+   On a wide screen the view button (top right)
+   shows the pages as on a phone: in a column a
+   phone wide, with the phone's layout. theme.js
+   puts .wide or .phone on <html>; the rules for
+   wide screens above need .wide, and those for
+   phones are also given for .phone. */
+
+.phone {
+  background: var(--surface);
+}
+
+.phone body {
+  max-width: 26rem;
+  min-height: 100vh;
+  margin: 0 auto;
+  border-inline: 1px solid var(--rule);
+  box-shadow: 0 0 24px var(--shadow);
+}
+
+/* the word panel: at the bottom of the column */
+.phone .panel {
+  max-width: 26rem;
+  margin: 0 auto;
+}
+
+.top-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* only where there is a choice: a wide screen */
+@media (max-width: 30rem) {
+  #view {
+    display: none;
+  }
+}
+
+#view[aria-pressed="true"] {
+  color: var(--accent-ink);
+  border-color: var(--accent);
 }

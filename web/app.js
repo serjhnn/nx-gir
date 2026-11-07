@@ -71,6 +71,10 @@ const ICONS = {
     "M5 4v16M3 6l2-2l2 2M3 18l2 2l2-2"],
   center: ["M4 6h16M7 10h10M4 14h16M7 18h10"],
   back: ["M19 12H5M11 6l-6 6l6 6"],
+  // a phone: the phone view
+  phone: ["M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1"
+    + "H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z",
+    "M11 18h2"],
   // two sliders: the text settings
   sliders: ["M4 7h9M17 7h3M4 17h3M11 17h9",
     "M15 5a2 2 0 1 0 0 4a2 2 0 1 0 0-4z",
@@ -314,6 +318,37 @@ button.addEventListener("click", () => {
     localStorage.setItem("nxgir-theme", t);
   } catch (e) {}
   drawTheme();
+});
+
+// -- the phone view --
+// On a wide screen, the pages as on a phone: in a
+// column a phone wide, with the phone's layout
+// (.phone on <html>, set early by theme.js; the
+// CSS rules for wide screens need .wide). Kept per
+// browser. The button is hidden on a phone.
+
+const viewBtn = document.getElementById("view");
+
+function drawView() {
+  const on = document.documentElement.classList
+    .contains("phone");
+  viewBtn.replaceChildren(icon(ICONS.phone));
+  viewBtn.title = on ? "Phone view: on (click for"
+    + " the wide view)" : "Phone view";
+  viewBtn.setAttribute("aria-label", "Phone view");
+  viewBtn.setAttribute("aria-pressed", String(on));
+}
+
+viewBtn.addEventListener("click", () => {
+  const html = document.documentElement;
+  const on = !html.classList.contains("phone");
+  html.classList.toggle("phone", on);
+  html.classList.toggle("wide", !on);
+  try {
+    localStorage.setItem("nxgir-phone",
+      on ? "1" : "0");
+  } catch (e) {}
+  drawView();
 });
 
 // -- bookshelf --
@@ -1802,4 +1837,5 @@ async function route() {
 
 window.addEventListener("hashchange", route);
 drawTheme();
+drawView();
 route();
