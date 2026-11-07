@@ -79,6 +79,8 @@ const ICONS = {
   sliders: ["M4 7h9M17 7h3M4 17h3M11 17h9",
     "M15 5a2 2 0 1 0 0 4a2 2 0 1 0 0-4z",
     "M9 15a2 2 0 1 0 0 4a2 2 0 1 0 0-4z"],
+  // arrows out to both sides: full width
+  width: ["M3 12h18M7 8l-4 4l4 4M17 8l4 4l-4 4"],
 };
 
 // 512 B, 3.4 KB: like human_size() in Python.
@@ -1055,7 +1057,8 @@ const FONT_NAMES = { grqi: "Arian Grqi",
   garamond: "EB Garamond",
   oldstandard: "Old Standard" };
 const view = { size: SIZE, center: false, line: 0,
-  font: 0, parallel: true, sentences: false };
+  font: 0, parallel: true, sentences: false,
+  full: false };
 try {
   const v = JSON.parse(
     localStorage.getItem("nxgir-view") || "{}");
@@ -1069,6 +1072,7 @@ try {
   view.font = Math.max(0, FONTS.indexOf(v.font));
   view.parallel = v.parallel !== false;
   view.sentences = v.sentences === true;
+  view.full = v.full === true;
 } catch (e) {}
 
 function applyView() {
@@ -1088,6 +1092,9 @@ function applyView() {
   R.text.classList.toggle("centered", view.center);
   R.text.classList.toggle("sentences",
     view.sentences);
+  // the whole width of the screen, not a column
+  R.text.classList.toggle("full", view.full);
+  document.body.classList.toggle("full", view.full);
   const par = Boolean(R.par && view.parallel);
   R.text.classList.toggle("parallel", par);
   document.body.classList.toggle("parallel", par);
@@ -1106,7 +1113,8 @@ function setView(change) {
         line: LINES[view.line],
         font: FONTS[view.font],
         parallel: view.parallel,
-        sentences: view.sentences }));
+        sentences: view.sentences,
+        full: view.full }));
   } catch (e) {}
   applyView();
   if (i >= 0) {
@@ -1149,6 +1157,14 @@ function viewTools() {
     title: view.sentences
       ? "Sentences apart (click to join)"
       : "Text as written (click for sentences)" }),
+  btn(icon(ICONS.width),
+    () => setView({ full: !view.full }), {
+      "aria-label": "Text across the whole width",
+      "aria-pressed": String(view.full),
+      title: view.full
+        ? "Whole width (click for a column)"
+        : "Text in a column (click for whole"
+          + " width)" }),
   fontPick(),
   // the theme button joins the row while reading
   button);
@@ -1819,7 +1835,7 @@ async function route() {
   R.panel = null;
   R.par = null;
   document.body.classList.remove("reading",
-    "parallel");
+    "parallel", "full");
   // back to the top bar from the reading tools
   if (button.parentNode !== topBar) topBar.append(button);
   try {

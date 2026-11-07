@@ -292,8 +292,11 @@ phone's browser.
   above the text, opens it.
 - **A− / A+** make the text smaller or bigger; the
   buttons beside them center it and space the lines
-  (each tap more, then back to normal), and the
-  **font list** picks the font of the text by name:
+  (each tap more, then back to normal), the
+  **↔** button spreads the text across the whole
+  width of the screen instead of a column (for an
+  open folding phone; tap again for the column),
+  and the **font list** picks the font of the text by name:
   Arian Grqi (the default) and Arian AMU Serif,
   Armenian book fonts; Noto Serif; the decorative
   old print face Faulmann; the calligraphic

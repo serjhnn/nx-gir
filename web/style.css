@@ -1262,6 +1262,24 @@ body.panel-open main {
   }
 }
 
+/* Whole width (the arrows in the text settings):
+   no column, the text as wide as the screen, e.g.
+   an open folding phone */
+.text.full {
+  max-width: none;
+}
+
+body.reading.full main,
+body.reading.full .bar {
+  max-width: none;
+}
+
+@media (min-width: 64rem) {
+  .wide body.full .reader {
+    grid-template-columns: minmax(0, 1fr) 20rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   body {
     transition: none;
