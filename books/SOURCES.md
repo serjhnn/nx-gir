@@ -141,24 +141,29 @@ How the files are made:
   have no text of their own.
 - Some paragraphs are very long (a whole sermon in the
   summer volume can be one paragraph), as on Digilib.
-- `3-amaran-hator/01.txt` is cut further: one
-  sentence per line (a sentence ends at `։`, as the
-  reader counts them), with a blank line where a
-  Digilib paragraph ended, to be read beside its
-  translation in `ashkharhabar/`. The words are as on
-  Digilib; where a `։` had no space after it (6
-  times), the line break now stands there.
+- `3-amaran-hator/01.txt` and `02.txt` are cut
+  further: one sentence per line (a sentence ends
+  at `։`, as the reader counts them), with a blank
+  line where a Digilib paragraph ended, to be read
+  beside its translation in `ashkharhabar/`. The
+  words are as on Digilib; where a `։` had no space after it (6
+  times in part 1, 5 in part 2), the line break now
+  stands there.
 
 ## ashkharhabar/grigor-tatevatsi/3-amaran-hator/
 
-`01.txt`: a translation into modern Eastern Armenian
-of `grabar/grigor-tatevatsi/3-amaran-hator/01.txt`
-(part 1 of 24 of Ամառան հատոր: the sermons on Psalm
-118:35 and on the Ten Commandments, Գլուխ Ա–Ե), made
-by Claude (Anthropic's AI model) on 2026-11-06 at the user's
-request. It is a machine translation, not a published
-or reviewed one: read it as a help to the Grabar, not
-in its place.
+`01.txt` and `02.txt`: a translation into modern
+Eastern Armenian of the same files in
+`grabar/grigor-tatevatsi/3-amaran-hator/` (parts 1
+and 2 of 24 of Ամառան հատոր: the sermons on Psalm
+118:35 and on the Ten Commandments, Գլուխ Ա–Ե; on
+visions and dreams, on Deuteronomy 15:9, on the Holy
+Trinity and two on the Lord's Prayer, Գլուխ Զ–Ժ),
+made by Claude (Anthropic's AI model) on 2026-11-06
+and 2026-11-07 at the user's request. It is a
+machine translation, not a published or reviewed
+one: read it as a help to the Grabar, not in its
+place.
 
 - Reformed (Soviet) spelling, as written in Armenia
   today.
