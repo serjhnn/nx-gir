@@ -126,7 +126,8 @@
   `.github/workflows/pages.yml`): the answers of the
   API as files, read by `app.js` when `static.js`
   sets `NXGIR_STATIC`; for search engines, each
-  book also as plain HTML (`read/<book>.html`),
+  book also as plain HTML (`read/<book>.html`)
+  and each blog post (`blog/<slug>.html`),
   `sitemap.xml` and `robots.txt`; tested in
   `tests/test_site.py`. `bucket()` and `BUCKETS` must
   match `app.js` (a test checks it)
