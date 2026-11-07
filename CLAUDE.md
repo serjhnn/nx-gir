@@ -73,7 +73,8 @@
   short book names for `books/grabar/` (content; a
   test checks every path and author)
 - `blog/`: the Blog page (`#/blog`, `#/blog/<slug>`,
-  `/api/blog`): one `YYYY-MM-DD-slug.md` per post,
+  `/api/blog`): one `YYYY-MM-DD-slug.LANG.md` per
+  post and language (hy, en, ru; Armenian first),
   read by `scripts/nxgir_blog.py` (tested in
   `tests/test_blog.py`; the format is in
   `blog/README.md`); content, exempt from the line
@@ -127,7 +128,7 @@
   API as files, read by `app.js` when `static.js`
   sets `NXGIR_STATIC`; for search engines, each
   book also as plain HTML (`read/<book>.html`)
-  and each blog post (`blog/<slug>.html`),
+  and each blog post (`blog/<slug>.<lang>.html`),
   `sitemap.xml` and `robots.txt`; tested in
   `tests/test_site.py`. `bucket()` and `BUCKETS` must
   match `app.js` (a test checks it)

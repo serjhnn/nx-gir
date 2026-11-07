@@ -26,7 +26,8 @@ not see the #/ pages of app.js:
 
     read/<book>.html   each book as a plain page,
         its text in the HTML, linked to the reader
-    blog/<slug>.html   each blog post, the same way
+    blog/<slug>.<lang>.html   each blog post in
+        each of its languages, the same way
     sitemap.xml, robots.txt   where they are
 
 The test texts of data/ and the user's own texts in
@@ -278,7 +279,7 @@ PAGE = """<!doctype html>
 <title>{title} · նղ֊գիր</title>
 <meta name="description" content="{desc}">
 <link rel="canonical" href="{canon}">
-<meta property="og:type" content="article">
+{alt}<meta property="og:type" content="article">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{canon}">
@@ -303,47 +304,71 @@ PAGE = """<!doctype html>
 
 # the link at the top of a plain page
 OPEN_BOOK = "Read in the reader,\nwith word lookup"
-OPEN_POST = "Open in nx-gir"
+OPEN_POST = {
+    "hy": "Բացել նղ֊գիրում",
+    "en": "Open in nx-gir",
+    "ru": "Открыть в nx-gir",
+}
 
 
-def plain_page(out, path, text, **kw):
+def plain_page(out, path, text, alt="", **kw):
     """Write a plain page (PAGE) at path of out:
-    text is HTML, the rest (title, desc, reader,
-    and lang and open if not the book's) plain."""
+    text and alt (links to its other languages)
+    are HTML, the rest (title, desc, reader, and
+    lang and open if not the book's) plain."""
     kw = {"lang": "hy", "open": OPEN_BOOK, **kw}
     kw = {k: htm.escape(v) for k, v in kw.items()}
     page = PAGE.format(
-        canon=htm.escape(url(path)), text=text, **kw
+        canon=htm.escape(url(path)),
+        text=text,
+        alt=alt,
+        **kw,
     )
     dest = out / path
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(versioned(page, out), "utf-8")
 
 
+def post_page(slug, lang):
+    """Where a blog post's plain page is."""
+    return f"blog/{slug}.{lang}.html"
+
+
 def post_pages(out, app):
-    """Each blog post as a plain page,
-    blog/<slug>.html. Returns [(path, title,
+    """Each version of each blog post as a plain
+    page, blog/<slug>.<lang>.html, which names the
+    others (hreflang). Returns [(path, title,
     date)]."""
     links = []
     for p in web.blog(app)["posts"]:
-        path = f"blog/{p['slug']}.html"
-        text = "\n".join(
-            f"<{t}>{htm.escape(x)}</{t}>"
-            for k, x in p["blocks"]
-            for t in ["h2" if k == "h" else "p"]
+        slug, vs = p["slug"], p["versions"]
+        alt = "".join(
+            '<link rel="alternate" hreflang='
+            f'"{v["lang"]}" href="'
+            f"{htm.escape(url(post_page(slug, v['lang'])))}"
+            '">\n'
+            for v in vs
         )
-        paras = [x for k, x in p["blocks"] if k == "p"]
-        plain_page(
-            out,
-            path,
-            lang="en",
-            open=OPEN_POST,
-            title=p["title"],
-            desc=describe([""] + paras),
-            reader="./#/blog/" + p["slug"],
-            text=text,
-        )
-        links.append((path, p["title"], p["date"]))
+        for v in vs:
+            path = post_page(slug, v["lang"])
+            text = "\n".join(
+                f"<{t}>{htm.escape(x)}</{t}>"
+                for k, x in v["blocks"]
+                for t in ["h2" if k == "h" else "p"]
+            )
+            paras = [x for k, x in v["blocks"] if k == "p"]
+            plain_page(
+                out,
+                path,
+                lang=v["lang"],
+                open=OPEN_POST[v["lang"]],
+                title=v["title"],
+                desc=describe([""] + paras),
+                reader=f"./#/blog/{slug}/{v['lang']}",
+                text=text,
+                alt=alt if len(vs) > 1 else "",
+            )
+            links.append((path, v["title"], p["date"]))
     return links
 
 

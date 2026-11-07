@@ -78,6 +78,8 @@ def test_build(tmp_path, files):
         (data / "blog.json").read_text("utf-8")
     )
     assert blog["posts"][-1]["slug"] == "welcome"
+    first = blog["posts"][-1]["versions"][0]
+    assert first["lang"] == "hy"
     tl = json.loads(
         (data / "timeline.json").read_text("utf-8")
     )
@@ -189,19 +191,25 @@ def test_searchable(tmp_path, files):
     assert f"Sitemap: {bs.SITE}/sitemap.xml" in robots
     index = (out / "index.html").read_text("utf-8")
     assert '<a href="read/grabar/john.html">' in index
-    # the blog posts, with their dates
-    post = out / "blog/welcome.html"
+    # the blog posts, each language on its own
+    # page, naming the others, with their dates
+    post = out / "blog/welcome.en.html"
     html = post.read_text("utf-8")
     assert '<html lang="en">' in html
-    assert 'href="./#/blog/welcome"' in html
+    assert 'href="./#/blog/welcome/en"' in html
     assert "<h1>Welcome to the nx-gir blog</h1>" in html
     assert "<h2>The idea</h2>" in html
-    canon = bs.SITE + "/blog/welcome.html"
-    assert (
-        f"<url><loc>{canon}</loc>"
-        "<lastmod>2026-11-07</lastmod></url>"
-    ) in sm
-    assert '<a href="blog/welcome.html">' in index
+    hy = bs.SITE + "/blog/welcome.hy.html"
+    assert f'hreflang="hy" href="{hy}"' in html
+    for lang in ("hy", "en"):
+        canon = bs.SITE + f"/blog/welcome.{lang}.html"
+        assert (
+            f"<url><loc>{canon}</loc>"
+            "<lastmod>2026-11-07</lastmod></url>"
+        ) in sm
+    assert '<a href="blog/welcome.hy.html">' in index
+    page = out / "blog/welcome.hy.html"
+    assert '<html lang="hy">' in page.read_text("utf-8")
 
 
 def test_describe():

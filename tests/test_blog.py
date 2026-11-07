@@ -19,8 +19,11 @@ Second.
 def folder(tmp_path):
     d = tmp_path / "blog"
     d.mkdir()
-    (d / "2026-10-07-hello.md").write_text(POST, "utf-8")
-    (d / "2026-11-01-later.md").write_text(
+    (d / "2026-10-07-hello.en.md").write_text(POST, "utf-8")
+    (d / "2026-10-07-hello.hy.md").write_text(
+        "# Բարև\n\nԱռաջին։\n", "utf-8"
+    )
+    (d / "2026-11-01-later.en.md").write_text(
         "# Later\n\nText.\n", "utf-8"
     )
     (d / "README.md").write_text("# not a post\n")
@@ -35,8 +38,15 @@ def test_read(folder):
     ]
     hello = posts[1]
     assert hello["date"] == "2026-10-07"
-    assert hello["title"] == "Hello"
-    assert hello["blocks"] == [
+    # Armenian first, as in LANGS
+    hy, en = hello["versions"]
+    assert hy == {
+        "lang": "hy",
+        "title": "Բարև",
+        "blocks": [["p", "Առաջին։"]],
+    }
+    assert en["title"] == "Hello"
+    assert en["blocks"] == [
         ["p", "First line, same paragraph."],
         ["h", "A heading"],
         ["p", "Second."],
@@ -50,11 +60,13 @@ def test_no_folder(tmp_path):
 @pytest.mark.parametrize(
     "name, text, msg",
     [
-        ("welcome.md", "# A\n\nB\n", "YYYY"),
-        ("2026-13-01-a.md", "# A\n\nB\n", "bad date"),
-        ("2026-10-01-a.md", "A\n\nB\n", "title"),
-        ("2026-10-01-a.md", "# A\n", "no title"),
-        ("2026-10-01-hello.md", "# A\n\nB\n", "two"),
+        ("welcome.en.md", "# A\n\nB\n", "YYYY"),
+        ("2026-10-01-a.md", "# A\n\nB\n", "LANG"),
+        ("2026-10-01-a.de.md", "# A\n\nB\n", "lang"),
+        ("2026-13-01-a.en.md", "# A\n\nB\n", "date"),
+        ("2026-10-01-a.en.md", "A\n\nB\n", "title"),
+        ("2026-10-01-a.en.md", "# A\n", "no title"),
+        ("2026-10-01-hello.ru.md", "# A\n\nB\n", "two"),
     ],
 )
 def test_read_bad(folder, name, text, msg):
@@ -72,8 +84,11 @@ def test_web_blog(tmp_path, folder):
 
 
 def test_the_blog():
-    # blog/ reads, and opens with the welcome
+    # blog/ reads, and opens with the welcome, in
+    # Armenian and English
     posts = bl.read()
     assert posts[-1]["slug"] == "welcome"
     assert posts[-1]["date"] == "2026-11-07"
+    langs = [v["lang"] for v in posts[-1]["versions"]]
+    assert langs == ["hy", "en"]
     json.dumps(posts)

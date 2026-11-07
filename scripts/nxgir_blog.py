@@ -1,6 +1,7 @@
 """The blog of nx-gir: blog/, one Markdown file per
-post, named YYYY-MM-DD-slug.md (see
-blog/README.md).
+post and language, named YYYY-MM-DD-slug.LANG.md
+(see blog/README.md); the versions of a post share
+its date and slug.
 
 A post is a "# Title" line, then paragraphs split
 by empty lines; "## " starts a subheading. read()
@@ -15,9 +16,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 BLOG = ROOT / "blog"
+# the languages of the posts, in the order the
+# page offers them: Armenian first
+LANGS = ("hy", "en", "ru")
 NAME_RE = re.compile(
     r"(\d{4}-\d{2}-\d{2})-([a-z0-9]+(?:-[a-z0-9]+)*)"
-    r"\.md"
+    r"\.([a-z]{2})\.md"
 )
 
 
@@ -58,41 +62,52 @@ def parse(text, name):
 
 
 def read(folder=BLOG):
-    """The posts in folder, newest first, as
-    {slug, date, title, blocks}. Files other than
-    *.md (and README.md) are left alone."""
+    """The posts in folder, newest first, as {slug,
+    date, versions}: versions [{lang, title,
+    blocks}] in the order of LANGS. Files other
+    than *.md (and README.md) are left alone."""
     folder = Path(folder)
     if not folder.is_dir():
         return []
-    posts = []
+    posts = {}
     for p in sorted(folder.glob("*.md")):
         if p.name == "README.md":
             continue
         m = NAME_RE.fullmatch(p.name)
         if not m:
             raise BlogError(
-                f"{p.name}: not YYYY-MM-DD-slug.md"
+                f"{p.name}: not YYYY-MM-DD-slug.LANG.md"
             )
-        date, slug = m.groups()
+        date, slug, lang = m.groups()
+        if lang not in LANGS:
+            raise BlogError(
+                f"{p.name}: language not in {LANGS}"
+            )
         try:
             datetime.date.fromisoformat(date)
         except ValueError:
             raise BlogError(
                 f"{p.name}: bad date {date!r}"
             ) from None
+        post = posts.setdefault(
+            slug, {"slug": slug, "date": date}
+        )
+        if post["date"] != date:
+            raise BlogError(
+                f"{p.name}: two dates for {slug!r}"
+            )
         text = p.read_text(encoding="utf-8")
         title, blocks = parse(text, p.name)
-        posts.append(
-            {
-                "slug": slug,
-                "date": date,
-                "title": title,
-                "blocks": blocks,
-            }
+        post.setdefault("versions", []).append(
+            {"lang": lang, "title": title, "blocks": blocks}
         )
-    slugs = [p["slug"] for p in posts]
-    for s in slugs:
-        if slugs.count(s) > 1:
-            raise BlogError(f"two posts named {s!r}")
-    posts.sort(key=lambda p: p["date"], reverse=True)
-    return posts
+    out = sorted(
+        posts.values(),
+        key=lambda p: p["date"],
+        reverse=True,
+    )
+    for post in out:
+        post["versions"].sort(
+            key=lambda v: LANGS.index(v["lang"])
+        )
+    return out

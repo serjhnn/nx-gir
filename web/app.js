@@ -906,41 +906,127 @@ async function timelinePage() {
 
 // -- blog --
 
+// the languages of the posts: LANGS in
+// nxgir_blog.py, with the page's own words
+const BLOG = {
+  hy: { name: "Հայերեն", title: "Բլոգ",
+    sub: "Նորություններ և նշումներ նղ֊գիրից",
+    home: "← Գլխավոր", none: "Գրառումներ դեռ չկան։" },
+  en: { name: "English", title: "Blog",
+    sub: "News and notes from nx-gir",
+    home: "← Home", none: "No posts yet." },
+  ru: { name: "Русский", title: "Блог",
+    sub: "Новости и заметки nx-gir",
+    home: "← Главная", none: "Записей пока нет." },
+};
+const BLOG_LANG = "nxgir-blog-lang";
+
+const MONTHS_HY = ["հունվարի", "փետրվարի",
+  "մարտի", "ապրիլի", "մայիսի", "հունիսի",
+  "հուլիսի", "օգոստոսի", "սեպտեմբերի",
+  "հոկտեմբերի", "նոյեմբերի", "դեկտեմբերի"];
+const MONTHS_RU = ["января", "февраля", "марта",
+  "апреля", "мая", "июня", "июля", "августа",
+  "сентября", "октября", "ноября", "декабря"];
+
+// "2026-11-07" in lang, with the year
+function longDay(iso, lang) {
+  const d = isoDate(iso);
+  const n = d.getUTCDate();
+  const m = d.getUTCMonth();
+  const y = d.getUTCFullYear();
+  if (lang === "hy") {
+    return y + " թ. " + MONTHS_HY[m] + " " + n;
+  }
+  if (lang === "ru") {
+    return n + " " + MONTHS_RU[m] + " " + y;
+  }
+  return day(iso, true);
+}
+
+// the language the reader picked, or Armenian
+function blogLang() {
+  try {
+    const l = localStorage.getItem(BLOG_LANG);
+    if (l in BLOG) return l;
+  } catch (e) {}
+  return "hy";
+}
+
+function setBlogLang(lang) {
+  try {
+    localStorage.setItem(BLOG_LANG, lang);
+  } catch (e) {}
+}
+
+// a post's version in lang, or its first one
+function version(p, lang) {
+  return p.versions.find((v) => v.lang === lang)
+    || p.versions[0];
+}
+
 // one post: its date, title and text (parse()
 // in nxgir_blog.py: ["p", text] or ["h", text])
-function postItem(p) {
+function postItem(p, lang) {
+  const v = version(p, lang);
   return h("article", { class: "post",
-    id: "post-" + p.slug, lang: "en" },
-  h("time", { datetime: p.date }, day(p.date, true)),
+    id: "post-" + p.slug, lang: v.lang },
+  h("time", { datetime: p.date },
+    longDay(p.date, v.lang)),
   h("h2", {},
-    h("a", { href: "#/blog/" + p.slug }, p.title)),
-  p.blocks.map(([kind, text]) =>
+    h("a", { href: "#/blog/" + p.slug }, v.title)),
+  v.blocks.map(([kind, text]) =>
     h(kind === "h" ? "h3" : "p", {}, text)));
 }
 
-// #/blog: every post, newest first; #/blog/<slug>:
-// that one post
-async function blogPage(slug) {
+// #/blog: every post, newest first; #/blog/<slug>
+// that one post; #/blog/<slug>/<lang> in lang
+async function blogPage(path) {
+  const [slug, want] = path.split("/");
+  if (want in BLOG) setBlogLang(want);
   const data = await api("blog");
   const one = slug
     ? data.posts.find((p) => p.slug === slug) : null;
   if (slug && !one) throw new Error("No such post");
-  document.title = (one ? one.title + " · " : "")
-    + "Blog · nx-gir";
-  show(
-    h("p", { class: "crumbs" },
-      h("a", { href: "#/" }, "← Home"),
-      one ? [" · ", h("a", { href: "#/blog" },
-        "Blog")] : null),
-    one ? null : h("h1", {}, "Blog"),
-    one ? null : h("p", { class: "sub" },
-      "News and notes from nx-gir"),
-    h("div", { class: "blog" + (one ? " one" : "") },
-      one ? postItem(one)
-        : data.posts.length
-          ? data.posts.map(postItem)
-          : h("p", { class: "empty" },
-            "No posts yet.")));
+  const draw = () => {
+    const lang = blogLang();
+    const t = BLOG[lang];
+    // the languages the posts on this page have
+    const have = new Set((one ? [one] : data.posts)
+      .flatMap((p) => p.versions.map((v) => v.lang)));
+    const langs = Object.keys(BLOG)
+      .filter((l) => have.has(l));
+    const pick = h("div", { class: "filters",
+      role: "group", "aria-label": "Language" },
+    langs.map((l) => {
+      const b = h("button", { type: "button",
+        lang: l, "aria-pressed": String(l === lang) },
+      BLOG[l].name);
+      b.addEventListener("click", () => {
+        setBlogLang(l);
+        draw();
+      });
+      return b;
+    }));
+    document.title = (one ? version(one, lang).title
+      + " · " : "") + t.title + " · nx-gir";
+    show(
+      h("p", { class: "crumbs", lang },
+        h("a", { href: "#/" }, t.home),
+        one ? [" · ", h("a", { href: "#/blog" },
+          t.title)] : null),
+      one ? null : h("h1", { lang }, t.title),
+      one ? null : h("p", { class: "sub", lang },
+        t.sub),
+      langs.length > 1 ? pick : null,
+      h("div", { class: "blog" + (one ? " one" : "") },
+        one ? postItem(one, lang)
+          : data.posts.length
+            ? data.posts.map((p) => postItem(p, lang))
+            : h("p", { class: "empty", lang },
+              t.none)));
+  };
+  draw();
 }
 
 // -- statistics --
