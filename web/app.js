@@ -105,6 +105,34 @@ async function api(path) {
 // kept in this browser.
 
 const STATIC = window.NXGIR_STATIC === true;
+
+// Visits to the published copy are counted by
+// GoatCounter (NXGIR_COUNT, set by static.js when
+// build-site.py has a code): the page and its title,
+// where the visitor came from and the screen width;
+// no cookies, nothing about the visitor. Sent as an
+// image, as GoatCounter allows, so no script of
+// theirs is loaded. Not when a program drives the
+// browser, and never on the local server.
+let counted = "";
+function visit(path) {
+  const url = window.NXGIR_COUNT;
+  if (!STATIC || !url || navigator.webdriver) return;
+  if (path === counted) return;
+  const first = counted === "";
+  counted = path;
+  const q = new URLSearchParams({
+    p: path,
+    t: document.title,
+    s: String(screen.width),
+    rnd: Math.random().toString(36).slice(2),
+  });
+  // where they came from, on the first page only
+  if (first && document.referrer) {
+    q.set("r", document.referrer);
+  }
+  new Image().src = url + "?" + q;
+}
 // files the words are spread over, per language;
 // as BUCKETS in build-site.py
 const BUCKETS = 256;
@@ -1481,6 +1509,7 @@ async function route() {
     } else {
       await shelf("");
     }
+    visit("/" + decodeURIComponent(hash));
   } catch (e) {
     showError(e.message || "Something went wrong");
   }

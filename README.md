@@ -341,6 +341,16 @@ your own texts in `interpretations/` and your saved
 state are left out; the rest of the shelf goes in,
 and a GitHub Pages site can be seen by anyone.
 
+Visits to it can be counted with
+[GoatCounter](https://www.goatcounter.com/): set
+`GOATCOUNTER` in `scripts/build-site.py` to the
+site's code (`CODE.goatcounter.com`). Each page
+opened is sent there with its title, where the
+visitor came from and the screen width; no cookies
+and nothing about the visitor, and no script of
+GoatCounter's is loaded. The local `nxgir web`
+counts nothing.
+
 `.github/workflows/pages.yml` builds and publishes it
 on every push to `main`. Turn it on once: in the
 repository's **Settings → Pages**, set **Source** to

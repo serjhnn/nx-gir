@@ -45,6 +45,10 @@ BUCKETS = 256
 # marks a folder this script made, so it may be
 # emptied and made again
 MARK = ".nxgir-site"
+# GoatCounter (goatcounter.com): the site's code,
+# CODE.goatcounter.com, where the published copy
+# counts its visits; "" counts nothing
+GOATCOUNTER = ""
 
 
 def bucket(w):
@@ -74,8 +78,10 @@ def folders(files):
     return sorted(out)
 
 
-def pages(out):
-    """The pages of web/, told to read the files."""
+def pages(out, counter=GOATCOUNTER):
+    """The pages of web/, told to read the files, and
+    where to count visits (counter: a GoatCounter
+    code, or "")."""
     for p in web.WEB_DIR.iterdir():
         if p.is_file():
             shutil.copy2(p, out / p.name)
@@ -83,9 +89,13 @@ def pages(out):
             shutil.copytree(
                 p, out / p.name, dirs_exist_ok=True
             )
+    count = ""
+    if counter:
+        url = f"https://{counter}.goatcounter.com/count"
+        count = f'window.NXGIR_COUNT = "{url}";\n'
     (out / "static.js").write_text(
         "// the published copy: app.js reads data/\n"
-        "window.NXGIR_STATIC = true;\n",
+        "window.NXGIR_STATIC = true;\n" + count,
         encoding="utf-8",
     )
     index = out / "index.html"

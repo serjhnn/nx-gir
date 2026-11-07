@@ -106,3 +106,18 @@ def test_test_texts_left_out(tmp_path):
     assert not any(
         n.startswith("interpretations/") for n in names
     )
+
+
+def test_pages_count_visits(tmp_path):
+    # with a GoatCounter code static.js says where
+    # to count; without one, nothing is counted
+    on = tmp_path / "on"
+    on.mkdir()
+    bs.pages(on, counter="nxgir")
+    js = (on / "static.js").read_text("utf-8")
+    assert "https://nxgir.goatcounter.com/count" in js
+    off = tmp_path / "off"
+    off.mkdir()
+    bs.pages(off, counter="")
+    js = (off / "static.js").read_text("utf-8")
+    assert "NXGIR_COUNT" not in js
