@@ -61,6 +61,10 @@
   same path under `ashkharhabar/` are read side by
   side in the web reader (`PARALLEL` in
   `nxgir_web.py`); keep their lines one for one
+- `notes/`: working notes, e.g. what each part of a
+  book covers (`notes/3-amaran-hator.md`, added to
+  with every translated part); not on the shelf and
+  not on the Pages site
 - `interpretations/`: the user's own texts on the
   books, in Russian (`ru/`), English (`en/`) and
   Armenian (`hy/`);
