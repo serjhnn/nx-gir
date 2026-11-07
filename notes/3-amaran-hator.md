@@ -22,7 +22,7 @@ closing prayer with the doxology.
 
 ## How to do the next part
 
-Parts 1–11 are done. To do part N (12 next):
+Parts 1–12 are done. To do part N (13 next):
 
 1. Split the Grabar into sentences in place (the
    file from Digilib has long paragraphs):
@@ -887,6 +887,99 @@ on prayer, then one on fasting.
   a lifted mind). Short, "for much was said in
   the first volume"; ends announcing alms.
 
+## Part 12 · ԳԼՈՒԽ ՂԶ-Ճ and ՃԱ-ՃԵ (sermons 96–105)
+
+Two chapter groups, 1247 lines: five sermons on
+the poor and on alms, then five on the church
+(the building, its consecration and door, its
+people).
+
+- ՂԶ (line 5): the poor, Ps 40:1 "blessed is he
+  who considers the poor". Seven ranks of the
+  poor like the seven ranks of priests (the poor
+  and the fallen rich, orphan and widow, the sick,
+  prisoners and captives, strangers, the hungry,
+  the dead); why the poor are priests "in power";
+  the gleanings left in field and vineyard; four
+  reasons to care for animals; alms to all,
+  Christian or not; ransoming captives and burying
+  the dead above all.
+- ՂԷ (line 101): Eccl 11:2 "give a portion to
+  seven, and also to eight". God asks a share of
+  all he gave (three reasons); what we give him
+  is for our own good (the fire and the light);
+  four praises of the number seven (rest, the
+  "virgin" number, body and soul, Israel's
+  feasts); seven and eight as this life and the
+  next; sow morning and evening: four kinds of
+  men in youth and old age. Breaks off in the
+  middle of a sentence (line 183).
+- ՂԸ (line 185): Prov 15:27 "by alms and faith
+  sins are cleansed". Nature, goodness, gratitude
+  and law move us to alms; ten gains of alms and
+  ten harms of mercilessness, all from Proverbs
+  (the lender to God, mocking the poor: Ham,
+  Michal, the boys and Elisha; ransoming the
+  condemned as the new law of love).
+- ՂԹ (line 360): Luke 6:36 "be merciful". God's
+  common and special care: six gifts to the good,
+  six "busynesses" to the wicked; why the poor
+  exist (the rich are saved through them); alms
+  from ill-gotten wealth; to whom first (the just,
+  Christians, priests, captives, the dead); alms
+  as the second gate of the kingdom and above the
+  other virtues (ten reasons; the lamps of the
+  virgins; the Last Judgement).
+- Ճ (line 478): Prov 27:23 "know the state of
+  your flocks". The ranks of the poor as flocks
+  (ten likenesses: rams and oxen as priests and
+  teachers, clean and unclean beasts); excuses
+  answered (the lord who does not work, the poor
+  man: spiritual alms); the six works of mercy of
+  Matt 25; the seven parts of the blessing on the
+  just and six of the sentence on the wicked.
+- ՃԱ (line 626, group ԳԼՈՒԽ ՃԱ-ՃԵ starts at
+  624): on
+  laying the foundations and consecrating a
+  church: the stones, the psalms and responses of
+  the rite read as the Old Testament, the
+  Incarnation and the heavenly city. No verse.
+- ՃԲ (line 687): the church, Ps 45:4 "the Most
+  High made holy his dwelling". God's dwellings
+  for each creature; the tabernacle of Moses (why
+  built: ten reasons; ten curtains; four colours
+  as elements and virtues; three parts); why God
+  is worshipped with bodily things too; why a
+  church is blessed (against the Manichaeans and
+  those who reject blessings), no water in the
+  chalice, re-consecration of a defiled church;
+  the hewn stone with six faces.
+- ՃԳ (line 858): the new door of a church, Ps
+  117:20 "this is the gate of the Lord". Ten
+  "doors" (justice, baptism, holy orders, faith
+  hope love, penance, fear of God, humility,
+  wisdom, Christ, the church door); the senses as
+  doors (six likenesses); why a door is blessed
+  and anointed in five places (the Passover
+  blood).
+- ՃԴ (line 949): the people of the church, Song
+  1:5 "I am black and beautiful". The church as
+  bride (six reasons); the verse read of Adam and
+  Eve (the sun that "looked askance" as Satan:
+  ten reasons; "my mother's sons" as the demons;
+  the vineyard not kept as Eden), of Israel, of
+  Christians and of the soul (the face's four
+  colours; the senses as vineyards).
+- ՃԵ (line 1095): Rev 12:1 "a woman clothed with
+  the sun". The woman as the Virgin, the church
+  (building, people, the saints in heaven) and
+  the earth; the moon as faith and baptism; five
+  wonders of birth from the font; three kinds of
+  "parents" in the church; the dragon, the souls
+  of the dead fought over (Michael and Moses'
+  body), the Antichrist's three and a half years;
+  the male child as the risen Christ.
+
 ## Notes on the text
 
 - The Digilib text has many misprints; repeated
@@ -995,3 +1088,39 @@ on prayer, then one on fasting.
   quotation that is never closed, and 768/770,
   1098/1099, 1134/1135, 1268/1271 close it on a
   later line; parentheses kept as in the Grabar.
+- Part 12 line 102 reads «Տուր բաժին եւ Բանց»
+  for «եօթանց» ("to seven", as in lines 117,
+  129, 158) and gives Eccl 11:2 as "the psalm";
+  translated «յոթին», "the psalm" kept.
+- Part 12 line 98 reads «հանդերձն Ադանիս»;
+  translated as Adam's garment of light.
+- Part 12 lines 154 and 333 open a quotation
+  that is never closed; 440/441, 473–475,
+  799/800 and 1241/1243 close theirs on a later
+  line;
+  parentheses kept as in the Grabar.
+- Part 12 line 183 (sermon ՂԷ) breaks off at
+  «եւ»; line 185 has the heading of ՂԸ, its verse
+  and reference on one line. Kept.
+- Part 12 line 295 says the boys who mocked
+  Elisha died "in Bethlehem" (Bethel in 2 Kings
+  2); kept.
+- Part 12 line 567: «աղքատ եւ օդեաց դասքն» is
+  translated "the ranks of the poor and of
+  orphans", and «երկրաւոր» (earthly) garment as
+  «երկնավոր», which the sense needs.
+- Part 12 repeats words or phrases at lines 383,
+  568, 629, 758, 813, 883, 975, 1030, 1035 and
+  1042; kept and translated as they stand.
+- Part 12 line 789 reads «երեք ազգ փրկութիւն»
+  where the list (foundation, blessing, vessels)
+  needs «սրբութիւն»; translated so. Lines 719
+  and 789 carry two sentences without a `։`.
+- Part 12 line 887 garbles Ps 111:1; translated
+  by the sense (blessed is the man who delights
+  in his commandments). Line 900 garbles Col 4:6;
+  translated as it stands.
+- Part 12 lines 1064–1065 go from «Մին» to
+  «Երրորդ» with no second; kept.
+- Part 12 line 1097 gives the reference as
+  «Յայտ. 123. 1» (for 12:1); kept.

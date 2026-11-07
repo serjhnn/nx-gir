@@ -141,7 +141,7 @@ How the files are made:
   have no text of their own.
 - Some paragraphs are very long (a whole sermon in the
   summer volume can be one paragraph), as on Digilib.
-- `3-amaran-hator/01.txt` to `11.txt` are cut
+- `3-amaran-hator/01.txt` to `12.txt` are cut
   further: one sentence per line (a sentence ends
   at `։`, as the reader counts them), with a blank
   line where a Digilib paragraph ended, to be read
@@ -150,15 +150,15 @@ How the files are made:
   after it (6 times in part 1, 5 in part 2, 7 in
   part 3, 6 in part 4, 9 in part 5, 4 in part
   6, 11 in part 7, none in parts 8 and 9, 1 in
-  part 10, none in part 11), the line break now
-  stands there.
+  part 10, none in part 11, 2 in part 12), the
+  line break now stands there.
 
 ## ashkharhabar/grigor-tatevatsi/3-amaran-hator/
 
-`01.txt` to `11.txt`: a translation into modern
+`01.txt` to `12.txt`: a translation into modern
 Eastern Armenian of the same files in
 `grabar/grigor-tatevatsi/3-amaran-hator/` (parts 1
-to 11 of 24 of Ամառան հատոր: the sermons on Psalm
+to 12 of 24 of Ամառան հատոր: the sermons on Psalm
 118:35 and on the Ten Commandments, Գլուխ Ա–Ե; on
 visions and dreams, on Deuteronomy 15:9, on the Holy
 Trinity and on the Lord's Prayer, Գլուխ Զ–ԺԱ; on
@@ -178,8 +178,11 @@ the evil day, affliction, chastisement and
 repentance, Գլուխ ՀԱ–ՀԵ; on repentance, remorse
 and confession, Գլուխ ՀԶ–Ձ; on prayer, the hours
 of prayer, grace at table, the voice in prayer,
-joy and sorrow, and fasting, Գլուխ ՁԱ–ՂԵ), made
-by Claude
+joy and sorrow, and fasting, Գլուխ ՁԱ–ՂԵ; on the
+poor and on almsgiving, Գլուխ ՂԶ–Ճ; on the
+consecration of a church, its door and its
+people, and on the woman of Revelation 12,
+Գլուխ ՃԱ–ՃԵ), made by Claude
 (Anthropic's AI model) on 2026-11-06 and
 2026-11-07 at the user's request. It is a machine translation, not a
 published or reviewed one: read it as a help to
