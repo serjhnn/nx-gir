@@ -230,6 +230,89 @@ of the book: "second volume" of Grigor's sermons
   of scales (soul and body); scales of love, of
   loan, of repayment.
 
+## Part 5 · ԳԼՈՒԽ ԼԱ-ԼԵ and ԼԶ-Խ (sermons 31–40)
+
+- ԼԱ (line 5): wrongs and false accusation, Eccl
+  4:1. Ten ways of wronging; "better the dead and
+  the unborn".
+- ԼԲ (line 103): the seven sacraments and baptism,
+  John 3:5. Why the rite was handed down by word
+  and uses bodily signs; why seven sacraments; the
+  godfather; ten reasons why women do not enter at
+  baptism; renouncing to the west, confessing to
+  the east; triple immersion as death and burial;
+  anointing, and why the Armenians anoint in a
+  hidden way; priests may confirm; no rebaptism.
+- ԼԳ (line 333): baptism, Zech 3:9. Birth from the
+  font and bodily birth (six likenesses, six
+  differences); three births (body, grace, glory);
+  faith, baptism and anointing and the Trinity;
+  warm water, myron, light, cross; confirmation on
+  the forehead; old and new Adam; circumcision of
+  the heart.
+- ԼԴ (line 505): communion, John 6:52. Names of the
+  sacrament; the liturgy explained (incense,
+  psalms, readings, alleluia, creed); three
+  unworthy classes sent out; confession.
+- ԼԵ (line 620): communion, continued. Three worthy
+  classes; washing of hands; kiss of peace; words
+  of God, angels and men, three languages; the two
+  blessings (institution, epiclesis); twelve
+  reasons for bread and wine; one loaf, against
+  the Franks; accidents and substance; against the
+  dyophysites; the saints remembered; elevation;
+  ten qualities of the host.
+- ԼԶ (line 776; group ԳԼՈՒԽ ԼԶ-Խ starts, "from
+  another"): the Liturgy, Matt 26:26. Union through
+  the five senses; why hidden under bread and
+  wine; four essentials (true priest, matter,
+  words, intention); five objections answered
+  with natural images (star and serpent-stone,
+  mercury and sulphur, petrifying waters; the sun
+  in a mirror; the widow of Zarephath; many places
+  at once; Isaac and Jacob for the accidents).
+- ԼԷ (line 905): ordination, Ps 131:16. Dionysius'
+  definition of hierarchy; order everywhere
+  (angels, heavens, elements, cities); likeness to
+  God: purify, illumine, perfect (deacon, priest,
+  bishop); the priest as angel, mediator,
+  watchman, salt, elder; the lazy and the active
+  priest.
+- ԼԸ (line 1052): the priesthood, Ps 109:4. The
+  angelic hierarchy; demons have no priesthood or
+  prophecy; old and new priesthood (tabernacle as
+  type); the nine ranks (doorkeeper, reader,
+  exorcist, candle-bearer, dpir, deacon, priest,
+  bishop, catholicos); the rite: tonsure, key,
+  kneeling, laying on of hands, Gospel on the
+  bishop's head, the kiss; only priests give the
+  right hand; a closing charge to priests.
+- ԼԹ (line 1274): monks, Luke 14:27. Dionysius'
+  three graces and the classes of the church (five
+  orders to be purified, the people, the monks as
+  «կամարար»); six meanings of «միայնակեաց»;
+  monozon and skemavor; what a monk may not do;
+  the rite: renouncing (loved ones, goods,
+  pleasures; will, evil thoughts, pride), tonsure
+  in five places, the habit (five garments, four
+  more for the skemavor, the Egyptian fathers);
+  priests and deacons who become monks only change
+  dress; communion at the end.
+- Խ (line 1360, "from another"): the orders, Lev
+  21:6. Order in the Trinity, angels, heavens (the
+  seven planets with Armenian and Arabic names),
+  elements, plants, animals, men; seven church
+  orders like seven planets. Part one: what Christ
+  wants of ministers: good birth, full age (25),
+  no blemish: the twelve bodily blemishes of Lev
+  21 read as twelve blemishes of the soul; which
+  bodily defects bar a priest; eunuchs (three
+  kinds, the Nicene canon). Part two: six
+  essentials of ordination (a bishop, the matter
+  handed over, the words for each of the seven
+  orders, a man, baptised, true intention); nine
+  seals; essentials vs accidents of a rite.
+
 ## Notes on the text
 
 - The Digilib text has many misprints; repeated
@@ -242,3 +325,9 @@ of the book: "second volume" of Grigor's sermons
   "a sermon from another": perhaps not by Grigor.
 - Some numbered lists skip or repeat a number
   (e.g. two "second"s); kept as in the text.
+- Part 5 line 1238 is a stray «Իսկ վերատեսակ։»
+  (a false start of the next line); kept as a line
+  of its own.
+- Part 5 line 1447 reads «կարեն գալ» ("can come")
+  where the sense needs «ոչ կարեն»; translated as
+  «չեն կարող գալ».

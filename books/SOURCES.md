@@ -141,29 +141,31 @@ How the files are made:
   have no text of their own.
 - Some paragraphs are very long (a whole sermon in the
   summer volume can be one paragraph), as on Digilib.
-- `3-amaran-hator/01.txt` to `04.txt` are cut
+- `3-amaran-hator/01.txt` to `05.txt` are cut
   further: one sentence per line (a sentence ends
   at `։`, as the reader counts them), with a blank
   line where a Digilib paragraph ended, to be read
   beside its translation in `ashkharhabar/`. The
   words are as on Digilib; where a `։` had no space
   after it (6 times in part 1, 5 in part 2, 7 in
-  part 3, 6 in part 4), the line break now stands
-  there.
+  part 3, 6 in part 4, 9 in part 5), the line
+  break now stands there.
 
 ## ashkharhabar/grigor-tatevatsi/3-amaran-hator/
 
-`01.txt` to `04.txt`: a translation into modern
+`01.txt` to `05.txt`: a translation into modern
 Eastern Armenian of the same files in
 `grabar/grigor-tatevatsi/3-amaran-hator/` (parts 1
-to 4 of 24 of Ամառան հատոր: the sermons on Psalm
+to 5 of 24 of Ամառան հատոր: the sermons on Psalm
 118:35 and on the Ten Commandments, Գլուխ Ա–Ե; on
 visions and dreams, on Deuteronomy 15:9, on the Holy
 Trinity and on the Lord's Prayer, Գլուխ Զ–ԺԱ; on
 faith, hope, love, virtue, prudence and wisdom,
 Գլուխ ԺԲ–Ի; on courage and work, sloth, sleep,
-marriage and justice, Գլուխ ԻԱ–Լ), made by Claude
-(Anthropic's AI model) on 2026-11-06 and
+marriage and justice, Գլուխ ԻԱ–Լ; on wrongs, on
+the sacraments of baptism, communion and
+ordination, and on monks, Գլուխ ԼԱ–Խ), made by
+Claude (Anthropic's AI model) on 2026-11-06 and
 2026-11-07 at the user's request. It is a machine
 translation, not a published or reviewed one: read
 it as a help to the Grabar, not in its place.
