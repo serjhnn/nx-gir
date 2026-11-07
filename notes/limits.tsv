@@ -1,0 +1,5 @@
+# Measured by scripts/check-limits.py --record:
+# sizes in bytes, build in seconds, empty when
+# not measured. See notes/limits.md.
+date	commit	books	text	part	file	git	site	build
+2026-11-07	8dfe23d	79	16490140	284820	6299837	17283102	62656004	65
