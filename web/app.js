@@ -1,6 +1,7 @@
 // nx-gir web: the bookshelf and the theme button.
 // Pages are #/ (top), #/f/<folder>, #/read/<book>,
-// #/timeline and #/stats; the data comes from
+// #/library, #/timeline and #/stats; the data
+// comes from
 // /api/.
 "use strict";
 
@@ -262,6 +263,9 @@ async function staticApi(path) {
   }
   if (route === "stats") {
     return json("data/stats.json");
+  }
+  if (route === "library") {
+    return json("data/library.json");
   }
   if (route === "book") {
     const name = q.get("name");
@@ -571,8 +575,13 @@ async function shelf(folder) {
   const lang = folder.split("/")[1];
   show(
     folder ? crumbs(folder, false) : null,
-    // at the top: what was read last, then the
-    // welcome
+    // at the top: the Library button, what was
+    // read last, then the welcome
+    folder ? null : h("p", { class: "lib-btn",
+      lang: "hy" },
+    h("a", { class: "icon-btn",
+      href: "#/library" },
+    icon(ICONS.book), "Գրադարան")),
     last && last.items.length
       ? recentCard(last.items) : null,
     folder ? null : intro(data.status, data.news),
@@ -702,6 +711,54 @@ async function recentPage() {
       : h("p", { class: "empty", lang: "hy" },
         "Դեռ ոչինչ չեք կարդացել։ ",
         h("a", { href: "#/" }, "Գրադարան")));
+}
+
+// -- library --
+
+// one book of #/library: its short name, how many
+// parts and how much is translated
+function libraryRow(b) {
+  const meta = h("span", { class: "meta" });
+  if (b.parts > 1) meta.append(b.parts + " մաս");
+  if (b.done) {
+    meta.append(h("span", { class: "done" },
+      b.done === b.parts ? "թարգմանված"
+        : "թարգմանված " + b.done + "/" + b.parts));
+  }
+  const a = h("a", { class: "row",
+    href: "#/read/" + enc(b.first) },
+  icon(ICONS.book, "ico"),
+  h("span", { class: "name" }, b.name),
+  meta);
+  // the full title, when the name is short
+  if (b.title !== b.name) a.title = b.title;
+  return a;
+}
+
+// #/library: the Grabar books, by author
+async function libraryPage() {
+  const data = await api("library");
+  document.title = "Գրադարան · nx-gir";
+  const groups = data.authors.map((a) => {
+    const list = h("ul", { class: "shelf" });
+    for (const b of a.books) {
+      list.append(h("li", {}, libraryRow(b)));
+    }
+    return h("section", { class: "author" },
+      h("h2", {}, a.name), list);
+  });
+  const n = data.authors.reduce(
+    (k, a) => k + a.books.length, 0);
+  show(
+    h("p", { class: "crumbs" },
+      h("a", { href: "#/" }, "← Home")),
+    h("div", { class: "library", lang: "hy" },
+      h("h1", {}, "Գրադարան"),
+      h("p", { class: "sub" },
+        "Գրաբար գրքեր · " + n),
+      groups.length ? groups
+        : h("p", { class: "empty" },
+          "Գրքեր դեռ չկան։")));
 }
 
 // -- timeline --
@@ -2172,6 +2229,8 @@ async function route() {
       await statsPage();
     } else if (hash === "recent") {
       await recentPage();
+    } else if (hash === "library") {
+      await libraryPage();
     } else if (hash.startsWith("f/")) {
       await shelf(decodeURIComponent(hash.slice(2)));
     } else {

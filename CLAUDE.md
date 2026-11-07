@@ -68,6 +68,10 @@
   same path under `ashkharhabar/` are read side by
   side in the web reader (`PARALLEL` in
   `nxgir_web.py`); keep their lines one for one
+- `books/LIBRARY.tsv`: the Library page
+  (`#/library`, `/api/library`): author names and
+  short book names for `books/grabar/` (content; a
+  test checks every path and author)
 - `notes/`: working notes, e.g. what each part of a
   book covers (`notes/3-amaran-hator.md`, added to
   with every translated part); not on the shelf and

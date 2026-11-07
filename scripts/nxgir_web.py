@@ -13,6 +13,7 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/timeline           the main steps
   GET  /api/recent?n=          the books read last
   GET  /api/stats              how close to the limits
+  GET  /api/library            the Grabar books
   POST /api/position           {name, pos, lines}
   POST /api/mark               {name, pos}
   POST /api/forget             {name}: off the list
@@ -72,6 +73,8 @@ from nxgir_state import State
 
 ROOT = Path(__file__).resolve().parent.parent
 WEB_DIR = ROOT / "web"
+# the Library page: authors and short book names
+LIBRARY = ROOT / "books" / "LIBRARY.tsv"
 HOST = "127.0.0.1"
 PORT = 8088
 LOCAL_HOSTS = {"127.0.0.1", "localhost", "[::1]"}
@@ -120,6 +123,7 @@ class App:
         state_path=None,
         notes=None,
         timeline=tl.TIMELINE,
+        library=LIBRARY,
     ):
         self.files = list(files)
         self.paths = {n: p for n, _, p in self.files}
@@ -129,6 +133,8 @@ class App:
         self.notes = notes
         # timeline.tsv, or None for no events
         self.timeline = timeline
+        # LIBRARY.tsv, or None for no names
+        self.library = library
 
     def events(self):
         """The events of the timeline, oldest first,
@@ -345,6 +351,81 @@ def status(app):
             b["done"] += 1
             b["first"] = b["first"] or name
     return list(books.values())
+
+
+def read_names(path):
+    """LIBRARY.tsv as {path: name}, in its order;
+    lines starting with # are comments."""
+    names = {}
+    if not path:
+        return names
+    with open(path, encoding="utf-8") as f:
+        for n, line in enumerate(f, 1):
+            line = line.rstrip("\n")
+            if not line.strip() or line[0] == "#":
+                continue
+            key, tab, name = line.partition("\t")
+            if not tab or not key or not name.strip():
+                raise ValueError(
+                    f"{path}:{n}: not path<TAB>name"
+                )
+            names[key.strip("/")] = name.strip()
+    return names
+
+
+def library(app):
+    """The Library page: the books in grabar/ by
+    author (the folder under grabar/). A book is a
+    folder of parts ("title · n/N") or a single
+    file; its name is the short one in LIBRARY.tsv,
+    or its title. "done" counts the parts with a
+    translation (PARALLEL)."""
+    top = PARALLEL[0] + "/"
+    names = read_names(app.library)
+    authors = {}
+    for name, _, path in app.files:
+        rest = name[len(top) :]
+        if not name.startswith(top) or "/" not in rest:
+            continue
+        who = rest.partition("/")[0]
+        line = first_line(path)
+        m = PART_RE.match(line)
+        key = rest.rpartition("/")[0] if m else rest
+        a = authors.setdefault(
+            who,
+            {
+                "name": names.get(who, who),
+                "folder": top + who,
+                "books": {},
+            },
+        )
+        title = m.group(1) if m else line
+        b = a["books"].setdefault(
+            key,
+            {
+                "name": names.get(key) or title or key,
+                "title": title or key,
+                "first": name,
+                "parts": 0,
+                "done": 0,
+            },
+        )
+        b["parts"] += 1
+        if app.parallel(name):
+            b["done"] += 1
+    order = list(names)
+
+    def place(who):
+        if who in names:
+            return (0, order.index(who), who)
+        return (1, 0, who)
+
+    out = []
+    for who in sorted(authors, key=place):
+        a = authors[who]
+        a["books"] = list(a["books"].values())
+        out.append(a)
+    return {"authors": out}
 
 
 def book_title(app, name):
@@ -688,6 +769,8 @@ def get(app, route, query):
         return recent(app, int(n))
     if route == "/api/stats":
         return stats(app)
+    if route == "/api/library":
+        return library(app)
     raise ApiError(404, f"no such page: {route}")
 
 

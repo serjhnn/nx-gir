@@ -679,3 +679,75 @@ def test_forget(app):
     assert len(web.recent(app)["items"]) == 1
     with pytest.raises(web.ApiError):
         web.post(app, "/api/forget", {"name": "x"})
+
+
+def test_library(tmp_path):
+    files = []
+
+    def add(name, first):
+        p = tmp_path / name
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(first + "\nտեքստ\n", encoding="utf-8")
+        files.append((name, 10, p))
+
+    d = "grabar/ann/1-book/"
+    add("grabar/bible/nt/1-mt.txt", "Աւետարան")
+    add(d + "01.txt", "Գիրք քարոզութեան · 1/2")
+    add(d + "02.txt", "Գիրք քարոզութեան · 2/2")
+    add("ashkharhabar/ann/1-book/02.txt", "Գիրք · 2/2")
+    add("grabar/ann/2-poem.txt", "Տաղ")
+    # not in an author's folder, or not Grabar
+    add("grabar/john.txt", "Ի սկզբանէ")
+    add("ashkharhabar/ann/x.txt", "Թարգմանություն")
+    names = tmp_path / "LIBRARY.tsv"
+    names.write_text(
+        "# comment\n\nann\tԱննա\n"
+        "ann/1-book/\tՔարոզ\nbible\tԱստվածաշունչ\n",
+        encoding="utf-8",
+    )
+    app = App(files, tmp_path / "s.json", library=names)
+    got = web.get(app, "/api/library", {})["authors"]
+    # authors in the order of LIBRARY.tsv
+    assert [a["name"] for a in got] == [
+        "Աննա",
+        "Աստվածաշունչ",
+    ]
+    assert got[0]["books"] == [
+        {
+            "name": "Քարոզ",
+            "title": "Գիրք քարոզութեան",
+            "first": d + "01.txt",
+            "parts": 2,
+            "done": 1,
+        },
+        # no short name: its first line
+        {
+            "name": "Տաղ",
+            "title": "Տաղ",
+            "first": "grabar/ann/2-poem.txt",
+            "parts": 1,
+            "done": 0,
+        },
+    ]
+    assert got[1]["books"][0]["name"] == "Աւետարան"
+    # an author not listed: the folder's name, last
+    app = App(files, tmp_path / "s.json", library=None)
+    got = web.library(app)["authors"]
+    assert [a["name"] for a in got] == ["ann", "bible"]
+    names.write_text("ann Աննա\n", encoding="utf-8")
+    app = App(files, tmp_path / "s.json", library=names)
+    with pytest.raises(ValueError):
+        web.library(app)
+
+
+def test_library_names_are_on_the_shelf():
+    """Every path in books/LIBRARY.tsv is a folder or
+    file in books/grabar/, and every author there has
+    a name."""
+    grabar = web.ROOT / "books" / "grabar"
+    names = web.read_names(web.LIBRARY)
+    for key in names:
+        assert (grabar / key).exists(), key
+    for d in grabar.iterdir():
+        if d.is_dir():
+            assert d.name in names, d.name

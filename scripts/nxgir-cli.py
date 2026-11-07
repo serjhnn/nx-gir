@@ -33,7 +33,11 @@ SHELVES = (
     (NOTES_DIR, "interpretations/"),
 )
 # notes about a shelf, not books: left off the list
-NOT_BOOKS = {"SOURCES.md", "README.md"}
+NOT_BOOKS = {
+    "SOURCES.md",
+    "README.md",
+    "LIBRARY.tsv",
+}
 PROMPT = "nxgir> "
 
 

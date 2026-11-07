@@ -16,6 +16,7 @@ the same functions (nxgir_web.py):
     data/timeline.json              /api/timeline
     data/titles.json                each book's title,
         for /api/recent (the rest is in the browser)
+    data/library.json               /api/library
     data/stats.json                 /api/stats, with
         this site's size and build time
 
@@ -190,6 +191,7 @@ def build(out, files, timeline=web.tl.TIMELINE):
         write_json(
             data / "timeline.json", web.timeline(app)
         )
+        write_json(data / "library.json", web.library(app))
         # for the list of readings, which only has
         # the names (recentHere() in app.js)
         write_json(

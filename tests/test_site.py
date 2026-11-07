@@ -68,6 +68,11 @@ def test_build(tmp_path, files):
     assert titles == {
         "grabar/john.txt": "Ի սկզբանէ էր Բանն, ած։"
     }
+    # the Library page: john.txt has no author
+    lib = json.loads(
+        (data / "library.json").read_text("utf-8")
+    )
+    assert lib == {"authors": []}
     tl = json.loads(
         (data / "timeline.json").read_text("utf-8")
     )
