@@ -254,6 +254,11 @@ async function staticApi(path) {
   throw new Error("Not in the published copy");
 }
 
+// the top page's title, as in index.html: what
+// search results show
+const TOP_TITLE =
+  "nx-gir · Գրաբար · Grabar books, word by word";
+
 function enc(name) {
   return name.split("/").map(encodeURIComponent)
     .join("/");
@@ -520,7 +525,7 @@ async function shelf(folder) {
   const title = folder
     ? folder.split("/").pop() : "Library";
   document.title = folder
-    ? title + " · nx-gir" : "nx-gir";
+    ? title + " · nx-gir" : TOP_TITLE;
   const list = h("ul", { class: "shelf" });
   for (const item of data.items) {
     list.append(h("li", {}, item.folder

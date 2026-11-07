@@ -151,3 +151,30 @@ def test_pages_count_visits(tmp_path):
     bs.pages(off, counter="")
     js = (off / "static.js").read_text("utf-8")
     assert "NXGIR_COUNT" not in js
+
+
+def test_searchable(tmp_path, files):
+    # search engines see no #/ pages: each book is a
+    # plain page too, in the sitemap
+    out = tmp_path / "site"
+    bs.build(out, files)
+    page = out / "read/grabar/john.html"
+    html = page.read_text("utf-8")
+    assert "<p>Ի սկզբանէ էր Բանն, ած։</p>" not in html
+    assert "<h1>Ի սկզբանէ էր Բանն, ած։</h1>" in html
+    assert 'href="./#/read/grabar/john.txt"' in html
+    canon = bs.SITE + "/read/grabar/john.html"
+    assert f'rel="canonical" href="{canon}"' in html
+    assert "style.css?v=" in html
+    sm = (out / "sitemap.xml").read_text("utf-8")
+    assert f"<loc>{canon}</loc>" in sm
+    robots = (out / "robots.txt").read_text("utf-8")
+    assert f"Sitemap: {bs.SITE}/sitemap.xml" in robots
+    index = (out / "index.html").read_text("utf-8")
+    assert '<a href="read/grabar/john.html">' in index
+
+
+def test_describe():
+    lines = ["Title", "", "one two", "three four"]
+    assert bs.describe(lines) == "one two three four"
+    assert bs.describe(lines, 10) == "one two…"

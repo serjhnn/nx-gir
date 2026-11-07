@@ -391,12 +391,21 @@ added up per browser and book, and passing 1, 5,
 so on, once each. The local `nxgir web` counts
 nothing.
 
+Search engines do not see the `#/` pages of the
+reader, so the copy also has each book as a plain
+page with its text, `read/<book>.html`, linking to
+the reader, and a `sitemap.xml` that `robots.txt`
+names. To get it into Google, add `nxgir.am` once in
+[Google Search Console](https://search.google.com/search-console)
+(a domain property, proved with a DNS TXT record)
+and submit `https://nxgir.am/sitemap.xml` there.
+
 `.github/workflows/pages.yml` builds and publishes it
 on every push to `main`. Turn it on once: in the
 repository's **Settings → Pages**, set **Source** to
 **GitHub Actions**. The address nxgir.am is set
 there too, under **Custom domain**. To build it here and look at it
-(about a minute, 50 MB in `site/`):
+(about a minute, 80 MB in `site/`):
 
 ```sh
 scripts/build-site.py

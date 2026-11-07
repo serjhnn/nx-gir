@@ -17,6 +17,13 @@ the same functions (nxgir_web.py):
     data/stats.json                 /api/stats, with
         this site's size and build time
 
+and, for search engines (searchable()), which do
+not see the #/ pages of app.js:
+
+    read/<book>.html   each book as a plain page,
+        its text in the HTML, linked to the reader
+    sitemap.xml, robots.txt   where they are
+
 The test texts of data/ and the user's own texts in
 interpretations/ are left out.
 
@@ -30,6 +37,7 @@ to main and publishes OUT.
 """
 
 import hashlib
+import html as htm
 import importlib.util
 import json
 import shutil
@@ -37,6 +45,7 @@ import sys
 import tempfile
 import time
 from pathlib import Path
+from urllib.parse import quote
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
@@ -64,6 +73,13 @@ VERSIONED = (
 # CODE.goatcounter.com, where the published copy
 # counts its visits; "" counts nothing
 GOATCOUNTER = "nxgir"
+# the published address (the custom domain set in
+# Settings, Pages), for sitemap.xml and canonical
+# links
+SITE = "https://nxgir.am"
+# what search results show under a book's title:
+# the start of its text, this long at most
+DESCRIBE = 155
 
 
 def bucket(w):
@@ -176,6 +192,7 @@ def build(out, files, timeline=web.tl.TIMELINE):
             path = data / "shelf" / f / "index.json"
             write_json(path, web.shelf(app, f))
         words = set()
+        searchable(out, app, files)
         for name, _, _ in files:
             b = web.book(app, name)
             write_json(data / "book" / f"{name}.json", b)
@@ -200,6 +217,137 @@ def build(out, files, timeline=web.tl.TIMELINE):
         stats(out, words, time.monotonic() - start),
     )
     return len(files), len(dirs), len(words)
+
+
+def page_path(name):
+    """Where a book's plain page is: read/<book>.html,
+    without the .txt or .md."""
+    return "read/" + name.rpartition(".")[0] + ".html"
+
+
+def url(path):
+    """The full address of a path of the site, each
+    part %-escaped as in enc() of app.js."""
+    return f"{SITE}/{quote(path)}"
+
+
+def describe(lines, n=DESCRIBE):
+    """The start of a text, after its title, cut at a
+    word: for <meta name="description">."""
+    text = " ".join(
+        x.strip() for x in lines[1:] if x.strip()
+    )
+    if len(text) <= n:
+        return text
+    return text[:n].rpartition(" ")[0] + "…"
+
+
+PAGE = """<!doctype html>
+<html lang="hy">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+  content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<base href="/">
+<title>{title} · նղ֊գիր</title>
+<meta name="description" content="{desc}">
+<link rel="canonical" href="{canon}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{desc}">
+<meta property="og:url" content="{canon}">
+<link rel="icon" href="icon.svg">
+<script src="theme.js"></script>
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="bar">
+  <a class="brand" href="./">նղ֊գիր</a>
+</header>
+<main class="plain">
+<p><a href="{reader}">Read in the reader,
+with word lookup</a></p>
+<h1>{title}</h1>
+{text}
+</main>
+</body>
+</html>
+"""
+
+
+def searchable(out, app, files):
+    """What search engines need to find the books:
+    app.js shows everything at #/ addresses, and to
+    a search engine those are all the one top page.
+    So each book is also a plain page with its text
+    (read/<book>.html), listed in sitemap.xml, which
+    robots.txt names, and linked from index.html for
+    browsers without JavaScript."""
+    esc = htm.escape
+    links = []
+    for name, _, _ in files:
+        lines = web.book_text(app, name).splitlines()
+        if not lines:
+            continue
+        path = page_path(name)
+        title = lines[0].strip() or name
+        text = "\n".join(
+            f"<p>{esc(x.strip())}</p>"
+            for x in lines[1:]
+            if x.strip()
+        )
+        reader = "./#/read/" + "/".join(
+            quote(x, safe="") for x in name.split("/")
+        )
+        page = PAGE.format(
+            title=esc(title),
+            desc=esc(describe(lines)),
+            canon=esc(url(path)),
+            reader=esc(reader),
+            text=text,
+        )
+        dest = out / path
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(versioned(page, out), "utf-8")
+        links.append((path, title))
+    urls = [SITE + "/"] + [url(p) for p, _ in links]
+    (out / "sitemap.xml").write_text(
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/'
+        'schemas/sitemap/0.9">\n'
+        + "".join(
+            f"<url><loc>{esc(u)}</loc></url>\n"
+            for u in urls
+        )
+        + "</urlset>\n",
+        "utf-8",
+    )
+    (out / "robots.txt").write_text(
+        f"User-agent: *\nAllow: /\n\n"
+        f"Sitemap: {SITE}/sitemap.xml\n",
+        "utf-8",
+    )
+    index = out / "index.html"
+    html = index.read_text("utf-8")
+    tag = '<main id="main" tabindex="-1"></main>'
+    if tag not in html:
+        raise SystemExit("index.html: no main")
+    nav = "".join(
+        f'<li><a href="{esc(p)}">{esc(t)}</a></li>\n'
+        for p, t in links
+    )
+    html = html.replace(
+        tag,
+        tag
+        + "\n<noscript><ul>\n"
+        + nav
+        + "</ul></noscript>",
+    )
+    canon = f'<link rel="canonical" href="{SITE}/">\n'
+    html = html.replace("</head>", canon + "</head>")
+    index.write_text(html, "utf-8")
 
 
 def stats(out, words, took, root=ROOT):

@@ -115,7 +115,9 @@
   web reader for GitHub Pages (`site/`, published by
   `.github/workflows/pages.yml`): the answers of the
   API as files, read by `app.js` when `static.js`
-  sets `NXGIR_STATIC`; tested in
+  sets `NXGIR_STATIC`; for search engines, each
+  book also as plain HTML (`read/<book>.html`),
+  `sitemap.xml` and `robots.txt`; tested in
   `tests/test_site.py`. `bucket()` and `BUCKETS` must
   match `app.js` (a test checks it)
 - `scripts/render-logo.py`, `scripts/render-screens.py`,
