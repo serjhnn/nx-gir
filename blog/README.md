@@ -5,7 +5,7 @@ read by `scripts/nxgir_blog.py`. Content, not code.
 
 - One file per post: `YYYY-MM-DD-slug.md`, the date
   it is published and a short name in Latin letters
-  (`2026-10-07-welcome.md`); the slug is its address,
+  (`2026-11-07-welcome.md`); the slug is its address,
   `#/blog/welcome`.
 - First line: `# Title`. Then paragraphs, split by
   empty lines; `## ` starts a subheading. No other

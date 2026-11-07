@@ -75,5 +75,5 @@ def test_the_blog():
     # blog/ reads, and opens with the welcome
     posts = bl.read()
     assert posts[-1]["slug"] == "welcome"
-    assert posts[-1]["date"] == "2026-10-07"
+    assert posts[-1]["date"] == "2026-11-07"
     json.dumps(posts)
