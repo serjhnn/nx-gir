@@ -24,7 +24,10 @@ ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / "web"
 OUT = WEB / "og-image.png"
 
-# the light theme of style.css
+# the light theme of style.css. LinkedIn crops
+# the sides (a Featured link shows about the
+# middle 960px), so all of it is centered and
+# kept in the middle 840px
 CARD = """<!doctype html>
 <html lang="hy">
 <head>
@@ -37,8 +40,10 @@ html, body {{ width: 1200px; height: 630px; }}
 body {{
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  padding: 0 96px;
+  padding: 0 180px;
+  text-align: center;
   background: #faf9f5;
   color: #141413;
   font-family: system-ui, sans-serif;
@@ -47,28 +52,29 @@ body {{
 .top {{
   display: flex;
   align-items: center;
-  gap: 32px;
+  justify-content: center;
+  gap: 28px;
 }}
 svg {{
-  width: 132px;
-  height: 143px;
+  width: 116px;
+  height: 126px;
   fill: none;
   stroke: #d97757;
   stroke-linecap: round;
   stroke-linejoin: round;
 }}
 h1 {{
-  font: 400 112px "nx Arian Grqi", serif;
+  font: 400 100px "nx Arian Grqi", serif;
   line-height: 1.1;
 }}
 h2 {{
-  margin-top: 36px;
-  font-size: 52px;
+  margin-top: 32px;
+  font-size: 50px;
   font-weight: 600;
 }}
 p {{
   margin-top: 20px;
-  font-size: 32px;
+  font-size: 30px;
   color: #6b6a65;
   line-height: 1.35;
 }}
