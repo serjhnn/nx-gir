@@ -1212,6 +1212,7 @@ const R = {
   refs: [], // indexes of words with its key
   panel: null,
   tools: null,
+  prog: null, // the bar of how far in the reader is
   title: "", // of the book open
   head: "", // its first line
   saved: "", // the position last saved
@@ -1504,6 +1505,7 @@ function decorate() {
   const dir = (R.name || R.opening).split("/")
     .slice(0, -1).join("/");
   R.tools.replaceChildren(...[
+    R.prog,
     // the site's mark, once the top bar has
     // scrolled away (see stick())
     h("a", { class: "icon-btn home", href: "#/",
@@ -1970,8 +1972,28 @@ function stick() {
     R.tools.getBoundingClientRect().top < 1);
 }
 
+// how much of the text has been scrolled past,
+// in the bar above the reader's buttons: 100%
+// once its end is on the screen
+function progress() {
+  if (!R.prog || !R.text?.isConnected) return;
+  const r = R.text.getBoundingClientRect();
+  const seen = window.innerHeight - r.top;
+  const f = r.height > 0
+    ? Math.min(1, Math.max(0, seen / r.height)) : 1;
+  const pct = Math.round(f * 100);
+  R.prog.firstChild.firstChild.style.width =
+    pct + "%";
+  R.prog.lastChild.textContent = pct + "%";
+  R.prog.setAttribute("aria-valuenow", pct);
+}
+
+window.addEventListener("resize", progress,
+  { passive: true });
+
 window.addEventListener("scroll", () => {
   stick();
+  progress();
   if (!R.name) return;
   clearTimeout(R.timer);
   // the published copy only writes to this
@@ -2154,6 +2176,11 @@ async function book(name) {
     "aria-label": "Word", "aria-live": "polite" });
   R.panel.hidden = true;
   R.tools = h("div", { class: "tools" });
+  R.prog = h("div", { class: "readbar",
+    role: "progressbar", "aria-label": "Read",
+    "aria-valuemin": "0", "aria-valuemax": "100" },
+  h("span", { class: "track" }, h("span")),
+  h("span", { class: "pct" }, "0%"));
   document.body.classList.add("reading");
   show(crumbs(name, false), h("h1", {}, title),
     h("p", { class: "sub" },
@@ -2169,6 +2196,7 @@ async function book(name) {
     window.scrollTo(0, top - bar() - 16);
   }
   stick();
+  progress();
   // from now on scrolling is saved
   R.name = name;
   R.title = title;

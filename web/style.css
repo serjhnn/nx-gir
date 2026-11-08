@@ -1136,6 +1136,39 @@ body.reading .bar {
   border-bottom: 1px solid var(--rule);
 }
 
+/* how much of the book is scrolled past, above
+   the reader's buttons */
+.tools .readbar {
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.readbar .track {
+  flex: 1;
+  height: 4px;
+  overflow: hidden;
+  background: var(--surface);
+  border-radius: 999px;
+}
+
+.readbar .track span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+}
+
+.readbar .pct {
+  min-width: 3.2em;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;
