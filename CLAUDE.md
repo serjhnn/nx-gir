@@ -29,7 +29,8 @@
 - **նխ՟գիր** (or նխ֊գիր): the short form, as a
   scribe writes it (`նխ` = `նախ` in
   `grabar/abbreviations.tsv`); only where the
-  name is explained, beside Նախագիր; never
+  name is explained, beside Նախագիր, and not on
+  the web pages (the README explains it); never
   inflected.
 - **nx-gir** / **nxgir**: English text, code,
   commands, file names, nxgir.am.

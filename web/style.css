@@ -920,12 +920,6 @@ h1 {
 .about p {
   line-height: 1.6;
 }
-/* how the name is read, under the heading */
-.about .name {
-  margin-top: -0.3rem;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
 
 .error {
   padding: 2rem 0;
