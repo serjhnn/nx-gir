@@ -6,8 +6,10 @@
 
 **A terminal book reader built for Grabar (Classical Armenian) texts.**
 
-nx-gir (from Armenian *գիր*, "letter, script") is a book reader that runs in the
-terminal. Its main goal is to make old Armenian texts easier to read: Grabar
+nx-gir, in Armenian **Նախագիր**, is a book reader that runs in the terminal.
+The name is written the way a scribe would write it: *նխ՟* is the manuscript
+abbreviation of *նախ*, "first", and *գիր* is "letter, script"; read in full,
+*նխ՟գիր* is *Նախագիր*. Its main goal is to make old Armenian texts easier to read: Grabar
 books, early printed editions, and scanned manuscripts. It also turns scanned
 PDFs and images into plain text, so a page photo can be read like any other book.
 

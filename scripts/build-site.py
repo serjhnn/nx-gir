@@ -285,7 +285,7 @@ PAGE = """<!doctype html>
   content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <base href="/">
-<title>{title} · նղ֊գիր</title>
+<title>{title} · Նախագիր</title>
 <meta name="description" content="{desc}">
 <link rel="canonical" href="{canon}">
 {alt}<meta property="og:type" content="article">
@@ -299,7 +299,7 @@ PAGE = """<!doctype html>
 </head>
 <body>
 <header class="bar">
-  <a class="brand" href="./">նղ֊գիր</a>
+  <a class="brand" href="./" lang="hy">Նախագիր</a>
 </header>
 <main class="plain">
 <p><a href="{reader}">{open}</a></p>
@@ -314,7 +314,7 @@ PAGE = """<!doctype html>
 # the link at the top of a plain page
 OPEN_BOOK = "Read in the reader,\nwith word lookup"
 OPEN_POST = {
-    "hy": "Բացել նղ֊գիրում",
+    "hy": "Բացել Նախագրում",
     "en": "Open in nx-gir",
     "ru": "Открыть в nx-gir",
 }

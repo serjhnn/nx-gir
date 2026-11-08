@@ -20,6 +20,22 @@
   `interpretations/` are content, not code, and are
   exempt.
 
+## The name
+
+- **Նախագիր**: the Armenian name in all text
+  people read (headings, titles, the blog, the
+  welcome); inflected as usual (Նախագրի,
+  Նախագրից, Նախագրում).
+- **նխ՟գիր** (or նխ֊գիր): the short form, as a
+  scribe writes it (`նխ` = `նախ` in
+  `grabar/abbreviations.tsv`); only where the
+  name is explained, beside Նախագիր; never
+  inflected.
+- **nx-gir** / **nxgir**: English text, code,
+  commands, file names, nxgir.am.
+- The logo is art and stays as drawn (`նղ`);
+  don't change it to match.
+
 ## Layout
 
 - `scripts/nxgir-cli.py`: commands and the `nxgir>` shell

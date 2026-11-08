@@ -931,7 +931,7 @@ async function timelinePage() {
 // nxgir_blog.py, with the page's own words
 const BLOG = {
   hy: { name: "Հայերեն", title: "Բլոգ",
-    sub: "Նորություններ և նշումներ նղ֊գիրից",
+    sub: "Նորություններ և նշումներ Նախագրից",
     home: "← Գլխավոր", none: "Գրառումներ դեռ չկան։" },
   en: { name: "English", title: "Blog",
     sub: "News and notes from nx-gir",
