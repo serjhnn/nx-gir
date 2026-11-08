@@ -153,6 +153,10 @@
   `scripts/render-web.py`: regenerate the README
   images in `docs/` after changing the logo, the
   screens or the web pages
+- `scripts/render-og.py`: regenerates
+  `web/og-image.png`, the link preview image
+  (`og:image` in `web/index.html`, for LinkedIn
+  and others) after changing the logo or colors
 - Linux and Termux only, no Windows support for now.
 
 ## Git
