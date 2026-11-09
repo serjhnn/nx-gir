@@ -273,8 +273,12 @@ def sentence_starts(lay):
 # that starts with Գլուխ and its number; a heading
 # not yet cut into sentences ends with its number
 GROUP_RE = re.compile(r"ԳԼՈՒԽ\s+\S")
-NUMBER_RE = re.compile(r"\(Գլուխ\.?\s*([^\s.)]+)\)$")
+NUMBER_RE = re.compile(r"\(Գլուխ\.?\s*([^\s.)]+)\.?\s*\)$")
 CHAPTER_RE = re.compile(r"Գլուխ\.?\s+([^\s.]+)\.?\s*(.*)")
+# a verse at the end: Սաղ. 131. 9. or 1 Թագ. 2. 7։
+REF_RE = re.compile(
+    r"(\d\s+)?\S+\.?\s+\d+\s*[.։]\s*\d+[\d\s,-]*[.։]?\s*$"
+)
 TITLE_MAX = 120
 
 
@@ -309,12 +313,14 @@ def contents(lines):
             continue
         m = NUMBER_RE.search(t)
         if m:
-            # the number ends the heading, or stands
-            # under it: then the heading starts after
-            # the empty line above
+            # a heading not yet cut into sentences is
+            # one line that ends with the number; else
+            # only the verse is before the number, and
+            # the heading starts after the empty line
+            # above
             top = i
             title = t[: m.start()]
-            if not title.strip():
+            if not REF_RE.sub("", title).strip():
                 while top and lines[top - 1].strip():
                     top -= 1
                 if top == i:
