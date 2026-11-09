@@ -22,7 +22,7 @@ closing prayer with the doxology.
 
 ## How to do the next part
 
-Parts 1–12 are done. To do part N (13 next):
+Parts 1–13 are done. To do part N (14 next):
 
 1. Split the Grabar into sentences in place (the
    file from Digilib has long paragraphs):
@@ -980,6 +980,94 @@ people).
   body), the Antichrist's three and a half years;
   the male child as the risen Christ.
 
+## Part 13 · ԳԼՈՒԽ ՃԶ-ՃԺ and ՃԺԱ-ՃԺԵ (sermons 106–115)
+
+Two chapter groups, 1139 lines: five sermons on
+the woman of Revelation 17, on virgins and on
+Saint Gregory the Illuminator, then five on
+rulers, on the rich and the poor, and on the
+demons.
+
+- ՃԶ (line 5): Rev 17:3 "a woman sitting on a
+  scarlet beast". The beast as Satan, its seven
+  heads the seven deadly sins, its ten horns the
+  broken commandments; the woman read as the
+  harlot (against adorned women in church; the
+  three unclean spirits like frogs, five
+  likenesses), as the city, as the heretics (six
+  kinds of fornication and of virginity; eight
+  causes of heresy), as this bodily life and as
+  "new Rome"; the ten kings in three lists; the
+  Antichrist.
+- ՃԷ (line 156): Prov 31:29 "many daughters have
+  done worthily". The six kinds of virginity
+  again (the tongue: measure, wisdom and order in
+  speech); ten reasons why the soul is the bride
+  of Christ; the Armenian virgin saints
+  (Hripsime, Gayane, Sandukht); true and false
+  beauty; the godly wife; husband and wife on one
+  road (four kinds of couples); the faithful
+  servant.
+- ՃԸ (line 309): John 3:6 "that which is born of
+  the flesh is flesh". Bodily and spiritual
+  offspring compared (ten points); ten miseries
+  of marriage (widowhood, death in childbirth);
+  the greatness of virginity (incorruption, the
+  Father, the Virgin, the angels).
+- ՃԹ (line 387, no verse): five gains of
+  virginity: it leads back to the first life of
+  paradise (ten steps of the fall, climbed back in
+  reverse), is like the resurrection, is the art
+  of the divine life (the lost coin), purity of
+  heart (Elijah and John the Baptist), freedom
+  from cares; three kinds of virginity; short
+  rules for virgins, widows and the ears.
+- ՃԺ (line 526): Gregory the Illuminator, Ps 87:7
+  "they laid me in the lowest pit". Gregory as a
+  new Adam (eight contrasts, all on the serpent);
+  four questions: why the pit (ten reasons), why
+  serpents (eight), why Trdat became a boar (ten),
+  why the name Grigor (ten: the bird that called
+  "gurgur", the six letters, "watchful"); a
+  closing prayer to Gregory for the Armenians in
+  servitude.
+- ՃԺԱ (line 641, group ԳԼՈՒԽ ՃԺԱ-ՃԺԵ starts at
+  639): rulers, Prov 11:14 "where there is no
+  guidance, they fall like leaves". The ruler as
+  the reason, head, eye, tongue and heart of the
+  land, spiritual and bodily rule; the Armenians
+  without princes; counsel (the Roman senate,
+  Saul and David) and just judgement (why the
+  Ishmaelites' rule grows); four kinds of wisdom
+  in war.
+- ՃԺԲ (line 753): Luke 16:19, the rich man.
+  God's greatness and man's (seven differences);
+  ten reasons why wealth is good; what spoils it
+  (unjust gain, greed, waste) and what spoils
+  poverty; four gifts like a sword (wisdom,
+  beauty, power, wealth); four reasons God gives
+  wealth and four he gives poverty.
+- ՃԺԳ (line 843): 1 Sam 2:7 "the Lord makes poor
+  and makes rich". Good wealth (three ways);
+  four reasons God gives it; ten gains of wealth
+  and ten miseries of poverty, all from Proverbs
+  and Ecclesiastes; ten spiritual gains of
+  poverty.
+- ՃԺԴ (line 926): Prov 30:7–8 "remove far from me
+  vanity and lies". God's grace and the demons'
+  deceit; a thousand at the left and ten
+  thousand at the right (Ps 90:7): the demons'
+  war from both sides; war in three places (this
+  life, the stations after death, the judgement:
+  Egypt, the desert and Canaan); what "vain" and
+  "false" mean; right and left glory.
+- ՃԺԵ (line 1028): Prov 30:8 "give me neither
+  poverty nor riches". Good, evil and middle
+  wealth and poverty; the rich man's grave; good
+  and bad bodily wealth and poverty; food and
+  clothing as the measure; God keeps the
+  Armenians neither rich nor very poor.
+
 ## Notes on the text
 
 - The Digilib text has many misprints; repeated
@@ -1124,3 +1212,44 @@ people).
   «Երրորդ» with no second; kept.
 - Part 12 line 1097 gives the reference as
   «Յայտ. 123. 1» (for 12:1); kept.
+- Part 13 line 85 calls the seven-headed beast
+  "eight-headed" to match eight causes of heresy;
+  line 54 has «մայր կռապաշտութեան» where line 10
+  has «պոռնկութեան»; both kept.
+- Part 13 lines 98 and 122 end in a `)` with no
+  opening one (98 a stray bit of the verse);
+  kept. Lines 250, 261 and 294 start with a small
+  letter (a sentence cut by a `։`); kept.
+- Part 13 line 116 reads «Որպէս մերկն է
+  հրեշտակն» for «մեկնէ» ("as the angel
+  explains"); translated so. Line 150 reads «ի
+  տասն պատճառի» where "divided into ten" is
+  meant; translated so.
+- Part 13 line 166 repeats a phrase; line 934 is
+  a broken repeat of line 933; line 1130 repeats
+  «առաքեալն չափ եւ սահման դնէ մեզ». Kept and
+  translated as they stand.
+- Part 13 line 237 garbles Ps 44:14 («ի վերջ
+  աւորս յոսկէ հուռս»); translated by the sense
+  (inside, in gold fringes). Line 374 «առաքիաննայ»
+  is translated as "is present with" (Gregory of
+  Nyssa on virginity).
+- Part 13 line 506 quotes 1 Tim 5:6 as «Գիրք
+  այրին»; translated «Փափկասուն այրին», as the
+  verse reads.
+- Part 13 line 532 («զսուրէն ատեաց եւ խոտեաց
+  զԱնդրանիկն») is unclear; translated as it
+  stands, the two words taken as names.
+- Part 13 line 615: Gregory is taken «ի կեսարի
+  Աստուծոյ»; translated "God's Caesarea". The
+  bird's names «գուրգուր» and «դռուն» are kept.
+- Part 13 line 700 has "fifty men" (Ծ) in the
+  Roman senate where 1 Macc 8:15 has 320; kept.
+- Part 13 line 724 «Նա հաղ» and «ասախ» and
+  «շարղ դատաստանի» (the Ishmaelites' laws) are
+  translated by the sense (no wrong, order, just
+  judgement). Line 730 repeats a clause; kept.
+- Part 13 line 1030 gives the reference as
+  «Առակ. 3ծ. 8» (Ծ for the zero); written as 30.
+- Part 13 line 1016 announces three glories and
+  lists two (the second has two kinds); kept.
