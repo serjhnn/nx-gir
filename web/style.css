@@ -199,8 +199,8 @@ main {
 .brand {
   display: flex;
   align-items: baseline;
-  /* the mark is նղ: ֊գիր follows it as one word */
-  gap: 0.15rem;
+  /* the logo, then the name beside it */
+  gap: 0.5rem;
   text-decoration: none;
 }
 
