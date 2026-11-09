@@ -215,7 +215,9 @@ main {
 }
 
 .brand-hy {
-  font: 600 1.25rem var(--serif);
+  /* the bundled Noto, not the phone's own font */
+  font: 700 1.25rem "nx Noto Serif Armenian",
+    var(--serif);
 }
 
 .icon-btn {
