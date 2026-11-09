@@ -125,6 +125,16 @@
   files it writes are `.md` texts in
   `interpretations/` (edited or new, saved exactly as
   given, never over a file changed on disk)
+- The reader's Contents (☰ in the web reader): the
+  sermons and chapters of the open part, found by
+  `contents()` in `nxgir_reader.py` from the text
+  itself: `ԳԼՈՒԽ ...` group lines, a sermon's
+  `(Գլուխ. X)` number (its heading is the paragraph
+  above, or the same line when only the verse is
+  before it) and `Գլուխ X` lines. Nothing to add by
+  hand: keep these lines as they are in every book
+  and translation, and check the list after a new
+  part (step 3 in `notes/3-amaran-hator.md`)
 - `web/`: the web pages (plain HTML, CSS, JS, no
   build step, nothing loaded from other sites); the
   60-character limit applies here too. `wordKey()`

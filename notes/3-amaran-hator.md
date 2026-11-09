@@ -71,7 +71,26 @@ Parts 1–13 are done. To do part N (14 next):
 3. Check: same line count as the Grabar, blank
    lines at the same places, no `։` inside a line
    (except where the Grabar has it), no Latin
-   letters, no `եւ`.
+   letters, no `եւ`. The Contents (☰ in the web
+   reader) must list every sermon of the part, in
+   the Grabar and the translation alike, each with
+   its heading (not its verse); it finds them by
+   the `(Գլուխ X)` lines, so keep those and the
+   group lines as they are:
+
+   ```sh
+   python3 -c "
+   import sys; sys.path.insert(0, 'scripts')
+   from nxgir_reader import contents
+   for s in ('grabar', 'ashkharhabar'):
+       p = f'books/{s}/grigor-tatevatsi/3-amaran-hator/NN.txt'
+       for c in contents(open(p).read().splitlines()):
+           print(c['line'] + 1, c['n'], c['title'][:50])
+   "
+   ```
+
+   If a sermon is missing or shows its verse, fix
+   `contents()` (and its test), not the text.
 4. Update `books/SOURCES.md` (file range, the `։`
    count, the part's sermons in the translation
    note) and add a "Part N" section here.
