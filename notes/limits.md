@@ -24,20 +24,26 @@ the git size is measured, and the site's size and
 build time are the last ones in `limits.tsv`. So
 record after big additions to keep them fresh.
 
-## State on 2026-11-07 (commit 52c1df8)
+## State on 2026-11-09 (commit d4db7fb)
 
-Amaran hator parts 1–12 of 24 translated; 79 book
-files on the shelf.
+Amaran hator parts 1–13 of 24 translated; 80 book
+files on the shelf; the reader has a Contents list
+(the sermons of each part, in the book JSON).
 
 | What | Now | Limit | Used |
 |---|---|---|---|
-| Book text (`books/`) | 15.7 MB, 79 files | — | — |
-| Grabar / translation | 14 MB / 2.7 MB | — | — |
-| Pages site | 76.0 MB | 1 GB | 7% |
-| Git history | 16.6 MB | 1 GB | 2% |
+| Book text (`books/`) | 16.0 MB, 80 files | — | — |
+| Grabar / translation | 13.1 MB / 2.9 MB | — | — |
+| Pages site | 76.9 MB | 1 GB | 8% |
+| Git history | 18.2 MB | 1 GB | 2% |
 | Largest file | 6.0 MB (`grabar/vocabulary-hy.tsv`) | 50 MB | 12% |
 | Largest book part | 278 KB (Amaran hator 05, translation) | 1 MB | 27% |
-| Site build | 15 s | 10 min | 3% |
+| Site build | 20 s | 10 min | 3% |
+
+Since 2026-11-07 (52c1df8): one translated part
+added 0.9 MB to the site and 1.6 MB to git; the
+build took 20 s instead of 15 (one measure, on
+another machine: watch it, not a trend yet).
 
 The site is 25 MB of books (about 1.6 times their
 text) and 33 MB of word lookups (512 files, at most
