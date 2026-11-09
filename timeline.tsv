@@ -29,11 +29,13 @@
 2026-11-06	Site		A welcome on the home page	Questions and answers in Armenian for first-time visitors, and how far each translation has got.	
 2026-11-07	Dictionary		Meanings for 900 more words	The most frequent words Wiktionary lacks; their meanings are written by Claude and marked so.	
 2026-11-07	Books		Seven works of Nerses Shnorhali	New on the shelf, from Digilib.	grabar/nerses-shnorhali
-2026-11-07	Translation	*	Amaran hator, parts 2–7	Six more parts in modern Armenian.	grabar/grigor-tatevatsi/3-amaran-hator/02.txt
+2026-11-07	Translation	*	Amaran hator, parts 2–12	Eleven more parts in modern Armenian.	grabar/grigor-tatevatsi/3-amaran-hator/02.txt
 2026-11-07	Site	*	nxgir.am is live	The site gets its own address, a day after the domain was requested.	https://nxgir.am
 2026-11-07	Site		A Statistics page	How much the library holds and how close it is to the limits of GitHub and of a phone, measured at every publish.	
 2026-11-07	Reader		Continue reading	The library shows the last three books you opened, with how far you got; all of them are on the Readings page.	
 2026-11-07	Site		A Library page	The Grabar books by author, with short names and how much of each is translated, behind a button at the top of the home page.	
 2026-11-07	Site		A blog	News and notes from nx-gir, behind a button at the top of the home page; the first post welcomes readers and tells the idea.	
+2026-11-09	Translation		Amaran hator, part 13	Sermons on virgins, on Gregory the Illuminator, on rulers and on the rich and the poor, in modern Armenian.	grabar/grigor-tatevatsi/3-amaran-hator/13.txt
+2026-11-09	Reader	*	Contents of each part	The ☰ button lists the sermons and chapters of the part being read; a tap goes to one.	grabar/grigor-tatevatsi/3-amaran-hator/13.txt
 next	Translation		All of Amaran hator in modern Armenian	Then the other works of Grigor Tatevatsi.	
 next	Site		A contents page for each book	What each part of a book is about.	
