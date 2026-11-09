@@ -59,6 +59,7 @@ from nxgir_browse import (
 )
 from nxgir_reader import (
     WORD_RE,
+    contents,
     layout,
     markdown_line,
     note_start,
@@ -536,7 +537,8 @@ def md_format(app, name):
 def book(app, name):
     """A book's lines, cut into words, with where it
     was left ("at": its word), the first word of every
-    sentence, its bookmarks and notes, and for a .md
+    sentence, its bookmarks and notes, its contents
+    (the chapters and sermons in it) and for a .md
     book its bold, italic, headings and quotes."""
     text = book_text(app, name)
     lay = layout(text, 10**9)
@@ -556,6 +558,7 @@ def book(app, name):
         "editable": app.editable(name),
         "parallel": app.parallel(name),
         "format": md_format(app, name),
+        "contents": contents(text.splitlines()),
         **places(app, name, st, lay),
     }
 

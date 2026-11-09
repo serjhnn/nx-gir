@@ -1307,6 +1307,25 @@ a.icon-btn {
   border-top: 0;
 }
 
+/* the contents: a group of chapters stands out,
+   the one being read is marked */
+.toc li {
+  padding: 0.5rem 0;
+}
+
+.toc li.group .item-quote {
+  font-weight: 600;
+}
+
+.toc li.here {
+  box-shadow: inset 3px 0 var(--accent);
+  padding-left: 0.6rem;
+}
+
+.toc li.here .item-quote {
+  color: var(--accent-ink);
+}
+
 .item-main {
   display: flex;
   flex: 1 1 12rem;

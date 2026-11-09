@@ -266,6 +266,82 @@ def sentence_starts(lay):
     return out
 
 
+# the headings of a book's parts, for its
+# contents: a chapter group (ԳԼՈՒԽ ՃԶ-ՃԺ), a
+# sermon's number on a line of its own under its
+# heading ((Գլուխ. ՃԶ), (Գլուխ ՃԶ)), or a line
+# that starts with Գլուխ and its number; a heading
+# not yet cut into sentences ends with its number
+GROUP_RE = re.compile(r"ԳԼՈՒԽ\s+\S")
+NUMBER_RE = re.compile(r"\(Գլուխ\.?\s*([^\s.)]+)\)$")
+CHAPTER_RE = re.compile(r"Գլուխ\.?\s+([^\s.]+)\.?\s*(.*)")
+TITLE_MAX = 120
+
+
+def short(text, n=TITLE_MAX):
+    """text cut at a word to at most n letters."""
+    text = " ".join(text.split())
+    if len(text) <= n:
+        return text
+    cut = text[: n - 1]
+    if " " in cut:
+        cut = cut[: cut.rindex(" ")]
+    return cut.rstrip(" .,՝") + "…"
+
+
+def contents(lines):
+    """The parts of a book, in order: [{"line": the
+    line to go to, "n": its number or "", "title":
+    its heading, short, "level": 1 for a group of
+    chapters, 2 for a chapter}]."""
+    out = []
+    for i, line in enumerate(lines):
+        t = line.strip()
+        if GROUP_RE.match(t):
+            out.append(
+                {
+                    "line": i,
+                    "n": "",
+                    "title": short(t),
+                    "level": 1,
+                }
+            )
+            continue
+        m = NUMBER_RE.search(t)
+        if m:
+            # the number ends the heading, or stands
+            # under it: then the heading starts after
+            # the empty line above
+            top = i
+            title = t[: m.start()]
+            if not title.strip():
+                while top and lines[top - 1].strip():
+                    top -= 1
+                if top == i:
+                    continue
+                title = lines[top]
+            out.append(
+                {
+                    "line": top,
+                    "n": m.group(1),
+                    "title": short(title),
+                    "level": 2,
+                }
+            )
+            continue
+        m = CHAPTER_RE.fullmatch(t)
+        if m and not t.startswith("Գլուխը"):
+            out.append(
+                {
+                    "line": i,
+                    "n": m.group(1),
+                    "title": short(m.group(2)),
+                    "level": 2,
+                }
+            )
+    return out
+
+
 def sentence_of(starts, i, n):
     """(first, last + 1): the words of the sentence
     with word i, of n words."""

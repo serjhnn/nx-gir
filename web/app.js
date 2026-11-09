@@ -1218,6 +1218,8 @@ const R = {
   saved: "", // the position last saved
   timer: 0,
   par: null, // the other version: book() data
+  contents: [], // its chapters: [{line, n, title,
+  // level}]
 };
 
 async function send(path, body, keepalive) {
@@ -1517,6 +1519,11 @@ function decorate() {
       "aria-label": "Back to the folder",
       title: "Back to " + (dir || "the library") },
     icon(ICONS.back)),
+    R.contents.length ? btn(["☰ ", h("span",
+      { class: "long" }, "Contents")], showContents,
+    { "aria-label": "Contents", title: "Contents: "
+      + plural(R.contents.length, "heading") })
+      : null,
     STATIC ? null : btn(count("★", "Bookmarks",
       R.marks.length), showMarks,
     { "aria-label": marks, title: marks }),
@@ -1747,6 +1754,54 @@ function snippet(i, n = 70) {
 
 function lineOf(i) {
   return "line " + (R.wpos[i][0] + 1);
+}
+
+// -- the contents: the chapters and sermons --
+
+// the first word on the line or after it
+function wordOfLine(line) {
+  let lo = 0;
+  let hi = R.wpos.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if (R.wpos[mid][0] < line) lo = mid + 1;
+    else hi = mid;
+  }
+  return lo;
+}
+
+function showContents() {
+  closePanel();
+  // the heading the top of the page is under
+  const top = R.spans.length
+    ? R.wpos[topWord()][0] : 0;
+  let here = -1;
+  R.contents.forEach((c, k) => {
+    if (c.line <= top) here = k;
+  });
+  const list = h("ul", { class: "items toc" });
+  R.contents.forEach((c, k) => {
+    const meta = c.level === 1 ? ""
+      : (c.n ? "Գլուխ " + c.n + " · " : "");
+    const link = h("button", { type: "button",
+      class: "item-main" },
+    h("span", { class: "item-meta" },
+      meta + "line " + (c.line + 1)),
+    h("span", { class: "item-quote", lang: "hy" },
+      c.title || "Գլուխ " + c.n));
+    link.addEventListener("click", () =>
+      go(wordOfLine(c.line)));
+    const li = h("li", { class: c.level === 1
+      ? "group" : null }, link);
+    if (k === here) {
+      li.classList.add("here");
+      link.setAttribute("aria-current", "true");
+    }
+    list.append(li);
+  });
+  openPanel("Contents", "en", list);
+  list.querySelector(".here")
+    ?.scrollIntoView({ block: "center" });
 }
 
 function showMarks() {
@@ -2099,6 +2154,7 @@ async function book(name) {
     spans: [], keys: [], wpos: [],
     starts: data.starts, marks: data.marks,
     notes: data.notes, sel: -1, refs: [],
+    contents: data.contents || [],
     saved: "", editable: data.editable,
     opening: name, par: null,
   });

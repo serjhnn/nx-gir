@@ -8,6 +8,7 @@ from nxgir_reader import (
     TEXT_MAX,
     WORD_RE,
     abbr_panel,
+    contents,
     find,
     layout,
     margin,
@@ -21,6 +22,7 @@ from nxgir_reader import (
     sentence_of,
     sentence_starts,
     sentence_text,
+    short,
     snippet,
     split,
     text_width,
@@ -537,3 +539,63 @@ def test_plain_markdown_unchanged():
     )
     for t in texts:
         assert plain_markdown(t) == old_plain_markdown(t)
+
+
+def test_contents_of_sermons():
+    lines = [
+        "Գիրք · 13/24",
+        "",
+        "ԳԼՈՒԽ ՃԶ-ՃԺ",
+        "",
+        "Նորին քարոզ. ի Բանն (Տեսի կին մի։)",
+        "Յայտ. 17. 3։",
+        "(Գլուխ. ՃԶ)",
+        "",
+        "Գլուխը խոնարհեալ։",
+        "(Գլուխ ՃԷ)",
+        "Նորին քարոզ։ (Մի շնար։) Ել. 20։ (Գլուխ. ՃԸ)",
+        "Գլուխ Դ. Նորին քարոզ վասն ծննդեանն։",
+        "Գլուխ Ա",
+    ]
+    assert contents(lines) == [
+        {
+            "line": 2,
+            "n": "",
+            "title": "ԳԼՈՒԽ ՃԶ-ՃԺ",
+            "level": 1,
+        },
+        {
+            "line": 4,
+            "n": "ՃԶ",
+            "title": "Նորին քարոզ. ի Բանն (Տեսի կին մի։)",
+            "level": 2,
+        },
+        # its heading is the line above, no empty
+        # line between: from the empty line
+        {
+            "line": 8,
+            "n": "ՃԷ",
+            "title": "Գլուխը խոնարհեալ։",
+            "level": 2,
+        },
+        {
+            "line": 10,
+            "n": "ՃԸ",
+            "title": "Նորին քարոզ։ (Մի շնար։) Ել. 20։",
+            "level": 2,
+        },
+        {
+            "line": 11,
+            "n": "Դ",
+            "title": "Նորին քարոզ վասն ծննդեանն։",
+            "level": 2,
+        },
+        {"line": 12, "n": "Ա", "title": "", "level": 2},
+    ]
+    # a number with no heading above it is left out
+    assert contents(["(Գլուխ. Ա)"]) == []
+
+
+def test_short_cuts_at_a_word():
+    assert short("ա  բ") == "ա բ"
+    assert short("աբգ դեզ էըթ", 9) == "աբգ դեզ…"

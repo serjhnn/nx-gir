@@ -156,6 +156,13 @@ def test_book_position_and_sentences(app):
     assert web.book(app, name)["at"] == 7
 
 
+def test_book_contents(app):
+    # the test book has no headings
+    assert (
+        web.book(app, "grabar/john.txt")["contents"] == []
+    )
+
+
 def test_notes_add_edit_delete(app):
     name = "grabar/john.txt"
     # a word in the middle of the second sentence
