@@ -320,7 +320,7 @@ async function staticApi(path) {
 // the top page's title, as in index.html: what
 // search results show
 const TOP_TITLE =
-  "nx-gir · Գրաբար · Grabar books, word by word";
+  "Նախագիր · Գրաբար · Grabar books, word by word";
 
 function enc(name) {
   return name.split("/").map(encodeURIComponent)
@@ -596,7 +596,7 @@ async function shelf(folder) {
   const title = folder
     ? folder.split("/").pop() : "Library";
   document.title = folder
-    ? title + " · nx-gir" : TOP_TITLE;
+    ? title + " · Նախագիր" : TOP_TITLE;
   const list = h("ul", { class: "shelf" });
   for (const item of data.items) {
     list.append(h("li", {}, item.folder
@@ -732,7 +732,7 @@ function recentCard(items) {
 
 async function recentPage() {
   const data = await api("recent");
-  document.title = "Readings · nx-gir";
+  document.title = "Readings · Նախագիր";
   show(
     h("p", { class: "crumbs" },
       h("a", { href: "#/" }, "← Home")),
@@ -773,7 +773,7 @@ function libraryRow(b) {
 // #/library: the Grabar books, by author
 async function libraryPage() {
   const data = await api("library");
-  document.title = "Գրադարան · nx-gir";
+  document.title = "Գրադարան · Նախագիր";
   const groups = data.authors.map((a) => {
     const list = h("ul", { class: "shelf" });
     for (const b of a.books) {
@@ -877,7 +877,7 @@ function eventList(data, kind) {
 
 async function timelinePage() {
   const data = await api("timeline");
-  document.title = "Timeline · nx-gir";
+  document.title = "Timeline · Նախագիր";
   const stat = (n, label) => h("div", {},
     h("b", {}, String(n)), h("span", {}, label));
   // a filter for each kind with more than one
@@ -1032,7 +1032,7 @@ async function blogPage(path) {
       return b;
     }));
     document.title = (one ? version(one, lang).title
-      + " · " : "") + t.title + " · nx-gir";
+      + " · " : "") + t.title + " · Նախագիր";
     show(
       h("p", { class: "crumbs", lang },
         h("a", { href: "#/" }, t.home),
@@ -1129,7 +1129,7 @@ function historyTable(rows) {
 
 async function statsPage() {
   const data = await api("stats");
-  document.title = "Statistics · nx-gir";
+  document.title = "Statistics · Նախագիր";
   const head = [
     h("p", { class: "crumbs" },
       h("a", { href: "#/" }, "← Home")),
@@ -2148,7 +2148,7 @@ async function book(name) {
   const data = await api("book?name=" +
     encodeURIComponent(name));
   const title = name.split("/").pop();
-  document.title = title + " · nx-gir";
+  document.title = title + " · Նախագիր";
   Object.assign(R, {
     name: "", lines: data.lines.length,
     spans: [], keys: [], wpos: [],
@@ -2318,7 +2318,7 @@ async function edit(name) {
     encodeURIComponent(name));
   let ver = src.version;
   const title = name.split("/").pop();
-  document.title = "Edit " + title + " · nx-gir";
+  document.title = "Edit " + title + " · Նախագիր";
   const box = textBox(src.text);
   const msg = status();
   const reload = btn("Load the file again", () => {
@@ -2370,7 +2370,7 @@ const TEXT_LANGS = {
 
 async function newText(lang) {
   if (!TEXT_LANGS[lang]) lang = "ru";
-  document.title = "New text · nx-gir";
+  document.title = "New text · Նախագիր";
   const file = h("input", { type: "text",
     class: "field", id: "file", autocomplete: "off",
     autocapitalize: "none", spellcheck: "false",
