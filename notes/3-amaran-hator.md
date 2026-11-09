@@ -22,7 +22,7 @@ closing prayer with the doxology.
 
 ## How to do the next part
 
-Parts 1–13 are done. To do part N (14 next):
+Parts 1–14 are done. To do part N (15 next):
 
 1. Split the Grabar into sentences in place (the
    file from Digilib has long paragraphs):
@@ -1087,6 +1087,67 @@ demons.
   clothing as the measure; God keeps the
   Armenians neither rich nor very poor.
 
+## Part 14 · ԳԼՈՒԽ ՃԺԶ-ՃԻ (sermons 116–120)
+
+One chapter group, 735 lines: on church leaders,
+on teachers and counsel, and two on the young.
+
+- ՃԺԶ (line 5): patriarchs and leaders, Luke
+  12:42 "who is the faithful and wise steward".
+  The ranks of being (elements, plants, animals,
+  man, angels); the nine choirs in three
+  hierarchies as stewards of one another; Adam
+  the steward of paradise, then prophets,
+  apostles and teachers of the church; four
+  senses of "faithful"; the shepherd's work
+  (heal, feed, drive off heretic wolves; heresy
+  like idolatry and unforgivable, the harlot of
+  Proverbs); the two comings of the Lord (death,
+  resurrection); "cut him asunder" (three ways);
+  "take his garment, he was surety for a
+  stranger"; four reasons a priest's sin weighs
+  more; the priest's due is holy (six reasons;
+  the high priest's plate, mitre, vestments and
+  the hood); how to gather and spend it.
+- ՃԺԷ (line 233): teachers and counsel, Jas
+  1:23 "like a man beholding his face in a
+  glass". Needful and pleasant things; the mind
+  of the teacher like a mirror (ten points);
+  four kinds of teachers (say/do) and of
+  hearers; "judge not" and rebuke (four rules:
+  rank, the beam, love, the wilful); silence,
+  gentleness or sternness; Eli; four reasons
+  rulers are not rebuked (flattery, glory, fear,
+  greed); Ezekiel's watchman.
+- ՃԺԸ (line 381): counsel and obedience, Prov
+  25:11 "apples of gold in sardius". The inner
+  and outer ear; the sower's seed (birds, sun,
+  trampling, water); four fruits of good works;
+  the teacher as physician, two kinds of
+  patients; sin and sin unto death (without
+  repentance); ten reasons wise words are like
+  gold and sardius.
+- ՃԺԹ (line 486): the young, Ps 118:9
+  "wherewith shall a young man cleanse his way".
+  The four things past finding out (Prov 30:19);
+  why youth is unsteady; four ways and ten
+  reasons to keep God's word in the heart (staff,
+  tutor, memory, light, snares, order of soul
+  and body, healing, hope, rest, fearlessness);
+  long life and peace promised to the obedient
+  (Hezekiah's fifteen years).
+- ՃԻ (line 587): disciplining children, Prov
+  13:24 "he that spareth the rod hateth his
+  son". The soul as a blank tablet; what parents
+  owe in body (four) and in spirit (faith, good
+  works, a trade); ten reasons for the rod
+  (willow, wax, hides, carpenter, ploughing,
+  weeding); guard the tongue, hands and body;
+  four reasons to obey a father; obedience as
+  the tree of life; sons by creation and by
+  grace, three inheritances; God's chastening
+  as a sign of love (Job, Abraham, Jacob).
+
 ## Notes on the text
 
 - The Digilib text has many misprints; repeated
@@ -1272,3 +1333,43 @@ demons.
   «Առակ. 3ծ. 8» (Ծ for the zero); written as 30.
 - Part 13 line 1016 announces three glories and
   lists two (the second has two kinds); kept.
+- Part 14 line 79 reads «Որ մուրճ է» ("who is a
+  hammer") among the sick: «մունջ» (dumb) is
+  meant and translated. Line 86 «Զգացան
+  հերձուածողաց գասս» is read as the wolves
+  (գայլս) of the heretics.
+- Part 14 line 122 reads «կրկին եւ երեք կին
+  չար»: «երեքկին» (threefold) is meant;
+  translated so. Line 180 «քահանայն ե զօրէնս»
+  is translated "the priest knows the law".
+- Part 14 line 136 repeats «իմոց»; line 172 is
+  a broken repeat («...որք աս վայ եւ եղուկ ասաց
+  մեծատանց...»); lines 729 and 730 are the same
+  verse (2 Tim 3:12) twice. Kept and translated
+  as they stand.
+- Part 14 line 201 opens a parenthesis twice
+  (a repeated clause) and closes it once; lines
+  165 and 386 have a `)` with no opening; line
+  325 opens one never closed, and 110, 156, 172,
+  269, 347, 371 and 708 close theirs on the next
+  line. Parentheses kept as in the Grabar.
+- Part 14 lines 213 and 217: «Վարձատրեսցին։»
+  stands alone where a "first" is missing, and
+  217 starts with a stray `.`; kept.
+- Part 14 line 295 lists the four kinds of
+  hearers with "hear and do" twice (the second
+  should be "do not hear and do", as line 298);
+  kept.
+- Part 14 line 420 says the counsellor has "the
+  face of a sick man" (հիւանդի); the next lines
+  make him the physician: translated «բժշկի».
+- Part 14 line 467 «յարմարութիւն» is
+  «յիմարութիւն» (1 Cor 2:14); translated
+  "foolishness". Line 494 «կարէ ի Աբել» is read
+  as «կարէ որսալ» ("can catch").
+- Part 14 lines 618–620 cut the word «չար»
+  across a paragraph break («չա» / «ր
+  զաւակացն»); the translation is cut the same
+  way.
+- Part 14 line 715 «ի կարգ որ դէգրութեան» is
+  «որդեգրութեան» (adoption); translated so.
