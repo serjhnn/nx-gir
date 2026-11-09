@@ -1543,8 +1543,11 @@ body.panel-open main {
 
   .wide .panel {
     position: sticky;
-    top: 68px; /* below the toolbar */
-    max-height: calc(100vh - 84px);
+    /* below the toolbar: --tools is its height,
+       set by app.js */
+    top: calc(var(--tools, 84px) + 8px);
+    max-height: calc(100vh - var(--tools, 84px)
+      - 24px);
     border: 1px solid var(--rule);
     border-radius: 12px;
     box-shadow: none;

@@ -2232,6 +2232,12 @@ async function book(name) {
     "aria-label": "Word", "aria-live": "polite" });
   R.panel.hidden = true;
   R.tools = h("div", { class: "tools" });
+  // its height, for the panel beside the text
+  // (--tools in style.css): it wraps and grows
+  new ResizeObserver(() => {
+    document.documentElement.style.setProperty(
+      "--tools", R.tools.offsetHeight + "px");
+  }).observe(R.tools);
   R.prog = h("div", { class: "readbar",
     role: "progressbar", "aria-label": "Read",
     "aria-valuemin": "0", "aria-valuemax": "100" },
