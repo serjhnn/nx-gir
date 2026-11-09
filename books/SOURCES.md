@@ -141,7 +141,7 @@ How the files are made:
   have no text of their own.
 - Some paragraphs are very long (a whole sermon in the
   summer volume can be one paragraph), as on Digilib.
-- `3-amaran-hator/01.txt` to `14.txt` are cut
+- `3-amaran-hator/01.txt` to `15.txt` are cut
   further: one sentence per line (a sentence ends
   at `։`, as the reader counts them), with a blank
   line where a Digilib paragraph ended, to be read
@@ -151,15 +151,15 @@ How the files are made:
   part 3, 6 in part 4, 9 in part 5, 4 in part
   6, 11 in part 7, none in parts 8 and 9, 1 in
   part 10, none in part 11, 2 in part 12, none
-  in part 13, 3 in part 14), the
-  line break now stands there.
+  in part 13, 3 in part 14, none in part 15),
+  the line break now stands there.
 
 ## ashkharhabar/grigor-tatevatsi/3-amaran-hator/
 
-`01.txt` to `14.txt`: a translation into modern
+`01.txt` to `15.txt`: a translation into modern
 Eastern Armenian of the same files in
 `grabar/grigor-tatevatsi/3-amaran-hator/` (parts 1
-to 14 of 24 of Ամառան հատոր: the sermons on Psalm
+to 15 of 24 of Ամառան հատոր: the sermons on Psalm
 118:35 and on the Ten Commandments, Գլուխ Ա–Ե; on
 visions and dreams, on Deuteronomy 15:9, on the Holy
 Trinity and on the Lord's Prayer, Գլուխ Զ–ԺԱ; on
@@ -190,7 +190,10 @@ rich and the poor, and on the deceit of
 demons, Գլուխ ՃԺԱ–ՃԺԵ; on patriarchs and
 leaders, on teachers and their counsel, and on
 the young and the discipline of children,
-Գլուխ ՃԺԶ–ՃԻ), made by Claude
+Գլուխ ՃԺԶ–ՃԻ; on judges, on the twelve
+apostles and the seventy-two disciples, on
+Saint Bartholomew, and on the ark of the
+covenant, Գլուխ ՃԻԱ–ՃԻԵ), made by Claude
 (Anthropic's AI model) on 2026-11-06,
 2026-11-07 and 2026-11-09 at the user's
 request. It is a machine translation, not a

@@ -22,7 +22,7 @@ closing prayer with the doxology.
 
 ## How to do the next part
 
-Parts 1–14 are done. To do part N (15 next):
+Parts 1–15 are done. To do part N (16 next):
 
 1. Split the Grabar into sentences in place (the
    file from Digilib has long paragraphs):
@@ -1148,6 +1148,78 @@ on teachers and counsel, and two on the young.
   grace, three inheritances; God's chastening
   as a sign of love (Job, Abraham, Jacob).
 
+## Part 15 · ԳԼՈՒԽ ՃԻԱ-ՃԻԵ (sermons 121–125)
+
+One chapter group, 771 lines: on judges, on the
+apostles and the disciples, on Bartholomew, and
+on the ark of the covenant.
+
+- ՃԻԱ (line 5): judges of the world, Isa 1:17
+  "judge the fatherless, plead for the widow".
+  The judge as a craftsman whose matter is men's
+  deeds; four things that bend judgement
+  (ignorance, bribes, fear, partiality) and four
+  a judge needs; no oath for thieves; who may
+  swear and how a false accuser shows; why
+  judges sit high (six reasons; the scales:
+  pan, beam, palm); witnesses (sight, not
+  hearsay; the blind and the deaf); six harms of
+  bribes, good and bad gifts, Habakkuk; why
+  small crimes are punished in the limb that
+  did them; sowing and reaping; God's
+  punishment and the judges' compared.
+- ՃԻԲ (line 162): the feast of Peter and Paul
+  and the twelve apostles, Mark 6:7. Twenty
+  reasons for the number twelve (the ranks of
+  angels, the zodiac, months and hours, winds,
+  patriarchs, the springs of Elim, the twelve
+  spies, the stones of the breastplate and of
+  the Jordan, Solomon's oxen and lions, our
+  twelve members, the woman crowned with twelve
+  stars, the twelve gates of pearl, the tree of
+  life); the twelve foundation stones, each
+  given to an apostle "after Saint Vardan"
+  (jasper Peter, sapphire Paul, ... amethyst
+  Matthias).
+- (line 315): a stray passage, starting in the
+  middle of a sentence, on Solomon's counsels
+  (Eccl 11:1 "cast thy bread upon the waters";
+  build a house anew in heaven) and sixteen
+  goods of almsgiving, with its own doxology;
+  it stands before the heading of ՃԻԳ.
+- ՃԻԳ (line 375): the seventy-two disciples,
+  Luke 10:1. Ten types of seventy (the tower of
+  Babel and seventy tongues, Jacob's seventy
+  souls, the seventy palms of Elim, Moses'
+  seventy elders, seventy years of life and of
+  the Babylonian captivity, "seventy times
+  seven", Lamech, Daniel's weeks, the seventy-two
+  translators); why the disciples were sent
+  (the Pharisees' charge of magic; the boy the
+  disciples could not heal); Noah's dove.
+- ՃԻԴ (line 457): Saint Bartholomew, Matt 10:16
+  "wise as serpents and harmless as doves".
+  Ten points of the serpent's wisdom and ten of
+  the dove's simplicity; three garments (sin,
+  possessions, the body); ten reasons why
+  Bartholomew was stripped of his skin (Joseph
+  and Potiphar's wife, the beaver, the
+  wrestler, David without Saul's armour, the
+  sacrifice, Noah's wine, Elijah's mantle,
+  Elisha's flour, Joseph's new robe, the snake
+  shedding its skin in a narrow cleft, the
+  pearl of great price).
+- ՃԻԵ (line 598): the ark of the covenant, Ex
+  37:1 (no reference line). Why the law was
+  given in the desert and on stone; six
+  questions: the ark as the angels (its
+  measures), the Mother of God, Christ, the
+  cross, the Church; why the ark went before
+  and the rock after; why the ark was taken
+  (Dagon, the mice); why Uzzah died; why the
+  feast is kept now (after Pentecost, before
+  Vardavar); the fast of Navakatik and meat.
+
 ## Notes on the text
 
 - The Digilib text has many misprints; repeated
@@ -1373,3 +1445,27 @@ on teachers and counsel, and two on the young.
   way.
 - Part 14 line 715 «ի կարգ որ դէգրութեան» is
   «որդեգրութեան» (adoption); translated so.
+- Part 15 line 6 garbles Isa 1:17 («Դատ արեէ
+  որ բոյն. եւ դատ իւաւունսայրւոյն»); translated
+  by the sense. Line 10 ends in a `)` with no
+  opening; lines 115, 331, 369, 429/430 and
+  500/501 open a quotation closed later or not
+  at all. Parentheses kept as in the Grabar.
+- Part 15 line 162 reads «ի խոյ հարդ երկոտասն
+  առաքելոցն»; translated "and for the twelve
+  apostles". Line 181 «անօրէնութիւն փրկչին» is
+  «տնօրէնութիւն» (economy); translated so.
+  Line 216 «ողորմութեան» among the pearl's
+  properties is «ողորկութեան» (smoothness);
+  translated so.
+- Part 15 lines 315–373 (a passage on Eccl 11:1
+  and on almsgiving, starting with «սականն»)
+  stand between ՃԻԲ and ՃԻԳ; kept and translated
+  where they stand.
+- Part 15 lines 377 and 459 give «1Օ» (Օ for the
+  zero); written as 10. Line 589 «մարգէն
+  անգէաս» is the prophet Haggai. Line 735 reads
+  «Ոզիմ» for Ոզիա (Uzzah, line 618); translated
+  «Ոզիան».
+- Part 15 line 727 carries two sentences without
+  a `։` («...մուկն. Չորրորդ՝...»); kept.
