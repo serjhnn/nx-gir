@@ -781,3 +781,42 @@ def test_library_names_are_on_the_shelf():
     for d in grabar.iterdir():
         if d.is_dir():
             assert d.name in names, d.name
+
+
+def test_parts(tmp_path):
+    # a part of a long book knows the parts beside
+    # it, with their first heading
+    files = []
+
+    def add(name, text):
+        p = tmp_path / name
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text, encoding="utf-8")
+        files.append((name, 9, p))
+
+    d = "grabar/ann/1-book/"
+    add(d + "01.txt", "Գիրք · 1/3\n\nԳԼՈՒԽ Ա-Բ\n")
+    add(d + "02.txt", "Գիրք · 2/3\n\nԳԼՈՒԽ Գ\n")
+    add(d + "03.txt", "Գիրք · 3/3\n\nտող\n")
+    add("grabar/ann/x.txt", "Մեկ գիրք\n")
+    names = tmp_path / "LIBRARY.tsv"
+    names.write_text("ann/1-book\tԳիրքը\n", "utf-8")
+    app = App(files, library=names)
+    two = web.book(app, d + "02.txt")["parts"]
+    assert two["book"] == "Գիրքը"
+    assert (two["n"], two["total"]) == (2, 3)
+    assert two["folder"] == "grabar/ann/1-book"
+    assert two["prev"] == {
+        "name": d + "01.txt",
+        "n": 1,
+        "title": "ԳԼՈՒԽ Ա-Բ",
+    }
+    # no heading: no title
+    assert two["next"]["title"] == ""
+    one = web.parts(app, d + "01.txt")
+    assert one["prev"] is None
+    assert web.parts(app, d + "03.txt")["next"] is None
+    assert web.parts(app, "grabar/ann/x.txt") is None
+    # no LIBRARY.tsv: the title of the part
+    app = App(files, library=None)
+    assert web.parts(app, d + "01.txt")["book"] == "Գիրք"

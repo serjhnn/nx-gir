@@ -34,6 +34,10 @@ The site remembers where you stopped reading each book, in this browser. The hom
 
 ☰ Contents lists the chapters and sermons of the part you are reading and marks the one you are in. Tap one to go there; tap ☰ again to close the list.
 
+## From one part to the next
+
+At the end of each part of a long book, two cards lead to the part before and the part after it, with the chapters each one begins with, and a link to all the parts of the book. At the bottom of every page are the main pages of the site, the license of the translations and how to help.
+
 ## Text settings
 
 Make the text bigger or smaller, set it on the left or in the center, change the line spacing, put each sentence on its own line, read in a column or across the whole width, and choose the font. On a phone these are behind the settings button. The site remembers your choice.

@@ -559,7 +559,9 @@ def book(app, name):
     (the chapters and sermons in it), for a .md
     book its bold, italic, headings and quotes, and
     for one of our translations who made and
-    reviewed it and its license (credit)."""
+    reviewed it and its license (credit), and for
+    a part of a long book the parts beside it
+    (parts())."""
     text = book_text(app, name)
     lay = layout(text, 10**9)
     st = app.state()
@@ -580,7 +582,54 @@ def book(app, name):
         "format": md_format(app, name),
         "contents": contents(text.splitlines()),
         "credit": credit(app, name),
+        "parts": parts(app, name),
         **places(app, name, st, lay),
+    }
+
+
+def parts(app, name):
+    """For a part of a long book ("title · n/N" on
+    its first line): {book (its short name in
+    LIBRARY.tsv, or its title), folder, n, total,
+    prev, next}, prev and next the parts n-1 and n+1 in
+    the same folder as {name, n, title} (title: its
+    first heading in contents(), or ""), or None.
+    For any other book None."""
+    m = PART_RE.match(first_line(app.path(name)))
+    if not m:
+        return None
+    folder = name.rpartition("/")[0]
+    by_n = {}
+    for other, _, path in app.files:
+        if other.rpartition("/")[0] != folder:
+            continue
+        o = PART_RE.match(first_line(path))
+        if o and o.group(1) == m.group(1):
+            by_n.setdefault(int(o.group(2)), other)
+    n = int(m.group(2))
+
+    def side(k):
+        if k not in by_n:
+            return None
+        lines = book_text(app, by_n[k]).splitlines()
+        heads = contents(lines)
+        return {
+            "name": by_n[k],
+            "n": k,
+            "title": heads[0]["title"] if heads else "",
+        }
+
+    # its short name in LIBRARY.tsv, for grabar/ and
+    # its translations alike
+    key = folder.partition("/")[2]
+    short = read_names(app.library).get(key)
+    return {
+        "book": short or m.group(1),
+        "folder": folder,
+        "n": n,
+        "total": int(m.group(3)),
+        "prev": side(n - 1),
+        "next": side(n + 1),
     }
 
 

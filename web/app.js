@@ -340,8 +340,40 @@ function enc(name) {
 function show(...kids) {
   // (replaceChildren would write null as "null")
   main.replaceChildren(
-    ...kids.filter((k) => k != null));
+    ...kids.filter((k) => k != null), siteFooter());
   window.scrollTo(0, 0);
+}
+
+// the bottom of every page: the main pages, the
+// license, how to help and who made it
+const REPO = "https://github.com/serjhnn/nx-gir";
+const BY_SA = "https://creativecommons.org/"
+  + "licenses/by-sa/4.0/";
+
+function siteFooter() {
+  const pages = [["#/library", "Library"],
+    ["#/blog", "Blog"], ["#/features", "Features"],
+    ["#/timeline", "Timeline"],
+    ["#/stats", "Statistics"],
+    ["#/recent", "Readings"]];
+  return h("footer", { class: "site-foot" },
+    h("p", { class: "foot-name", lang: "hy" },
+      "Նախագիր"),
+    h("nav", { "aria-label": "Pages" },
+      pages.flatMap(([to, label], i) => [
+        i ? " · " : null,
+        h("a", { href: to }, label)])),
+    h("p", {}, "Translations ",
+      h("a", { href: BY_SA, rel: "license" },
+        "CC BY-SA 4.0"),
+      " · Grabar texts in the public domain"),
+    h("p", {},
+      h("a", { href: REPO + "/blob/main/"
+        + "CONTRIBUTING.md" },
+      "Help review the translations"),
+      " · ",
+      h("a", { href: REPO }, "GitHub")),
+    h("p", {}, "Developed by S.O. and Claude"));
 }
 
 // an error, and under it what the site is: a
@@ -639,19 +671,7 @@ async function shelf(folder) {
         href: "#/new/" + (lang || "ru") },
       "+ New text")) : null,
     data.items.length ? list
-      : h("p", { class: "empty" }, "No books here."),
-    // who made it, at the bottom of the top page
-    folder ? null : h("footer", { class: "credit" },
-      "Developed by S.O. and Claude · ",
-      h("a", { href: "#/timeline" }, "Timeline"),
-      " · ",
-      h("a", { href: "#/blog" }, "Blog"),
-      " · ",
-      h("a", { href: "#/features" }, "Features"),
-      " · ",
-      h("a", { href: "#/stats" }, "Statistics"),
-      " · ",
-      h("a", { href: "#/recent" }, "Readings"))
+      : h("p", { class: "empty" }, "No books here.")
   );
 }
 
@@ -2286,6 +2306,30 @@ function trCredit(c, of) {
     h("a", { href: HELP }, "Օգնել խմբագրել"));
 }
 
+// the end of a part of a long book (data.parts):
+// the parts before and after it, and its folder
+function partEnd(p) {
+  if (!p || !(p.prev || p.next)) return null;
+  const card = (q, cls, label) => q
+    ? h("a", { class: cls,
+      href: "#/read/" + enc(q.name) },
+    h("small", {}, label),
+    q.title ? h("span", { lang: "hy" }, q.title)
+      : null)
+    : h("span");
+  return h("div", { class: "part-end" },
+    h("nav", { class: "part-nav",
+      "aria-label": "Parts" },
+    card(p.prev, "prev", "← Part "
+      + (p.n - 1) + " of " + p.total),
+    card(p.next, "next", "Part " + (p.n + 1)
+      + " of " + p.total + " →")),
+    h("p", { class: "part-all" },
+      h("a", { href: "#/f/" + enc(p.folder) },
+        "All " + p.total + " parts of ",
+        h("span", { lang: "hy" }, p.book))));
+}
+
 // where a sentence starts inside a line: shown as
 // a break when Sentences (¶) is on
 function cut() {
@@ -2400,7 +2444,8 @@ async function book(name) {
       plural(data.lines.length, "line") +
       " · tap a word to look it up"),
     R.tools,
-    h("div", { class: "reader" }, text, R.panel));
+    h("div", { class: "reader" }, text, R.panel,
+      partEnd(data.parts)));
   decorate();
   // the first word: stay at the top, title shown
   if (data.at > 0 && R.spans[data.at]) {
