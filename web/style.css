@@ -220,6 +220,11 @@ main {
     var(--serif);
 }
 
+/* nxGir in the texts (named() in app.js) */
+.nxgir {
+  color: var(--accent);
+}
+
 /* a thin line between the two names */
 .brand-sep {
   align-self: center;

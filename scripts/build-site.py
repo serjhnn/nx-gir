@@ -318,7 +318,7 @@ PAGE = """<!doctype html>
 </header>
 <main class="plain">
 <p><a href="{reader}">{open}</a></p>
-<h1>{title}</h1>
+<h1>{heading}</h1>
 {text}
 </main>
 </body>
@@ -330,9 +330,17 @@ PAGE = """<!doctype html>
 OPEN_BOOK = "Read in the reader,\nwith word lookup"
 OPEN_POST = {
     "hy": "Բացել Նախագրում",
-    "en": "Open in nx-gir",
-    "ru": "Открыть в nx-gir",
+    "en": "Open in nxGir",
+    "ru": "Открыть в nxGir",
 }
+
+
+def named(html):
+    """Escaped HTML with each nxGir in the accent
+    color, as named() in app.js."""
+    return html.replace(
+        "nxGir", '<span class="nxgir">nxGir</span>'
+    )
 
 
 def plain_page(out, path, text, alt="", **kw):
@@ -343,6 +351,8 @@ def plain_page(out, path, text, alt="", **kw):
     the book's) plain."""
     kw = {"lang": "hy", "open": OPEN_BOOK, **kw}
     kw = {k: htm.escape(v) for k, v in kw.items()}
+    kw["heading"] = named(kw["title"])
+    kw["open"] = named(kw["open"])
     page = PAGE.format(
         canon=htm.escape(url(path)),
         text=text,
@@ -377,7 +387,7 @@ def post_pages(out, app):
         for v in vs:
             path = post_page(slug, v["lang"])
             text = "\n".join(
-                f"<{t}>{htm.escape(x)}</{t}>"
+                f"<{t}>{named(htm.escape(x))}</{t}>"
                 for k, x in v["blocks"]
                 for t in ["h2" if k == "h" else "p"]
             )

@@ -32,8 +32,13 @@
   name is explained, beside Նախագիր, and not on
   the web pages (the README explains it); never
   inflected.
-- **nx-gir** / **nxgir**: English text, code,
-  commands, file names, nxgir.am.
+- **nxGir**: the English name in text people read
+  on the site (pages, blog, timeline), beside
+  Նախագիր in the header and footer; shown in the
+  accent color (`named()` in `app.js` and
+  `build-site.py`, class `nxgir`).
+- **nx-gir** / **nxgir**: code, commands, file
+  names, the repository, nxgir.am.
 - The logo is art and stays as drawn (`նղ`);
   don't change it to match.
 

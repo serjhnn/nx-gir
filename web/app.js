@@ -17,6 +17,14 @@ const ABOUT = document.getElementById("about");
 // h("a", {href: "#/"}, "text", child): an element.
 // Text is always set as text, never as HTML. Kids
 // may be lists; null kids are left out.
+// text with each nxGir in the accent color (the
+// name, as in the header): strings and spans for h()
+function named(text) {
+  return String(text).split(/(nxGir)/).map((t) =>
+    t === "nxGir"
+      ? h("span", { class: "nxgir" }, t) : t);
+}
+
 function h(tag, attrs, ...kids) {
   const el = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs || {})) {
@@ -359,7 +367,7 @@ function siteFooter() {
   return h("footer", { class: "site-foot" },
     h("p", { class: "foot-name" },
       h("span", { lang: "hy" }, "Նախագիր"),
-      " (nxGir)"),
+      " (", named("nxGir"), ")"),
     h("nav", { "aria-label": "Pages" },
       pages.flatMap(([to, label], i) => [
         i ? " · " : null,
@@ -611,9 +619,10 @@ function newsList(news) {
       h("time", { datetime: e.date },
         day(e.date)),
       h("div", {},
-        to ? h("a", { href: to }, e.title)
-          : h("b", {}, e.title),
-        e.text ? h("span", {}, e.text) : null)));
+        to ? h("a", { href: to }, named(e.title))
+          : h("b", {}, named(e.title)),
+        e.text ? h("span", {}, named(e.text))
+          : null)));
   }
   return list;
 }
@@ -888,8 +897,8 @@ function eventItem(e) {
       (e.big ? " big" : ""), "data-kind": e.kind },
     h("h3", {},
       h("span", { class: "chip" }, e.kind),
-      e.title),
-    e.text ? h("p", {}, e.text) : null,
+      named(e.title)),
+    e.text ? h("p", {}, named(e.text)) : null,
     eventLink(e));
 }
 
@@ -942,8 +951,8 @@ async function timelinePage() {
       h("a", { href: "#/" }, "← Home")),
     h("h1", {}, "Timeline"),
     h("p", { class: "sub" },
-      "How nx-gir grew, from the first line"
-      + " to today"),
+      named("How nxGir grew, from the first"
+        + " line to today")),
     data.start ? h("div", { class: "stats" },
       stat(dayNo(data.start), "days"),
       stat(data.books, "Grabar books"),
@@ -971,11 +980,11 @@ const BLOG = {
     home: "← Գլխավոր", none: "Գրառումներ դեռ չկան։",
     read: "Կարդալ →" },
   en: { name: "English", title: "Blog",
-    sub: "News and notes from nx-gir",
+    sub: "News and notes from nxGir",
     home: "← Home", none: "No posts yet.",
     read: "Read →" },
   ru: { name: "Русский", title: "Блог",
-    sub: "Новости и заметки nx-gir",
+    sub: "Новости и заметки nxGir",
     home: "← Главная", none: "Записей пока нет.",
     read: "Читать →" },
 };
@@ -1034,9 +1043,10 @@ function postItem(p, lang) {
   h("time", { datetime: p.date },
     longDay(p.date, v.lang)),
   h("h2", {},
-    h("a", { href: "#/blog/" + p.slug }, v.title)),
+    h("a", { href: "#/blog/" + p.slug },
+      named(v.title))),
   v.blocks.map(([kind, text]) =>
-    h(kind === "h" ? "h3" : "p", {}, text)));
+    h(kind === "h" ? "h3" : "p", {}, named(text))));
 }
 
 // a post in the list: a card with its date,
@@ -1052,8 +1062,9 @@ function postCard(p, lang) {
       longDay(p.date, v.lang)),
     h("span", { class: "pc-more" },
       BLOG[v.lang].read)),
-  h("span", { class: "pc-title" }, v.title),
-  lead ? h("span", { class: "pc-lead" }, lead[1])
+  h("span", { class: "pc-title" }, named(v.title)),
+  lead ? h("span", { class: "pc-lead" },
+    named(lead[1]))
     : null);
 }
 
@@ -1097,7 +1108,7 @@ async function blogPage(path) {
           t.title)] : null),
       one ? null : h("h1", { lang }, t.title),
       one ? null : h("p", { class: "sub", lang },
-        t.sub),
+        named(t.sub)),
       langs.length > 1 ? pick : null,
       h("div", { class: "blog" + (one ? " one" : "") },
         one ? postItem(one, lang)

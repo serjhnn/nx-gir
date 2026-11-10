@@ -1,6 +1,6 @@
 # Our translations are free to share: help us make them better
 
-Today the modern Armenian translations of nx-gir got a license: CC BY-SA 4.0, a Creative Commons license. We added it for one reason above all: so that people can join the work and know where their work goes.
+Today the modern Armenian translations of nxGir got a license: CC BY-SA 4.0, a Creative Commons license. We added it for one reason above all: so that people can join the work and know where their work goes.
 
 ## Why a license
 

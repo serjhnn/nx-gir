@@ -13,7 +13,7 @@
 #          https:// address; may be empty
 #
 # Add a line with every milestone. English for now.
-2026-10-18	Start	*	nx-gir begins	A README with the goals: read books in Grabar, classical Armenian, and understand every word.	
+2026-10-18	Start	*	nxGir begins	A README with the goals: read books in Grabar, classical Armenian, and understand every word.	
 2026-10-18	Reader		A reader in the terminal	The nxgir shell and a reader with a word cursor, themes and saved places, made to work on a phone.	
 2026-10-18	Books	*	The first book: the Gospel of John	From the 1895 Grabar Bible; the four Gospels were on the shelf the same day.	grabar/bible/new-testament/4-john.txt
 2026-10-21	Books	*	First works from Digilib	Three works of Grigor Tatevatsi, Amaran hator among them.	grabar/grigor-tatevatsi
@@ -34,10 +34,10 @@
 2026-11-07	Site		A Statistics page	How much the library holds and how close it is to the limits of GitHub and of a phone, measured at every publish.	
 2026-11-07	Reader		Continue reading	The library shows the last three books you opened, with how far you got; all of them are on the Readings page.	
 2026-11-07	Site		A Library page	The Grabar books by author, with short names and how much of each is translated, behind a button at the top of the home page.	
-2026-11-07	Site		A blog	News and notes from nx-gir, behind a button at the top of the home page; the first post welcomes readers and tells the idea.	
+2026-11-07	Site		A blog	News and notes from nxGir, behind a button at the top of the home page; the first post welcomes readers and tells the idea.	
 2026-11-09	Translation		Amaran hator, part 13	Sermons on virgins, on Gregory the Illuminator, on rulers and on the rich and the poor, in modern Armenian.	grabar/grigor-tatevatsi/3-amaran-hator/13.txt
 2026-11-09	Reader	*	Contents of each part	The ☰ button lists the sermons and chapters of the part being read; a tap goes to one.	grabar/grigor-tatevatsi/3-amaran-hator/13.txt
-2026-11-09	Site	*	The site gets its name: Նախագիր	Nobody planned it: AI read the nx of nx-gir as նխ, the scribes' short form of նախ, and nx-gir became Նախագիր.	
+2026-11-09	Site	*	The site gets its name: Նախագիր	Nobody planned it: AI read the nx of nxGir as նխ, the scribes' short form of նախ, and nxGir became Նախագիր.	
 2026-11-09	Translation		Amaran hator, part 14	Sermons on church leaders, on teachers and counsel, and on the young and the discipline of children, in modern Armenian.	grabar/grigor-tatevatsi/3-amaran-hator/14.txt
 2026-11-09	Translation		Amaran hator, part 15	Sermons on judges, on the apostles and the seventy-two disciples, on Saint Bartholomew and on the ark of the covenant, in modern Armenian.	grabar/grigor-tatevatsi/3-amaran-hator/15.txt
 2026-11-10	Translation	*	Dzmeran hator, part 1 in modern Armenian	The winter volume begins: the preface, and sermons on the New Year, the Annunciation and the Nativity.	grabar/grigor-tatevatsi/2-dzmeran-hator/01.txt

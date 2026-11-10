@@ -209,7 +209,10 @@ def test_searchable(tmp_path, files):
     html = post.read_text("utf-8")
     assert '<html lang="en">' in html
     assert 'href="./#/blog/welcome/en"' in html
-    assert "<h1>Welcome to the nx-gir blog</h1>" in html
+    assert (
+        '<h1>Welcome to the <span class="nxgir">'
+        "nxGir</span> blog</h1>"
+    ) in html
     assert "<h2>The idea</h2>" in html
     # one language: no others to name
     assert "hreflang" not in html
