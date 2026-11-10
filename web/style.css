@@ -682,7 +682,10 @@ h1 {
   color: var(--accent-ink);
 }
 .site-foot .foot-name {
-  font: 500 1rem var(--serif);
+  /* the bundled Noto for both names, as in the
+     header, so they match in size on any phone */
+  font: 400 1.05rem "nx Noto Serif Armenian",
+    var(--serif);
   color: var(--text);
 }
 /* a thin line between the two names, as in
