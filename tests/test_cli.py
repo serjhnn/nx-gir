@@ -105,3 +105,11 @@ def test_notes(capsys, tmp_path, monkeypatch):
     assert "  «Ի սկզբանէ…»\n    Բանն\n" in out
     assert cli.run(["notes", "john"]) == 0
     assert cli.run(["notes", "matthew"]) == 1
+
+
+def test_only_books_on_the_shelf():
+    # the tables and notes in books/ (NOT_BOOKS)
+    # are not books: only texts are on the shelf
+    for name, _, p in cli.shelf_files():
+        assert p.suffix in (".txt", ".md"), name
+        assert p.name not in cli.NOT_BOOKS, name

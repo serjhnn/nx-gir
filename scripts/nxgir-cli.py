@@ -37,6 +37,7 @@ NOT_BOOKS = {
     "SOURCES.md",
     "README.md",
     "LIBRARY.tsv",
+    "TRANSLATIONS.tsv",
 }
 PROMPT = "nxgir> "
 
