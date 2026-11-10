@@ -40,7 +40,7 @@ PDFs and images into plain text, so a page photo can be read like any other book
 Tools that help a modern reader through a Classical Armenian text:
 
 - **Abbreviation expansion.** Expand common abbreviations and *nomina sacra*
-  marked with the abbreviation sign `՟` (e.g. `ա՟ծ` → `աստուած`, `ք՟ս` → `Քրիստոս`).
+  marked with the abbreviation sign `՟` (e.g. `վ՟րդ` → `վարդապետ`, `թ՟գր` → `թագաւոր`).
 - **Modern spelling view.** Show the text in reformed (modern Eastern Armenian)
   orthography next to the classical one (e.g. `յոյս` → `հույս`, `իւր` → `յուր`).
   This is approximate and rule-based, and the original text is always kept.
@@ -79,11 +79,11 @@ Tools that help a modern reader through a Classical Armenian text:
 ./nxgir ocr scan.pdf -o scan.txt --lang hye
 
 # Grabar helpers: list the abbreviations of old
-# manuscripts, or expand one (ած, ԱԾ and ա՟ծ all work);
+# manuscripts, or expand one (վրդ, ՎՐԴ and վ՟րդ all work);
 # a joined յ-, ի-, զ- or ց- is split off: յա՟մ →
 # յամենայն, իվ՟ր → ի վերայ
 ./nxgir grabar abbr
-./nxgir grabar abbr ա՟ծ
+./nxgir grabar abbr վ՟րդ
 ./nxgir grabar abbr յա՟մ
 ./nxgir grabar abbr իվ՟ր
 
@@ -94,8 +94,8 @@ Tools that help a modern reader through a Classical Armenian text:
 
 # the same in Armenian, from the Armenian Wiktionary
 # (modern Armenian entries, matched to the Grabar
-# spelling): աստուած (աստված) · գոյական
-./nxgir grabar word --hy Աստուծոյ
+# spelling): թագաւոր (թագավոր) · գոյական
+./nxgir grabar word --hy թագաւորի
 
 # print the notes written in the reader (all books, or
 # those whose path has the text given)

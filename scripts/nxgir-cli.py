@@ -301,7 +301,7 @@ def build_parser():
     p.add_argument(
         "word",
         nargs="?",
-        help="a short form (ած, ԱԾ, ա՟ծ) or any text",
+        help="a short form (վրդ, ՎՐԴ, վ՟րդ) or any text",
     )
     p.set_defaults(func=cmd_abbr)
     p = tools.add_parser(

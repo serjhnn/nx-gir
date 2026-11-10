@@ -69,7 +69,7 @@ class Abbr(NamedTuple):
 
 
 def key(word):
-    """Letters only, any case: ա՟ծ and ԱԾ -> ած."""
+    """Letters only, any case: վ՟րդ and ՎՐԴ -> վրդ."""
     return word.translate(MARKS).casefold()
 
 
@@ -349,7 +349,7 @@ def vocabulary_ai(lang="en", words=VOCABULARY_AI):
 
 def head_line(w):
     """'լուսին · noun'; with the modern spelling of an
-    Armenian entry: 'աստուած (աստված) · գոյական'."""
+    Armenian entry: 'թագաւոր (թագավոր) · գոյական'."""
     name = w.word
     if w.entry and key(w.entry) != key(w.word):
         name += f" ({w.entry})"

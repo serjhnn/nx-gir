@@ -37,6 +37,18 @@
 - The logo is art and stays as drawn (`նղ`);
   don't change it to match.
 
+## Examples
+
+- No sacred words in examples or screenshots
+  (God, Jesus, Christ, Lord, holy, Israel,
+  Jerusalem: the `sacred` kind in
+  `grabar/abbreviations.tsv`, and their forms).
+  This covers the README, the web pages, the
+  Features page, the blog, help texts and the
+  word looked up in `docs/` images. Take an
+  everyday word: վրդ → վարդապետ, թգր → թագաւոր.
+  The books themselves are quoted as they are.
+
 ## Layout
 
 - `scripts/nxgir-cli.py`: commands and the `nxgir>` shell
