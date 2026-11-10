@@ -6,6 +6,10 @@ What Նախագիր can do today. Everything works in the browser, on a phone or
 
 Open a translated part and press ⇆ Parallel: the Grabar original and its modern Armenian translation are shown line by line, each line next to its pair. On a wide screen the two can stand in columns or each line under its pair.
 
+## Free translations, reviewed by people
+
+Our modern Armenian translations are under the CC BY-SA 4.0 license: copy, share and change them, naming Նախագիր (nxgir.am) and keeping the same license. They were first made by machine (Claude); above each one the reader shows whether it is still a draft, being reviewed or reviewed, and by whom. Anyone can help review them.
+
 ## Word lookup
 
 Tap any word to see what it means, in English or in Armenian. The meanings come from Wiktionary; where it has nothing, a meaning written by AI is shown and marked as such.

@@ -94,6 +94,29 @@ def test_parallel(tmp_path):
     assert app.parallel("notes/grabar/ps.txt") == []
 
 
+def test_credit(tmp_path):
+    # our translations: who made and reviewed them,
+    # and their license
+    tsv = tmp_path / "t.tsv"
+    tsv.write_text(
+        "ashkharhabar\treview\tAni\t2026-11-10\n",
+        encoding="utf-8",
+    )
+    files = []
+    for top in ("grabar", "ashkharhabar"):
+        p = tmp_path / top / "ps.txt"
+        p.parent.mkdir()
+        p.write_text("Սաղմոս\n")
+        files.append((f"{top}/ps.txt", 7, p))
+    app = App(files, translations=tsv)
+    c = web.book(app, "ashkharhabar/ps.txt")["credit"]
+    assert c["license"] == "CC BY-SA 4.0"
+    assert c["reviewers"] == ["Ani"]
+    assert web.book(app, "grabar/ps.txt")["credit"] is None
+    none = App(files, translations=None)
+    assert web.credit(none, "ashkharhabar/ps.txt") is None
+
+
 def test_only_shelf_books_are_read(app):
     for name in (
         "../secret.txt",

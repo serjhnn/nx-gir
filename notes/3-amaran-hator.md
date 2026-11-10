@@ -93,7 +93,9 @@ Parts 1–15 are done. To do part N (16 next):
    `contents()` (and its test), not the text.
 4. Update `books/SOURCES.md` (file range, the `։`
    count, the part's sermons in the translation
-   note) and add a "Part N" section here.
+   note), add the part to `books/TRANSLATIONS.tsv`
+   as `machine` (a test fails without it) and add
+   a "Part N" section here.
 5. Run ruff and pytest, commit, push to the
    session branch, then ask before `main`.
 

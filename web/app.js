@@ -2249,6 +2249,22 @@ function parLine(line) {
   return p;
 }
 
+// who made and reviewed a translation and its
+// license (data.credit, books/TRANSLATIONS.tsv);
+// of the other version (of), it hides with it
+const HELP = "https://github.com/serjhnn/nx-gir/"
+  + "blob/main/CONTRIBUTING.md";
+
+function trCredit(c, of) {
+  return h("p", { class: "tr-credit"
+    + (of ? " of-par" : "") },
+    c.text + " · ",
+    h("a", { href: c.url, rel: "license" },
+      c.license),
+    " · ",
+    h("a", { href: HELP }, "Օգնել խմբագրել"));
+}
+
 // where a sentence starts inside a line: shown as
 // a break when Sentences (¶) is on
 function cut() {
@@ -2296,6 +2312,9 @@ async function book(name) {
   if (R.par) {
     frag.append(...parHead(name, R.par.name));
   }
+  const of = !data.credit && R.par && R.par.credit;
+  const credit = data.credit || of;
+  if (credit) frag.append(trCredit(credit, of));
   data.lines.forEach((parts, line) => {
     const p = document.createElement("p");
     const f = format[line];

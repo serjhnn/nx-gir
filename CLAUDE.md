@@ -101,6 +101,16 @@
   (`#/library`, `/api/library`): author names and
   short book names for `books/grabar/` (content; a
   test checks every path and author)
+- `books/TRANSLATIONS.tsv`: our translations in
+  `books/ashkharhabar/` (all but `bible/`, which is
+  not ours): their status (`machine`, `review`,
+  `reviewed`), reviewers and date, read by
+  `scripts/nxgir_translations.py` (tested in
+  `tests/test_translations.py`, which checks every
+  translation is listed). The web reader and the
+  site's book pages show it with the license, CC
+  BY-SA 4.0 (`CONTRIBUTING.md`, README). Add a line
+  with every new translated part, as `machine`
 - `blog/`: the Blog page (`#/blog`, `#/blog/<slug>`,
   `/api/blog`): one `YYYY-MM-DD-slug.LANG.md` per
   post and language (hy, en, ru; Armenian first),

@@ -219,6 +219,11 @@ place.
 
 ## Both translations
 
+- License: CC BY-SA 4.0 (see `CONTRIBUTING.md`).
+  Who reviews each part, and how far, is in
+  `TRANSLATIONS.tsv`; a part marked `review` or
+  `reviewed` there is no longer only the machine
+  translation described above.
 - Reformed (Soviet) spelling, as written in Armenia
   today.
 - The lines match the Grabar one for one: one

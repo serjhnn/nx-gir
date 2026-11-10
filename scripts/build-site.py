@@ -26,7 +26,9 @@ and, for search engines (searchable()), which do
 not see the #/ pages of app.js:
 
     read/<book>.html   each book as a plain page,
-        its text in the HTML, linked to the reader
+        its text in the HTML, linked to the reader;
+        our translations with their credit and
+        license (licensed())
     blog/<slug>.<lang>.html   each blog post in
         each of its languages, the same way
     features.<lang>.html   the Features page, the
@@ -331,9 +333,10 @@ OPEN_POST = {
 
 def plain_page(out, path, text, alt="", **kw):
     """Write a plain page (PAGE) at path of out:
-    text and alt (links to its other languages)
-    are HTML, the rest (title, desc, reader, and
-    lang and open if not the book's) plain."""
+    text and alt (links in the head: its other
+    languages, its license) are HTML, the rest
+    (title, desc, reader, and lang and open if not
+    the book's) plain."""
     kw = {"lang": "hy", "open": OPEN_BOOK, **kw}
     kw = {k: htm.escape(v) for k, v in kw.items()}
     page = PAGE.format(
@@ -430,6 +433,26 @@ def feature_pages(out, app):
     return links
 
 
+def licensed(credit, text):
+    """For one of our translations (credit, from
+    nxgir_web.credit()): the license link for the
+    head, and text with the credit line on top.
+    Else ("", text)."""
+    if not credit:
+        return "", text
+    esc = htm.escape
+    href = esc(credit["url"])
+    line = (
+        f'<p class="tr-credit">{esc(credit["text"])} · '
+        f'<a rel="license" href="{href}">'
+        f"{esc(credit['license'])}</a></p>\n"
+    )
+    return (
+        f'<link rel="license" href="{href}">\n',
+        line + text,
+    )
+
+
 def searchable(out, app, files):
     """What search engines need to find the books:
     app.js shows everything at #/ addresses, and to
@@ -456,6 +479,7 @@ def searchable(out, app, files):
         reader = "./#/read/" + "/".join(
             quote(x, safe="") for x in name.split("/")
         )
+        lic, text = licensed(web.credit(app, name), text)
         plain_page(
             out,
             path,
@@ -463,6 +487,7 @@ def searchable(out, app, files):
             desc=describe(lines),
             reader=reader,
             text=text,
+            alt=lic,
         )
         links.append((path, title))
     posts = post_pages(out, app)

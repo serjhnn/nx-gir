@@ -1,0 +1,39 @@
+# The translations of nx-gir: who made them, who
+# reviewed them, and their license (CC BY-SA 4.0,
+# see CONTRIBUTING.md). Shown in the web reader
+# and on the book pages under each translation
+# (scripts/nxgir_translations.py).
+#
+# path<TAB>status<TAB>reviewers<TAB>date
+#
+#   path       under books/: a file, or a folder
+#              for all its files (the longest
+#              match wins)
+#   status     machine: made by Claude, not yet
+#                reviewed by a person
+#              review: being reviewed
+#              reviewed: read through and corrected
+#   reviewers  names, split by ", "; empty for
+#              machine
+#   date       when the status last changed,
+#              YYYY-MM-DD
+#
+# Only our own translations are listed. The rest of
+# ashkharhabar/bible/ (Psalm 118, Etchmiadzin 1994)
+# is not ours and not under this license.
+ashkharhabar/grigor-tatevatsi/2-dzmeran-hator/01.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/01.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/02.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/03.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/04.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/05.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/06.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/07.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/08.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/09.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/10.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/11.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/12.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/13.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/14.txt	review	serjhnn	2026-11-10
+ashkharhabar/grigor-tatevatsi/3-amaran-hator/15.txt	review	serjhnn	2026-11-10

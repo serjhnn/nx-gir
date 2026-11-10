@@ -228,6 +228,26 @@ def test_searchable(tmp_path, files):
     assert '<a href="features.en.html">' in index
 
 
+def test_licensed():
+    credit = {
+        "text": "Թարգմանությունը՝ <Նախագիր>",
+        "license": "CC BY-SA 4.0",
+        "url": "https://example.org/by-sa/",
+    }
+    head, text = bs.licensed(credit, "<p>x</p>")
+    assert head == (
+        '<link rel="license"'
+        ' href="https://example.org/by-sa/">\n'
+    )
+    assert text.startswith('<p class="tr-credit">')
+    assert "&lt;Նախագիր&gt;" in text
+    assert text.endswith("<p>x</p>")
+    assert bs.licensed(None, "<p>x</p>") == (
+        "",
+        "<p>x</p>",
+    )
+
+
 def test_describe():
     lines = ["Title", "", "one two", "three four"]
     assert bs.describe(lines) == "one two three four"

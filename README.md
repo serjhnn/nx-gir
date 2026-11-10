@@ -473,8 +473,18 @@ scripts/render-web.py
 ## Contributing
 
 Grabar texts, glossaries, and lists of abbreviations are especially welcome,
-along with test scans of old prints.
+along with test scans of old prints, and most of all people to review the
+modern Armenian translations: see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-TBD
+- **Translations into modern Armenian** (`books/ashkharhabar/`, except
+  `bible/`): [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
+  Նախագիր (nxgir.am). First made by machine (Claude), now reviewed by people;
+  who reviewed which part is in `books/TRANSLATIONS.tsv`, and the reader shows
+  it above each part.
+- **Grabar texts**: in the public domain (see `books/SOURCES.md`).
+- **Psalm 118 in modern Armenian** (`books/ashkharhabar/bible/`): the 1994
+  translation of the Mother See of Holy Etchmiadzin, not ours and not under
+  CC BY-SA.
+- **Code**: TBD.

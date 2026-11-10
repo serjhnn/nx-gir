@@ -54,6 +54,7 @@ import nxgir_features as feature_list
 import nxgir_grabar as grabar
 import nxgir_limits as lim
 import nxgir_timeline as tl
+import nxgir_translations as tr
 from nxgir_browse import (
     folder_count,
     folder_exists,
@@ -131,6 +132,7 @@ class App:
         library=LIBRARY,
         blog=blog_posts.BLOG,
         features=feature_list.FEATURES,
+        translations=tr.TRANSLATIONS,
     ):
         self.files = list(files)
         self.paths = {n: p for n, _, p in self.files}
@@ -146,6 +148,8 @@ class App:
         self.blog = blog
         # features/, or None for an empty page
         self.features = features
+        # TRANSLATIONS.tsv, or None for no credits
+        self.translations = translations
 
     def events(self):
         """The events of the timeline, oldest first,
@@ -552,8 +556,10 @@ def book(app, name):
     """A book's lines, cut into words, with where it
     was left ("at": its word), the first word of every
     sentence, its bookmarks and notes, its contents
-    (the chapters and sermons in it) and for a .md
-    book its bold, italic, headings and quotes."""
+    (the chapters and sermons in it), for a .md
+    book its bold, italic, headings and quotes, and
+    for one of our translations who made and
+    reviewed it and its license (credit)."""
     text = book_text(app, name)
     lay = layout(text, 10**9)
     st = app.state()
@@ -573,8 +579,17 @@ def book(app, name):
         "parallel": app.parallel(name),
         "format": md_format(app, name),
         "contents": contents(text.splitlines()),
+        "credit": credit(app, name),
         **places(app, name, st, lay),
     }
+
+
+def credit(app, name):
+    """Who made and reviewed a translation, and its
+    license (nxgir_translations.credit()); None for
+    a book not in TRANSLATIONS.tsv."""
+    table = tr.read(app.translations)
+    return tr.credit(table, name)
 
 
 def word(w, lang="en"):
