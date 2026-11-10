@@ -78,6 +78,11 @@ def test_build(tmp_path, files):
         (data / "blog.json").read_text("utf-8")
     )
     assert blog["posts"][-1]["slug"] == "welcome"
+    # the Features page, from features/
+    feats = json.loads(
+        (data / "features.json").read_text("utf-8")
+    )
+    assert "en" in [v["lang"] for v in feats["versions"]]
     tl = json.loads(
         (data / "timeline.json").read_text("utf-8")
     )
@@ -215,6 +220,12 @@ def test_searchable(tmp_path, files):
     ) in sm
     assert '<a href="blog/welcome.en.html">' in index
     assert not (out / "blog/welcome.hy.html").exists()
+    # the Features page as a plain page too
+    feat = (out / "features.en.html").read_text("utf-8")
+    assert 'href="./#/features/en"' in feat
+    assert "<h1>Features</h1>" in feat
+    assert f"{bs.SITE}/features.en.html" in sm
+    assert '<a href="features.en.html">' in index
 
 
 def test_describe():

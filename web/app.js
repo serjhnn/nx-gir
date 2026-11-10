@@ -1,6 +1,7 @@
 // nx-gir web: the bookshelf and the theme button.
 // Pages are #/ (top), #/f/<folder>, #/read/<book>,
-// #/library, #/timeline, #/blog and #/stats; the
+// #/library, #/timeline, #/blog, #/features and
+// #/stats; the
 // data
 // comes from
 // /api/.
@@ -61,6 +62,12 @@ const ICONS = {
   pen: [
     "M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z",
     "M13.5 6.5l4 4",
+  ],
+  // a ticked box: the features
+  tick: [
+    "M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5" +
+      "a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z",
+    "M8 12l3 3l5-6",
   ],
   sun: [
     "M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8z",
@@ -281,6 +288,9 @@ async function staticApi(path) {
   }
   if (route === "blog") {
     return json("data/blog.json");
+  }
+  if (route === "features") {
+    return json("data/features.json");
   }
   if (route === "recent") {
     return { items: await recentHere(
@@ -614,7 +624,10 @@ async function shelf(folder) {
     icon(ICONS.book), "Գրադարան"),
     h("a", { class: "icon-btn",
       href: "#/blog" },
-    icon(ICONS.pen), "Բլոգ")),
+    icon(ICONS.pen), "Բլոգ"),
+    h("a", { class: "icon-btn",
+      href: "#/features" },
+    icon(ICONS.tick), "Հնարավորություններ")),
     last && last.items.length
       ? recentCard(last.items) : null,
     folder ? null : intro(data.status, data.news),
@@ -633,6 +646,8 @@ async function shelf(folder) {
       h("a", { href: "#/timeline" }, "Timeline"),
       " · ",
       h("a", { href: "#/blog" }, "Blog"),
+      " · ",
+      h("a", { href: "#/features" }, "Features"),
       " · ",
       h("a", { href: "#/stats" }, "Statistics"),
       " · ",
@@ -1048,6 +1063,69 @@ async function blogPage(path) {
             ? data.posts.map((p) => postItem(p, lang))
             : h("p", { class: "empty", lang },
               t.none)));
+  };
+  draw();
+}
+
+// -- features --
+
+// the page's blocks as an intro (the paragraphs
+// before the first feature) and one card per
+// "## " feature with its paragraphs
+function featureCards(blocks) {
+  const intro = [];
+  const list = h("ul", { class: "features" });
+  let card = null;
+  for (const [kind, text] of blocks) {
+    if (kind === "h") {
+      card = h("li", {}, h("h2", {}, text));
+      list.append(card);
+    } else if (card) {
+      card.append(h("p", {}, text));
+    } else {
+      intro.push(h("p", { class: "sub" }, text));
+    }
+  }
+  return [intro, list];
+}
+
+// #/features: what the site can do, in the
+// language picked for the blog; #/features/<lang>
+// in lang
+async function featuresPage(want) {
+  if (want in BLOG) setBlogLang(want);
+  const data = await api("features");
+  const draw = () => {
+    const langs = data.versions.map((v) => v.lang);
+    const lang = langs.includes(blogLang())
+      || !langs.length ? blogLang() : langs[0];
+    const v = data.versions.find((x) =>
+      x.lang === lang);
+    const pick = h("div", { class: "filters",
+      role: "group", "aria-label": "Language" },
+    langs.map((l) => {
+      const b = h("button", { type: "button",
+        lang: l, "aria-pressed": String(l === lang) },
+      BLOG[l].name);
+      b.addEventListener("click", () => {
+        setBlogLang(l);
+        draw();
+      });
+      return b;
+    }));
+    document.title = (v ? v.title : "Features")
+      + " · Նախագիր";
+    const [intro, list] = v ? featureCards(v.blocks)
+      : [[], null];
+    show(
+      h("p", { class: "crumbs", lang },
+        h("a", { href: "#/" }, BLOG[lang].home)),
+      h("h1", { lang }, v ? v.title : "Features"),
+      h("div", { lang }, intro),
+      langs.length > 1 ? pick : null,
+      v ? h("div", { lang }, list)
+        : h("p", { class: "empty" },
+          "Nothing here yet."));
   };
   draw();
 }
@@ -2507,6 +2585,9 @@ async function route() {
       || hash.startsWith("blog/")) {
       await blogPage(decodeURIComponent(
         hash.slice(5)));
+    } else if (hash === "features"
+      || hash.startsWith("features/")) {
+      await featuresPage(hash.slice(9));
     } else if (hash === "stats") {
       await statsPage();
     } else if (hash === "recent") {

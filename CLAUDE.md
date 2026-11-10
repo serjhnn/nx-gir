@@ -96,6 +96,16 @@
   `tests/test_blog.py`; the format is in
   `blog/README.md`); content, exempt from the line
   limit; on the site as `data/blog.json`
+- `features/`: the Features page (`#/features`,
+  `/api/features`): what the site can do, one
+  `features.LANG.md` per language (drafts in
+  `features/drafts/`), in the blog's format, read
+  by `scripts/nxgir_features.py` (tested in
+  `tests/test_features.py`; see
+  `features/README.md`); on the site as
+  `data/features.json` and
+  `features.<lang>.html`. Add a feature there
+  with every new one on the site
 - `notes/`: working notes, e.g. what each part of a
   book covers (`notes/3-amaran-hator.md` and
   `notes/2-dzmeran-hator.md`, added to with every

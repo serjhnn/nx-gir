@@ -15,6 +15,7 @@ the same functions (nxgir_web.py):
         know, spread over BUCKETS files by bucket()
     data/timeline.json              /api/timeline
     data/blog.json                  /api/blog
+    data/features.json              /api/features
     data/titles.json                each book's title,
         for /api/recent (the rest is in the browser)
     data/library.json               /api/library
@@ -28,6 +29,8 @@ not see the #/ pages of app.js:
         its text in the HTML, linked to the reader
     blog/<slug>.<lang>.html   each blog post in
         each of its languages, the same way
+    features.<lang>.html   the Features page, the
+        same way
     sitemap.xml, robots.txt   where they are
 
 The test texts of data/ and the user's own texts in
@@ -181,11 +184,13 @@ def build(
     files,
     timeline=web.tl.TIMELINE,
     blog=web.blog_posts.BLOG,
+    features=web.feature_list.FEATURES,
 ):
     """Write the site for files [(name, size, path)],
-    the events of timeline (timeline.tsv) and the
-    posts in blog (blog/) into out. Returns (books,
-    folders, words)."""
+    the events of timeline (timeline.tsv), the
+    posts in blog (blog/) and the Features page
+    (features/) into out. Returns (books, folders,
+    words)."""
     start = time.monotonic()
     out = Path(out)
     if out.exists():
@@ -207,6 +212,7 @@ def build(
             state_path=state,
             timeline=timeline,
             blog=blog,
+            features=features,
         )
         dirs = folders(files)
         write_json(
@@ -214,6 +220,9 @@ def build(
         )
         write_json(data / "library.json", web.library(app))
         write_json(data / "blog.json", web.blog(app))
+        write_json(
+            data / "features.json", web.features(app)
+        )
         # for the list of readings, which only has
         # the names (recentHere() in app.js)
         write_json(
@@ -381,6 +390,46 @@ def post_pages(out, app):
     return links
 
 
+def feature_pages(out, app):
+    """The Features page in each of its languages
+    as a plain page, features.<lang>.html, naming
+    the others (hreflang). Returns [(path,
+    title)]."""
+    vs = web.features(app)["versions"]
+
+    def page(lang):
+        return f"features.{lang}.html"
+
+    alt = "".join(
+        '<link rel="alternate" hreflang='
+        f'"{v["lang"]}" href="'
+        f'{htm.escape(url(page(v["lang"])))}">\n'
+        for v in vs
+    )
+    links = []
+    for v in vs:
+        path = page(v["lang"])
+        text = "\n".join(
+            f"<{t}>{htm.escape(x)}</{t}>"
+            for k, x in v["blocks"]
+            for t in ["h2" if k == "h" else "p"]
+        )
+        paras = [x for k, x in v["blocks"] if k == "p"]
+        plain_page(
+            out,
+            path,
+            lang=v["lang"],
+            open=OPEN_POST[v["lang"]],
+            title=v["title"],
+            desc=describe([""] + paras),
+            reader=f"./#/features/{v['lang']}",
+            text=text,
+            alt=alt if len(vs) > 1 else "",
+        )
+        links.append((path, v["title"]))
+    return links
+
+
 def searchable(out, app, files):
     """What search engines need to find the books:
     app.js shows everything at #/ addresses, and to
@@ -389,7 +438,8 @@ def searchable(out, app, files):
     (read/<book>.html), listed in sitemap.xml, which
     robots.txt names, and linked from index.html for
     browsers without JavaScript. The blog posts
-    too (post_pages()), with their dates."""
+    too (post_pages()), with their dates, and the
+    Features page (feature_pages())."""
     esc = htm.escape
     links = []
     for name, _, _ in files:
@@ -416,6 +466,7 @@ def searchable(out, app, files):
         )
         links.append((path, title))
     posts = post_pages(out, app)
+    links += feature_pages(out, app)
     urls = [(SITE + "/", "")]
     urls += [(url(p), "") for p, _ in links]
     urls += [(url(p), d) for p, _, d in posts]

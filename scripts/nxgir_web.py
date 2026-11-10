@@ -12,6 +12,7 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/word?w=&lang=      abbreviation + meaning
   GET  /api/timeline           the main steps
   GET  /api/blog               the blog posts
+  GET  /api/features           what the site can do
   GET  /api/recent?n=          the books read last
   GET  /api/stats              how close to the limits
   GET  /api/library            the Grabar books
@@ -49,6 +50,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
 import nxgir_blog as blog_posts
+import nxgir_features as feature_list
 import nxgir_grabar as grabar
 import nxgir_limits as lim
 import nxgir_timeline as tl
@@ -128,6 +130,7 @@ class App:
         timeline=tl.TIMELINE,
         library=LIBRARY,
         blog=blog_posts.BLOG,
+        features=feature_list.FEATURES,
     ):
         self.files = list(files)
         self.paths = {n: p for n, _, p in self.files}
@@ -141,6 +144,8 @@ class App:
         self.library = library
         # blog/, or None for no posts
         self.blog = blog
+        # features/, or None for an empty page
+        self.features = features
 
     def events(self):
         """The events of the timeline, oldest first,
@@ -315,6 +320,15 @@ def blog(app):
     if not app.blog:
         return {"posts": []}
     return {"posts": blog_posts.read(app.blog)}
+
+
+def features(app):
+    """The Features page: what the site can do, in
+    each language it is written in
+    (nxgir_features.py)."""
+    if not app.features:
+        return {"versions": []}
+    return {"versions": feature_list.read(app.features)}
 
 
 def stats(app, root=lim.ROOT):
@@ -780,6 +794,8 @@ def get(app, route, query):
         return timeline(app)
     if route == "/api/blog":
         return blog(app)
+    if route == "/api/features":
+        return features(app)
     if route == "/api/recent":
         n = arg("n", "0")
         if not n.isdigit():
