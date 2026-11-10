@@ -688,6 +688,19 @@ h1 {
     var(--serif);
   color: var(--text);
 }
+/* the line in the middle of the page: Նախագիր
+   to its left, nxGir to its right */
+.site-foot p.foot-name {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+.site-foot .foot-name > :first-child {
+  justify-self: end;
+}
+.site-foot .foot-name > :last-child {
+  justify-self: start;
+}
 /* a thin line between the two names, as in
    the header (.brand-sep) */
 .site-foot .foot-sep {
