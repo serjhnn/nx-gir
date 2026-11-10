@@ -97,8 +97,9 @@
   `blog/README.md`); content, exempt from the line
   limit; on the site as `data/blog.json`
 - `notes/`: working notes, e.g. what each part of a
-  book covers (`notes/3-amaran-hator.md`, added to
-  with every translated part); not on the shelf and
+  book covers (`notes/3-amaran-hator.md` and
+  `notes/2-dzmeran-hator.md`, added to with every
+  translated part); not on the shelf and
   not on the Pages site
 - `scripts/nxgir_limits.py`: how close the
   repository is to the limits of GitHub and of a

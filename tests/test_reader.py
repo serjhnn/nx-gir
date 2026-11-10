@@ -555,6 +555,8 @@ def test_contents_of_sermons():
         "(Գլուխ ՃԷ)",
         "Նորին քարոզ։ (Մի շնար։) Ել. 20։ (Գլուխ. ՃԸ)",
         "Գլուխ Դ. Նորին քարոզ վասն ծննդեանն։",
+        "Քարոզ. Բ. Որոտնեցւոյ։",
+        "Քարոզ վասն տարեմտին։",
         "",
         "Յայլմէ քարոզ։",
         "Սաղ. 131. 9. (Գլուխ ԽԱ. )",
@@ -593,13 +595,20 @@ def test_contents_of_sermons():
             "title": "Նորին քարոզ վասն ծննդեանն։",
             "level": 2,
         },
+        # Քարոզ and a number, without Գլուխ
         {
-            "line": 13,
+            "line": 12,
+            "n": "Բ",
+            "title": "Որոտնեցւոյ։",
+            "level": 2,
+        },
+        {
+            "line": 15,
             "n": "ԽԱ",
             "title": "Յայլմէ քարոզ։",
             "level": 2,
         },
-        {"line": 15, "n": "Ա", "title": "", "level": 2},
+        {"line": 17, "n": "Ա", "title": "", "level": 2},
     ]
     # a number with no heading above it is left out
     assert contents(["(Գլուխ. Ա)"]) == []

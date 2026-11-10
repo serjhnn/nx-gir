@@ -275,6 +275,8 @@ def sentence_starts(lay):
 GROUP_RE = re.compile(r"ԳԼՈՒԽ\s+\S")
 NUMBER_RE = re.compile(r"\(Գլուխ\.?\s*([^\s.)]+)\.?\s*\)$")
 CHAPTER_RE = re.compile(r"Գլուխ\.?\s+([^\s.]+)\.?\s*(.*)")
+# a sermon numbered without Գլուխ: Քարոզ. Բ. ...
+SERMON_RE = re.compile(r"Քարոզ\.?\s+([Ա-Ֆ]{1,4})\.\s*(.*)")
 # a verse at the end: Սաղ. 131. 9. or 1 Թագ. 2. 7։
 REF_RE = re.compile(
     r"(\d\s+)?\S+\.?\s+\d+\s*[.։]\s*\d+[\d\s,-]*[.։]?\s*$"
@@ -336,7 +338,10 @@ def contents(lines):
             )
             continue
         m = CHAPTER_RE.fullmatch(t)
-        if m and not t.startswith("Գլուխը"):
+        if m and t.startswith("Գլուխը"):
+            m = None
+        m = m or SERMON_RE.fullmatch(t)
+        if m:
             out.append(
                 {
                     "line": i,

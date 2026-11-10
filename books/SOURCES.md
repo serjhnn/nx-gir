@@ -153,6 +153,8 @@ How the files are made:
   part 10, none in part 11, 2 in part 12, none
   in part 13, 3 in part 14, none in part 15),
   the line break now stands there.
+- `2-dzmeran-hator/01.txt` is cut the same way
+  (no `։` without a space after it).
 
 ## ashkharhabar/grigor-tatevatsi/3-amaran-hator/
 
@@ -200,17 +202,35 @@ request. It is a machine translation, not a
 published or reviewed one: read it as a help to
 the Grabar, not in its place.
 
+## ashkharhabar/grigor-tatevatsi/2-dzmeran-hator/
+
+`01.txt`: a translation into modern Eastern
+Armenian of `grabar/grigor-tatevatsi/2-dzmeran-hator/01.txt`
+(part 1 of 18 of Ձմեռան հատոր: the preface of the
+1740 edition and praise of Grigor, the preludes to
+the readings, and the sermons on the New Year, on
+the Annunciation and on the Nativity, Գլուխ Ա–Զ),
+made by Claude (Anthropic's AI model) on
+2026-11-10 at the user's request, the same way as
+the translation of Ամառան հատոր above. It is a
+machine translation, not a published or reviewed
+one: read it as a help to the Grabar, not in its
+place.
+
+## Both translations
+
 - Reformed (Soviet) spelling, as written in Armenia
   today.
 - The lines match the Grabar one for one: one
   Grabar sentence per line and its translation on the
-  same line of this file, so the web reader shows the
+  same line of the translated file, so the web reader shows the
   two side by side. Where the translation joins what
   the Grabar says in two sentences (mostly the words
   before a quotation, which the Grabar ends with
   `։`), it is cut at the same place, so some lines
   end in a comma or a `.`.
-- Quotations keep the parentheses of the Grabar.
+- Quotations keep the parentheses (Ամառան հատոր)
+  or the «» (Ձմեռան հատոր) of the Grabar.
   Slips and repeated passages in the Digilib text are
   translated as they stand, not corrected.
 
