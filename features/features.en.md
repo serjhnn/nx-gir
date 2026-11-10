@@ -12,7 +12,7 @@ Tap any word to see what it means, in English or in Armenian. The meanings come 
 
 ## Scribal abbreviations
 
-Old manuscripts and books shorten common words (ած for Աստուած). Tap one and its full form is shown, with the source it comes from.
+Old manuscripts and books shorten common words (վրդ for վարդապետ). Tap one and its full form is shown, with the source it comes from.
 
 ## Every place a word appears
 
