@@ -1904,6 +1904,13 @@ function showContents() {
     list.append(li);
   });
   openPanel("Contents", "en", list);
+  // the book's title under the heading, which
+  // stays at the top while the list scrolls
+  const head = R.panel.querySelector(".panel-head h2");
+  const box = h("div", { class: "toc-head" });
+  head.before(box);
+  box.append(head, h("p", { class: "toc-book",
+    lang: "hy" }, R.head || R.title));
   list.querySelector(".here")
     ?.scrollIntoView({ block: "center" });
 }

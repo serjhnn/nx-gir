@@ -1467,6 +1467,13 @@ body.panel-open main {
   overflow-wrap: anywhere;
 }
 
+/* the Contents: the book's title under it */
+.toc-book {
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+  font: 1rem/1.35 var(--serif);
+}
+
 .panel .icon-btn.close {
   font-size: 1.2em;
   line-height: 1;
