@@ -1306,7 +1306,9 @@ function openPanel(title, titleLang, ...body) {
       h("h2", { lang: titleLang }, title), close),
     h("div", { class: "panel-body" }, ...body));
   R.panel.hidden = false;
+  R.panel.dataset.kind = title;
   document.body.classList.add("panel-open");
+  tocOpen(title === "Contents");
 }
 
 function closePanel() {
@@ -1316,6 +1318,13 @@ function closePanel() {
   R.refs = [];
   if (R.panel) R.panel.hidden = true;
   document.body.classList.remove("panel-open");
+  tocOpen(false);
+}
+
+// the Contents button shows whether its list is open
+function tocOpen(open) {
+  R.tools?.querySelector(".toc-btn")
+    ?.setAttribute("aria-expanded", String(open));
 }
 
 function langSwitch() {
@@ -1519,10 +1528,16 @@ function decorate() {
       "aria-label": "Back to the folder",
       title: "Back to " + (dir || "the library") },
     icon(ICONS.back)),
+    // a second click hides the list again
     R.contents.length ? btn(["☰ ", h("span",
-      { class: "long" }, "Contents")], showContents,
-    { "aria-label": "Contents", title: "Contents: "
-      + plural(R.contents.length, "heading") })
+      { class: "long" }, "Contents")],
+    toggleContents, { class: "icon-btn toc-btn",
+      "aria-label": "Contents",
+      "aria-expanded": String(!!R.panel &&
+        !R.panel.hidden &&
+        R.panel.dataset.kind === "Contents"),
+      title: "Contents: "
+        + plural(R.contents.length, "heading") })
       : null,
     STATIC ? null : btn(count("★", "Bookmarks",
       R.marks.length), showMarks,
@@ -1768,6 +1783,15 @@ function wordOfLine(line) {
     else hi = mid;
   }
   return lo;
+}
+
+function toggleContents() {
+  if (R.panel && !R.panel.hidden &&
+      R.panel.dataset.kind === "Contents") {
+    closePanel();
+  } else {
+    showContents();
+  }
 }
 
 function showContents() {

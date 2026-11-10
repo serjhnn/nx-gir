@@ -1717,7 +1717,8 @@ body.reading.full .bar {
   padding-inline: 8px;
 }
 
-.tools .more[aria-expanded="true"] {
+.tools .more[aria-expanded="true"],
+.tools .toc-btn[aria-expanded="true"] {
   color: var(--accent-ink);
   border-color: var(--accent);
 }
