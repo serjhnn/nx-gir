@@ -685,6 +685,16 @@ h1 {
   font: 500 1rem var(--serif);
   color: var(--text);
 }
+/* a thin line between the two names, as in
+   the header (.brand-sep) */
+.site-foot .foot-sep {
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin: 0 0.5rem;
+  vertical-align: -0.15em;
+  background: var(--muted);
+}
 
 /* the end of a part (partEnd()): the parts
    before and after it, under the text */

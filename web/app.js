@@ -367,7 +367,9 @@ function siteFooter() {
   return h("footer", { class: "site-foot" },
     h("p", { class: "foot-name" },
       h("span", { lang: "hy" }, "Նախագիր"),
-      " (", named("nxGir"), ")"),
+      h("span", { class: "foot-sep",
+        "aria-hidden": "true" }),
+      named("nxGir")),
     h("nav", { "aria-label": "Pages" },
       pages.flatMap(([to, label], i) => [
         i ? " · " : null,
