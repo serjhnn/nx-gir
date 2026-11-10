@@ -220,6 +220,13 @@ main {
     var(--serif);
 }
 
+/* the Latin name beside it, in the logo's color */
+.brand-en {
+  font: 700 1.25rem "nx Noto Serif Armenian",
+    var(--serif);
+  color: var(--accent);
+}
+
 .icon-btn {
   display: inline-flex;
   align-items: center;

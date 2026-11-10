@@ -310,7 +310,10 @@ PAGE = """<!doctype html>
 </head>
 <body>
 <header class="bar">
-  <a class="brand" href="./" lang="hy">Նախագիր</a>
+  <a class="brand" href="./">
+    <span class="brand-hy" lang="hy">Նախագիր</span>
+    <span class="brand-en">nxGir</span>
+  </a>
 </header>
 <main class="plain">
 <p><a href="{reader}">{open}</a></p>
