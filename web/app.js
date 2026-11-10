@@ -947,13 +947,16 @@ async function timelinePage() {
 const BLOG = {
   hy: { name: "Հայերեն", title: "Բլոգ",
     sub: "Նորություններ և նշումներ Նախագրից",
-    home: "← Գլխավոր", none: "Գրառումներ դեռ չկան։" },
+    home: "← Գլխավոր", none: "Գրառումներ դեռ չկան։",
+    read: "Կարդալ →" },
   en: { name: "English", title: "Blog",
     sub: "News and notes from nx-gir",
-    home: "← Home", none: "No posts yet." },
+    home: "← Home", none: "No posts yet.",
+    read: "Read →" },
   ru: { name: "Русский", title: "Блог",
     sub: "Новости и заметки nx-gir",
-    home: "← Главная", none: "Записей пока нет." },
+    home: "← Главная", none: "Записей пока нет.",
+    read: "Читать →" },
 };
 const BLOG_LANG = "nxgir-blog-lang";
 
@@ -1015,6 +1018,24 @@ function postItem(p, lang) {
     h(kind === "h" ? "h3" : "p", {}, text)));
 }
 
+// a post in the list: a card with its date,
+// title and first paragraph, the whole card a
+// link to the post's own page
+function postCard(p, lang) {
+  const v = version(p, lang);
+  const lead = v.blocks.find(([k]) => k === "p");
+  return h("a", { class: "post-card",
+    href: "#/blog/" + p.slug, lang: v.lang },
+  h("span", { class: "pc-top" },
+    h("time", { datetime: p.date },
+      longDay(p.date, v.lang)),
+    h("span", { class: "pc-more" },
+      BLOG[v.lang].read)),
+  h("span", { class: "pc-title" }, v.title),
+  lead ? h("span", { class: "pc-lead" }, lead[1])
+    : null);
+}
+
 // #/blog: every post, newest first; #/blog/<slug>
 // that one post; #/blog/<slug>/<lang> in lang
 async function blogPage(path) {
@@ -1060,7 +1081,7 @@ async function blogPage(path) {
       h("div", { class: "blog" + (one ? " one" : "") },
         one ? postItem(one, lang)
           : data.posts.length
-            ? data.posts.map((p) => postItem(p, lang))
+            ? data.posts.map((p) => postCard(p, lang))
             : h("p", { class: "empty", lang },
               t.none)));
   };
