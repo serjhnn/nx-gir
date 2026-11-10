@@ -220,6 +220,14 @@ main {
     var(--serif);
 }
 
+/* a thin line between the two names */
+.brand-sep {
+  align-self: center;
+  width: 1px;
+  height: 1.2rem;
+  background: var(--muted);
+}
+
 /* the Latin name beside it, in the logo's color */
 .brand-en {
   font: 700 1.25rem "nx Noto Serif Armenian",

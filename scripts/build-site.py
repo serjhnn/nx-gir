@@ -312,6 +312,7 @@ PAGE = """<!doctype html>
 <header class="bar">
   <a class="brand" href="./">
     <span class="brand-hy" lang="hy">Նախագիր</span>
+    <span class="brand-sep" aria-hidden="true"></span>
     <span class="brand-en">nxGir</span>
   </a>
 </header>
