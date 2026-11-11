@@ -57,32 +57,45 @@ MODERN = set(
 )
 # modern plural and locative endings
 ENDINGS = ("ները", "ների", "ում", "երը", "երի")
-WORDS = 50  # fewer words than this: no verdict
-MIN = 10  # marker words needed for a verdict
+WORDS = 20  # fewer words than this: no verdict
+# marker words needed for a verdict: more for
+# modern, as Middle Armenian (medieval songs) shares
+# its words (ու, կու)
+MIN = 5
+MIN_MODERN = 10
 
 
 def score(text):
-    """(words, Grabar markers, modern markers)."""
-    words = re.findall(r"[Ա-և]+", text.lower())
+    """(Armenian words, Grabar markers, modern markers,
+    Latin or Cyrillic words)."""
+    words = re.findall(r"[\u0531-\u0587]+", text.lower())
+    other = re.findall(r"[A-Za-z\u0400-\u04ff]{2,}", text)
     count = collections.Counter(words)
     g = sum(count[w] for w in GRABAR)
     m = sum(count[w] for w in MODERN)
     m += sum(
         n for w, n in count.items() if w.endswith(ENDINGS)
     )
-    return len(words), g, m
+    return len(words), g, m, len(other)
+
+
+def judge(n, g, m, other=0):
+    """The kind for the counts of score()."""
+    if other >= WORDS and other > n:
+        return "other language"
+    if n < WORDS:
+        return "no text"
+    if g + m >= MIN and g >= 2 * m:
+        return "grabar"
+    if m >= MIN_MODERN and m >= 2 * g:
+        return "modern"
+    return "unclear"
 
 
 def kind(text):
-    """'grabar', 'modern', 'unclear' or 'no text'."""
-    n, g, m = score(text)
-    if n < WORDS:
-        return "no text"
-    if g >= MIN and g >= 2 * m:
-        return "grabar"
-    if m >= MIN and m >= 2 * g:
-        return "modern"
-    return "unclear"
+    """'grabar', 'modern', 'unclear', 'other
+    language' or 'no text'."""
+    return judge(*score(text))
 
 
 def verdict(first, middle):
@@ -164,11 +177,16 @@ def book(n):
     for href, _ in toc.found[mid : mid + 6]:
         url = urllib.parse.urljoin(SITE, href)
         middle += " " + text(fetch(url))
-        if score(middle)[0] >= WORDS:
+        n, _, _, other = score(middle)
+        if max(n, other) >= WORDS:
             break
-    _, g, m = score(middle or first)
+    n, g, m, o = score(middle or first)
     info.update(
-        kind=verdict(first, middle), grabar=g, modern=m
+        kind=verdict(first, middle),
+        grabar=g,
+        modern=m,
+        words=n,
+        other=o,
     )
     path.write_text(
         json.dumps(info, ensure_ascii=False), "utf-8"
@@ -219,9 +237,13 @@ HEAD = """\
 # kind: the language of a section from the middle of
 #   the book, guessed by counting words typical of
 #   Grabar against words of the modern language:
-#   grabar, modern, mixed (a modern foreword before
-#   a Grabar text, or the reverse), unclear, or
-#   no text (a scan or an empty section). A guess:
+#   grabar; modern (Eastern or Western); mixed (a
+#   modern foreword before a Grabar text, or the
+#   reverse); unclear (often Middle Armenian:
+#   medieval songs, chronicles); other language
+#   (English, French, Russian...); no text (no
+#   typed text on Digilib: most of these, with 0
+#   sections, are scans offered as PDF). A guess:
 #   check a book before fetching it.
 # grabar, modern: the marker words counted.
 # ours: yes if the book is in books/ already.

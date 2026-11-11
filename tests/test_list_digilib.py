@@ -63,3 +63,20 @@ def test_verdict():
     assert ld.verdict("", GRABAR) == "grabar"
     assert ld.verdict(GRABAR, "") == "grabar"
     assert ld.verdict(MODERN, MODERN) == "modern"
+
+
+def test_other_language():
+    text = "The Life and Adventures of Joseph Emin " * 5
+    assert ld.kind(text) == "other language"
+    assert ld.kind("Жизнь и приключения " * 10) == (
+        "other language"
+    )
+
+
+def test_few_markers_are_unclear():
+    # Armenian words, but almost no marker words
+    assert ld.kind("Գանձ սրբոյ լուսոյ " * 10) == "unclear"
+    assert ld.judge(100, 5, 0) == "grabar"
+    assert ld.judge(100, 2, 2) == "unclear"
+    assert ld.judge(100, 0, 9) == "unclear"
+    assert ld.judge(100, 0, 10) == "modern"
