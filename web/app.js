@@ -676,6 +676,7 @@ async function shelf(folder) {
     h("a", { class: "icon-btn",
       href: "#/contribute" },
     icon(ICONS.join), "Միանալ")),
+    folder ? null : joinBanner(),
     last && last.items.length
       ? recentCard(last.items) : null,
     folder ? null : intro(data.status, data.news),
@@ -689,6 +690,21 @@ async function shelf(folder) {
     data.items.length ? list
       : h("p", { class: "empty" }, "No books here.")
   );
+}
+
+// a narrow banner on the top page, with the
+// picture of #/contribute, leading there
+function joinBanner() {
+  return h("a", { class: "join-banner",
+    href: "#/contribute", lang: "hy" },
+  h("img", { src: "contribute.jpg", alt: "",
+    width: "1200", height: "675" }),
+  h("span", { class: "join-text" },
+    h("b", {}, "Միացեք Նախագրին"),
+    h("span", {}, "Օգնեք թարգմանել և ստուգել"
+      + " հին գրքերը"),
+    h("span", { class: "join-go" },
+      "Ինչպես միանալ →")));
 }
 
 // -- readings --
