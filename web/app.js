@@ -1433,10 +1433,8 @@ function sheet() {
 }
 
 function openPanel(title, titleLang, ...body) {
-  // the Contents button closes its own list
-  const close = title === "Contents" ? null
-    : btn("×", closePanel, { class: "icon-btn close",
-      "aria-label": "Close" });
+  const close = btn("×", closePanel,
+    { class: "icon-btn close", "aria-label": "Close" });
   R.panel.replaceChildren(
     h("div", { class: "panel-head" },
       h("h2", { lang: titleLang }, title), close),

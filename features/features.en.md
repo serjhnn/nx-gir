@@ -32,7 +32,7 @@ The site remembers where you stopped reading each book, in this browser. The hom
 
 ## Contents
 
-☰ Contents lists the chapters and sermons of the part you are reading and marks the one you are in. Tap one to go there; tap ☰ again to close the list.
+☰ Contents lists the chapters and sermons of the part you are reading and marks the one you are in. Tap one to go there; tap × or ☰ again to close the list.
 
 ## From one part to the next
 
