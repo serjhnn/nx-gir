@@ -296,7 +296,7 @@ PAGE = """<!doctype html>
   content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <base href="/">
-<title>{title} · Նախագիր</title>
+<title>{title} · Նախագիր | nxGir</title>
 <meta name="description" content="{desc}">
 <link rel="canonical" href="{canon}">
 {alt}<meta property="og:type" content="article">

@@ -341,10 +341,13 @@ async function staticApi(path) {
   throw new Error("Not in the published copy");
 }
 
+// the end of every tab title
+const NAME = "Նախագիր | nxGir";
+
 // the top page's title, as in index.html: what
 // search results show
 const TOP_TITLE =
-  "Նախագիր · Գրաբար · Grabar books, word by word";
+  NAME + " · Grabar books, word by word";
 
 function enc(name) {
   return name.split("/").map(encodeURIComponent)
@@ -651,7 +654,7 @@ async function shelf(folder) {
   const title = folder
     ? folder.split("/").pop() : "Library";
   document.title = folder
-    ? title + " · Նախագիր" : TOP_TITLE;
+    ? title + " · " + NAME : TOP_TITLE;
   const list = h("ul", { class: "shelf" });
   for (const item of data.items) {
     list.append(h("li", {}, item.folder
@@ -799,7 +802,7 @@ function recentCard(items) {
 
 async function recentPage() {
   const data = await api("recent");
-  document.title = "Readings · Նախագիր";
+  document.title = "Readings · " + NAME;
   show(
     h("p", { class: "crumbs" },
       h("a", { href: "#/" }, "← Home")),
@@ -840,7 +843,7 @@ function libraryRow(b) {
 // #/library: the Grabar books, by author
 async function libraryPage() {
   const data = await api("library");
-  document.title = "Գրադարան · Նախագիր";
+  document.title = "Գրադարան · " + NAME;
   const groups = data.authors.map((a) => {
     const list = h("ul", { class: "shelf" });
     for (const b of a.books) {
@@ -944,7 +947,7 @@ function eventList(data, kind) {
 
 async function timelinePage() {
   const data = await api("timeline");
-  document.title = "Timeline · Նախագիր";
+  document.title = "Timeline · " + NAME;
   const stat = (n, label) => h("div", {},
     h("b", {}, String(n)), h("span", {}, label));
   // a filter for each kind with more than one
@@ -1122,7 +1125,7 @@ async function blogPage(path) {
       return b;
     }));
     document.title = (one ? version(one, lang).title
-      + " · " : "") + t.title + " · Նախագիր";
+      + " · " : "") + t.title + " · " + NAME;
     show(
       h("p", { class: "crumbs", lang },
         h("a", { href: "#/" }, t.home),
@@ -1189,7 +1192,7 @@ async function featuresPage(want) {
       return b;
     }));
     document.title = (v ? v.title : "Features")
-      + " · Նախագիր";
+      + " · " + NAME;
     const [intro, list] = v ? featureCards(v.blocks)
       : [[], null];
     show(
@@ -1238,7 +1241,7 @@ const WAYS = [
 
 function contributePage() {
   document.title = "Become a contributor"
-    + " · Նախագիր";
+    + " · " + NAME;
   const list = h("ul", { class: "features" },
     WAYS.map(([title, ...text]) => h("li", {},
       h("h2", {}, title),
@@ -1358,7 +1361,7 @@ function historyTable(rows) {
 
 async function statsPage() {
   const data = await api("stats");
-  document.title = "Statistics · Նախագիր";
+  document.title = "Statistics · " + NAME;
   const head = [
     h("p", { class: "crumbs" },
       h("a", { href: "#/" }, "← Home")),
@@ -2449,7 +2452,7 @@ async function book(name) {
   const data = await api("book?name=" +
     encodeURIComponent(name));
   const title = name.split("/").pop();
-  document.title = title + " · Նախագիր";
+  document.title = title + " · " + NAME;
   Object.assign(R, {
     name: "", lines: data.lines.length,
     spans: [], keys: [], wpos: [],
@@ -2629,7 +2632,7 @@ async function edit(name) {
     encodeURIComponent(name));
   let ver = src.version;
   const title = name.split("/").pop();
-  document.title = "Edit " + title + " · Նախագիր";
+  document.title = "Edit " + title + " · " + NAME;
   const box = textBox(src.text);
   const msg = status();
   const reload = btn("Load the file again", () => {
@@ -2681,7 +2684,7 @@ const TEXT_LANGS = {
 
 async function newText(lang) {
   if (!TEXT_LANGS[lang]) lang = "ru";
-  document.title = "New text · Նախագիր";
+  document.title = "New text · " + NAME;
   const file = h("input", { type: "text",
     class: "field", id: "file", autocomplete: "off",
     autocapitalize: "none", spellcheck: "false",
