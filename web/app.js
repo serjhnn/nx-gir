@@ -1229,7 +1229,17 @@ function contributePage() {
       h("img", { src: "contribute.jpg",
         width: "1200", height: "675",
         alt: "A reader under a tree with a laptop,"
-          + " a monastery and a mountain behind" })),
+          + " a monastery and a mountain behind" }),
+      h("figcaption", { class: "mission" },
+        h("p", {}, "Our mission: to open the old"
+          + " Armenian books to every reader, word"
+          + " by word, in the language we speak"
+          + " today."),
+        h("p", { class: "aside" }, "Think of it as"
+          + " a scriptorium with a new apprentice:"
+          + " the AI copies fast and never asks for"
+          + " candles, but a monk still has to"
+          + " check every line."))),
     h("h1", {}, "Become a contributor"),
     h("p", { class: "sub" }, named("Նախագիր"
       + " (nxGir) is an open project: old Armenian"

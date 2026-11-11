@@ -585,6 +585,20 @@ h1 {
   object-fit: cover;
   border-radius: 14px;
 }
+.mission {
+  margin: 0.9rem 0 0;
+  padding-left: 0.9rem;
+  border-left: 3px solid var(--accent-ink);
+}
+.mission p {
+  margin: 0;
+  font: italic 1.15rem/1.45 var(--serif);
+}
+.mission .aside {
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font: 0.9rem/1.5 var(--sans);
+}
 .cta {
   display: flex;
   flex-wrap: wrap;
