@@ -97,6 +97,12 @@
   `books/SOURCES.md`)
 - `scripts/fetch-digilib.py`: downloads a book from
   digilib.am into `books/`, cut into parts
+- `scripts/list-digilib.py`: lists every Digilib
+  book in `notes/digilib.tsv`, with a link and a
+  guess whether it is Grabar (tested in
+  `tests/test_list_digilib.py`); a slow run (two
+  requests a book), resumable from
+  `.digilib-cache/list/`
 - `books/`: the library; `data/`: test texts.
   A book under `grabar/` and its translation at the
   same path under `ashkharhabar/` are read side by
