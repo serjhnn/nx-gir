@@ -5,7 +5,7 @@ Grabar.
     scripts/list-digilib.py [OUT]
 
 Walks the whole library (digilib.am/am/library/all),
-opens each book and one section from its middle (past
+opens each book and a section from its middle (past
 any modern foreword), and counts words typical of
 Grabar against words typical of the modern language,
 Eastern or Western. OUT (default notes/digilib.tsv)
@@ -34,6 +34,11 @@ _spec.loader.exec_module(fd)
 SITE = fd.SITE
 DELAY = 1.0  # seconds between requests
 CACHE = ROOT / ".digilib-cache/list"
+SORTS = (
+    f"{SITE}/am/library/all",
+    f"{SITE}/am/library/?sort=af",
+    f"{SITE}/am/library/?sort=fa",
+)
 
 # words found often in Grabar and hardly ever in the
 # modern language
@@ -154,10 +159,11 @@ def book(n):
     info["sections"] = len(toc.found)
     middle = ""
     mid = len(toc.found) // 2
-    # a section can be a bare heading: try a few
-    for href, _ in toc.found[mid : mid + 4]:
+    # sections can be short (a law, a heading): join
+    # a few until there are words enough
+    for href, _ in toc.found[mid : mid + 6]:
         url = urllib.parse.urljoin(SITE, href)
-        middle = text(fetch(url))
+        middle += " " + text(fetch(url))
         if score(middle)[0] >= WORDS:
             break
     _, g, m = score(middle or first)
@@ -175,17 +181,26 @@ def library():
     path = CACHE / "ids.json"
     if path.exists():
         return json.loads(path.read_text("utf-8"))
-    found, p = [], 1
-    while True:
-        # ?p=1 is a server error: page 1 has no p
-        url = f"{SITE}/am/library/all"
-        url += f"?p={p}" if p > 1 else ""
-        new = [i for i in ids(fetch(url)) if i not in found]
-        if not new:
-            break
-        found += new
-        print(f"page {p}: {len(found)}", file=sys.stderr)
-        p += 1
+    found = []
+    # the pages stop at 44 (later ones repeat it), so
+    # read the list in three orders: the default, A-Z
+    # and Z-A; ?p=1 is a server error, page 1 has no p
+    for base in SORTS:
+        p = 1
+        while True:
+            url = base
+            if p > 1:
+                url += (
+                    "&" if "?" in url else "?"
+                ) + f"p={p}"
+            new = [
+                i for i in ids(fetch(url)) if i not in found
+            ]
+            if not new and p > 1:
+                break
+            found += new
+            print(f"{url}: {len(found)}", file=sys.stderr)
+            p += 1
     path.write_text(json.dumps(found), "utf-8")
     return found
 
