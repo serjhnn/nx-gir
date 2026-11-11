@@ -331,3 +331,40 @@ Notes:
   start of the laws) with no text of their own.
 - Բ numbers the laws in the text as well
   (`1. «…`), and puts them in «».
+
+## grabar/grigor-narekatsi/
+
+The Book of Lamentations of Grigor Narekatsi
+(Գրիգոր Նարեկացի, about 951–1003), Մատեան
+ողբերգութեան, from Digilib, like the Tatevatsi
+works above (same remarks on the source and
+license).
+
+| Folder | Work | Digilib | Sections | Parts |
+|--------|------|---------|---------:|------:|
+| `1-matean-voghbergutyan/` | Մատեան ողբերգութեան (Book of Lamentations), verse | [178](https://www.digilib.am/book/178/) | 96 | 3 |
+
+Downloaded on 2026-11-11 with
+`scripts/fetch-digilib.py`, made the same way as
+the Tatevatsi works:
+
+```sh
+D=books/grabar/grigor-narekatsi
+scripts/fetch-digilib.py 178 "Մատեան ողբերգութեան" $D/1-matean-voghbergutyan
+```
+
+Notes:
+
+- The 95 chapters (Բան) have Digilib's numbers as
+  headings, `[Ա]` to `[ՂԵ]`, after one group
+  heading (`- ԲԱՆ`) with no text of its own. Each
+  chapter starts with its title (`Ի ԽՈՐՈՑ ՍՐՏԻՑ
+  ԽԱՒՍՔ ԸՆԴ ԱՍՏՈՒԾՈՅ`) and the numbers of its
+  parts (`Ա`, `Բ`, …) stand on lines of their own.
+- One verse per line.
+- Digilib writes `~` for the exclamation mark `՜`,
+  mostly inside a word (`Ձա~յն`), where the reader
+  would cut the word in two; all 121 were replaced
+  with `՜`. Otherwise the text is as on Digilib:
+  `:` for `։`, `` ` `` for `՝` and `'` for the
+  stress mark `՛`, as in the Shnorhali works.
