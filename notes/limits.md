@@ -92,8 +92,10 @@ size of their text), with `sitemap.xml`.
   would be near 1 GB: that is why parts stay
   under 1 MB. How it was measured, why it takes
   that much and how to make it smaller are in
-  `notes/browser-memory.md`; measure again with
-  `scripts/measure-memory.js`.
+  `notes/browser-memory.md`. Measured only when
+  asked, not with every new book: then with
+  `scripts/measure-memory.js`, and update both
+  notes.
 - **Site build, 10 minutes** (our own limit).
   GitHub Actions allows hours, but a slow build slows
   every publish. On 2026-11-07 more than half of
@@ -120,13 +122,6 @@ out: a translated part adds about 250 KB.
   books, fewer or smaller buckets), then at the book
   JSON (it repeats every word and space).
 - [ ] When a book part passes 1 MB: cut it in two.
-- [ ] After a new kind of book (larger parts,
-  another layout) or a change to how `app.js`
-  builds the text: measure the browser memory
-  again (`PHONE=1 node scripts/measure-memory.js
-  fresh 5`, with `nxgir web` running) and update
-  `notes/browser-memory.md`. If a tab nears
-  1 GB, start with steps 1 and 2 there.
 - [ ] When the repository passes 500 MB: think about
   keeping the large source copies (`sources/`, page
   scans) out of git.

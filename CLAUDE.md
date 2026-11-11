@@ -162,7 +162,8 @@
   (and how to lower it) is in
   `notes/browser-memory.md`, measured with
   `scripts/measure-memory.js` (Playwright, with
-  `nxgir web` running)
+  `nxgir web` running); measure it only when the
+  user asks, not with every new book
 - `interpretations/`: the user's own texts on the
   books, in Russian (`ru/`), English (`en/`) and
   Armenian (`hy/`);
