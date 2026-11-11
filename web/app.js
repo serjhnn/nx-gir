@@ -542,10 +542,6 @@ function folderRow(item) {
 // its modern Armenian translation side by side
 const START = "grabar/grigor-tatevatsi/" +
   "3-amaran-hator/01.txt";
-// the books whose translation the welcome shows;
-// the others wait for a page of their own
-const FRONT = "grabar/grigor-tatevatsi/";
-
 // where visitors can write: kept in parts and put
 // together only in the page, so that programs
 // gathering addresses from the files do not find it
@@ -554,8 +550,7 @@ const CONTACT = ["serj.hnn13", "gmail.com"];
 // the welcome above the library, in Armenian:
 // questions a first-time visitor may ask
 function intro(status, news) {
-  status = (status || []).filter(
-    (b) => b.folder.startsWith(FRONT));
+  status = status || [];
   const qa = (q, ...a) => [h("h3", {}, q),
     h("p", {}, ...a)];
   return h("section", { class: "intro", lang: "hy" },
@@ -595,8 +590,9 @@ function intro(status, news) {
       + "գրեք նախագծի հեղինակին՝ ", mail(), "։"));
 }
 
-// the long books and how many of their parts
-// have a translation (status() in nxgir_web.py)
+// the long books with a part translated, as
+// "author • book", and how many of their parts
+// (status() in nxgir_web.py)
 function statusList(status) {
   const list = h("ul", { class: "status" });
   for (const b of status) {
@@ -606,7 +602,7 @@ function statusList(status) {
     const to = b.first ? "#/read/" + enc(b.first)
       : "#/f/" + enc(b.folder);
     list.append(h("li", {},
-      h("a", { href: to }, b.title),
+      h("a", { href: to }, b.name || b.title),
       h("span", { class: "meta" },
         b.done + " / " + b.parts + " մաս"),
       h("span", { class: "progress", role: "img",

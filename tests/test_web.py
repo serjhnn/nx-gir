@@ -615,6 +615,9 @@ def test_status_counts_translated_parts(tmp_path):
     add(d + "02.txt", "Գիրք · 2/3")
     add(d + "03.txt", "Գիրք · 3/3")
     add("ashkharhabar/author/book/02.txt", "Գիրք · 2/3")
+    # a book with nothing translated is left out
+    add("grabar/author/other/01.txt", "Այլ · 1/2")
+    add("grabar/author/other/02.txt", "Այլ · 2/2")
     # the Bible and books not in parts don't count
     add("grabar/bible/ps/01.txt", "Սաղմոս · 1/1")
     add("ashkharhabar/bible/ps/01.txt", "Սաղմոս · 1/1")
@@ -623,6 +626,7 @@ def test_status_counts_translated_parts(tmp_path):
     assert web.status(app) == [
         {
             "title": "Գիրք",
+            "name": "author • Գիրք",
             "folder": "grabar/author/book",
             "parts": 3,
             "done": 1,
@@ -631,6 +635,26 @@ def test_status_counts_translated_parts(tmp_path):
     ]
     assert web.shelf(app)["status"] == web.status(app)
     assert web.shelf(app, "grabar")["status"] == []
+
+
+def test_status_names_author_and_book(tmp_path):
+    lib = tmp_path / "LIBRARY.tsv"
+    lib.write_text(
+        "author\tՀեղինակ\nauthor/book\tԿարճ\n",
+        encoding="utf-8",
+    )
+    files = []
+    for name in (
+        "grabar/author/book/01.txt",
+        "ashkharhabar/author/book/01.txt",
+    ):
+        p = tmp_path / name
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text("Գիրք · 1/2\n", encoding="utf-8")
+        files.append((name, 10, p))
+    app = App(files, library=lib)
+    names = [b["name"] for b in web.status(app)]
+    assert names == ["Հեղինակ • Կարճ"]
 
 
 def test_wide_rules_leave_the_phone_view():

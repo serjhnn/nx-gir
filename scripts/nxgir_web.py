@@ -357,8 +357,12 @@ def status(app):
     """How much of each long book in grabar/ is
     translated: its parts with a translation at the
     same path in the other PARALLEL folders. The
-    Bible is left out (NOT_COUNTED)."""
+    Bible is left out (NOT_COUNTED), and so are
+    the books with no part translated. "name" is
+    "author • book" from LIBRARY.tsv (or the
+    folder and the title)."""
     top = PARALLEL[0] + "/"
+    names = read_names(app.library)
     books = {}
     for name, _, path in app.files:
         if not name.startswith(top) or name.startswith(
@@ -369,10 +373,14 @@ def status(app):
         if not m:
             continue
         folder = name.rpartition("/")[0]
+        key = folder[len(top) :]
+        who = key.partition("/")[0]
+        short = names.get(key) or m.group(1)
         b = books.setdefault(
             folder,
             {
                 "title": m.group(1),
+                "name": names.get(who, who) + " • " + short,
                 "folder": folder,
                 "parts": int(m.group(3)),
                 "done": 0,
@@ -382,7 +390,7 @@ def status(app):
         if app.parallel(name):
             b["done"] += 1
             b["first"] = b["first"] or name
-    return list(books.values())
+    return [b for b in books.values() if b["done"]]
 
 
 def read_names(path):
