@@ -290,3 +290,44 @@ Notes:
   centuries (`զետ` "like", `ու` "and", `կու`,
   `հանց`, verbs such as `դառնա`, `կարդա`). They are
   kept here with the other works under his name.
+
+## grabar/mkhitar-gosh/
+
+The law book of Mkhitar Gosh (Մխիթար Գոշ, about
+1130–1213), Գիրք Դատաստանի (Datastanagirk), from
+Digilib, like the Tatevatsi works above (same
+remarks on the source and license). Digilib has it
+in three redactions (խմբագրութիւն), each a book of
+its own; they are the same work, worded and
+numbered differently. These are Gosh's only books
+on Digilib (his fables are not there).
+
+| Folder | Work | Digilib | Sections | Parts |
+|--------|------|---------|---------:|------:|
+| `1-datastanagirk-a/` | Գիրք Դատաստանի, Ա խմբ. | [277](https://www.digilib.am/book/277/) | 264 | 2 |
+| `2-datastanagirk-b/` | Գիրք Դատաստանի, Բ խմբ. | [278](https://www.digilib.am/book/278/) | 268 | 2 |
+| `3-datastanagirk-c/` | Գիրք Դատաստանի, Գ խմբ. | [279](https://www.digilib.am/book/279/) | 263 | 2 |
+
+Downloaded on 2026-11-11 with
+`scripts/fetch-digilib.py`, made the same way as
+the Tatevatsi works:
+
+```sh
+D=books/grabar/mkhitar-gosh
+scripts/fetch-digilib.py 277 "Գիրք Դատաստանի, Ա խմբագրութիւն" $D/1-datastanagirk-a
+scripts/fetch-digilib.py 278 "Գիրք Դատաստանի, Բ խմբագրութիւն" $D/2-datastanagirk-b
+scripts/fetch-digilib.py 279 "Գիրք Դատաստանի, Գ խմբագրութիւն" $D/3-datastanagirk-c
+```
+
+Notes:
+
+- The headings are Digilib's section numbers
+  (`[Ա]`, `[Բ]`, …); the title of each law
+  (`ՅԱՂԱԳՍ ԴԱՏԱՍՏԱՆԱՑ …`, in Գ `ԳԼՈՒԽ … ՎԱՍՆ …`)
+  is the first line under it. The numbers start
+  again where the laws begin, after the preface.
+- 2 sections in Ա, 3 in Բ and 2 in Գ are only
+  headings (the title or `Նախադրութիւն`, and the
+  start of the laws) with no text of their own.
+- Բ numbers the laws in the text as well
+  (`1. «…`), and puts them in «».

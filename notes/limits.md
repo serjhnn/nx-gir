@@ -24,26 +24,27 @@ the git size is measured, and the site's size and
 build time are the last ones in `limits.tsv`. So
 record after big additions to keep them fresh.
 
-## State on 2026-11-10 (commit 2146d95)
+## State on 2026-11-11 (commit 3213930)
 
 Amaran hator parts 1–15 of 24 translated, and the
-first part of Dzmeran hator; 83 book files on the
-shelf.
+first part of Dzmeran hator; the law book of
+Mkhitar Gosh in three redactions is new; 89 book
+files on the shelf.
 
 | What | Now | Limit | Used |
 |---|---|---|---|
-| Book text (`books/`) | 16.5 MB, 83 files | — | — |
-| Grabar / translation | 13.1 MB / 3.4 MB | — | — |
-| Pages site | 78.3 MB | 1 GB | 8% |
-| Git history | 19.5 MB | 1 GB | 2% |
+| Book text (`books/`) | 18.8 MB, 89 files | — | — |
+| Grabar / translation | 15.2 MB / 3.6 MB | — | — |
+| Pages site | 84.0 MB | 1 GB | 8% |
+| Git history | 21.1 MB | 1 GB | 2% |
 | Largest file | 6.0 MB (`grabar/vocabulary-hy.tsv`) | 50 MB | 12% |
 | Largest book part | 278 KB (Amaran hator 05, translation) | 1 MB | 27% |
-| Site build | 19 s | 10 min | 3% |
+| Site build | 20 s | 10 min | 3% |
 
-Since 2026-11-09 (d4db7fb): three translated parts
-added 1.5 MB to the site and 1.3 MB to git, about
-0.5 MB and 0.4 MB a part; the build took 19 s
-(20 s last time: steady).
+Since 2026-11-10 (2146d95): the three Gosh
+redactions (1.5 MB of Grabar, 6 parts) added
+5.9 MB to the site and 1.7 MB to git; the
+build took 20 s (steady).
 
 The site is 25 MB of books (about 1.6 times their
 text) and 33 MB of word lookups (512 files, at most
