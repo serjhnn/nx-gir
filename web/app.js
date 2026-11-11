@@ -71,6 +71,12 @@ const ICONS = {
     "M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z",
     "M13.5 6.5l4 4",
   ],
+  // a person and a plus: become a contributor
+  join: [
+    "M9 11a3.5 3.5 0 1 0 0-7a3.5 3.5 0 0 0 0 7z",
+    "M3 20a6 6 0 0 1 12 0",
+    "M19 8v6M16 11h6",
+  ],
   // a ticked box: the features
   tick: [
     "M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5" +
@@ -658,8 +664,8 @@ async function shelf(folder) {
   const lang = folder.split("/")[1];
   show(
     folder ? crumbs(folder, false) : null,
-    // at the top: the Library button, what was
-    // read last, then the welcome
+    // at the top: the Library and the other
+    // pages, what was read last, then the welcome
     folder ? null : h("p", { class: "lib-btn",
       lang: "hy" },
     h("a", { class: "icon-btn",
@@ -670,7 +676,10 @@ async function shelf(folder) {
     icon(ICONS.pen), "Բլոգ"),
     h("a", { class: "icon-btn",
       href: "#/features" },
-    icon(ICONS.tick), "Հնարավորություններ")),
+    icon(ICONS.tick), "Հնարավորություններ"),
+    h("a", { class: "icon-btn",
+      href: "#/contribute" },
+    icon(ICONS.join), "Միանալ")),
     last && last.items.length
       ? recentCard(last.items) : null,
     folder ? null : intro(data.status, data.news),
