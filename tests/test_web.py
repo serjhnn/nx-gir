@@ -393,7 +393,7 @@ def js_key(w):
     """wordKey() in web/app.js."""
     return (
         w.lower()
-        .translate(str.maketrans("", "", "՛՜՞"))
+        .translate(str.maketrans("", "", "՛՜՞'’"))
         .replace("և", "եւ")
     )
 

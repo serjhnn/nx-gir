@@ -1315,10 +1315,11 @@ async function statsPage() {
 
 // Key for comparing words: normalize() in
 // nxgir_reader.py. Ignores case and the marks
-// ՛ ՜ ՞; և is the same as եւ (tests/test_web.py
-// checks this matches on the whole library).
+// ՛ ՜ ՞, and ' ’ written for ՛; և is the same as
+// եւ (tests/test_web.py checks this matches on
+// the whole library).
 function wordKey(w) {
-  return w.toLowerCase().replace(/[՛՜՞]/g, "")
+  return w.toLowerCase().replace(/[՛՜՞'’]/g, "")
     .replace(/և/g, "եւ");
 }
 

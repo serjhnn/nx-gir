@@ -30,15 +30,18 @@ LETTERS = r"[^\W\d_]"
 WORD_RE = re.compile(
     rf"{LETTERS}+(?:[{MARKS}'’]{LETTERS}*)*"
 )
-# Marks that don't change which word it is.
-STRESS = str.maketrans("", "", "՛՜՞")
+# Marks that don't change which word it is; ' and ’
+# stand for the stress mark ՛ in some typed texts
+# (Digilib: Լո'ւր).
+STRESS = str.maketrans("", "", "՛՜՞'’")
 
 
 def normalize(word):
     """Key for comparing words.
 
     Ignores case and the stress, exclamation and
-    question marks. casefold() also turns the
+    question marks (and ' or ’ for the stress
+    mark). casefold() also turns the
     ligature և into եւ.
     """
     return word.casefold().translate(STRESS)

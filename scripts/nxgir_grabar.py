@@ -47,8 +47,9 @@ PREFIXES = {
 APART = {"ի"}
 VOWELS = set("աեէըիոօ")
 # the pativ mark ՟ and the stress, exclamation and
-# question marks are not part of the letters
-MARKS = str.maketrans("", "", "՟՛՜՞")
+# question marks are not part of the letters, nor
+# ' and ’ written for the stress mark (Լո'ւր)
+MARKS = str.maketrans("", "", "՟՛՜՞'’")
 
 
 class Abbr(NamedTuple):

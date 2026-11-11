@@ -21,6 +21,12 @@ def test_expand_sacred_names_any_case_or_mark():
     assert grabar.expand("տն", TABLE)[0][0] == "տեառն"
 
 
+def test_key_ignores_apostrophe_for_stress():
+    # Digilib types the stress mark ՛ as '
+    assert grabar.key("Լո'ւր") == "լուր"
+    assert grabar.key("լո՛ւր") == "լուր"
+
+
 def test_expand_gives_every_reading():
     fulls = [f for f, _ in grabar.expand("վրդ", TABLE)]
     assert fulls == ["վարդապետ", "Վարդան"]

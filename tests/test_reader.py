@@ -60,6 +60,9 @@ def test_marks_stay_inside_words():
 def test_normalize():
     assert normalize("Բանն") == normalize("բանն")
     assert normalize("ո՞վ") == "ով"
+    # ' for the stress mark, as Digilib types it
+    assert normalize("Լո'ւր") == normalize("լո՛ւր")
+    assert normalize("Լո’ւր") == "լուր"
     assert normalize("և") == normalize("եւ")
     # the abbreviation mark is part of the word
     assert normalize("ա՟ծ") != normalize("ած")
