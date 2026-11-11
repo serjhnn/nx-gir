@@ -140,9 +140,10 @@
   `features.<lang>.html`. Add a feature there
   with every new one on the site
 - `notes/`: working notes, e.g. what each part of a
-  book covers (`notes/3-amaran-hator.md` and
-  `notes/2-dzmeran-hator.md`, added to with every
-  translated part); not on the shelf and
+  book covers (`notes/3-amaran-hator.md`,
+  `notes/2-dzmeran-hator.md` and
+  `notes/1-datastanagirk-a.md`, added to with
+  every translated part); not on the shelf and
   not on the Pages site
 - `scripts/nxgir_limits.py`: how close the
   repository is to the limits of GitHub and of a
@@ -172,10 +173,12 @@
 - The reader's Contents (☰ in the web reader): the
   sermons and chapters of the open part, found by
   `contents()` in `nxgir_reader.py` from the text
-  itself: `ԳԼՈՒԽ ...` group lines, a sermon's
-  `(Գլուխ. X)` number (its heading is the paragraph
-  above, or the same line when only the verse is
-  before it) and `Գլուխ X` lines. Nothing to add by
+  itself: `ԳԼՈՒԽ ...` group lines, Digilib's
+  `[Ա]` section lines (the title is the next
+  line), a sermon's `(Գլուխ. X)` number (its
+  heading is the paragraph above, or the same line
+  when only the verse is before it) and `Գլուխ X`
+  lines. Nothing to add by
   hand: keep these lines as they are in every book
   and translation, and check the list after a new
   part (step 3 in `notes/3-amaran-hator.md`)

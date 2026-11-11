@@ -217,7 +217,25 @@ machine translation, not a published or reviewed
 one: read it as a help to the Grabar, not in its
 place.
 
-## Both translations
+## ashkharhabar/mkhitar-gosh/1-datastanagirk-a/
+
+`01.txt`: a translation into modern Eastern
+Armenian of `grabar/mkhitar-gosh/1-datastanagirk-a/01.txt`
+(part 1 of 2 of Գիրք Դատաստանի, Ա խմբագրութիւն:
+the preface in eleven chapters, with the colophon
+of 1184, and laws Ա–ՃԷ: on judges, kings, monks,
+teachers and priests, marriage and divorce,
+children, serfs, finds, church property and
+bishops, slaves, wounds, animals, theft, fire,
+deposits, pledges, loans, sales and inheritance),
+made by Claude (Anthropic's AI model) on
+2026-11-11 at the user's request, the same way as
+the translation of Ամառան հատոր above. It is a
+machine translation, not a published or reviewed
+one: read it as a help to the Grabar, not in its
+place.
+
+## All translations
 
 - License: CC BY-SA 4.0 (see `CONTRIBUTING.md`).
   Who reviews each part, and how far, is in
@@ -235,7 +253,8 @@ place.
   `։`), it is cut at the same place, so some lines
   end in a comma or a `.`.
 - Quotations keep the parentheses (Ամառան հատոր)
-  or the «» (Ձմեռան հատոր) of the Grabar.
+  or the «» (Ձմեռան հատոր) of the Grabar; the
+  Datastanagirk has neither, and none are added.
   Slips and repeated passages in the Digilib text are
   translated as they stand, not corrected.
 
@@ -331,6 +350,11 @@ Notes:
   start of the laws) with no text of their own.
 - Բ numbers the laws in the text as well
   (`1. «…`), and puts them in «».
+- `1-datastanagirk-a/01.txt` is cut into one
+  sentence per line, like the Tatevatsi parts
+  above, to be read beside its translation in
+  `ashkharhabar/` (no `։` without a space after
+  it).
 
 ## grabar/grigor-narekatsi/
 

@@ -280,6 +280,9 @@ NUMBER_RE = re.compile(r"\(Գլուխ\.?\s*([^\s.)]+)\.?\s*\)$")
 CHAPTER_RE = re.compile(r"Գլուխ\.?\s+([^\s.]+)\.?\s*(.*)")
 # a sermon numbered without Գլուխ: Քարոզ. Բ. ...
 SERMON_RE = re.compile(r"Քարոզ\.?\s+([Ա-Ֆ]{1,4})\.\s*(.*)")
+# Digilib's section number on a line of its own,
+# [Ա]; the section's title is the next line
+SECTION_RE = re.compile(r"\[([Ա-Ֆ]{1,4})\]")
 # a verse at the end: Սաղ. 131. 9. or 1 Թագ. 2. 7։
 REF_RE = re.compile(
     r"(\d\s+)?\S+\.?\s+\d+\s*[.։]\s*\d+[\d\s,-]*[.։]?\s*$"
@@ -313,6 +316,21 @@ def contents(lines):
                     "n": "",
                     "title": short(t),
                     "level": 1,
+                }
+            )
+            continue
+        m = SECTION_RE.fullmatch(t)
+        if m:
+            nxt = (x.strip() for x in lines[i + 1 :])
+            title = next((x for x in nxt if x), "")
+            if SECTION_RE.fullmatch(title):
+                title = ""
+            out.append(
+                {
+                    "line": i,
+                    "n": m.group(1),
+                    "title": short(title),
+                    "level": 2,
                 }
             )
             continue

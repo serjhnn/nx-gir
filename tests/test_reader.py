@@ -617,6 +617,39 @@ def test_contents_of_sermons():
     assert contents(["(Գլուխ. Ա)"]) == []
 
 
+def test_contents_of_sections():
+    lines = [
+        "Գիրք · 1/2",
+        "",
+        "[Ա]",
+        "",
+        "ՅԱՂԱԳՍ ԴԱՏԱՒՈՐԱՑ",
+        "",
+        "Առաջին դատաւոր։",
+        "[Բ]",
+        "[Գ]",
+        "Տեքստ։",
+        "[ԺԲ]",
+    ]
+    assert contents(lines) == [
+        {
+            "line": 2,
+            "n": "Ա",
+            "title": "ՅԱՂԱԳՍ ԴԱՏԱՒՈՐԱՑ",
+            "level": 2,
+        },
+        # a section with no title of its own
+        {"line": 7, "n": "Բ", "title": "", "level": 2},
+        {
+            "line": 8,
+            "n": "Գ",
+            "title": "Տեքստ։",
+            "level": 2,
+        },
+        {"line": 10, "n": "ԺԲ", "title": "", "level": 2},
+    ]
+
+
 def test_short_cuts_at_a_word():
     assert short("ա  բ") == "ա բ"
     assert short("աբգ դեզ էըթ", 9) == "աբգ դեզ…"
