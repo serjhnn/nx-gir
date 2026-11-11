@@ -1,7 +1,7 @@
 // nx-gir web: the bookshelf and the theme button.
 // Pages are #/ (top), #/f/<folder>, #/read/<book>,
-// #/library, #/timeline, #/blog, #/features and
-// #/stats; the
+// #/library, #/timeline, #/blog, #/features,
+// #/contribute and #/stats; the
 // data
 // comes from
 // /api/.
@@ -379,9 +379,8 @@ function siteFooter() {
         "CC BY-SA 4.0"),
       " · Grabar texts in the public domain"),
     h("p", {},
-      h("a", { href: REPO + "/blob/main/"
-        + "CONTRIBUTING.md" },
-      "Help review the translations"),
+      h("a", { href: "#/contribute" },
+        "Become a contributor"),
       " · ",
       h("a", { href: REPO }, "GitHub")),
     h("p", {}, "Developed by S.O. and Claude"));
@@ -1183,6 +1182,72 @@ async function featuresPage(want) {
           "Nothing here yet."));
   };
   draw();
+}
+
+// -- contribute --
+
+// #/contribute: how to help. The translations
+// need two kinds of work: first drafts made with
+// AI for the parts not yet translated, and people
+// who read the drafts beside the Grabar
+const HOWTO = REPO + "/blob/main/CONTRIBUTING.md";
+
+const WAYS = [
+  ["Read and review",
+    "Every translation starts as a machine draft."
+    + " It becomes a book only when someone who"
+    + " knows Grabar reads it beside the original,"
+    + " line by line, and corrects it.",
+    "Open a part, press ⇆ Parallel, and read."
+    + " Your name is shown above every part you"
+    + " review."],
+  ["Translate with AI",
+    "Many parts have no translation yet. Make a"
+    + " first draft into modern Armenian with an"
+    + " AI model, one line for each Grabar line,"
+    + " keeping the chapter lines as they are.",
+    "A draft goes in as machine, and waits for"
+    + " its first reader."],
+  ["Bring texts and words",
+    "Grabar books that are not here yet, words"
+    + " missing from the glossary, abbreviations"
+    + " from a printed source, and scans of old"
+    + " prints to test with."],
+];
+
+function contributePage() {
+  document.title = "Become a contributor"
+    + " · Նախագիր";
+  const list = h("ul", { class: "features" },
+    WAYS.map(([title, ...text]) => h("li", {},
+      h("h2", {}, title),
+      text.map((t) => h("p", {}, t)))));
+  show(
+    h("p", { class: "crumbs" },
+      h("a", { href: "#/" }, "Home")),
+    h("figure", { class: "hero" },
+      h("img", { src: "contribute.jpg",
+        width: "1200", height: "675",
+        alt: "A reader under a tree with a laptop,"
+          + " a monastery and a mountain behind" })),
+    h("h1", {}, "Become a contributor"),
+    h("p", { class: "sub" }, named("Նախագիր"
+      + " (nxGir) is an open project: old Armenian"
+      + " books, word by word, and their"
+      + " translations into modern Armenian, free"
+      + " for anyone to read. It grows with the"
+      + " people who help.")),
+    list,
+    h("p", { class: "cta" },
+      h("a", { class: "cta-main", href: HOWTO },
+        "How to start"),
+      h("a", { href: REPO }, "The project on"
+        + " GitHub")),
+    h("p", { class: "sub" }, "Translations are"
+      + " under ", h("a", { href: BY_SA,
+      rel: "license" }, "CC BY-SA 4.0"), "; by"
+      + " sending one you agree to publish it"
+      + " under this license."));
 }
 
 // -- statistics --
@@ -2693,6 +2758,8 @@ async function route() {
     } else if (hash === "features"
       || hash.startsWith("features/")) {
       await featuresPage(hash.slice(9));
+    } else if (hash === "contribute") {
+      contributePage();
     } else if (hash === "stats") {
       await statsPage();
     } else if (hash === "recent") {
