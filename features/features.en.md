@@ -60,4 +60,4 @@ The Blog tells what is new. The Timeline shows the main steps of the project, an
 
 ## Become a contributor
 
-Միանալ on the home page opens a page on how to help: make first drafts of translations with AI, read them beside the Grabar to correct them, or bring texts and words.
+Միանալ on the home page, and the banner with the reader under the tree below it, open a page on how to help: make first drafts of translations with AI, read them beside the Grabar to correct them, or bring texts and words.
