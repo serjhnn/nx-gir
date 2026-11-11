@@ -41,6 +41,7 @@ files.
 | Largest file | 6.0 MB (`grabar/vocabulary-hy.tsv`) | 50 MB | 12% |
 | Largest book part | 278 KB (Amaran hator 05, translation) | 1 MB | 27% |
 | Site build | 21 s | 10 min | 3% |
+| Browser tab, largest part | 297 MB (phone) | about 1 GB | 30% |
 
 Since 2026-11-10 (2146d95): the three Gosh
 redactions (6 parts) and the Matean (3 parts),
@@ -76,6 +77,23 @@ size of their text), with `sitemap.xml`.
   matter for the readers, only the size of each part.
   Keep cutting big books into parts, as
   `fetch-digilib.py` does.
+- **Browser memory, about 1 GB a tab** (our own
+  limit, for a phone of 3 GB). The web reader
+  builds a whole part at once, every word an
+  element, so a tab takes about 0.5 MB per KB of
+  text it shows (both versions side by side
+  counted), on top of 65 MB for the page. On
+  2026-11-11 the largest part took 297 MB on a
+  phone screen (Datastanagirk A 01 beside its
+  translation, 570 KB together), Grabar alone
+  about 210 MB, and the JavaScript heap at most
+  46 MB; reading all 93 parts in one tab leaks
+  nothing. A 1 MB part beside a 1 MB translation
+  would be near 1 GB: that is why parts stay
+  under 1 MB. How it was measured, why it takes
+  that much and how to make it smaller are in
+  `notes/browser-memory.md`; measure again with
+  `scripts/measure-memory.js`.
 - **Site build, 10 minutes** (our own limit).
   GitHub Actions allows hours, but a slow build slows
   every publish. On 2026-11-07 more than half of
@@ -102,6 +120,13 @@ out: a translated part adds about 250 KB.
   books, fewer or smaller buckets), then at the book
   JSON (it repeats every word and space).
 - [ ] When a book part passes 1 MB: cut it in two.
+- [ ] After a new kind of book (larger parts,
+  another layout) or a change to how `app.js`
+  builds the text: measure the browser memory
+  again (`PHONE=1 node scripts/measure-memory.js
+  fresh 5`, with `nxgir web` running) and update
+  `notes/browser-memory.md`. If a tab nears
+  1 GB, start with steps 1 and 2 there.
 - [ ] When the repository passes 500 MB: think about
   keeping the large source copies (`sources/`, page
   scans) out of git.

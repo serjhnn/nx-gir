@@ -157,7 +157,12 @@
   `notes/limits.md`.
   After a new book or a few translated parts, run it
   with `--site --record` (adds a line to
-  `notes/limits.tsv`) and update the notes
+  `notes/limits.tsv`) and update the notes.
+  How much browser memory the web reader takes
+  (and how to lower it) is in
+  `notes/browser-memory.md`, measured with
+  `scripts/measure-memory.js` (Playwright, with
+  `nxgir web` running)
 - `interpretations/`: the user's own texts on the
   books, in Russian (`ru/`), English (`en/`) and
   Armenian (`hy/`);
