@@ -252,6 +252,19 @@ on 2026-11-12 at the user's request, the same
 way. With it the whole of redaction Ա is
 translated. It is a machine translation too.
 
+## ashkharhabar/mkhitar-gosh/2-datastanagirk-b/
+
+`01.txt`: a translation into modern Eastern Armenian of
+`grabar/mkhitar-gosh/2-datastanagirk-b/01.txt`
+(part 1 of 2 of Գիրք Դատաստանի, Բ խմբագրութիւն:
+the preface and the first part of the laws and canons,
+through item 108 at the end), made by ChatGPT (GPT-6)
+on 2026-11-12 at the user's request, following the
+method recorded for Mkhitar Gosh's redaction Ա.
+It is a machine translation, not a published or
+human-reviewed text: read it as a help to the Grabar,
+not in its place.
+
 ## All translations
 
 - License: CC BY-SA 4.0 (see `CONTRIBUTING.md`).

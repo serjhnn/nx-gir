@@ -9,7 +9,7 @@
 #   path       under books/: a file, or a folder
 #              for all its files (the longest
 #              match wins)
-#   status     machine: made by Claude, not yet
+#   status     machine: made by an AI model, not yet
 #                reviewed by a person
 #              review: being reviewed
 #              reviewed: read through and corrected
@@ -39,3 +39,4 @@ ashkharhabar/grigor-tatevatsi/3-amaran-hator/14.txt	review	serjhnn	2026-11-10
 ashkharhabar/grigor-tatevatsi/3-amaran-hator/15.txt	review	serjhnn	2026-11-10
 ashkharhabar/mkhitar-gosh/1-datastanagirk-a/01.txt	machine		2026-11-11
 ashkharhabar/mkhitar-gosh/1-datastanagirk-a/02.txt	machine		2026-11-12
+ashkharhabar/mkhitar-gosh/2-datastanagirk-b/01.txt	machine		2026-11-12
