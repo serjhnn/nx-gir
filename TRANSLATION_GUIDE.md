@@ -34,6 +34,11 @@ translating another work, read its entry in
 apply Tatevatsi's sermon-heading or sentence-splitting
 rules blindly to another text.
 
+Other works translated so far follow their own notes:
+Mkhitar Gosh's law book (Գիրք Դատաստանի, redaction Ա)
+is described in section 5A below and in
+`notes/1-datastanagirk-a.md`.
+
 ## 2. Read before starting a session
 
 At the beginning of every new session, inspect the current
@@ -139,6 +144,11 @@ into one modern sentence and make alignment difficult.
   `։)`). A run such as `։։` must remain intact.
 - The Grabar middle stop `.` is not normally a sentence
   boundary in this workflow.
+- The splitting script in `notes/3-amaran-hator.md` cuts
+  only after `։`, while the reader also counts `:`
+  (`SENTENCE_END` in `scripts/nxgir_reader.py`). Check
+  whether a source has `:` at the end of its sentences
+  before relying on either.
 - Check the reader's actual sentence model and the
   work-specific notes before applying these rules. Some
   Digilib sources use different punctuation conventions.
@@ -181,7 +191,9 @@ differences:
   as they are in the established format.
 - Keep quotation delimiters as in the Grabar source.
   In Ամառան հատոր, quotations retain parentheses.
-- Do not introduce square brackets.
+- Do not introduce square brackets. (This is a rule for
+  the Tatevatsi parts. Works with bracketed section
+  lines keep them: see section 5A.)
 - Keep a leading `*` where present.
 - Preserve repeated passages and unusual numbering.
 - Keep headings and structural lines needed by the
@@ -196,6 +208,45 @@ appear with its heading, not merely its Biblical verse.
 If the Contents parser misses a heading, investigate the
 parser and its tests; do not distort the source text to
 work around a parser bug.
+
+## 5A. Datastanagirk (Mkhitar Gosh)
+
+Գիրք Դատաստանի, redaction Ա, is translated (both parts,
+status `machine`) at
+`books/grabar/mkhitar-gosh/1-datastanagirk-a/`, and at
+the same path under `books/ashkharhabar/`. Redactions
+Բ and Գ are on the shelf but not translated. The
+workflow is section 8, with these differences:
+
+- The title line is `Դատաստանագիրք, Ա խմբագրություն · N/2`.
+- Digilib's section lines (`[Ա]`, `[ՃԸ]`, ...) and
+  `ԳԼՈՒԽ Ա` are copied exactly as in the Grabar: the
+  Contents finds the sections by them (`SECTION_RE` in
+  `scripts/nxgir_reader.py`). The title in capitals under
+  a section line is translated and stays in capitals:
+  «ՅԱՂԱԳՍ ԴԱՏԱՍՏԱՆԱՑ ...» becomes
+  «... ԴԱՏԱՍՏԱՆՆԵՐԻ ՄԱՍԻՆ». So square brackets stay in
+  these files, and so do the Grabar's own `[...]`
+  insertions. Add none.
+- The Grabar has no «» here: add none. Its parentheses
+  stay.
+- Names of coins stay as they are: դահեկան, դանգ, թասու,
+  գարի, սիկղ, երկդրամյան, չեքչեք. `որոշվել` is for being
+  cut off from the church, `լուծվել` for a cleric losing
+  rank.
+- Source peculiarities are kept: a sentence the Grabar
+  repeats (part 2, lines 386–387), a law numbered
+  `[ՂՃԵ]` for ՃՂԵ. They are listed in the notes.
+- Words that could not be identified, such as the
+  Byzantine court titles in law ՄԻԵ (part 2, lines
+  1596–1650), stay in Armenian letters and are listed in
+  the notes for a reviewer to check first.
+
+Open point: in part 2, words added to make a sentence
+whole stand in parentheses, the same sign as the
+Grabar's own quotation parentheses. This is not a rule
+of this guide. Decide whether to keep it before
+continuing it in other parts or works.
 
 ## 6. Terminology
 
@@ -429,6 +480,12 @@ at the start of each session.
 - `notes/3-amaran-hator.md` — detailed practical notes
   for Ամառան հատոր.
 - `notes/2-dzmeran-hator.md` — winter-volume notes.
+- `notes/1-datastanagirk-a.md` — notes on Gosh's law
+  book, redaction Ա.
+- `benchmark/` — chunks of translated parts with a fixed
+  prompt and scripts, to compare models (see its
+  README). Its `prompt.md` restates the rules above;
+  keep the two in step.
 - `notes/1-girk-harcmanc.md` — question-book notes,
   if present.
 - `scripts/nxgir_reader.py` — reader sentence and
