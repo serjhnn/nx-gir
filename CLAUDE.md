@@ -200,7 +200,10 @@
   when only the verse is before it) and `Գլուխ X`
   lines. A title must mean something: a chapter
   line that only points at a list (`ի մեծ ցանկէն`,
-  `FILLER_RE`) takes the next line as its title.
+  `FILLER_RE`) takes the next line as its title; a title that only
+  numbers the chapter (`label_only()`, Վեցերորդ Պրակ
+  Հատորիս։) takes the next two lines too, until it
+  says what it is about (three lines at most).
   Nothing to add by
   hand: keep these lines as they are in every book
   and translation, and check the list after a new
