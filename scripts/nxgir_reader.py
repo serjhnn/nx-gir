@@ -323,6 +323,43 @@ def filler(title):
     return bool(FILLER_RE.fullmatch(title.strip()))
 
 
+# the words of a label (not a topic): "the sixth
+# section of the volume", "section and question A"
+LABEL_RE = re.compile(
+    r"(պրակ|հատոր|տետր|տրակտատ|հարցում)\S*"
+    r"|\S*երորդ|երկրորդ|երրորդ|չորրորդ|առաջին"
+    r"|եւ|և|եվ|իմ|մեր|այս|[Ա-Ֆա-ֆ]",
+    re.IGNORECASE,
+)
+
+
+def label_only(title):
+    """True for a title that only numbers the chapter
+    (Վեցերորդ Պրակ Հատորիս։) and does not say what it
+    is about."""
+    words = re.findall(r"[^\W\d_]+", title)
+    return all(LABEL_RE.fullmatch(w) for w in words)
+
+
+def title_below(lines, i):
+    """The title of the chapter line i, from the lines
+    below it: the next line; if that only numbers the
+    chapter (label_only), with the line after it, and
+    then the one after that (three at most), joined.
+    It stops at the next heading."""
+    got = []
+    for x in lines[i + 1 :]:
+        x = x.strip()
+        if not x:
+            continue
+        if CHAPTER_RE.fullmatch(x) or GROUP_RE.match(x):
+            break
+        got.append(x)
+        if len(got) == 3 or not label_only(" ".join(got)):
+            break
+    return " ".join(got)
+
+
 def contents(lines):
     """The parts of a book, in order: [{"line": the
     line to go to, "n": its number or "", "title":
@@ -385,12 +422,9 @@ def contents(lines):
             m = None
         title = m.group(2) if m else ""
         if m and filler(title):
-            # no meaning in the line itself: the next
-            # line is the title
-            nxt = (x.strip() for x in lines[i + 1 :])
-            nxt = next((x for x in nxt if x), "")
-            if not CHAPTER_RE.fullmatch(nxt):
-                title = nxt
+            # no meaning in the line itself: the lines
+            # below are the title
+            title = title_below(lines, i)
         m = m or SERMON_RE.fullmatch(t)
         if m:
             if not title:
