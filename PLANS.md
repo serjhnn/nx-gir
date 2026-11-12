@@ -554,6 +554,48 @@ TODO:
 - [ ] The page in `app.js`, tested in
       `tests/test_web.py`
 
+## Plan: the reader's Contents, titles from more lines
+
+The Contents (☰ in the web reader, `contents()` in
+`nxgir_reader.py`) takes a chapter's title from its
+own line, or, when that only points at a list
+(`ի մեծ ցանկէն`, done), from the next line. Asked
+for, not done yet: when the title only numbers the
+chapter, use the second line too, and a third if
+needed, so every entry says what the chapter is
+about. In Girk harcmanc part 1 (Grabar), a chapter's
+title is then:
+
+- Բ: `Վեցերորդ Պրակ Հատորիս։` + `Յաղագս ճանաչմանն
+  Աստուծոյ`
+- Դ: `Եւ Առաջին Պրակ Երկրորդ Հատորիս։` + `Վասն
+  բիւրութեան հերձուածողաց`
+- Ե: `Պրակ եւ Հարցումն ա։` + `Առարկութիւնք
+  Եւնոմիոսացն եւ Արիոսի։`
+- the other four (Ա, Գ, Զ, Է) already say it in the
+  first line and stay as they are
+
+It was tried (commit `a94377f`, taken back with
+`1aac705`): `label_only()` found a title made only of
+label words (պրակ, հատոր, տետր, հարցում, ordinals,
+եւ, single letters), and added up to two lines
+below it. It changed only those three chapters in
+the whole library, but the label words are a list
+made for this one book, so check it on each new
+book before relying on it.
+
+TODO:
+
+- [ ] Bring `label_only()` back, with the label
+      words as a table at the top of the module and
+      a test with Girk harcmanc part 1
+- [ ] List the contents of Girk harcmanc parts 2–11
+      with it and look at every title (parts 5–7
+      have titles like `(Պրակ ԻԳ) Յելից գրոցն …`
+      that already say it)
+- [ ] The same rule in the translation, or Grabar
+      only: decide first
+
 ## TODO: the website
 
 - [ ] A separate email address for the project
