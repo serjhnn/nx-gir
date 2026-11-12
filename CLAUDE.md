@@ -198,7 +198,10 @@
   line), a sermon's `(Գլուխ. X)` number (its
   heading is the paragraph above, or the same line
   when only the verse is before it) and `Գլուխ X`
-  lines. Nothing to add by
+  lines. A title must mean something: a chapter
+  line that only points at a list (`ի մեծ ցանկէն`,
+  `FILLER_RE`) takes the next line as its title.
+  Nothing to add by
   hand: keep these lines as they are in every book
   and translation, and check the list after a new
   part (step 3 in `notes/3-amaran-hator.md`)

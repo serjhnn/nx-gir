@@ -9,6 +9,7 @@ from nxgir_reader import (
     WORD_RE,
     abbr_panel,
     contents,
+    filler,
     find,
     layout,
     margin,
@@ -672,3 +673,26 @@ def test_contents_word_glukh_is_not_a_chapter():
         ("Ա", "մեծ ցանկից։"),
         ("առաջին", "Քարոզ։"),
     ]
+
+
+def test_contents_title_from_the_next_line():
+    # "ի մեծ ցանկէն" ("from the great list") says
+    # nothing: the next line is the title; a bare
+    # number keeps no title
+    lines = [
+        "Գլուխ Ա ի մեծ ցանկէն",
+        "",
+        "Առաջին պրակ հատորիս։",
+        "Գլուխ Բ՝ Մեծ ցանկից։",
+        "Երկրորդ պրակ։",
+        "Գլուխ Գ",
+        "Եւ եղեւ։",
+    ]
+    got = [(e["n"], e["title"]) for e in contents(lines)]
+    assert got == [
+        ("Ա", "Առաջին պրակ հատորիս։"),
+        ("Բ", "Երկրորդ պրակ։"),
+        ("Գ", ""),
+    ]
+    assert filler("ի մեծ ցանկէն")
+    assert not filler("")

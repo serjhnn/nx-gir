@@ -308,6 +308,21 @@ def short(text, n=TITLE_MAX):
     return cut.rstrip(" .,՝") + "…"
 
 
+# a chapter line's text that only points at a list
+# ("ի մեծ ցանկէն", "from the great list"): no title
+FILLER_RE = re.compile(
+    r"(ի\s+)?մեծ\s+ցանկ(էն|ից)[.։]?", re.IGNORECASE
+)
+
+
+def filler(title):
+    """True for a chapter line's text with no meaning
+    of its own: a pointer to a list. The contents
+    then takes the next line as the title. (A bare
+    number is not: the Gospels have only that.)"""
+    return bool(FILLER_RE.fullmatch(title.strip()))
+
+
 def contents(lines):
     """The parts of a book, in order: [{"line": the
     line to go to, "n": its number or "", "title":
@@ -368,13 +383,23 @@ def contents(lines):
         m = CHAPTER_RE.fullmatch(t)
         if m and t.startswith("Գլուխը"):
             m = None
+        title = m.group(2) if m else ""
+        if m and filler(title):
+            # no meaning in the line itself: the next
+            # line is the title
+            nxt = (x.strip() for x in lines[i + 1 :])
+            nxt = next((x for x in nxt if x), "")
+            if not CHAPTER_RE.fullmatch(nxt):
+                title = nxt
         m = m or SERMON_RE.fullmatch(t)
         if m:
+            if not title:
+                title = m.group(2)
             out.append(
                 {
                     "line": i,
                     "n": m.group(1),
-                    "title": short(m.group(2)),
+                    "title": short(title),
                     "level": 2,
                 }
             )
