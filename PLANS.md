@@ -575,6 +575,25 @@ TODO:
       only when a book's words or `grabar/` change.
       A test that a build from the cache equals a
       build from scratch
+- [ ] A mailing list: a reader enters an email
+      address on a page of the site and is told by
+      mail about each new translated part (and new
+      books, the blog). Things to settle first:
+      the site is static (GitHub Pages, nothing
+      loaded from other sites), so the sign-up
+      needs a small service of its own or a mailing
+      list provider (a form that posts to it), and
+      the address of the project (see above) to
+      send from. A confirmation mail before anyone
+      is added (double opt-in), a one-click
+      unsubscribe in every mail, no addresses in the
+      repository, and a sentence on the page about
+      what is kept and for what. The notice itself
+      could be made from `timeline.tsv` and
+      `books/TRANSLATIONS.tsv` (what is new since
+      the last mail), sent by hand at first. Add the
+      page to Features and a line to the Timeline
+      when it exists
 
 ## Open questions
 
