@@ -480,7 +480,7 @@ modern Armenian translations: see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 - **Translations into modern Armenian** (`books/ashkharhabar/`, except
   `bible/`): [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
-  Նախագիր (nxgir.am). First made by machine (Claude), now reviewed by people;
+  Նախագիր (nxgir.am). First made by machine (Claude, GPT-6), now reviewed by people;
   who reviewed which part is in `books/TRANSLATIONS.tsv`, and the reader shows
   it above each part.
 - **Grabar texts**: in the public domain (see `books/SOURCES.md`).

@@ -8,8 +8,8 @@ prints.
 ## Reviewing a translation
 
 The translations in `books/ashkharhabar/` (except
-`bible/`) were first made by machine, by Claude
-(Anthropic's AI model). They need people who know
+`bible/`) were first made by machine, by AI models
+(Claude and GPT-6). They need people who know
 Grabar to read them beside the original and correct
 them.
 

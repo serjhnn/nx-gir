@@ -24,28 +24,29 @@ the git size is measured, and the site's size and
 build time are the last ones in `limits.tsv`. So
 record after big additions to keep them fresh.
 
-## State on 2026-11-12 (commit 802bb0e)
+## State on 2026-11-12 (commit 20590db)
 
 Amaran hator parts 1–15 of 24 translated, the
-first part of Dzmeran hator, and now all of
-Datastanagirk, redaction A (2 parts): the first
-whole book in modern Armenian; 94 book files.
+first part of Dzmeran hator, all of Datastanagirk,
+redaction A (2 parts) and now all of redaction B
+(2 parts, by GPT-6, from a contributor); 96 book
+files.
 
 | What | Now | Limit | Used |
 |---|---|---|---|
-| Book text (`books/`) | 19.2 MB, 94 files | — | — |
-| Grabar / translation | 15.3 MB / 3.9 MB | — | — |
-| Pages site | 90.8 MB | 1 GB | 9% |
-| Git history | 22.8 MB | 1 GB | 2% |
+| Book text (`books/`) | 19.8 MB, 96 files | — | — |
+| Grabar / translation | 15.3 MB / 4.5 MB | — | — |
+| Pages site | 92.4 MB | 1 GB | 9% |
+| Git history | 23.2 MB | 1 GB | 2% |
 | Largest file | 6.0 MB (`grabar/vocabulary-hy.tsv`) | 50 MB | 12% |
-| Largest book part | 290 KB (Datastanagirk A 01, translation) | 1 MB | 28% |
-| Site build | 21 s | 10 min | 3% |
+| Largest book part | 301 KB (Datastanagirk B 01, translation) | 1 MB | 29% |
+| Site build | 24 s | 10 min | 3% |
 | Browser tab, largest part | 297 MB (phone, measured 2026-11-11) | about 1 GB | 30% |
 
-Since 2026-11-11 (c0323d6): the two parts of
-Datastanagirk A in modern Armenian (0.5 MB of
-text) added 2.4 MB to the site and 1.0 MB to
-git; the build took 21 s (steady).
+Since 802bb0e: the two parts of Datastanagirk B in
+modern Armenian (0.6 MB of text, with the Grabar
+cut into sentence lines) added 1.6 MB to the site
+and 0.4 MB to git; the build took 24 s (steady).
 Sizes are in MB of 2^20 bytes, as
 `check-limits.py` shows them.
 
