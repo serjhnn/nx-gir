@@ -278,6 +278,18 @@ reader lines; there were no instances of `։` without
 a following space. The translation is a machine
 translation, not a published or human-reviewed text.
 
+## ashkharhabar/grigor-tatevatsi/1-girk-harcmanc/
+
+`01.txt`: a translation into modern Eastern Armenian of
+`grabar/grigor-tatevatsi/1-girk-harcmanc/01.txt`
+(part 1 of 12 of Գիրք հարցմանց, 2,865 lines), made
+by ChatGPT (GPT-6) on 2026-11-12 at the user's
+request. Passages that are uncertain or damaged in
+the source are marked `*` (78 lines) for review.
+It is a machine translation, not a published or
+human-reviewed text: read it as a help to the Grabar,
+not in its place.
+
 ## All translations
 
 - License: CC BY-SA 4.0 (see `CONTRIBUTING.md`).
