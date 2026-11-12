@@ -145,6 +145,12 @@
   `notes/1-datastanagirk-a.md`, added to with
   every translated part); not on the shelf and
   not on the Pages site
+- `TRANSLATION_GUIDE.md`: how a part is translated, for
+  contributors and for any AI tool (the prompt, an
+  example, a check that can be run). It holds the text
+  of `benchmark/prompt.md`; `tests/test_guide.py`
+  checks that, and that its check runs. Change the two
+  together
 - `benchmark/`: a benchmark of models translating
   Grabar (chunks from translated parts, frozen in
   `cases/`, a prompt, `score.py`, a blind human
