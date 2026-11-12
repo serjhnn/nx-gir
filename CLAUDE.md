@@ -207,7 +207,9 @@
   says what it is about (three lines at most; the
   label words are the `LABEL_*` tables, to add to for
   a book that numbers its chapters otherwise).
-  Nothing to add by
+  When the first heading is not at the start of the
+  part, the list begins with an entry for the start
+  (its first line, `"start": true`). Nothing to add by
   hand: keep these lines as they are in every book
   and translation, and check the list after a new
   part (step 3 in `notes/3-amaran-hator.md`)
