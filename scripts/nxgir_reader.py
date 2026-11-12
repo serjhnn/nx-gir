@@ -277,7 +277,14 @@ def sentence_starts(lay):
 # not yet cut into sentences ends with its number
 GROUP_RE = re.compile(r"ԳԼՈՒԽ\s+\S")
 NUMBER_RE = re.compile(r"\(Գլուխ\.?\s*([^\s.)]+)\.?\s*\)$")
-CHAPTER_RE = re.compile(r"Գլուխ\.?\s+([^\s.]+)\.?\s*(.*)")
+# (the number is Armenian letters starting with a
+# capital (Ժէ), digits or առաջին: a sentence that
+# starts with the word գլուխ, "head", is not one)
+CHAPTER_RE = re.compile(
+    r"Գլուխ\.?\s+([Ա-Ֆ][Ա-Ֆա-ֆ]{0,3}|\d+|առաջին)"
+    r"(?![Ա-Ֆա-ֆ\d])"
+    r"[՝,։:]?\.?\s*(.*)"
+)
 # a sermon numbered without Գլուխ: Քարոզ. Բ. ...
 SERMON_RE = re.compile(r"Քարոզ\.?\s+([Ա-Ֆ]{1,4})\.\s*(.*)")
 # Digilib's section number on a line of its own,

@@ -653,3 +653,22 @@ def test_contents_of_sections():
 def test_short_cuts_at_a_word():
     assert short("ա  բ") == "ա բ"
     assert short("աբգ դեզ էըթ", 9) == "աբգ դեզ…"
+
+
+def test_contents_word_glukh_is_not_a_chapter():
+    # a sentence that starts with the word գլուխ
+    # ("head") is no chapter; a numeral, even
+    # mixed case (Ժէ) or a word (առաջին), is
+    lines = [
+        "Գլուխ գոլով մեր եւ լեզու։",
+        "Գլուխ Ժէ ի մեծ ցանկէն",
+        "Գլուխ Ա՝ մեծ ցանկից։",
+        "Գլուխ առաջին Քարոզ։",
+        "Գլուխ Աստուած է։",
+    ]
+    got = [(e["n"], e["title"]) for e in contents(lines)]
+    assert got == [
+        ("Ժէ", "ի մեծ ցանկէն"),
+        ("Ա", "մեծ ցանկից։"),
+        ("առաջին", "Քարոզ։"),
+    ]
