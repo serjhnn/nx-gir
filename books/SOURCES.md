@@ -393,11 +393,12 @@ Notes:
   start of the laws) with no text of their own.
 - Բ numbers the laws in the text as well
   (`1. «…`), and puts them in «».
-- `1-datastanagirk-a/01.txt` and `02.txt` are cut
-  into one sentence per line, like the Tatevatsi
-  parts above, to be read beside their
-  translations in `ashkharhabar/` (no `։` without
-  a space after it in either).
+- `1-datastanagirk-a/01.txt` and `02.txt`, and
+  `2-datastanagirk-b/01.txt` and `02.txt`, are cut
+  into reader lines, like the Tatevatsi parts above,
+  to be read beside their translations in
+  `ashkharhabar/` (no `։` without a following space
+  in any of these files).
 
 ## grabar/grigor-narekatsi/
 
