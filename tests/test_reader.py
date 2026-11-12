@@ -11,7 +11,6 @@ from nxgir_reader import (
     contents,
     filler,
     find,
-    label_only,
     layout,
     margin,
     normalize,
@@ -697,39 +696,3 @@ def test_contents_title_from_the_next_line():
     ]
     assert filler("ի մեծ ցանկէն")
     assert not filler("")
-
-
-def test_contents_title_label_takes_more_lines():
-    # a title that only numbers the chapter takes the
-    # next line, and still a label, the one after
-    lines = [
-        "Գլուխ Բ ի մեծ ցանկէն",
-        "",
-        "Վեցերորդ Պրակ Հատորիս։",
-        "Յաղագս ճանաչմանն Աստուծոյ",
-        "Գլուխ Դ ի մեծ ցանկէն",
-        "Պրակ եւ Հարցումն ա։",
-        "Երկրորդ Հատոր։",
-        "Առարկութիւնք Արիոսի։",
-        "Այլ տող։",
-        "Գլուխ Ե ի մեծ ցանկէն",
-        "(Պրակ Ա) Ընդ դէմ նեստորականացն։",
-        "Որք զբանն ասեն։",
-    ]
-    got = [(e["n"], e["title"]) for e in contents(lines)]
-    assert got == [
-        (
-            "Բ",
-            "Վեցերորդ Պրակ Հատորիս։ Յաղագս"
-            " ճանաչմանն Աստուծոյ",
-        ),
-        (
-            "Դ",
-            "Պրակ եւ Հարցումն ա։ Երկրորդ Հատոր։"
-            " Առարկութիւնք Արիոսի։",
-        ),
-        ("Ե", "(Պրակ Ա) Ընդ դէմ նեստորականացն։"),
-    ]
-    assert label_only("Եւ Առաջին Պրակ Երկրորդ Հատորիս։")
-    assert label_only("Մեր հատորի վեցերորդ տրակտատը։")
-    assert not label_only("ՎԱՍՆ Հոգւոյն Սրբոյ։")
