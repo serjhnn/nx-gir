@@ -308,27 +308,51 @@ def short(text, n=TITLE_MAX):
     return cut.rstrip(" .,՝") + "…"
 
 
-# a chapter line's text that only points at a list
-# ("ի մեծ ցանկէն", "from the great list"): no title
-FILLER_RE = re.compile(
-    r"(ի\s+)?մեծ\s+ցանկ(էն|ից)[.։]?", re.IGNORECASE
+# the start of a chapter line's text that points at a
+# list ("ի մեծ ցանկէն", "ի մեծն ցանկէն", "from the
+# great list"): no title in itself
+POINTER_RE = re.compile(
+    r"(ի\s+)?մեծն?\s+ցանկ(էն|ից)[.։]?\s*", re.IGNORECASE
 )
 
 
-def filler(title):
-    """True for a chapter line's text with no meaning
-    of its own: a pointer to a list. The contents
-    then takes the next line as the title. (A bare
-    number is not: the Gospels have only that.)"""
-    return bool(FILLER_RE.fullmatch(title.strip()))
+def pointer_rest(title):
+    """None if a chapter line's text does not start
+    with a pointer to a list; else what follows it
+    (often nothing). The contents then takes the
+    lines below as the title, after what follows. (A
+    bare number is not a pointer: the Gospels have
+    only that.)"""
+    m = POINTER_RE.match(title.strip())
+    return title.strip()[m.end() :] if m else None
 
 
 # the words of a label (not a topic): "the sixth
-# section of the volume", "section and question A"
+# section of the volume", "section and question A".
+# A table to add to when a book numbers its chapters
+# in other words (Grabar and modern forms)
+LABEL_STEMS = (
+    "պրակ",  # section
+    "հատոր",  # volume
+    "տետր",  # booklet
+    "տրակտատ",  # treatise
+    "հարցում",  # question
+)
+LABEL_ORDINALS = (
+    "առաջին",
+    "երկրորդ",
+    "երրորդ",
+    "չորրորդ",
+)
+LABEL_SMALL = ("եւ", "և", "եվ", "իմ", "մեր", "այս")
 LABEL_RE = re.compile(
-    r"(պրակ|հատոր|տետր|տրակտատ|հարցում)\S*"
-    r"|\S*երորդ|երկրորդ|երրորդ|չորրորդ|առաջին"
-    r"|եւ|և|եվ|իմ|մեր|այս|[Ա-Ֆա-ֆ]",
+    "|".join(
+        [f"({'|'.join(LABEL_STEMS)})\\S*"]
+        + [r"\S*երորդ"]  # fifth, sixth, ...
+        + list(LABEL_ORDINALS)
+        + list(LABEL_SMALL)
+        + ["[Ա-Ֆա-ֆ]"]  # a letter as a number
+    ),
     re.IGNORECASE,
 )
 
@@ -421,10 +445,14 @@ def contents(lines):
         if m and t.startswith("Գլուխը"):
             m = None
         title = m.group(2) if m else ""
-        if m and filler(title):
-            # no meaning in the line itself: the lines
-            # below are the title
-            title = title_below(lines, i)
+        rest = pointer_rest(title) if m else None
+        if rest is not None:
+            # no meaning in the pointer: what follows
+            # it, and while that only numbers the
+            # chapter, the lines below
+            if not rest or label_only(rest):
+                rest = f"{rest} {title_below(lines, i)}"
+            title = rest.strip()
         m = m or SERMON_RE.fullmatch(t)
         if m:
             if not title:

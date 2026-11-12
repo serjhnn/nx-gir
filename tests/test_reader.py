@@ -9,7 +9,6 @@ from nxgir_reader import (
     WORD_RE,
     abbr_panel,
     contents,
-    filler,
     find,
     label_only,
     layout,
@@ -18,6 +17,7 @@ from nxgir_reader import (
     note_start,
     notes_panel,
     plain_markdown,
+    pointer_rest,
     quote,
     references,
     row_x,
@@ -695,8 +695,12 @@ def test_contents_title_from_the_next_line():
         ("Բ", "Երկրորդ պրակ։"),
         ("Գ", ""),
     ]
-    assert filler("ի մեծ ցանկէն")
-    assert not filler("")
+    assert pointer_rest("ի մեծ ցանկէն") == ""
+    assert pointer_rest("ի մեծն ցանկէն") == ""
+    assert pointer_rest("ի մեծ Ցանկէն։ Նախերգան") == (
+        "Նախերգան"
+    )
+    assert pointer_rest("") is None
 
 
 def test_contents_title_label_takes_more_lines():
@@ -733,3 +737,18 @@ def test_contents_title_label_takes_more_lines():
     assert label_only("Եւ Առաջին Պրակ Երկրորդ Հատորիս։")
     assert label_only("Մեր հատորի վեցերորդ տրակտատը։")
     assert not label_only("ՎԱՍՆ Հոգւոյն Սրբոյ։")
+
+
+def test_contents_pointer_with_a_title_after_it():
+    lines = [
+        "Գլուխ Լ ի մեծ Ցանկէն։ Նախերգան Հատորիս",
+        "Զանսկիզբն սկզբան։",
+        "Գլուխ ԼԲ ի մեծն ցանկէն",
+        "",
+        "(Պրակ ԺԲ) Յետ այսորիկ հարցանելի է։",
+    ]
+    got = [(e["n"], e["title"]) for e in contents(lines)]
+    assert got == [
+        ("Լ", "Նախերգան Հատորիս"),
+        ("ԼԲ", "(Պրակ ԺԲ) Յետ այսորիկ հարցանելի է։"),
+    ]

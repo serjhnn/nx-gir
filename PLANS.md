@@ -575,26 +575,29 @@ title is then:
 - the other four (Ա, Գ, Զ, Է) already say it in the
   first line and stay as they are
 
-It was tried (commit `a94377f`, taken back with
-`1aac705`): `label_only()` found a title made only of
-label words (պրակ, հատոր, տետր, հարցում, ordinals,
-եւ, single letters), and added up to two lines
-below it. It changed only those three chapters in
-the whole library, but the label words are a list
-made for this one book, so check it on each new
-book before relying on it.
+Done 2026-11-12 (`label_only()` and `title_below()`
+in `nxgir_reader.py`; the label words are the
+`LABEL_*` tables at the top; tests in
+`tests/test_reader.py`). It applies to the
+translation as well as the Grabar, so the two lists
+stay alike. Checked on Girk harcmanc parts 1–11
+(Grabar): only Բ, Դ and Ե of part 1 changed by it.
+The pointer rule also takes a text after the
+pointer (Լ: `ի մեծ Ցանկէն։ Նախերգան Հատորիս` is
+now `Նախերգան Հատորիս`) and `ի մեծն ցանկէն` (ԼԲ).
+The label words are a list made for this book, so
+check the contents of each new book.
 
-TODO:
+Left as it is, with its reason:
 
-- [ ] Bring `label_only()` back, with the label
-      words as a table at the top of the module and
-      a test with Girk harcmanc part 1
-- [ ] List the contents of Girk harcmanc parts 2–11
-      with it and look at every title (parts 5–7
-      have titles like `(Պրակ ԻԳ) Յելից գրոցն …`
-      that already say it)
-- [ ] The same rule in the translation, or Grabar
-      only: decide first
+- [ ] Part 2 chapter Ը: the line below the pointer
+      is a paragraph, and the heading (`(Պրակ Ա)`)
+      comes after it; its title is the start of
+      the paragraph
+- [ ] Part 3 chapters ԺԱ and ԺԲ: only `Գլուխ ԺԱ`,
+      the heading is two lines down after empty
+      lines; a bare number has no title (as in the
+      Gospels, where the next line is a verse)
 
 ## TODO: the website
 
