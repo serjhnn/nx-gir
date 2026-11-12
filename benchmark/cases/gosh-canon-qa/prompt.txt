@@ -1,0 +1,88 @@
+You translate Classical Armenian (Grabar) into
+modern Eastern Armenian.
+
+The text you get is one chunk of a book, cut into
+lines. Translate it line by line.
+
+Rules:
+
+1. Answer with the translation only: no comments,
+   no notes, no quotation marks around it, no code
+   block.
+2. One output line for each input line. Do not
+   merge or split lines. A blank line stays a blank
+   line, at the same place. The output has exactly
+   as many lines as the input.
+3. Use the reformed spelling of modern Armenian:
+   `և` (never `եւ`), `Եվ` at the start of a
+   sentence, `ու`, `յ` only where modern Armenian
+   has it. Use modern Eastern Armenian words and
+   word order, not the Grabar's.
+4. Be faithful, not word for word: the meaning of
+   each sentence, nothing added, nothing left out,
+   no explaining. Keep the author's tone, and every
+   comparison and example.
+5. A line in square brackets, such as `[ՃԸ]`, and
+   a line that starts with `ԳԼՈՒԽ`, are copied
+   exactly. A title in capital letters is
+   translated and stays in capital letters.
+   `(Գլուխ. ԾԱ)` becomes `(Գլուխ ԾԱ)`. A leading `*`
+   stays.
+6. Quoted words stand in parentheses in the Grabar:
+   keep the parentheses. Add no «», no square
+   brackets and no other marks.
+7. Keep the names of coins as they are: դահեկան,
+   դանգ, թասու, գարի.
+8. Every sentence ends with `։`, as in the Grabar.
+9. If a word is unclear, give your best reading in
+   modern Armenian. Never leave Grabar words in the
+   translation.
+
+The chunk follows after the line with three dashes.
+
+---
+
+[ՃԿԵ]
+
+ՅԱՂԱԳՍ ԴԱՏԱՍՏԱՆԱՑ, ՈՐ Ի ՄԻՏՍ ՈՉ ԻՑԷ ԵՒ ԶԻՒՐՈՎԻՆ ԵՐԹԱՅՑԷ
+
+Հարցումն. Որ յիւր միտս ոչ իցէ եւ երթիցէ զիւրովին, այսինքն՝ կամ գահավէժ առնի, կամ այլ ինչ մահու մեռանի, պա՞րտ է ի վերայ պատարագ մատուցանել, թէ ոչ։
+
+Պատասխանի. Պարտ է վիճակելոյն քննել, եթէ ճշմարտութեամբ պակասամիտ էր եւ արար զայս, քանզի բազում անգամ մերձաւորին ախտացելոյն կամելով դիպել, որ ի վերայ նորա պատարագ մատչի, ստեն, ասեն, թէ չէր յիւր միտս, զի մատուսցեն զպատարագն։
+Արդ, քննել պարտ է, մի գուցէ ի բռնութենէ մարդկան կամ այլապէս արար զայս, ապա ոչ է պարտ լինել պատարագ ի վերայ նորա, քանզի ինքնասպան եղեւ անձին իւրոյ։
+Ապա պարտ է քննել զամենայն ճշմարտութեամբ, զի մի՛ ի դատաստան անկանիցի մատուցանողն։
+
+Արդ, թէպէտ յայտնի է ըստ հարցմանն եւ պատասխանիդ, այլ վերակացուքն պարտապան են ապաշխարել ըստ դատելոյ վարդապետաց։
+Եւ դատաւորաց ոչ է այդ։
+
+[ՃԿԶ]
+
+ՅԱՂԱԳՍ ԴԱՏԱՍՏԱՆԱՑ ԱՅՍԱՀԱՐ ԿՆՈՋ
+
+Հարցումն. Եթէ ոք կին այսահարիցի յոյժ, որպէս զի երկաթս ագանիցի, եւ այր նորա ասիցէ՝ ոչ կարեմ ժուժկալ լինել, եւ կամիցի առնուլ այլ կին, աւրէ՞ն է, թէ ոչ։
+
+Պատասխանի. Շնութիւն միջնորդի յիրսդ. եւ զի՞նչ պարտ եւ արժան է, ոչ գիտեմ վասն այդորիկ։
+
+Ըստ ներման եւ զայս գրեցաք երբեմն զդատաստան. որպէս կամ է՝ ընկալցին դատաւորք եւ անպարսաւս զմեզ թողցեն յայդմանէ։
+
+[ՃԿԷ]
+
+ՅԱՂԱԳՍ ԴԱՏԱՍՏԱՆԱՑ ԱՆԱՐԵԱՑ
+
+Հարց. Եթէ այր ոք ոչ լինիցի ի գործ արութեան, եւ կինն ելանէ ի նմանէ, եթէ ոք զկինն զայն կին առնիցէ, ընդ հանեա՞լ կանայսն պարտ է համարել զայնպիսին, եթէ անխի՞ղճ ունել։
+Կամ թէ այրն չարձակէ զկինն ի բաց եւ ասէ այսպէս, թէ՝ ինձ մասն հասեալ է յԱստուծոյ, կաց եւ պաշտեա զիս,  մեք զի՞նչ պատասխանի տացուք։
+
+Պատասխանի. Չէ արժան արձակել եւ ոչ ձեզ թողացուցանել նմա։
+
+Եդեալ է եւ այս դատաստան կանոնական. ներմամբ ի կամս ապաստան է հաճելն ընդ երկաքանչիւրսն, նմանապէս եւ՝ դատաւորաց եկեղեցւոյ։
+
+[ՃԿԸ]
+
+ՅԱՂԱԳՍ ԴԱՏԱՍՏԱՆԱՑ ՀԱՇՄԵԼՈՅ ԿՆՈՋ
+
+Հարց. Եթէ կին ուրուք հաշմիցի եւ ասիցէ ցայր իւր, թէ՝ ես ահաւասիկ չեմ արժանի առնակնութեան, արա դու քեզ այլ կին, որ քեզ պիտանի է եւ զտուն շէն կալցի, եւ ինձ ամ ըստ ամէ հաց եւ հանդերձ տուր, եւ ես նստայց առ եկեղեցւոյդ մինչեւ ի վախճան ժամանակի իմոյ, եւ առցէ յանձն առնել զամենայն, ընդ պատուհասի՞ւ ինչ են իրքն, զի այլ կին առնէ, թէ՞ անվնաս է։
+
+Պատասխանի. Վնասակար է, ոչ է իշխանութիւն այլ կին առնուլ, մինչեւ այն կինն կենդանի է։
+
+Ընտրութեամբ զիջանելով եդաւ այս դատաստան կանխաւ։
+Ընդ կամս դատաւորաց եկեղեցւոյ եդաք եւ զայսոցիկ ընդունելութիւն, միայն զի ի խղճէ ճողոպրիցիմ։

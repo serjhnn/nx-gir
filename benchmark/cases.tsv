@@ -1,0 +1,28 @@
+# Benchmark cases: a chunk of Grabar and its modern
+# Armenian translation, both under books/. Fields
+# split by tabs; lines are 1-based and inclusive; the
+# translation has the same line numbers as the Grabar.
+#
+#   id       folder name under cases/
+#   grabar   path under books/
+#   modern   path under books/
+#   first    first line of the chunk
+#   last     last line of the chunk
+#   kind     what the chunk tests
+#   ref      reference quality: human (a published
+#            translation, in traditional spelling:
+#            its scores are left out of the means),
+#            claude (made by Claude, in review by
+#            serjhnn), machine (made by Claude, not
+#            yet reviewed)
+#
+# `build.py` copies the chunks to cases/, frozen: the
+# translations in books/ are still being corrected, so
+# the benchmark keeps its own copy.
+amaran-07-scholastic	grabar/grigor-tatevatsi/3-amaran-hator/07.txt	ashkharhabar/grigor-tatevatsi/3-amaran-hator/07.txt	5	30	Sermon: a scholastic argument in short steps, a heading, a (Գլուխ. X) line	claude
+amaran-10-confession	grabar/grigor-tatevatsi/3-amaran-hator/10.txt	ashkharhabar/grigor-tatevatsi/3-amaran-hator/10.txt	740	762	Sermon: comparisons (bleeding, wounds, a story), a leading *	claude
+gosh-laws-deut	grabar/mkhitar-gosh/1-datastanagirk-a/02.txt	ashkharhabar/mkhitar-gosh/1-datastanagirk-a/02.txt	3	55	Law: a verse of the Torah, then the comment; [..] section lines, capital titles	machine
+gosh-canon-qa	grabar/mkhitar-gosh/1-datastanagirk-a/02.txt	ashkharhabar/mkhitar-gosh/1-datastanagirk-a/02.txt	575	618	Law: questions and answers on canons (Հարց, Պատասխանի)	machine
+gosh-inheritance	grabar/mkhitar-gosh/1-datastanagirk-a/02.txt	ashkharhabar/mkhitar-gosh/1-datastanagirk-a/02.txt	737	754	Law: long legal sentences about shares of an estate	machine
+gosh-judges	grabar/mkhitar-gosh/1-datastanagirk-a/01.txt	ashkharhabar/mkhitar-gosh/1-datastanagirk-a/01.txt	179	197	Preface: how judges must be, witnesses and oaths	machine
+psalm-118	grabar/bible/old-testament/psalm-118.txt	ashkharhabar/bible/old-testament/psalm-118.txt	1	40	Verse: Psalm 118, Etchmiadzin 1994, a published human translation	human

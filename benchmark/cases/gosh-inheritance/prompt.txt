@@ -1,0 +1,62 @@
+You translate Classical Armenian (Grabar) into
+modern Eastern Armenian.
+
+The text you get is one chunk of a book, cut into
+lines. Translate it line by line.
+
+Rules:
+
+1. Answer with the translation only: no comments,
+   no notes, no quotation marks around it, no code
+   block.
+2. One output line for each input line. Do not
+   merge or split lines. A blank line stays a blank
+   line, at the same place. The output has exactly
+   as many lines as the input.
+3. Use the reformed spelling of modern Armenian:
+   `և` (never `եւ`), `Եվ` at the start of a
+   sentence, `ու`, `յ` only where modern Armenian
+   has it. Use modern Eastern Armenian words and
+   word order, not the Grabar's.
+4. Be faithful, not word for word: the meaning of
+   each sentence, nothing added, nothing left out,
+   no explaining. Keep the author's tone, and every
+   comparison and example.
+5. A line in square brackets, such as `[ՃԸ]`, and
+   a line that starts with `ԳԼՈՒԽ`, are copied
+   exactly. A title in capital letters is
+   translated and stays in capital letters.
+   `(Գլուխ. ԾԱ)` becomes `(Գլուխ ԾԱ)`. A leading `*`
+   stays.
+6. Quoted words stand in parentheses in the Grabar:
+   keep the parentheses. Add no «», no square
+   brackets and no other marks.
+7. Keep the names of coins as they are: դահեկան,
+   դանգ, թասու, գարի.
+8. Every sentence ends with `։`, as in the Grabar.
+9. If a word is unclear, give your best reading in
+   modern Armenian. Never leave Grabar words in the
+   translation.
+
+The chunk follows after the line with three dashes.
+
+---
+
+[ՃՁ]
+
+ՅԱՂԱԳՍ ԴԱՏԱՍՏԱՆԱՑ ԲԱԺԱՆՄԱՆ ԺԱՌԱՆԳՈՒԹԵԱՆ ՅՈՒՍՏԵՐՍ ԵՒ Ի ԴՍՏԵՐՍ
+
+Եթէ ոք վախճանի եւ ունիցի ուստերս եւ դստերս, զինչսն ծնողացն ընդ երկու քորսն մի բաժին եղբաւր դիցեն հաւասարապէս։
+Ըստ Աւրինացն յառաջագոյն գրեցաք զայս դատաստան եւ եդաք, զի դուստր ի տան զորդւոյ առցէ բաժին, եւ ելեալքն՝ երկուսն զմի եղբաւր։
+Եւ այս յայտնի յԱւրինացն ոչ ասացաւ, եւ աստ կանոնական հրամանս զայս ոչ ընտրեն, եւ ոչ հեթանոսք զանազանեն զսոսա։
+Այլ ես յիրացն հաւատարիմ զայն իսկ գիտեմ, զի ելանէ դուստր ի տանէ հաւր բաժնիւ, եւ որ տակաւին ի տան է՝ անբաժին իսկ է։
+Արդ, զսոսա հաւասարաբաժին զկնի մահուան հաւրն առնել ոչ է արդարադատութիւն, զի այդպէս գտանին կարգեալ դստերքն ընդ եղբարսն առեալ բաժին, եւ որք ի տան՝ երկուսն մի։
+Ապա թէ ոք ասիցէ՝ որդւոցն ծախք լինել ածել կանայս, գիտելի է, զի որքան ծախք իցէ, եւ այնքան աշխատութիւն, իբր զի արու է, եւ բաժին ընդ կնոջ նորա ածաւ։
+Ըստ այսմ հաւատարիմ երեւի, զի կարգեալքն՝ երկուսն մի լիցին, եւ որք ի տան՝ ընդ որդիս համարեսցին։
+Եւ այդպէս ամենեցուն հաւասարութիւն եղիցի, եւ տկար ազգն խնամեսցի, եւ մի՛ նուազ լիցի, զի բազում ծնողք զդստերս առաւել պատուեն. եւ զայս նախախնամութեամբ, զի որդւոց դիւրին է ապրել, քան դստերաց։
+Եւ զայս յայտ արարաք, զի եւ նոյն իրքդ այդպէս պատահի, այլ կամք ընտրեսցեն դատաւորաց՝ զամենայն դստերսն զերկուսն մի ունել եւ կամ ըստ դատմանդ, որպէս գրեցաւ։
+Նաեւ զայս իրաւունս համարիմ, զի բազում անգամ պատահի զդուստր երկիցս կարգել. այնոցիկ բաւական լիցի այն ի մասն բաժնի, եթէ ըստ ընչիցն ծնողացն եւ առ նա ծախքն ելեալ իցէ, ապա թէ ոչ՝ տեսցի հաւասարութիւն, սակայն մասն լիցի բաւական առելոցն։
+Եւ յերկրորդ ամուսնութենէ ուստերքն եւ դստերքն նուազ լիցին ի մասն բաժնի, որպէս եւ գրեալ է։
+
+Այլ զտուն հաւր կրսեր որդւոյն սովոր են տալ, բայց տեսցի՝ անկաւորին լինել, որ զտեղի հաւրն բաւական է ունել։
+Իսկ անդրանկանն պատիւ լիցի, որպէս ծանուցեալ է. ըստ այդմ, եթէ հաւասար բաժանիցի ժառանգութիւնն ուստերաց, առաւել լիցի յաղագս պատուոյ։

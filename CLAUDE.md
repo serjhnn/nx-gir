@@ -145,6 +145,14 @@
   `notes/1-datastanagirk-a.md`, added to with
   every translated part); not on the shelf and
   not on the Pages site
+- `benchmark/`: a benchmark of models translating
+  Grabar (chunks from translated parts, frozen in
+  `cases/`, a prompt, `score.py`, a blind human
+  review in `review.py`; see `benchmark/README.md`,
+  tested in `tests/test_benchmark.py`). Code in it
+  follows the same limits (ruff:
+  `ruff format benchmark/`). The model outputs go in
+  `benchmark/runs/<model>/`
 - `scripts/nxgir_limits.py`: how close the
   repository is to the limits of GitHub and of a
   phone (tested in `tests/test_limits.py`), shown by

@@ -1,0 +1,84 @@
+You translate Classical Armenian (Grabar) into
+modern Eastern Armenian.
+
+The text you get is one chunk of a book, cut into
+lines. Translate it line by line.
+
+Rules:
+
+1. Answer with the translation only: no comments,
+   no notes, no quotation marks around it, no code
+   block.
+2. One output line for each input line. Do not
+   merge or split lines. A blank line stays a blank
+   line, at the same place. The output has exactly
+   as many lines as the input.
+3. Use the reformed spelling of modern Armenian:
+   `և` (never `եւ`), `Եվ` at the start of a
+   sentence, `ու`, `յ` only where modern Armenian
+   has it. Use modern Eastern Armenian words and
+   word order, not the Grabar's.
+4. Be faithful, not word for word: the meaning of
+   each sentence, nothing added, nothing left out,
+   no explaining. Keep the author's tone, and every
+   comparison and example.
+5. A line in square brackets, such as `[ՃԸ]`, and
+   a line that starts with `ԳԼՈՒԽ`, are copied
+   exactly. A title in capital letters is
+   translated and stays in capital letters.
+   `(Գլուխ. ԾԱ)` becomes `(Գլուխ ԾԱ)`. A leading `*`
+   stays.
+6. Quoted words stand in parentheses in the Grabar:
+   keep the parentheses. Add no «», no square
+   brackets and no other marks.
+7. Keep the names of coins as they are: դահեկան,
+   դանգ, թասու, գարի.
+8. Every sentence ends with `։`, as in the Grabar.
+9. If a word is unclear, give your best reading in
+   modern Armenian. Never leave Grabar words in the
+   translation.
+
+The chunk follows after the line with three dashes.
+
+---
+
+Սաղմոս ՃԺԸ
+
+Ալէլուիա։
+Երանեալ են ամբիծք ի ճանապարհի, եւ ոյք գնան յօրէնս Տեառն։
+Երանի ոյք քննեն զվկայութիւնս նորա, բոլորով սրտիւ իւրեանց խնդրեսցեն զնա։
+Ոչ թէ որ գործեն զանօրէնութիւն, ի ճանապարհս նորա գնասցեն։
+Դու պատուիրեցեր զպատուիրանս քո, ի պահել ինձ յոյժ։
+Օ՛շ թէ յաջողեալ էին ինձ ճանապարհք իմ, պահել ինձ զարդարութիւնս քո։
+Յայնժամ ես ոչ ամաչէի ի զգուշանալ ինձ ի պատուիրանս քո։
+Խոստովան եղէց քեզ, Տէր, յուղղութիւն սրտի իմոյ. որպէս ուսայց զիրաւունս արդարութեան քո։
+Զիրաւունս քո պահեցի, մի՛ թողուր զիս մինչեւ ի սպառ։
+Ի՞ւ ուղղեսցէ երիտասարդ զճանապարհս իւր, այլ ի պահել զբանս քո։
+Բոլորով սրտիւ իմով խնդրեցի զքեզ, մի՛ մերժեր զիս ի պատուիրանաց քոց։
+Ի սրտի իմում թաքուցի զբանս քո, որպէս զի մի՛ մեղայց քեզ։
+Օրհնեալ ես դու, Տէր, ուսո ինձ զարդարութիւնս քո։
+Շրթամբք իմովք պատմեցից զամենայն իրաւունս բերանոյ քո։
+Ի ճանապարհս վկայութեանց քոց զուարճացայ, որպէս յամենայն ի մեծութեան։
+Ի պատուիրանս քո հոգացայ, եւ զգուշացայ ի ճանապարհս քո։
+Զիրաւունս քո խօսեցայ, եւ ոչ մոռացայ զբանս քո։
+Հատո ծառայի քում, զի կեցից եւ պահեցից զբանս քո։
+Զարթո զաչս իմ, եւ նայեցայց ի սքանչելիս օրինաց քոց։
+Պանդուխտ եմ ես յերկրի, մի՛ թաքուցաներ յինէն զպատուիրանս քո։
+Փափաքեաց անձն իմ ի ցանկալ ինձ յիրաւունս քո յամենայն ժամ։
+Սաստեցեր ամբարտաւանից, անիծեալ ոյք խոտորեցան ի պատուիրանաց քոց։
+Ի բաց արա յինէն զնախատինս եւ զարհամարհանս, զի զվկայութիւնս քո խնդրեցի։
+Քանզի նստան իշխանք եւ չարախօսէին զինէն, այլ ծառայ քո խորհէր յիրաւունս քո։
+Զի վկայութիւնք քո խօսք իմ էին, եւ խորհուրդք իմ արդարութիւն քո։
+Մերձեցաւ անձն իմ ի հող, Տէր, կեցո զիս ըստ բանի քում։
+Զճանապարհս իմ պատմեցի քեզ եւ լուար ինձ, ուսո ինձ զարդարութիւնս քո։
+Ի ճանապարհս արդարութեանց քոց իմաստուն արա զիս, եւ քննեցից զսքանչելիս քո։
+Տքնեցաւ անձն իմ առ ի ձանձրանալ, հաստատեա զիս ի բանս քո։
+Զճանապարհս մեղաց ի բաց արա յինէն, եւ յօրէնս քո ողորմեա ինձ։
+Զճանապարհս ճշմարտութեան քո ընտրեցի, եւ զիրաւունս քո ես ոչ մոռացայ։
+Մերձեցայ ես ի վկայութիւնս քո, Տէր, մի՛ յամօթ առներ զիս։
+Ի ճանապարհս պատուիրանաց քոց ընթացայ, զի անդորր արարեր սրտի իմոյ։
+Օրէնսգէտ արա զիս, Տէր, ի ճանապարհս իրաւանց քոց, եւ խնդրեցից զնա յամենայն ժամ։
+Իմաստուն արա զիս, եւ քննեցից զօրէնս քո, եւ պահեցից զնա բոլորով սրտիւ իմով։
+Առաջնորդեա ինձ ի շաւիղս պատուիրանաց քոց, զի ընդ նոսա հաճեցայ։
+Խոնարհեցո զսիրտ իմ ի վկայութիւնս քո, եւ մի՛ յագահութիւն։
+Դարձո զաչս իմ, զի մի՛ տեսից զնանրութիւն, ի ճանապարհս քո կեցո զիս։
