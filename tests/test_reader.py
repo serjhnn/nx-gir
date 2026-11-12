@@ -567,7 +567,7 @@ def test_contents_of_sermons():
         "Սաղ. 131. 9. (Գլուխ ԽԱ. )",
         "Գլուխ Ա",
     ]
-    assert contents(lines) == [
+    assert contents(lines)[1:] == [
         {
             "line": 2,
             "n": "",
@@ -633,7 +633,7 @@ def test_contents_of_sections():
         "Տեքստ։",
         "[ԺԲ]",
     ]
-    assert contents(lines) == [
+    assert contents(lines)[1:] == [
         {
             "line": 2,
             "n": "Ա",
@@ -668,7 +668,11 @@ def test_contents_word_glukh_is_not_a_chapter():
         "Գլուխ առաջին Քարոզ։",
         "Գլուխ Աստուած է։",
     ]
-    got = [(e["n"], e["title"]) for e in contents(lines)]
+    got = [
+        (e["n"], e["title"])
+        for e in contents(lines)
+        if not e.get("start")
+    ]
     assert got == [
         ("Ժէ", "ի մեծ ցանկէն"),
         ("Ա", "մեծ ցանկից։"),
@@ -689,7 +693,11 @@ def test_contents_title_from_the_next_line():
         "Գլուխ Գ",
         "Եւ եղեւ։",
     ]
-    got = [(e["n"], e["title"]) for e in contents(lines)]
+    got = [
+        (e["n"], e["title"])
+        for e in contents(lines)
+        if not e.get("start")
+    ]
     assert got == [
         ("Ա", "Առաջին պրակ հատորիս։"),
         ("Բ", "Երկրորդ պրակ։"),
@@ -720,7 +728,11 @@ def test_contents_title_label_takes_more_lines():
         "(Պրակ Ա) Ընդ դէմ նեստորականացն։",
         "Որք զբանն ասեն։",
     ]
-    got = [(e["n"], e["title"]) for e in contents(lines)]
+    got = [
+        (e["n"], e["title"])
+        for e in contents(lines)
+        if not e.get("start")
+    ]
     assert got == [
         (
             "Բ",
@@ -747,8 +759,37 @@ def test_contents_pointer_with_a_title_after_it():
         "",
         "(Պրակ ԺԲ) Յետ այսորիկ հարցանելի է։",
     ]
-    got = [(e["n"], e["title"]) for e in contents(lines)]
+    got = [
+        (e["n"], e["title"])
+        for e in contents(lines)
+        if not e.get("start")
+    ]
     assert got == [
         ("Լ", "Նախերգան Հատորիս"),
         ("ԼԲ", "(Պրակ ԺԲ) Յետ այսորիկ հարցանելի է։"),
     ]
+
+
+def test_contents_start_entry():
+    # text before the first heading: an entry for the
+    # start comes first; none when the heading is the
+    # first line
+    lines = [
+        "Գիրք · 1/2",
+        "",
+        "Նախաբան։",
+        "Գլուխ Ա",
+        "Տեքստ։",
+    ]
+    got = contents(lines)
+    assert got[0] == {
+        "line": 0,
+        "n": "",
+        "title": "Գիրք · 1/2",
+        "level": 1,
+        "start": True,
+    }
+    assert [e["n"] for e in got] == ["", "Ա"]
+    lines = ["", "Գլուխ Ա", "Տեքստ։"]
+    assert [e["n"] for e in contents(lines)] == ["Ա"]
+    assert contents(["Գիրք", "Տեքստ"]) == []

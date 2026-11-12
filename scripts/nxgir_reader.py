@@ -388,7 +388,10 @@ def contents(lines):
     """The parts of a book, in order: [{"line": the
     line to go to, "n": its number or "", "title":
     its heading, short, "level": 1 for a group of
-    chapters, 2 for a chapter}]."""
+    chapters, 2 for a chapter}]; when the first heading
+    is not at the start of the text, an entry for the
+    start comes first (its title the first line, level
+    1, "start": True)."""
     out = []
     for i, line in enumerate(lines):
         t = line.strip()
@@ -465,6 +468,23 @@ def contents(lines):
                     "level": 2,
                 }
             )
+    # the text before the first heading is reachable
+    # too: an entry for the start of the text
+    first = next(
+        (k for k, x in enumerate(lines) if x.strip()),
+        None,
+    )
+    if out and first is not None and out[0]["line"] > first:
+        out.insert(
+            0,
+            {
+                "line": first,
+                "n": "",
+                "title": short(lines[first].strip()),
+                "level": 1,
+                "start": True,
+            },
+        )
     return out
 
 

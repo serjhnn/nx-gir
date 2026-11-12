@@ -620,7 +620,9 @@ def parts(app, name):
         if k not in by_n:
             return None
         lines = book_text(app, by_n[k]).splitlines()
-        heads = contents(lines)
+        heads = [
+            h for h in contents(lines) if not h.get("start")
+        ]
         return {
             "name": by_n[k],
             "n": k,
