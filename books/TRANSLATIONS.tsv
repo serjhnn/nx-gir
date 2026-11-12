@@ -9,7 +9,7 @@
 #   path       under books/: a file, or a folder
 #              for all its files (the longest
 #              match wins)
-#   status     machine: made by Claude, not yet
+#   status     machine: made by an AI model, not yet
 #                reviewed by a person
 #              review: being reviewed
 #              reviewed: read through and corrected
