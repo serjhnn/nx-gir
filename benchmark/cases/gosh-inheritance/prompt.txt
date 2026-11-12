@@ -29,8 +29,9 @@ Rules:
    `(Գլուխ. ԾԱ)` becomes `(Գլուխ ԾԱ)`. A leading `*`
    stays.
 6. Quoted words stand in parentheses in the Grabar:
-   keep the parentheses. Add no «», no square
-   brackets and no other marks.
+   keep the parentheses. A word you must add to make
+   a sentence whole may also stand in parentheses.
+   Add no «», no square brackets and no other marks.
 7. Keep the names of coins as they are: դահեկան,
    դանգ, թասու, գարի.
 8. Every sentence ends with `։`, as in the Grabar.

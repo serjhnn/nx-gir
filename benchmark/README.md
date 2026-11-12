@@ -1,6 +1,6 @@
 # Benchmark: Grabar into modern Armenian
 
-Seven chunks of Grabar (223 lines, 31 KB) with the
+Six chunks of Grabar (183 lines, 27 KB) with the
 translation they are compared to, to test how well
 a model translates. The same prompt, the same
 chunks for every model.
@@ -15,7 +15,6 @@ chunks for every model.
 | `gosh-canon-qa` | 44 | law: questions and answers on canons | Claude, unreviewed |
 | `gosh-inheritance` | 18 | law: long legal sentences about shares | Claude, unreviewed |
 | `gosh-judges` | 19 | preface: judges, witnesses, oaths | Claude, unreviewed |
-| `psalm-118` | 40 | verse, a published translation (Etchmiadzin 1994) | human |
 
 `cases.tsv` lists them. Each folder in `cases/` has
 
@@ -78,15 +77,13 @@ needed. A missing case shows as `-`.
 
 ## What they do not mean
 
-- The references are made by Claude (all but the
-  psalm), so a model that writes like Claude scores
-  higher, and a good different translation lower.
-  Use chrF to find bad runs. To rank good ones, use
-  the blind review, by someone who reads the Grabar.
-- The psalm reference is in traditional spelling, so
-  its chrF is shown (`†`) but left out of the means;
-  rate it in the review.
-- Seven chunks are few: differences of a point or two
+- The references are all made by Claude, so a model
+  that writes like Claude scores higher, and a good
+  different translation lower. There is no
+  independent human reference. Use chrF to find bad
+  runs. To rank good ones, use the blind review, by
+  someone who reads the Grabar.
+- Six chunks are few: differences of a point or two
   are noise. Run twice before drawing a conclusion.
 - Reference errors: the Gosh references are not yet
   reviewed; if you find one, correct it in `books/`

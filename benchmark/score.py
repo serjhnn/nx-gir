@@ -20,9 +20,6 @@ Numbers (0-100, higher is better):
   word   F1 of the bag of words
   copy   share of the words (4 letters or more) that
          are also in the Grabar: untranslated words
-The case with a human reference (psalm-118) is in
-traditional spelling, so its scores are shown (marked
-†) but left out of the means.
 The references are made by Claude, so a model that
 writes like Claude scores higher. Use the numbers to
 find the bad runs, and the human review (review.py)
@@ -34,8 +31,6 @@ import re
 import sys
 from collections import Counter
 from pathlib import Path
-
-import build
 
 HERE = Path(__file__).resolve().parent
 OLD = re.compile("եւ|Եւ|ԵՒ")
@@ -238,25 +233,16 @@ def fmt(v):
 def summarize(results):
     """The markdown tables of all models."""
     ids = [c.name for c in cases()]
-    skip = {
-        r["id"]
-        for r in build.read_cases()
-        if r["ref"] == "human"
-    }
     cols = "model | cases | rules ok | chrF"
     cols += " | line | word | copy"
     head = f"| {cols} |\n"
     out = [head, "|---|--:|--:|--:|--:|--:|--:|\n"]
     for model, res in results.items():
-        got = [
-            r
-            for cid, r in res.items()
-            if r and cid not in skip
-        ]
+        got = [r for r in res.values() if r]
         ok = sum(r["structure_ok"] for r in got)
         row = [
             model,
-            f"{len(got)}/{len(ids) - len(skip)}",
+            f"{len(got)}/{len(ids)}",
             f"{ok}/{len(got)}",
         ]
         for key in ("chrf", "line", "word", "copy"):
@@ -266,7 +252,7 @@ def summarize(results):
     out.append("| case | " + " | ".join(results) + " |\n")
     out.append("|---|" + "--:|" * len(results) + "\n")
     for cid in ids:
-        row = [cid + (" †" if cid in skip else "")]
+        row = [cid]
         for res in results.values():
             r = res[cid]
             mark = (
@@ -279,8 +265,7 @@ def summarize(results):
             )
         out.append("| " + " | ".join(row) + " |\n")
     out.append(
-        "\n`*` a rule is broken (see scores.json). "
-        "`†` traditional spelling, not in the means.\n"
+        "\n`*` a rule is broken (see scores.json).\n"
     )
     return "".join(out)
 

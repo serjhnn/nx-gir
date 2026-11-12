@@ -9,12 +9,9 @@
 #   first    first line of the chunk
 #   last     last line of the chunk
 #   kind     what the chunk tests
-#   ref      reference quality: human (a published
-#            translation, in traditional spelling:
-#            its scores are left out of the means),
-#            claude (made by Claude, in review by
-#            serjhnn), machine (made by Claude, not
-#            yet reviewed)
+#   ref      reference quality: claude (made by
+#            Claude, in review by serjhnn), machine
+#            (made by Claude, not yet reviewed)
 #
 # `build.py` copies the chunks to cases/, frozen: the
 # translations in books/ are still being corrected, so
@@ -25,4 +22,3 @@ gosh-laws-deut	grabar/mkhitar-gosh/1-datastanagirk-a/02.txt	ashkharhabar/mkhitar
 gosh-canon-qa	grabar/mkhitar-gosh/1-datastanagirk-a/02.txt	ashkharhabar/mkhitar-gosh/1-datastanagirk-a/02.txt	575	618	Law: questions and answers on canons (Հարց, Պատասխանի)	machine
 gosh-inheritance	grabar/mkhitar-gosh/1-datastanagirk-a/02.txt	ashkharhabar/mkhitar-gosh/1-datastanagirk-a/02.txt	737	754	Law: long legal sentences about shares of an estate	machine
 gosh-judges	grabar/mkhitar-gosh/1-datastanagirk-a/01.txt	ashkharhabar/mkhitar-gosh/1-datastanagirk-a/01.txt	179	197	Preface: how judges must be, witnesses and oaths	machine
-psalm-118	grabar/bible/old-testament/psalm-118.txt	ashkharhabar/bible/old-testament/psalm-118.txt	1	40	Verse: Psalm 118, Etchmiadzin 1994, a published human translation	human

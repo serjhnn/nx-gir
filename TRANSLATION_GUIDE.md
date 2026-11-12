@@ -15,7 +15,8 @@ it). Everything an AI tool needs is on this page.
 3. Translate the meaning of each sentence: add nothing,
    leave nothing out, explain nothing.
 4. Copy lines like `[Ա]` and `ԳԼՈՒԽ Ա` exactly.
-5. Add no marks of your own: no «», no `[ ]`, no `( )`.
+5. Add no «» and no `[ ]`. A word you must add to make a
+   sentence whole may stand in `( )`.
 6. Never leave Grabar words in the translation.
 7. Run the check (section 6) after every chunk.
 8. The result is `machine` until a person reads it.
@@ -112,8 +113,9 @@ Rules:
    `(Գլուխ. ԾԱ)` becomes `(Գլուխ ԾԱ)`. A leading `*`
    stays.
 6. Quoted words stand in parentheses in the Grabar:
-   keep the parentheses. Add no «», no square
-   brackets and no other marks.
+   keep the parentheses. A word you must add to make
+   a sentence whole may also stand in parentheses.
+   Add no «», no square brackets and no other marks.
 7. Keep the names of coins as they are: դահեկան,
    դանգ, թասու, գարի.
 8. Every sentence ends with `։`, as in the Grabar.
@@ -156,7 +158,7 @@ What happened:
   and stays in capitals.
 - One sentence on each line; the blank lines are where
   they were. The two files have the same shape.
-- No `եւ`, no added marks, no Grabar words left.
+- No `եւ`, no added « » or `[ ]`, no Grabar words left.
 - `թէպէտ աւրինադրութիւն` became `թեև օրենսդրություն է`:
   modern words and word order, the same meaning.
 
@@ -184,9 +186,12 @@ What happened:
 **Marks and lines**
 
 - The Grabar has parentheses for quoted words: keep them.
-  Add no «», no square brackets, and no parentheses for
-  words of your own. If grammar needs a word, add it
-  without a mark.
+  Add no «» and no square brackets.
+- If the modern sentence needs a word the Grabar does not
+  have, put it in parentheses, as the Gosh translation
+  does: `(եկող)`. Use it only when the sentence would
+  not be whole without the word; the parentheses show
+  that it is yours. Do not use them for explanations.
 - Locked lines are copied exactly. `(Գլուխ. X)` becomes
   `(Գլուխ X)`. A leading `*` stays.
 - The first line of a part is its title, in the form of
@@ -279,7 +284,9 @@ Common mistakes:
 - a blank line dropped or added;
 - `եւ` instead of `և`;
 - a locked line translated or changed;
-- «» or `( )` added;
+- « » or `[ ]` added;
+- explanations or extra words put in the text, with or
+  without parentheses;
 - a sentence left out, or Grabar left in;
 - a summary where a translation was asked for;
 - a code block, a note or "Here is the translation" in
