@@ -45,7 +45,8 @@ property, trade, labor, animals, injury and homicide.
 The source was split into 1,369 reader lines. The
 translation has the same line count and blank-line
 positions, and all 146 section markers are in the same
-positions. No old `եւ` spelling, Latin text or added
+positions. The source's repeated `[ՃԻԱ]` section marker
+and the spacing of law `16 .` are preserved. No old `եւ` spelling, Latin text or added
 quotation marks remain. The status is `machine`; no
 human or specialist review has been done.
 
