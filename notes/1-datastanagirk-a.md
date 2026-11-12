@@ -25,29 +25,31 @@ penance left to the canons. Others are his own,
 from custom, from the canons of the apostles and
 from the laws of other Christian peoples.
 
-## How to do the next part
+## How it was done
 
-Part 1 is done. To do part 2, follow "How to do
-the next part" in `notes/3-amaran-hator.md`, with
-these changes:
+Both parts are done (part 2 on 2026-11-12), by
+"How to do the next part" in
+`notes/3-amaran-hator.md`, with these changes
+(the same hold for redactions Բ and Գ, if they
+are translated):
 
-- the file is `1-datastanagirk-a/02.txt`;
 - the title line is «Դատաստանագիրք, Ա
-  խմբագրություն · 2/2»;
+  խմբագրություն · N/2»;
 - the `[Ա]` lines and `ԳԼՈՒԽ Ա` stay exactly as in
   the Grabar (the Contents finds a section by its
   `[Ա]` line, `SECTION_RE` in `nxgir_reader.py`);
   the title under it is translated, in capitals,
-  "ԴԱՏԱՍՏԱՆՆԵՐԻ ՄԱՍԻՆ" for «ՅԱՂԱԳՍ ԴԱՏԱՍՏԱՆԱՑ»;
+  "… ԴԱՏԱՍՏԱՆՆԵՐԻ ՄԱՍԻՆ" for «ՅԱՂԱԳՍ ԴԱՏԱՍՏԱՆԱՑ
+  …»;
 - the Grabar has no «» or parentheses for
   quotations: add none; its few `[…]` editorial
-  insertions are kept;
+  insertions are kept; words the translation adds
+  to make a sentence whole are in ( );
 - terms kept as they are: `դահեկան`, `դանգ`,
   `թասու`, `գարի` (money and its parts, law ՃԴ),
   `սիկղ`, `երկդրամյան`, `չեքչեք`; `որոշվել` for
   being cut off from the church, `լուծվել` for a
-  cleric losing his rank;
-- at the end, add a "Part 2" section here.
+  cleric losing his rank.
 
 ## Part 1 · preface and laws Ա–ՃԷ
 
@@ -155,3 +157,131 @@ Notes on the text:
   group line; the Contents lists both.
 - Line 1888: the Grabar opens a «» it does not
   close; the translation closes it.
+
+## Part 2 · laws ՃԸ–ՄԾԱ
+
+144 laws (108–251), 2067 lines. From ՃԼԲ on most
+laws are canons (of the councils, of Basil, of the
+Armenian fathers), quoted first, with Gosh's
+comment after a blank line; ՃԿԵ–ՃՀԳ and ՃՂԳ–ՃՂԴ
+are questions and answers (`Հարց.` /
+`Պատասխան.`).
+
+- ՃԸ–ՃԼԱ (lines 3–239): laws from Deuteronomy
+  with Gosh's comments: witnesses and false
+  witnesses, a body found in the fields, captive
+  women, the firstborn, the stubborn son, the
+  hanged, lost and fallen animals, men's and
+  women's clothes, birds' nests, the parapet,
+  runaway slaves, a neighbour's harvest and
+  vineyard, the bill of divorce, the newly
+  married and war, pledges (millstones, the
+  widow's garment), the hired man's wage, fathers
+  and sons, forty stripes, the woman in a fight.
+- ՃԼԲ–ՃԿԴ (240–574): canons: grave robbers,
+  killing a robber, founding a church, ordaining
+  bishops and catholicoi, clergy who lend at
+  interest, abducted betrothed girls, eating
+  meat, church property, a broken vow of
+  virginity, baptizing pregnant women, divorce
+  for adultery and for hatred, the age of
+  ordination (thirty), country priests,
+  chorepiscopi, parents and children, Maundy
+  Thursday, bishops under the metropolitan,
+  appeals, ordaining in another's diocese,
+  marrying outsiders.
+- ՃԿԵ–ՃՀԳ (575–683): questions and answers:
+  the suicide of a madman, a possessed wife,
+  impotence, a crippled wife, a priest who kills
+  robbers, killing by the possessed, barrenness,
+  killing by accident; Gosh on intent, no intent
+  and the two mixed.
+- ՃՀԴ–ՃՀԹ (684–736): killing in war (three
+  years without communion), sons who leave,
+  eunuchs, fourfold and threefold repayment.
+- ՃՁ–ՃՁԴ (737–826): inheritance of sons and
+  daughters (a daughter at home as a son, two
+  married ones as one), from when a child
+  inherits (birth, against "the pupils of
+  Mahmet"), disabled children, wills (three
+  witnesses), funeral costs and what husband and
+  wife inherit from each other.
+- ՃՁԵ–ՃՂԸ (827–1004): fraud in sales, false
+  witnesses, betrothal, who may marry (lepers,
+  the lame, blind, deaf, mute), child marriages,
+  milk kinship, boundaries (cross and Gospel as
+  an oath), leaving a wife and mother (fines in
+  dram, the leper-house), a barren wife, wives
+  who leave, abduction.
+- ՃՂԹ–ՄԺԱ (1005–1157): priests: the senior
+  priest, shares of the income, service,
+  memorial gifts, the excommunicated, closing a
+  church, spouses of captives (seven years),
+  heirs of church land, priests' houses free of
+  the nobles, nobles in monasteries, infirmaries.
+- ՄԺԲ–ՄԺԳ (1158–1250): kinship in marriage: a
+  catholicos's letter of the eighteenth year of
+  Khosrov son of Ormizd, then Gosh's reckoning of
+  the degrees (the fourth for laymen, the fifth
+  for priests).
+- ՄԺԴ–ՄԻԴ (1251–1373): shipwrecks, impostors
+  collecting alms, new villages, when a sale
+  holds (the heirs' consent, a sealed deed),
+  brides' shares, death from a tree or a church
+  stone, hanging thieves, animals that kill,
+  sending a man to work, teaching without pay,
+  what drunkenness is.
+- ՄԻԵ (1374–1665): a treatise, not a law: the
+  nine orders of angels (Moses, the prophets,
+  Jude, Dionysius), of the Levites and of the
+  church (patriarchs down to psalm-singers, with
+  deaconesses), the four sees of the evangelists
+  and Justinian's change, then the nine orders
+  of the Byzantine palace with their dress and
+  the other court servants.
+- ՄԻԶ–ՄԼԳ (1666–1821): sending others to work,
+  hired men, a church built against another, who
+  deposes clergy, kings, princes, nobles and
+  soldiers; wounding animals in one's field,
+  frightening a horse; a list of killings without
+  intent, with intent and mixed.
+- ՄԼԴ–ՄԾԱ (1822–2065): damage by water,
+  physicians, forced work, vine-dressers,
+  shepherds, gifts to a ruined church, markets
+  (measures, false coin, customs, prices),
+  craftsmen, tools, blood price and penance,
+  millers, lent horses, "earth money" for graves
+  and a dead priest's goods, boundaries and
+  fences, possessed animals, a child bride,
+  places of pilgrimage, sold spoils.
+- Line 2067: the closing line of the book.
+
+Notes on the text:
+
+- Lines 386–387 (ՃԽԵ): the Grabar has the same
+  sentence twice; the translation too.
+- Line 949: the number is `[ՂՃԵ]` (for ՃՂԵ) in
+  the Grabar; kept in both files.
+- Line 1382 (ՄԻԵ): «յաղագս հիշատակաց» is read as
+  հրեշտակաց ("of the angels"), as the passage
+  needs.
+- ՄԻԵ, the palace: the Greek titles stay in
+  Armenian letters (եղենդիար, վեստիտոր,
+  կանտիտոր, պռոքսետոր, ստրատոր, սքողար …), and
+  so do unclear words of dress and place (գրատ,
+  վաղար, կոպաղ, բեղար, դրսմոն); «ասին կրիտքն»
+  (line 1632) is read as one title, ասինկրիտ.
+  A reviewer who knows the Byzantine court
+  should look at lines 1596–1650 first.
+- Left untranslated as unclear: `կիսար` (line
+  1786), `հակարաշ` (title of ՄԼԷ).
+- Line 1872: the editorial `[ի]` is kept.
+- Line 2055: «մարդ տառիւքն է անդրադարձութեամբ»:
+  դրամ read backwards is մարդ; the translation
+  says so.
+- Words chosen: `մեռելոց` for the costs of
+  burial and memorial (ՃՁԴ), `իրավատեր` for
+  անկաւոր (ՄԷ), `աստիճան` for ազգ and `սերունդ`
+  for զարմ in the degrees of kinship
+  (ՄԺԲ–ՄԺԳ), `երկամուսին` for երկակ, `աքսորել`
+  kept for deposing (ՄԻԹ–ՄԼ).

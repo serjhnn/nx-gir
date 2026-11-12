@@ -235,6 +235,23 @@ machine translation, not a published or reviewed
 one: read it as a help to the Grabar, not in its
 place.
 
+`02.txt`: the same for
+`grabar/mkhitar-gosh/1-datastanagirk-a/02.txt`
+(part 2 of 2, laws ՃԸ–ՄԾԱ: more laws from
+Deuteronomy, on witnesses, lost things, pledges
+and wages; the canons of the councils and of the
+fathers on bishops, priests, marriage and
+divorce, questions and answers; inheritance and
+wills; kinship in marriage; the nine orders of
+angels, of the church and of the Byzantine
+palace; killing with and without intent,
+physicians, craftsmen, herdsmen, millers, trade
+and prices, boundaries and places of pilgrimage,
+to the closing line of the book), made by Claude
+on 2026-11-12 at the user's request, the same
+way. With it the whole of redaction Ա is
+translated. It is a machine translation too.
+
 ## All translations
 
 - License: CC BY-SA 4.0 (see `CONTRIBUTING.md`).
@@ -350,11 +367,11 @@ Notes:
   start of the laws) with no text of their own.
 - Բ numbers the laws in the text as well
   (`1. «…`), and puts them in «».
-- `1-datastanagirk-a/01.txt` is cut into one
-  sentence per line, like the Tatevatsi parts
-  above, to be read beside its translation in
-  `ashkharhabar/` (no `։` without a space after
-  it).
+- `1-datastanagirk-a/01.txt` and `02.txt` are cut
+  into one sentence per line, like the Tatevatsi
+  parts above, to be read beside their
+  translations in `ashkharhabar/` (no `։` without
+  a space after it in either).
 
 ## grabar/grigor-narekatsi/
 
