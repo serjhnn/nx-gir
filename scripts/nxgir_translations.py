@@ -19,20 +19,23 @@ STATUSES = ("machine", "review", "reviewed")
 # listed and not under LICENSE
 NOT_OURS = ("ashkharhabar/bible/",)
 DATE_RE = re.compile(r"\d{4}-\d{2}-\d{2}")
-# the credit line, by status; {who} are the
-# reviewers, {v} the verb "է", or "են" for more
-# than one
+# the model that made a translation when the table
+# does not say
+DEFAULT_MODEL = "Claude"
+# the credit line, by status; {model} made it, {who}
+# are the reviewers, {v} the verb "է", or "են" for
+# more than one
 TEXTS = {
     "machine": (
         "Թարգմանությունը՝ Նախագիր · մեքենայական"
-        " (Claude), դեռ չխմբագրված"
+        " ({model}), դեռ չխմբագրված"
     ),
     "review": (
         "Թարգմանությունը՝ Նախագիր · մեքենայական"
-        " (Claude), խմբագրում {v}՝ {who}"
+        " ({model}), խմբագրում {v}՝ {who}"
     ),
     "reviewed": (
-        "Թարգմանությունը՝ Նախագիր · Claude,"
+        "Թարգմանությունը՝ Նախագիր · {model},"
         " խմբագրել {v}՝ {who}"
     ),
 }
@@ -44,7 +47,7 @@ class TranslationsError(ValueError):
 
 def read(path=TRANSLATIONS):
     """The table as {path: {status, reviewers,
-    date}}, in its order; lines starting with # are
+    date, model}}, in its order; lines starting with # are
     comments. None or a missing file: {}."""
     out = {}
     if not path or not Path(path).is_file():
@@ -60,13 +63,16 @@ def read(path=TRANSLATIONS):
 
 def parse(line, where):
     """One line: (path, {status, reviewers,
-    date})."""
+    date, model})."""
     cols = line.split("\t")
-    if len(cols) != 4:
+    if len(cols) not in (4, 5):
         raise TranslationsError(
-            f"{where}: not 4 fields split by tabs"
+            f"{where}: not 4 or 5 fields split by tabs"
         )
-    key, status, who, date = (c.strip() for c in cols)
+    key, status, who, date, *model = (
+        c.strip() for c in cols
+    )
+    model = (model and model[0]) or DEFAULT_MODEL
     key = key.strip("/")
     if not key:
         raise TranslationsError(f"{where}: no path")
@@ -89,6 +95,7 @@ def parse(line, where):
         "status": status,
         "reviewers": names,
         "date": date,
+        "model": model,
     }
 
 
@@ -109,6 +116,7 @@ def text(entry):
     license."""
     who = entry["reviewers"]
     return TEXTS[entry["status"]].format(
+        model=entry["model"],
         who=", ".join(who),
         v="են" if len(who) > 1 else "է",
     )

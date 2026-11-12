@@ -81,7 +81,20 @@ def test_credit(tmp_path):
     assert r.endswith("խմբագրում է՝ Ani")
     d = tr.credit(t, "d.txt")["text"]
     assert d.endswith("խմբագրել են՝ Ani, Vardan")
+    assert "(Claude)" in m["text"]
     assert tr.credit(t, "x.txt") is None
+
+
+def test_model(tmp_path):
+    p = write(
+        tmp_path,
+        "g.txt\tmachine\t\t2026-11-10\tGPT-6",
+        "h.txt\treviewed\tAni\t2026-11-10\tGPT-6",
+    )
+    t = tr.read(p)
+    assert t["g.txt"]["model"] == "GPT-6"
+    assert "(GPT-6)" in tr.credit(t, "g.txt")["text"]
+    assert "GPT-6," in tr.credit(t, "h.txt")["text"]
 
 
 @pytest.mark.parametrize(

@@ -4,7 +4,7 @@
 # and on the book pages under each translation
 # (scripts/nxgir_translations.py).
 #
-# path<TAB>status<TAB>reviewers<TAB>date
+# path<TAB>status<TAB>reviewers<TAB>date[<TAB>model]
 #
 #   path       under books/: a file, or a folder
 #              for all its files (the longest
@@ -17,6 +17,9 @@
 #              machine
 #   date       when the status last changed,
 #              YYYY-MM-DD
+#   model      the AI model that made it, shown in
+#              the credit line; optional, Claude
+#              when left out
 #
 # Only our own translations are listed. The rest of
 # ashkharhabar/bible/ (Psalm 118, Etchmiadzin 1994)
@@ -39,4 +42,4 @@ ashkharhabar/grigor-tatevatsi/3-amaran-hator/14.txt	review	serjhnn	2026-11-10
 ashkharhabar/grigor-tatevatsi/3-amaran-hator/15.txt	review	serjhnn	2026-11-10
 ashkharhabar/mkhitar-gosh/1-datastanagirk-a/01.txt	machine		2026-11-11
 ashkharhabar/mkhitar-gosh/1-datastanagirk-a/02.txt	machine		2026-11-12
-ashkharhabar/mkhitar-gosh/2-datastanagirk-b/01.txt	machine		2026-11-12
+ashkharhabar/mkhitar-gosh/2-datastanagirk-b/01.txt	machine		2026-11-12	GPT-6
