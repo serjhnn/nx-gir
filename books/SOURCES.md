@@ -265,6 +265,19 @@ It is a machine translation, not a published or
 human-reviewed text: read it as a help to the Grabar,
 not in its place.
 
+`02.txt`: a translation into modern Eastern Armenian of
+`grabar/mkhitar-gosh/2-datastanagirk-b/02.txt`
+(part 2 of 2, continuing with item 109 and ending at
+item 130 and the colophon: the remaining canons,
+the nine orders of angels, church and palace,
+and secular laws on kingship, inheritance, property,
+trade, labor, injury and homicide), made by ChatGPT
+(GPT-6) on 2026-11-12 at the user's request, following
+the same method. The source was split into 1,369
+reader lines; there were no instances of `։` without
+a following space. The translation is a machine
+translation, not a published or human-reviewed text.
+
 ## All translations
 
 - License: CC BY-SA 4.0 (see `CONTRIBUTING.md`).
@@ -380,11 +393,12 @@ Notes:
   start of the laws) with no text of their own.
 - Բ numbers the laws in the text as well
   (`1. «…`), and puts them in «».
-- `1-datastanagirk-a/01.txt` and `02.txt` are cut
-  into one sentence per line, like the Tatevatsi
-  parts above, to be read beside their
-  translations in `ashkharhabar/` (no `։` without
-  a space after it in either).
+- `1-datastanagirk-a/01.txt` and `02.txt`, and
+  `2-datastanagirk-b/01.txt` and `02.txt`, are cut
+  into reader lines, like the Tatevatsi parts above,
+  to be read beside their translations in
+  `ashkharhabar/` (no `։` without a following space
+  in any of these files).
 
 ## grabar/grigor-narekatsi/
 
