@@ -1554,6 +1554,30 @@ function closePanel() {
   tocOpen(false);
 }
 
+// A phone's keyboard covers the bottom of the page,
+// and the panel with it. The visual viewport is the
+// part left; lift the panel to its bottom, and keep
+// the panel short enough to fit above the keyboard.
+function lift() {
+  const v = window.visualViewport;
+  if (!v || !R.panel) return;
+  const kb = Math.max(0,
+    window.innerHeight - v.height - v.offsetTop);
+  R.panel.style.bottom = kb ? kb + "px" : "";
+  R.panel.style.maxHeight = kb
+    ? Math.max(120, v.height * 0.7) + "px" : "";
+  // the box being typed in stays in view
+  const f = R.panel.querySelector(":focus");
+  if (kb && f && f.matches("textarea, input")) {
+    f.scrollIntoView({ block: "nearest" });
+  }
+}
+
+if (window.visualViewport) {
+  visualViewport.addEventListener("resize", lift);
+  visualViewport.addEventListener("scroll", lift);
+}
+
 // the Contents button shows whether its list is open
 function tocOpen(open) {
   R.tools?.querySelector(".toc-btn")
