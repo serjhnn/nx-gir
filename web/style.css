@@ -2167,9 +2167,17 @@ body.reading.full .bar {
   border: 18px solid #3a2212;
   border-image: url(img/knot-frame.svg) 24 / 18px
     round;
+  /* old vellum: edges darkened and stained, grain
+     and blotches from parchment.svg, warm base */
   background:
-    radial-gradient(ellipse at 20% 10%,
-      #f6e3b8, #e8c98d 70%, #d9b073);
+    radial-gradient(ellipse at 50% 45%,
+      transparent 55%, rgba(110, 60, 15, 0.35)),
+    radial-gradient(circle at 85% 12%,
+      rgba(120, 70, 20, 0.18), transparent 22%),
+    radial-gradient(circle at 10% 80%,
+      rgba(120, 70, 20, 0.16), transparent 25%),
+    url(img/parchment.svg),
+    linear-gradient(#ecd49a, #e2c386);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
   color: var(--ink);
 }
@@ -2200,12 +2208,12 @@ body.reading.full .bar {
   box-shadow: 0 4px 14px rgba(59, 36, 18, 0.5);
 }
 .p-mkhitar-gosh .post h3 {
-  color: #8a5a1c;
+  color: #8f2a14; /* rubric red, as in the books */
   font-style: italic;
   text-align: center;
 }
 .p-mkhitar-gosh .post p {
-  color: var(--ink);
+  color: #2e1c0e;
   font-family: var(--serif);
 }
 .p-mkhitar-gosh .post p.cap {
@@ -2214,4 +2222,12 @@ body.reading.full .bar {
   color: #6b4a22;
   font: italic 0.85rem/1.5 var(--serif);
   text-align: center;
+}
+/* a red initial, as a scribe begins a page */
+.p-mkhitar-gosh .post p.cap + p::first-letter {
+  float: left;
+  margin: 0.05em 0.1em 0 0;
+  color: #9a2a12;
+  font: 600 3.2em/0.85 var(--serif);
+  text-shadow: 1px 1px 0 rgba(184, 134, 47, 0.6);
 }
