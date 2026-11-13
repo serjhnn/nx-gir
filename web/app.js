@@ -1596,12 +1596,36 @@ function markAt(i) {
   return R.marks.find((m) => m.at === i);
 }
 
+// the address of the line of word i, to share
+function lineLink(i) {
+  return location.origin + location.pathname +
+    "#/read/" + enc(R.name) +
+    "?line=" + (R.wpos[i][0] + 1);
+}
+
+async function copyLink(b) {
+  const link = lineLink(R.sel);
+  try {
+    await navigator.clipboard.writeText(link);
+    b.textContent = "✓ Copied";
+  } catch (e) {
+    // no clipboard: show it to copy by hand
+    prompt("Link to this line", link);
+  }
+}
+
+function linkButton() {
+  const b = btn("🔗 Link to line", () => copyLink(b));
+  return b;
+}
+
 function wordActions() {
   const on = !!markAt(R.sel);
   return h("div", { class: "actions" },
     btn(on ? "★ Bookmarked" : "☆ Bookmark",
       toggleMark, { "aria-pressed": String(on) }),
-    btn("✎ Add note", () => editNote(-1)));
+    btn("✎ Add note", () => editNote(-1)),
+    linkButton());
 }
 
 // draw the panel for the chosen word
@@ -1619,7 +1643,9 @@ async function drawWord() {
   }
   // a later word may have been chosen meanwhile
   if (R.spans[R.sel] !== span) return;
-  const parts = [STATIC ? null : wordActions(),
+  const parts = [STATIC
+    ? h("div", { class: "actions" }, linkButton())
+    : wordActions(),
     placesNav()];
   if (data.error) {
     parts.push(h("p", { class: "error" },
@@ -2448,7 +2474,7 @@ function cut() {
   return h("span", { class: "cut" });
 }
 
-async function book(name) {
+async function book(name, line) {
   const data = await api("book?name=" +
     encodeURIComponent(name));
   const title = name.split("/").pop();
@@ -2559,8 +2585,13 @@ async function book(name) {
     h("div", { class: "reader" }, text, R.panel,
       partEnd(data.parts)));
   decorate();
-  // the first word: stay at the top, title shown
-  if (data.at > 0 && R.spans[data.at]) {
+  // a link to a line: open exactly there
+  const want = line >= 1 && R.spans.length
+    ? Math.min(line, data.lines.length) - 1 : -1;
+  if (want >= 0) {
+    go(wordOfLine(want));
+  } else if (data.at > 0 && R.spans[data.at]) {
+    // the first word: stay at the top, title shown
     const top = R.spans[data.at]
       .getBoundingClientRect().top + window.scrollY;
     window.scrollTo(0, top - bar() - 16);
@@ -2776,7 +2807,12 @@ async function route() {
   if (button.parentNode !== topBar) topBar.append(button);
   try {
     if (hash.startsWith("read/")) {
-      await book(decodeURIComponent(hash.slice(5)));
+      // #/read/<book>?line=N opens at line N
+      const [path, query] = hash.split("?");
+      const line = Number(
+        new URLSearchParams(query).get("line"));
+      await book(decodeURIComponent(path.slice(5)),
+        line);
     } else if (hash.startsWith("edit/")) {
       E.hash = location.hash;
       await edit(decodeURIComponent(hash.slice(5)));
