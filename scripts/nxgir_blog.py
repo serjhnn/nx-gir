@@ -7,7 +7,8 @@ Drafts are in blog/drafts/, which is not read.
 A post is a "# Title" line, then paragraphs split
 by empty lines; "## " starts a subheading; a line
 ![alt](name.jpg) alone is a picture, a file of
-web/img/. read()
+web/img/; lines starting "> " are a note under
+it. read()
 checks every file and stops on a bad one, so a
 mistake shows when the site is built. Tested in
 tests/test_blog.py.
@@ -39,7 +40,8 @@ class BlogError(ValueError):
 
 def parse(text, name):
     """The title and blocks of a post: blocks are
-    ["p", text], ["h", text] and ["img", file, alt],
+    ["p", text], ["h", text], ["cap", text] (a note,
+    lines starting "> ") and ["img", file, alt],
     a paragraph's lines joined by spaces."""
     lines = text.splitlines()
     while lines and not lines[0].strip():
@@ -58,6 +60,12 @@ def parse(text, name):
         line = line.strip()
         if not line:
             end()
+        elif line.startswith("> "):
+            end()
+            if blocks and blocks[-1][0] == "cap":
+                blocks[-1][1] += " " + line[2:].strip()
+            else:
+                blocks.append(["cap", line[2:].strip()])
         elif IMG_RE.fullmatch(line):
             end()
             alt, src = IMG_RE.fullmatch(line).groups()

@@ -1064,7 +1064,7 @@ function version(p, lang) {
 // ["img", file, alt])
 function postItem(p, lang) {
   const v = version(p, lang);
-  return h("article", { class: "post",
+  return h("article", { class: "post p-" + p.slug,
     id: "post-" + p.slug, lang: v.lang },
   h("time", { datetime: p.date },
     longDay(p.date, v.lang)),
@@ -1075,7 +1075,8 @@ function postItem(p, lang) {
     kind === "img"
       ? h("img", { src: "img/" + text, alt,
         loading: "lazy" })
-      : h(kind === "h" ? "h3" : "p", {},
+      : h(kind === "h" ? "h3" : "p",
+        kind === "cap" ? { class: "cap" } : {},
         named(text))));
 }
 
@@ -1140,7 +1141,8 @@ async function blogPage(path) {
       one ? null : h("p", { class: "sub", lang },
         named(t.sub)),
       langs.length > 1 ? pick : null,
-      h("div", { class: "blog" + (one ? " one" : "") },
+      h("div", {
+        class: "blog" + (one ? " one p-" + one.slug : "") },
         one ? postItem(one, lang)
           : data.posts.length
             ? data.posts.map((p) => postCard(p, lang))

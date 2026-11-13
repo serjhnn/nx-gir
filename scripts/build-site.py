@@ -378,6 +378,8 @@ def blog_block(block):
             '<p><img style="max-width:100%;height:auto"'
             f' src="{src}" alt="{htm.escape(alt[0])}"></p>'
         )
+    if kind == "cap":
+        return f"<p><em>{named(htm.escape(text))}</em></p>"
     tag = "h2" if kind == "h" else "p"
     return f"<{tag}>{named(htm.escape(text))}</{tag}>"
 

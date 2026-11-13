@@ -2,6 +2,8 @@
 
 ![Mkhitar Gosh: six, the first perfect number, with a medieval book, a castle in the mountains and a quill](mkhitar-gosh.jpg)
 
+> About the picture: the words in it are a modern paraphrase, not a quotation. Gosh writes «երկոտասան բաղկանայ յերկուց վեցից, եւ վեցն կատարեալ թիւ է»: "twelve is made of two sixes, and six is a perfect number", and then lists his reasons. The picture should be replaced with one that quotes this line.
+
 Mkhitar Gosh lived in the 12th century, and he is the author of the largest book in our library so far: the Datastanagirk, "The Book of Judgments", the law code of medieval Armenia. This week we finished its modern Armenian translation of the first two redactions, and the third is next. So it is a good time to meet the man.
 
 ## Who he was

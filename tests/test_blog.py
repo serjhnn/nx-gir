@@ -106,6 +106,15 @@ def test_picture(tmp_path):
     ]
 
 
+def test_note_under_picture():
+    _, blocks = bl.parse(
+        "# T\n\n![A](a.jpg)\n\n> One\n> two\n\nText\n",
+        "t",
+    )
+    assert blocks[1] == ["cap", "One two"]
+    assert blocks[2] == ["p", "Text"]
+
+
 def test_pictures_exist():
     for post in bl.read():
         for v in post["versions"]:
