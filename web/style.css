@@ -2161,9 +2161,12 @@ body.reading.full .bar {
 }
 .p-mkhitar-gosh .post {
   margin: 0;
-  padding: 1.4rem 1.2rem 1.2rem;
-  border: 0;
-  border-radius: 4px;
+  padding: 1.2rem 1rem 1rem;
+  /* a frame of knots: knot-frame.svg, corners and
+     an interlaced band, made to fit the sides */
+  border: 18px solid #3a2212;
+  border-image: url(img/knot-frame.svg) 24 / 18px
+    round;
   background:
     radial-gradient(ellipse at 20% 10%,
       #f6e3b8, #e8c98d 70%, #d9b073);
