@@ -864,6 +864,7 @@ def test_report_url(tmp_path):
     ]
     js = (
         'const ISSUES = "https://x/issues/new";\n'
+        'const CONTACT = ["a", "b.c"];\n'
         + code
         + "\nconst a = reportUrl({name:"
         ' "ashkharhabar/b/01.txt", par: "grabar/b/01.txt",'
@@ -872,7 +873,10 @@ def test_report_url(tmp_path):
         "const b = reportUrl({name: 'grabar/b/01.txt',"
         " line: 4, quote: 'q'.repeat(900), fix: '',"
         " comment: 'c', link: 'l'});\n"
-        "console.log(JSON.stringify([a, b]));"
+        "const c = reportMail({name: 'grabar/b/01.txt',"
+        " line: 4, quote: 'q w', fix: 'x&y', comment: '',"
+        " link: 'l'});\n"
+        "console.log(JSON.stringify([a, b, c]));"
     )
     f = tmp_path / "t.js"
     f.write_text(js, encoding="utf-8")
@@ -883,10 +887,13 @@ def test_report_url(tmp_path):
     import json
     from urllib.parse import parse_qs, urlparse
 
-    a, b = (
-        parse_qs(urlparse(u).query)
-        for u in json.loads(out.stdout)
-    )
+    a, b, mail = json.loads(out.stdout)
+    a, b = (parse_qs(urlparse(u).query) for u in (a, b))
+    m = urlparse(mail)
+    assert m.scheme == "mailto" and m.path == "a@b.c"
+    mq = parse_qs(m.query)
+    assert "line 4" in mq["subject"][0]
+    assert "x&y" in mq["body"][0]
     assert a["labels"] == ["translation"]
     assert "line 3" in a["title"][0]
     assert "> ab cd" in a["body"][0]

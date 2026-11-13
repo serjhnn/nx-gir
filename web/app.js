@@ -1630,7 +1630,7 @@ const ISSUES = "https://github.com/serjhnn/nx-gir"
 // the address of the issue; info: {name, par, line,
 // quote, fix, comment, link}
 // REPORT-START
-function reportUrl(info) {
+function reportText(info) {
   const tr = info.name.startsWith("ashkharhabar/");
   const quote = info.quote.length > 600
     ? info.quote.slice(0, 599) + "…" : info.quote;
@@ -1649,13 +1649,31 @@ function reportUrl(info) {
       + " correction is published under CC BY-SA"
       + " 4.0._" : "",
   ].filter(Boolean).join("\n\n");
-  const q = new URLSearchParams({
+  return {
+    tr,
     title: "Error in " + info.name + ", line "
       + info.line,
     body: body.slice(0, 5000),
-    labels: tr ? "translation" : "grabar-text",
+  };
+}
+
+function reportUrl(info) {
+  const r = reportText(info);
+  const q = new URLSearchParams({
+    title: r.title, body: r.body,
+    labels: r.tr ? "translation" : "grabar-text",
   });
   return ISSUES + "?" + q;
+}
+
+// the same report as an email, for those with no
+// GitHub account
+function reportMail(info) {
+  const r = reportText(info);
+  const at = CONTACT.join(String.fromCharCode(64));
+  return "mailto:" + at + "?subject="
+    + encodeURIComponent(r.title) + "&body="
+    + encodeURIComponent(r.body.slice(0, 1500));
 }
 // REPORT-END
 
@@ -1674,13 +1692,17 @@ function reportError() {
   const send = h("a", { class: "icon-btn primary",
     target: "_blank", rel: "noopener" },
   "Send on GitHub");
+  const mail = h("a", { class: "icon-btn",
+    rel: "noopener" }, "Send by email");
   const refresh = () => {
-    send.href = reportUrl({
+    const info = {
       name: R.name, par: R.par ? R.par.name : "",
       line: R.wpos[at][0] + 1, quote,
       fix: fix.value.trim(),
       comment: note.value.trim(),
-      link: lineLink(at) });
+      link: lineLink(at) };
+    send.href = reportUrl(info);
+    mail.href = reportMail(info);
   };
   fix.addEventListener("input", refresh);
   note.addEventListener("input", refresh);
@@ -1698,10 +1720,11 @@ function reportError() {
     h("label", { class: "rep-label" },
       "Comment, source (optional)", note),
     h("p", { class: "none" },
-      "Opens a new issue on GitHub; you can read"
-      + " it there before you send it. You need a"
-      + " GitHub account."),
-    h("div", { class: "actions" }, send, cancel));
+      "GitHub opens a new issue for you to read"
+      + " and send (an account is needed). With no"
+      + " account, send it by email."),
+    h("div", { class: "actions" }, send, mail,
+      cancel));
   reveal(R.spans[at]);
   fix.focus({ preventScroll: true });
 }

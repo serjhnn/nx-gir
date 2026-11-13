@@ -40,7 +40,7 @@ At the end of each part of a long book, two cards lead to the part before and th
 
 ## Report an error
 
-See a mistake in the Grabar text or in a translation? Tap the word, press Report an error, and write what the sentence should say. A new issue opens on GitHub, filled in with the book, the line and the sentence, for you to look over and send. You need a GitHub account.
+See a mistake in the Grabar text or in a translation? Tap the word, press Report an error, and write what the sentence should say. A new issue opens on GitHub, filled in with the book, the line and the sentence, for you to look over and send. No GitHub account? Send the same report by email.
 
 ## Text settings
 
