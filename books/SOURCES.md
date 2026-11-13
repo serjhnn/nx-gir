@@ -461,3 +461,33 @@ Notes:
   with `՜`. Otherwise the text is as on Digilib:
   `:` for `։`, `` ` `` for `՝` and `'` for the
   stress mark `՛`, as in the Shnorhali works.
+
+## grabar/anania-shirakatsi/
+
+Twelve works of Anania Shirakatsi (Անանիա Շիրակացի,
+c. 610–685) in Grabar, from Digilib
+(<https://www.digilib.am>): the texts are centuries
+old and in the public domain; Digilib states no
+license for its typed copies.
+
+| Folder | Work | Digilib |
+|--------|------|---------|
+| `1-zatki-char/` | Զատկի ճառ | [81](https://www.digilib.am/book/81/) |
+| `2-ampoc-nshanac/` | Յաղագս ամպոց եւ նշանաց | [60](https://www.digilib.am/book/60/) |
+| `3-i-yaytnutyun/` | Ի յայտնութիւն Տեառն եւ Փրկչին մերոյ | [64](https://www.digilib.am/book/64/) |
+| `4-yishatakaran/` | Յիշատակարան | [66](https://www.digilib.am/book/66/) |
+| `5-harcman-lucman/` | Յաղագս հարցման եւ լուծման | [67](https://www.digilib.am/book/67/) |
+| `6-kenac-iuroc/` | Վասն որպիսութեան կենաց իւրոց | [68](https://www.digilib.am/book/68/) |
+| `7-khrakhchanakank/` | Խրախճանականք | [70](https://www.digilib.am/book/70/) |
+| `8-mghonachapk/` | Մղոնաչափք եւ Օդաչափք | [74](https://www.digilib.am/book/74/) |
+| `9-patmutyun/` | Պատմութիւն | [75](https://www.digilib.am/book/75/) |
+| `10-bacayaytutyan-tvoc/` | Սակս բացայայտութեան թուոց | [76](https://www.digilib.am/book/76/) |
+| `11-shrjagayutyan-erknic/` | Յաղագս շրջագայութեան երկնից | [79](https://www.digilib.am/book/79/) |
+| `12-tomarakan-patarik/` | Տոմարական պատառիկ | [80](https://www.digilib.am/book/80/) |
+
+Downloaded on 2026-11-13 with
+`scripts/fetch-digilib.py` (`ID TITLE OUT`), each
+work as one part; made as for Grigor Tatevatsi above.
+Only books Digilib's list marks `grabar` were taken;
+the others of his (`unclear` or `modern`) are left
+for a check.
