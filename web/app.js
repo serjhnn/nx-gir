@@ -2603,6 +2603,15 @@ async function book(name, line) {
   R.title = title;
   // the first line, for the list of readings
   R.head = (data.lines[0] || []).join("").trim();
+  // wide screen: the Contents open beside the text
+  if (R.contents.length
+    && matchMedia("(min-width: 64rem)").matches
+    && document.documentElement.classList
+      .contains("wide")) {
+    const y = window.scrollY;
+    showContents();
+    window.scrollTo(0, y);
+  }
   stir();
   savePos();
 }
