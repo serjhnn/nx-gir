@@ -1060,7 +1060,8 @@ function version(p, lang) {
 }
 
 // one post: its date, title and text (parse()
-// in nxgir_blog.py: ["p", text] or ["h", text])
+// in nxgir_blog.py: ["p", text], ["h", text] or
+// ["img", file, alt])
 function postItem(p, lang) {
   const v = version(p, lang);
   return h("article", { class: "post",
@@ -1070,8 +1071,12 @@ function postItem(p, lang) {
   h("h2", {},
     h("a", { href: "#/blog/" + p.slug },
       named(v.title))),
-  v.blocks.map(([kind, text]) =>
-    h(kind === "h" ? "h3" : "p", {}, named(text))));
+  v.blocks.map(([kind, text, alt]) =>
+    kind === "img"
+      ? h("img", { src: "img/" + text, alt,
+        loading: "lazy" })
+      : h(kind === "h" ? "h3" : "p", {},
+        named(text))));
 }
 
 // a post in the list: a card with its date,

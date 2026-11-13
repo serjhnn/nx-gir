@@ -369,6 +369,19 @@ def post_page(slug, lang):
     return f"blog/{slug}.{lang}.html"
 
 
+def blog_block(block):
+    """One block of a blog post as HTML."""
+    kind, text, *alt = block
+    if kind == "img":
+        src = htm.escape(url(f"img/{text}"))
+        return (
+            '<p><img style="max-width:100%;height:auto"'
+            f' src="{src}" alt="{htm.escape(alt[0])}"></p>'
+        )
+    tag = "h2" if kind == "h" else "p"
+    return f"<{tag}>{named(htm.escape(text))}</{tag}>"
+
+
 def post_pages(out, app):
     """Each version of each blog post as a plain
     page, blog/<slug>.<lang>.html, which names the
@@ -387,11 +400,11 @@ def post_pages(out, app):
         for v in vs:
             path = post_page(slug, v["lang"])
             text = "\n".join(
-                f"<{t}>{named(htm.escape(x))}</{t}>"
-                for k, x in v["blocks"]
-                for t in ["h2" if k == "h" else "p"]
+                blog_block(b) for b in v["blocks"]
             )
-            paras = [x for k, x in v["blocks"] if k == "p"]
+            paras = [
+                b[1] for b in v["blocks"] if b[0] == "p"
+            ]
             plain_page(
                 out,
                 path,

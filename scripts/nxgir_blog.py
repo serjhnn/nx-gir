@@ -5,7 +5,9 @@ its date and slug.
 Drafts are in blog/drafts/, which is not read.
 
 A post is a "# Title" line, then paragraphs split
-by empty lines; "## " starts a subheading. read()
+by empty lines; "## " starts a subheading; a line
+![alt](name.jpg) alone is a picture, a file of
+web/img/. read()
 checks every file and stops on a bad one, so a
 mistake shows when the site is built. Tested in
 tests/test_blog.py.
@@ -26,14 +28,19 @@ NAME_RE = re.compile(
 )
 
 
+IMG_RE = re.compile(
+    r"!\[([^\]]*)\]\(([A-Za-z0-9_-]+\.(?:jpg|png|webp))\)"
+)
+
+
 class BlogError(ValueError):
     pass
 
 
 def parse(text, name):
     """The title and blocks of a post: blocks are
-    ["p", text] and ["h", text], a paragraph's
-    lines joined by spaces."""
+    ["p", text], ["h", text] and ["img", file, alt],
+    a paragraph's lines joined by spaces."""
     lines = text.splitlines()
     while lines and not lines[0].strip():
         lines.pop(0)
@@ -51,6 +58,10 @@ def parse(text, name):
         line = line.strip()
         if not line:
             end()
+        elif IMG_RE.fullmatch(line):
+            end()
+            alt, src = IMG_RE.fullmatch(line).groups()
+            blocks.append(["img", src, alt])
         elif line.startswith("## "):
             end()
             blocks.append(["h", line[3:].strip()])

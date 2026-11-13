@@ -94,3 +94,23 @@ def test_the_blog():
     assert posts[-1]["slug"] == "welcome"
     assert posts[-1]["date"] == "2026-11-07"
     json.dumps(posts)
+
+
+def test_picture(tmp_path):
+    title, blocks = bl.parse(
+        "# T\n\nText.\n\n![A cat](cat.jpg)\n", "t"
+    )
+    assert blocks == [
+        ["p", "Text."],
+        ["img", "cat.jpg", "A cat"],
+    ]
+
+
+def test_pictures_exist():
+    for post in bl.read():
+        for v in post["versions"]:
+            for b in v["blocks"]:
+                if b[0] == "img":
+                    assert (
+                        bl.ROOT / "web/img" / b[1]
+                    ).is_file()
