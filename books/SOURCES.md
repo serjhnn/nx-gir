@@ -74,14 +74,15 @@ line, without verse numbers or chapter heading.
 
 ## ashkharhabar/anania-shirakatsi/
 
-Seven short works of `grabar/anania-shirakatsi/`
+Eight works of `grabar/anania-shirakatsi/`
 translated into modern Eastern Armenian, one part
 each, line for line with the Grabar (`01.txt`): `4-`,
-`7-`, `8-`, `13-`, `14-`, `16-` and `18-`. Made by Claude (Sonnet
+`7-`, `8-`, `13-`, `14-`, `15-` (the Աշխարհացոյց, 471
+lines), `16-` and `18-`. Made by Claude (Sonnet
 5.5) on 2026-11-13 at the user's request, from the
 Grabar only. Machine translation, not human-reviewed.
 
-The Grabar files of these seven were cut into
+The Grabar files of these eight were cut into
 sentences first (a line after each `։`; a blank line
 where a Digilib paragraph ended); only line breaks
 changed. No `։` had a missing space after it.

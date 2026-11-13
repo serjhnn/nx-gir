@@ -94,3 +94,46 @@ many of each fine unit make one. Names are kept; the
 numbers are copied. In `ԺԵ` the Grabar has `ուկի`
 (read `ունկիա`). `ԺԷ` has `դանգ` where the rest has
 `դանկ` (copied). Page marks `/199a/` are dropped.
+
+## 15 · Աշխարհացոյց
+
+His geography, after Pappus of Alexandria's
+Chorography and Ptolemy: the method and the seven
+climates (lines 1–45), the ocean and three seas,
+then the lands one by one: Europe (Spain, Britain,
+Gaul, Germany, Dalmatia, Italy, Sardinia, Sicily,
+Sarmatia, Thrace, Macedonia, Hellas), Libya (Mauritania
+to Upper and Lower Ethiopia, with the animals), then
+Asia: the thirty-odd provinces of Asia Minor, then
+Sarmatia, Kolkhis, Iberia, Albania and the fifteen
+provinces of Greater Armenia with all their districts
+(lines 247–292 of the translation), Syria, Judea,
+Arabia, Mesopotamia, Babylon, Media, Persia, the Aryans,
+Scythia, India, Taprobane, China and the Sinaeans.
+
+- Place names are in modern Armenian spelling where
+  the place is known (Իսպանիա, Գաղիա, Սարդինիա,
+  Կապադովկիա ...); names of peoples and districts
+  that cannot be placed stay as the Grabar has them
+  (the lists of Sarmatian peoples, the districts of
+  Iberia and Albania).
+- Districts of Armenia (Այրարատ, Վասպուրական, Սյունիք
+  ...) keep their names in modern spelling.
+- Digilib's page marks (`/165b/` ...) are not kept.
+- The Latin `C` in `ժամս ունելով երեքտասան եւ C Գ`
+  (line 15 of the translation) is left out.
+- Line 5 of the file, `">` (an HTML leftover on
+  Digilib), is copied as it is.
+- Unclear or garbled passages, best reading only:
+  the second paragraph about `Թուղիս` and the latitudes;
+  `Դիոդորոս ... Ղիմեռիկոնն`; `դեոպատռեայ`;
+  `աստռողաբոն`, `սկիաթիռ` (instruments, kept);
+  `գաւսացեալ`, `ցամաքեալ` (names of the two
+  hemispheres, kept); `ի ճահ գան վկայութիւնք` (read as
+  "agree"); the line on Job 26 (`Ձգեաց զհիւսիւսի ...`);
+  `դարեհատաձեւ ճղճղկէն`, `տզրկաձեւ` (island shapes);
+  `Ոսկի` mountain; `զանգժտաբեր`, `լուտաս`; the
+  `երէս` and `ցիռ` animals; many lists of names.
+- The last line announces a shorter version of the
+  book (`համառաւտել ... ոտնաչափութեամբ`), which
+  Digilib does not give.
