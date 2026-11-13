@@ -100,8 +100,14 @@ PARALLEL = ("grabar", "ashkharhabar")
 # the first line of a part of a long book:
 # "title · 2/24" (see fetch-digilib.py)
 PART_RE = re.compile(r"^(.+) · (\d+)/(\d+)$")
-# left out of the translation status
-NOT_COUNTED = ("grabar/bible/",)
+# left out of the translation status: the Bible and the
+# short works of Anania Shirakatsi (all but the
+# Աշխարհացոյց, 15-)
+SHIRAKATSI = "grabar/anania-shirakatsi/"
+NOT_COUNTED = ("grabar/bible/",) + tuple(
+    SHIRAKATSI + d + "-"
+    for d in ("4", "7", "8", "13", "14", "16", "18")
+)
 # pages load only their own files: no inline scripts
 # or styles, nothing from other sites
 CSP = (
@@ -357,7 +363,8 @@ def status(app):
     """How much of each long book in grabar/ is
     translated: its parts with a translation at the
     same path in the other PARALLEL folders. The
-    Bible is left out (NOT_COUNTED), and so are
+    Bible and short works are left out (NOT_COUNTED),
+    and so are
     the books with no part translated. "name" is
     "author • book" from LIBRARY.tsv (or the
     folder and the title)."""

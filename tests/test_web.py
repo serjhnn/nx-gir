@@ -903,3 +903,17 @@ def test_report_url(tmp_path):
     assert "CC BY-SA" not in b["body"][0]
     assert "q" * 601 not in b["body"][0]
     assert "**Comment:**" in b["body"][0]
+
+
+def test_status_leaves_out_short_shirakatsi_works(tmp_path):
+    files = []
+    base = "anania-shirakatsi/"
+    for d in ("4-a", "13-b", "15-c"):
+        for top in ("grabar/", "ashkharhabar/"):
+            name = top + base + d + "/01.txt"
+            p = tmp_path / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text("Գիրք · 1/1\n", encoding="utf-8")
+            files.append((name, 10, p))
+    got = [b["folder"] for b in web.status(App(files))]
+    assert got == ["grabar/anania-shirakatsi/15-c"]
