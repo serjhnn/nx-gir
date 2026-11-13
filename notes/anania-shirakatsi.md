@@ -15,7 +15,9 @@ Choices for every part:
   translation (Latin letters); they stay in the
   Grabar.
 - Digilib's editorial `< >`, `[ ]` and `//` are not
-  copied.
+  copied. The Grabar's one `«` (in `7`) is dropped.
+- Numerals with a bar (`Ա¯ՏՆ`, thousands) are copied
+  as they are.
 
 ## 4 · Յիշատակարան
 
@@ -65,3 +67,30 @@ Grabar (`լտեր` is written `լիտր`). In `Ը` the text
 has a Latin `C` (`ընդ C բաժանելոյ`), left out of the
 translation. `ԺԸ` says `կադամադէկաւթ` and
 `մասմարաւթ` are not translated from the Hebrew.
+
+## 7 · Խրախճանականք
+
+Nine number puzzles for a feast (a friend, the
+number of the hour, the wine, a purse, eggs, pomegranates,
+birds); the text is corrupt and some steps cannot be
+followed. The titles `Խրախճանականք առաջին ...` are
+translated as `Առաջին խրախճանականը` and so on. Unclear
+words kept as they are: `հաւարածութիւն` (puzzle 5),
+`գար` and `կոճատ` (puzzle 4). `պարագայիկ` (puzzle 2)
+and `փաս` (puzzle 6, a measure) are kept. The numbers
+`Ա`, `Բ`, `Գ` ... in puzzles 8 and 9 with a `ն` or `ին`
+ending are kept as numerals with an ending (`Գ-ը`).
+The text stops in the middle of puzzle 9 (a note
+of Digilib in square brackets, put in parentheses).
+`Լին`, `Ան`, `Են` in puzzle 8 are corrupt; the
+translation follows the sense (30, 5 for 2).
+
+## 18 · Յաղագս կշռոյ, կշռոց եւ կշռորդաց
+
+Weights `Ա`–`ԺԸ`: ասսարիոն, փշիտ, կերատ, սինգ,
+գրամար, տրմէս, սիմէս, դահեկան, սատեր, սիկղ, ունկիա,
+լիտր, մնաս, կենդինար, դրամ, տաղանդ, քանքար, with how
+many of each fine unit make one. Names are kept; the
+numbers are copied. In `ԺԵ` the Grabar has `ուկի`
+(read `ունկիա`). `ԺԷ` has `դանգ` where the rest has
+`դանկ` (copied). Page marks `/199a/` are dropped.
