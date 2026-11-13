@@ -464,7 +464,7 @@ Notes:
 
 ## grabar/anania-shirakatsi/
 
-Twelve works of Anania Shirakatsi (Անանիա Շիրակացի,
+Nineteen works of Anania Shirakatsi (Անանիա Շիրակացի,
 c. 610–685) in Grabar, from Digilib
 (<https://www.digilib.am>): the texts are centuries
 old and in the public domain; Digilib states no
@@ -484,10 +484,20 @@ license for its typed copies.
 | `10-bacayaytutyan-tvoc/` | Սակս բացայայտութեան թուոց | [76](https://www.digilib.am/book/76/) |
 | `11-shrjagayutyan-erknic/` | Յաղագս շրջագայութեան երկնից | [79](https://www.digilib.am/book/79/) |
 | `12-tomarakan-patarik/` | Տոմարական պատառիկ | [80](https://www.digilib.am/book/80/) |
+| `13-akanc-patuakanac/` | Յաղագս ականց պատուականաց | [59](https://www.digilib.am/book/59/) |
+| `14-shaghkaputyan/` | Յաղագս շաղկապութեան արեգական եւ լուսնի | [61](https://www.digilib.am/book/61/) |
+| `15-ashkharhacuyc/` | Աշխարհացոյց | [62](https://www.digilib.am/book/62/) |
+| `16-yapoc-chapuc/` | Յաղագս յափոց, չափուց եւ պատարաց | [63](https://www.digilib.am/book/63/) |
+| `17-kendanatesakac/` | Յաղագս կենդանատեսակաց | [69](https://www.digilib.am/book/69/) |
+| `18-kshroy-kshroc/` | Յաղագս կշռոյ, կշռոց եւ կշռորդաց | [72](https://www.digilib.am/book/72/) |
+| `19-orchaputyun-sheki/` | Որչափութիւն շեկի | [77](https://www.digilib.am/book/77/) |
 
 Downloaded on 2026-11-13 with
 `scripts/fetch-digilib.py` (`ID TITLE OUT`), each
 work as one part; made as for Grigor Tatevatsi above.
-Only books Digilib's list marks `grabar` were taken;
-the others of his (`unclear` or `modern`) are left
-for a check.
+`1`–`12` are the books Digilib's list marks `grabar`;
+`13`–`19` are marked `unclear` or `modern` there, and
+were taken after the user read a sentence of each
+and judged them Grabar (many are lists of numbers
+and measures). Not taken: 58 and 65 (tables of
+letter-numerals), 73 and 78 (no typed text).
