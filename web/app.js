@@ -1560,21 +1560,22 @@ function closePanel() {
 // the panel short enough to fit above the keyboard.
 function lift() {
   const v = window.visualViewport;
-  if (!v || !R.panel) return;
-  const kb = Math.max(0,
-    window.innerHeight - v.height - v.offsetTop);
-  // only the panel moves: never scroll the page
-  // here, it would raise another event, and
-  // another, and the text would creep upward
-  const bottom = kb ? kb + "px" : "";
-  const max = kb
-    ? Math.max(120, v.height * 0.7) + "px" : "";
-  if (R.panel.style.bottom !== bottom) {
-    R.panel.style.bottom = bottom;
-  }
-  if (R.panel.style.maxHeight !== max) {
-    R.panel.style.maxHeight = max;
-  }
+  if (!v || !R.panel || R.panel.hidden) return;
+  // measure where the panel really is: the sizes of
+  // the window differ from the area a fixed box
+  // sits in (the address bar), so they can't be
+  // trusted. Only the panel moves: never scroll the
+  // page here, it would raise another event, and
+  // the text would creep upward.
+  R.panel.style.bottom = "";
+  R.panel.style.maxHeight = "";
+  const shown = v.offsetTop + v.height;
+  const kb = Math.round(Math.max(0,
+    R.panel.getBoundingClientRect().bottom - shown));
+  if (!kb) return;
+  R.panel.style.bottom = kb + "px";
+  R.panel.style.maxHeight =
+    Math.max(120, v.height * 0.7) + "px";
 }
 
 if (window.visualViewport) {
