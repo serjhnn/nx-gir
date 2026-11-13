@@ -826,3 +826,54 @@ def test_contents_of_prak_sections():
         (10, "Ը", None, "ի մեծ ցանկէն։"),
         (14, "Դ", "Պրակ", ""),
     ]
+
+
+def test_contents_of_a_geography_by_ordinals():
+    # a book of regions: lines that start with an
+    # ordinal and ՝, when there are enough of them and
+    # no other heading
+    names = [
+        "Առաջին՝ Սպանիա երեքանկիւնի իմն ձեւով կալով, է։",
+        "Երկրորդ՝ Բրիտանացւոցն է, որ են երկու կղզիք։",
+        "/171a/ Երրորդ՝ Գաղիոս է։",
+        "Իսկ չորրորդն՝ ընդ Ռոդոս, որ է միջին։",
+        "Քսան եւ միերորդ՝ Երկրորդ Հայք են։",
+    ]
+    lines = ["Աշխարհացոյց"]
+    for x in names:
+        lines += ["", x, "Տեքստ։"]
+    got = contents(lines)
+    assert [e["title"] for e in got] == [
+        "Աշխարհացոյց",
+        "Առաջին · Սպանիա",
+        "Երկրորդ · Բրիտանացւոցն",
+        "Երրորդ · Գաղիոս",
+        "Չորրորդ · ընդ Ռոդոս",
+        "Քսան եւ միերորդ · Երկրորդ Հայք",
+    ]
+    assert all(e["n"] == "" for e in got)
+    assert got[0].get("start")
+    # a few of them are running text, not regions
+    assert contents(lines[:9]) == []
+    # a real heading wins: the ordinals are then text
+    assert [
+        e["n"] for e in contents(lines + ["Գլուխ Ա"])
+    ] == [
+        "",
+        "Ա",
+    ]
+
+
+def test_contents_geography_and_its_translation():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parent.parent
+    g = root / "books/grabar/anania-shirakatsi"
+    t = root / "books/ashkharhabar/anania-shirakatsi"
+    name = "15-ashkharhacuyc/01.txt"
+    if not (g / name).exists() or not (t / name).exists():
+        return
+    a = contents((g / name).read_text().split("\n")[:-1])
+    b = contents((t / name).read_text().split("\n")[:-1])
+    assert len(a) > 40
+    assert [e["line"] for e in a] == [e["line"] for e in b]

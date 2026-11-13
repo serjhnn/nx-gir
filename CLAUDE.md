@@ -220,7 +220,13 @@
   (`TRANSLATION_GUIDE.md`). Nothing to add by
   hand: keep these lines as they are in every book
   and translation, and check the list after a new
-  part (step 3 in `notes/3-amaran-hator.md`)
+  part (step 3 in `notes/3-amaran-hator.md`).
+  A book of regions with none of these headings (the
+  Աշխարհացոյց) takes its lines that start with an
+  ordinal and ՝ (`Երկրորդ՝ Բրիտանացւոցն է`,
+  `Երկրորդը՝ ...`; `ordinal_entries()`, at least 5)
+  as entries, titled `Երկրորդ · Բրիտանացւոց`; a
+  translation keeps the ՝ after each ordinal
 - `web/`: the web pages (plain HTML, CSS, JS, no
   build step, nothing loaded from other sites); the
   60-character limit applies here too. `wordKey()`

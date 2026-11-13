@@ -441,6 +441,66 @@ def is_body_below(lines, i):
     )
 
 
+# a region of a geography: "Երկրորդ՝ Բրիտանացւոցն է,
+# որ ...", "Քսան եւ միերորդ՝ ...", modern "Երկրորդը՝
+# ...": an ordinal at the start of the line, then ՝
+ORDINAL_RE = re.compile(
+    r"((?:[^\W\d_]+\s+){0,2}?"
+    r"(?:առաջին|երկրորդ|երրորդ|չորրորդ|[^\W\d_]*երորդ))"
+    r"[ըն]?՝\s*(\S.*)",
+    re.IGNORECASE,
+)
+# a book with at least so many of them is a list of
+# regions; fewer is the running text of a sermon
+ORDINALS_MIN = 5
+# a Digilib page mark at the start of a line: /171a/
+PAGE_RE = re.compile(r"^/\d+[ab]/\s*")
+# small words before the ordinal: Իսկ երրորդ
+ORDINAL_LEAD = ("իսկ", "եւ", "և", "եվ", "բայց", "արդ")
+
+
+def ordinal_title(rest):
+    """The name of the region: the words before the
+    first է, են, comma or full stop, or only the first
+    word when that is long."""
+    cut = re.split(r"\s(?:է|են)(?!\w)|[,։]", rest)[0]
+    words = cut.split()
+    if len(words) > 4:
+        words = words[:1]
+    return " ".join(words)
+
+
+def ordinal_entries(lines):
+    """Entries for a book of regions that has no other
+    headings (the Աշխարհացոյց): the lines that start
+    with an ordinal and ՝; [] if there are fewer than
+    ORDINALS_MIN of them."""
+    out = []
+    for i, line in enumerate(lines):
+        m = ORDINAL_RE.match(PAGE_RE.sub("", line.strip()))
+        if m:
+            n = m.group(1).split()
+            if len(n) > 1 and n[0].lower() in ORDINAL_LEAD:
+                n = n[1:]
+            n[0] = n[0][:1].upper() + n[0][1:]
+            # the number is in words, spelled otherwise
+            # in a translation: it goes into the title,
+            # so that a book and its translation have
+            # the same entries
+            name = ordinal_title(m.group(2))
+            out.append(
+                {
+                    "line": i,
+                    "n": "",
+                    "title": short(
+                        f"{' '.join(n)} · {name}"
+                    ),
+                    "level": 2,
+                }
+            )
+    return out if len(out) >= ORDINALS_MIN else []
+
+
 def contents(lines):
     """The parts of a book, in order: [{"line": the
     line to go to, "n": its number or "", "title":
@@ -544,6 +604,8 @@ def contents(lines):
                     "level": 2,
                 }
             )
+    if not out:
+        out = ordinal_entries(lines)
     # the text before the first heading is reachable
     # too: an entry for the start of the text
     first = next(
