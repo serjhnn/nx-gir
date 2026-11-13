@@ -72,6 +72,21 @@ The first line after the title is the heading
 `Ալէլուիա։` (verse 0 on the site); then one verse per
 line, without verse numbers or chapter heading.
 
+## ashkharhabar/anania-shirakatsi/
+
+Five short works of `grabar/anania-shirakatsi/`
+translated into modern Eastern Armenian, one part
+each, line for line with the Grabar (`01.txt`): `4-`,
+`8-`, `13-`, `14-` and `16-`. Made by Claude (Sonnet
+5.5) on 2026-11-13 at the user's request, from the
+Grabar only. Machine translation, not human-reviewed.
+
+The Grabar files of these five were cut into
+sentences first (a line after each `։`; a blank line
+where a Digilib paragraph ended); only line breaks
+changed. No `։` had a missing space after it.
+Choices and doubts: `notes/anania-shirakatsi.md`.
+
 ## ashkharhabar/bible/old-testament/
 
 Psalm 118 in the Eastern Armenian translation of
