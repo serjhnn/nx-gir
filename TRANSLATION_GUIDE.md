@@ -194,6 +194,11 @@ What happened:
   that it is yours. Do not use them for explanations.
 - Locked lines are copied exactly. `(Գլուխ. X)` becomes
   `(Գլուխ X)`. A leading `*` stays.
+- A `(Պրակ X)` heading (a book of questions) keeps that
+  form, the letter in a capital, and its topic (after
+  it, or on the next line) is translated: the Contents
+  lists these headings with their topics, and the
+  check compares them.
 - The first line of a part is its title, in the form of
   the part before it (for Gosh:
   `Դատաստանագիրք, Ա խմբագրություն · N/2`).

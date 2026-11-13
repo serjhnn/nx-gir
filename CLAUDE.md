@@ -209,7 +209,15 @@
   a book that numbers its chapters otherwise).
   When the first heading is not at the start of the
   part, the list begins with an entry for the start
-  (its first line, `"start": true`). Nothing to add by
+  (its first line, `"start": true`). A `(Պրակ X)`
+  heading (Գիրք հարցմանց, a book of questions) is an
+  entry of its own, `"kind": "Պրակ"`, with its topic
+  (on the line or below it, not Հարց։), the letter
+  in a capital; running text after a chapter line that
+  only points at a list is not its title. A
+  translation keeps the `(Պրակ X)` line in that form
+  (the letter in a capital) and translates the topic
+  (`TRANSLATION_GUIDE.md`). Nothing to add by
   hand: keep these lines as they are in every book
   and translation, and check the list after a new
   part (step 3 in `notes/3-amaran-hator.md`)

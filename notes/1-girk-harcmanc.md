@@ -20,12 +20,18 @@ Parts 1 and 2 are done. To do part 3 (of 12):
    `books/ashkharhabar/.../03.txt`; the title line is
    `Հարցումների գիրք · 3/12`. Check each chunk with
    the check of `TRANSLATION_GUIDE.md`.
-3. Doubtful lines get a trailing ` *`, as in parts 1
+3. Keep every `(Պրակ X)` line as it is (the letter in
+   a capital, `(Պրակ բ)` becomes `(Պրակ Բ)`) and
+   translate its topic: the Contents lists these
+   headings with their topics, and the check of the
+   guide compares the two lists. (In part 1, one
+   `(Տետր Ա)` was changed back to `(Պրակ Ա)`.)
+4. Doubtful lines get a trailing ` *`, as in parts 1
    and 2; every other line of a sentence ends with
    `։`. A line that is a heading with a full stop
    in the Grabar (`Հարցումն առաջին.`) may end with
    `։`.
-4. Records: this file, `books/SOURCES.md`,
+5. Records: this file, `books/SOURCES.md`,
    `books/TRANSLATIONS.tsv`, `timeline.tsv`.
 
 ## Part 1

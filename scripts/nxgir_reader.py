@@ -287,6 +287,12 @@ CHAPTER_RE = re.compile(
 )
 # a sermon numbered without Գլուխ: Քարոզ. Բ. ...
 SERMON_RE = re.compile(r"Քարոզ\.?\s+([Ա-Ֆ]{1,4})\.\s*(.*)")
+# a section of a book of questions: (Պրակ Ա) Title։
+# Հարց։ (the title may be on the next line, and a
+# small letter is the same as a capital)
+PRAK_RE = re.compile(r"\(Պրակ\s+([Ա-Ֆա-ֆ]{1,4})\)\s*(.*)")
+# lines that open a question, not a title
+PRAK_SKIP = ("հարց", "պատասխան", "պատասխանեմք")
 # Digilib's section number on a line of its own,
 # [Ա]; the section's title is the next line
 SECTION_RE = re.compile(r"\[([Ա-Ֆ]{1,4})\]")
@@ -378,10 +384,61 @@ def title_below(lines, i):
             continue
         if CHAPTER_RE.fullmatch(x) or GROUP_RE.match(x):
             break
+        if PRAK_RE.fullmatch(x):
+            break  # a heading of its own
         got.append(x)
         if len(got) == 3 or not label_only(" ".join(got)):
             break
     return " ".join(got)
+
+
+def prak_title(lines, i, rest):
+    """The topic of the (Պրակ X) heading on line i: its
+    own text after the bracket, else the first line
+    below that is not Հարց։ (the question), up to the
+    next heading."""
+
+    def clean(x):
+        x = x.strip()
+        for w in PRAK_SKIP:
+            if x.lower().rstrip("։.: ") == w:
+                return ""
+        return x
+
+    if clean(rest):
+        # "Title։ Հարց։" on one line
+        parts = [clean(x + "։") for x in rest.split("։")]
+        return next((x for x in parts if x), "").rstrip("։")
+    for x in lines[i + 1 :]:
+        x = x.strip()
+        if PRAK_RE.fullmatch(x) or CHAPTER_RE.fullmatch(x):
+            break
+        if GROUP_RE.match(x):
+            break
+        x = clean(x)
+        if x:
+            return x
+    return ""
+
+
+def is_body_below(lines, i):
+    """True if the paragraph below line i has more than
+    one line: a heading stands alone, running text
+    does not (a book cut into sentences)."""
+    j = i + 1
+    while j < len(lines) and not lines[j].strip():
+        j += 1
+    if j + 1 >= len(lines):
+        return False
+    x = lines[j + 1].strip()
+    if label_only(lines[j]):
+        return False
+    return bool(x) and not (
+        CHAPTER_RE.fullmatch(x)
+        or GROUP_RE.match(x)
+        or PRAK_RE.fullmatch(x)
+        or SECTION_RE.fullmatch(x)
+    )
 
 
 def contents(lines):
@@ -420,6 +477,20 @@ def contents(lines):
                 }
             )
             continue
+        m = PRAK_RE.fullmatch(t)
+        if m:
+            out.append(
+                {
+                    "line": i,
+                    "n": m.group(1).upper(),
+                    "title": short(
+                        prak_title(lines, i, m.group(2))
+                    ),
+                    "level": 2,
+                    "kind": "Պրակ",
+                }
+            )
+            continue
         m = NUMBER_RE.search(t)
         if m:
             # a heading not yet cut into sentences is
@@ -454,8 +525,13 @@ def contents(lines):
             # it, and while that only numbers the
             # chapter, the lines below
             if not rest or label_only(rest):
-                rest = f"{rest} {title_below(lines, i)}"
-            title = rest.strip()
+                if not rest and is_body_below(lines, i):
+                    # running text follows, no title:
+                    # the pointer itself stays
+                    rest = title
+                else:
+                    rest = f"{rest} {title_below(lines, i)}"
+            title = rest.strip() or title.strip()
         m = m or SERMON_RE.fullmatch(t)
         if m:
             if not title:

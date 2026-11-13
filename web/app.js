@@ -2065,13 +2065,13 @@ function showContents() {
   const list = h("ul", { class: "items toc" });
   R.contents.forEach((c, k) => {
     const meta = c.level === 1 ? ""
-      : (c.n ? "Գլուխ " + c.n + " · " : "");
+      : (c.n ? (c.kind || "Գլուխ") + " " + c.n + " · " : "");
     const link = h("button", { type: "button",
       class: "item-main" },
     h("span", { class: "item-meta" },
       meta + "line " + (c.line + 1)),
     h("span", { class: "item-quote", lang: "hy" },
-      c.title || "Գլուխ " + c.n));
+      c.title || (c.kind || "Գլուխ") + " " + c.n));
     link.addEventListener("click", () =>
       go(wordOfLine(c.line)));
     const li = h("li", { class: c.level === 1
