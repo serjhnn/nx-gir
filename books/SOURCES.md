@@ -155,6 +155,9 @@ How the files are made:
   the line break now stands there.
 - `2-dzmeran-hator/01.txt` is cut the same way
   (no `։` without a space after it).
+- `1-girk-harcmanc/01.txt` and `02.txt` are cut the
+  same way (no `։` without a space after it in
+  either).
 
 ## ashkharhabar/grigor-tatevatsi/3-amaran-hator/
 
@@ -289,6 +292,16 @@ the source are marked `*` (78 lines) for review.
 It is a machine translation, not a published or
 human-reviewed text: read it as a help to the Grabar,
 not in its place.
+
+`02.txt`: the same for part 2 of 12 (3,439 lines, the
+Questions against the two-natures teachers, the
+proofs from Scripture, and the third volume, on the
+theology of Dionysius, as far as the angels),
+made by Claude (Sonnet 5.5) on 2026-11-13 at the
+user's request. Passages that are uncertain or
+damaged in the source (the Digilib text has broken
+words) are marked with a trailing `*` (63 lines).
+Machine translation, not human-reviewed.
 
 ## All translations
 
