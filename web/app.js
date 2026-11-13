@@ -1563,13 +1563,17 @@ function lift() {
   if (!v || !R.panel) return;
   const kb = Math.max(0,
     window.innerHeight - v.height - v.offsetTop);
-  R.panel.style.bottom = kb ? kb + "px" : "";
-  R.panel.style.maxHeight = kb
+  // only the panel moves: never scroll the page
+  // here, it would raise another event, and
+  // another, and the text would creep upward
+  const bottom = kb ? kb + "px" : "";
+  const max = kb
     ? Math.max(120, v.height * 0.7) + "px" : "";
-  // the box being typed in stays in view
-  const f = R.panel.querySelector(":focus");
-  if (kb && f && f.matches("textarea, input")) {
-    f.scrollIntoView({ block: "nearest" });
+  if (R.panel.style.bottom !== bottom) {
+    R.panel.style.bottom = bottom;
+  }
+  if (R.panel.style.maxHeight !== max) {
+    R.panel.style.maxHeight = max;
   }
 }
 
