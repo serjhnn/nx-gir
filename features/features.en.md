@@ -38,6 +38,10 @@ The site remembers where you stopped reading each book, in this browser. The hom
 
 At the end of each part of a long book, two cards lead to the part before and the part after it, with the chapters each one begins with, and a link to all the parts of the book. At the bottom of every page are the main pages of the site, the license of the translations and how to help.
 
+## Report an error
+
+See a mistake in the Grabar text or in a translation? Tap the word, press Report an error, and write what the sentence should say. A new issue opens on GitHub, filled in with the book, the line and the sentence, for you to look over and send. You need a GitHub account.
+
 ## Text settings
 
 Make the text bigger or smaller, set it on the left or in the center, change the line spacing, put each sentence on its own line, read in a column or across the whole width, and choose the font. On a phone these are behind the settings button. The site remembers your choice.

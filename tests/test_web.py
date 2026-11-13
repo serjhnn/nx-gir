@@ -844,3 +844,55 @@ def test_parts(tmp_path):
     # no LIBRARY.tsv: the title of the part
     app = App(files, library=None)
     assert web.parts(app, d + "01.txt")["book"] == "Գիրք"
+
+
+def test_report_url(tmp_path):
+    """reportUrl() in web/app.js builds the issue."""
+    import shutil
+    import subprocess
+
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("no node")
+    src = web.static_file("/app.js").read_text(
+        encoding="utf-8"
+    )
+    code = src[
+        src.index("// REPORT-START") : src.index(
+            "// REPORT-END"
+        )
+    ]
+    js = (
+        'const ISSUES = "https://x/issues/new";\n'
+        + code
+        + "\nconst a = reportUrl({name:"
+        ' "ashkharhabar/b/01.txt", par: "grabar/b/01.txt",'
+        ' line: 3, quote: "ab\\ncd", fix: "x y",'
+        ' comment: "", link: "https://x/#/r"});\n'
+        "const b = reportUrl({name: 'grabar/b/01.txt',"
+        " line: 4, quote: 'q'.repeat(900), fix: '',"
+        " comment: 'c', link: 'l'});\n"
+        "console.log(JSON.stringify([a, b]));"
+    )
+    f = tmp_path / "t.js"
+    f.write_text(js, encoding="utf-8")
+    out = subprocess.run(
+        [node, str(f)], capture_output=True, text=True
+    )
+    assert out.returncode == 0, out.stderr
+    import json
+    from urllib.parse import parse_qs, urlparse
+
+    a, b = (
+        parse_qs(urlparse(u).query)
+        for u in json.loads(out.stdout)
+    )
+    assert a["labels"] == ["translation"]
+    assert "line 3" in a["title"][0]
+    assert "> ab cd" in a["body"][0]
+    assert "CC BY-SA" in a["body"][0]
+    assert "x y" in a["body"][0]
+    assert b["labels"] == ["grabar-text"]
+    assert "CC BY-SA" not in b["body"][0]
+    assert "q" * 601 not in b["body"][0]
+    assert "**Comment:**" in b["body"][0]

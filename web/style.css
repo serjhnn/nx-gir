@@ -2128,3 +2128,10 @@ body.reading.full .bar {
   color: var(--accent-ink);
   border-color: var(--accent);
 }
+
+/* reporting an error */
+.rep-label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.85rem;
+}

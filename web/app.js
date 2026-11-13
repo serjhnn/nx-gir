@@ -1619,13 +1619,104 @@ function linkButton() {
   return b;
 }
 
+// -- reporting an error --
+// No server to send it to: the report opens as a
+// new issue on GitHub, filled in, for the reader
+// to look over and send
+
+const ISSUES = "https://github.com/serjhnn/nx-gir"
+  + "/issues/new";
+
+// the address of the issue; info: {name, par, line,
+// quote, fix, comment, link}
+// REPORT-START
+function reportUrl(info) {
+  const tr = info.name.startsWith("ashkharhabar/");
+  const quote = info.quote.length > 600
+    ? info.quote.slice(0, 599) + "…" : info.quote;
+  const body = [
+    "**" + (tr ? "Translation" : "Grabar text")
+      + ":** `books/" + info.name + "`, line "
+      + info.line,
+    info.par ? "**Other version:** `books/"
+      + info.par + "`" : "",
+    "**Place:** " + info.link,
+    "> " + quote.replace(/\n+/g, " "),
+    "**Correction:**\n" + (info.fix || "…"),
+    info.comment ? "**Comment:**\n" + info.comment
+      : "",
+    tr ? "_By sending this I agree that my"
+      + " correction is published under CC BY-SA"
+      + " 4.0._" : "",
+  ].filter(Boolean).join("\n\n");
+  const q = new URLSearchParams({
+    title: "Error in " + info.name + ", line "
+      + info.line,
+    body: body.slice(0, 5000),
+    labels: tr ? "translation" : "grabar-text",
+  });
+  return ISSUES + "?" + q;
+}
+// REPORT-END
+
+// the panel for an error in the chosen sentence
+function reportError() {
+  const at = R.sel;
+  mark(false);
+  sentence(true, at);
+  const [lo, hi] = lit;
+  const quote = R.spans.slice(lo, hi)
+    .map((s) => s.textContent).join(" ");
+  const fix = h("textarea", { rows: "4",
+    "aria-label": "The correct text" });
+  const note = h("textarea", { rows: "3",
+    "aria-label": "Comment" });
+  const send = h("a", { class: "icon-btn primary",
+    target: "_blank", rel: "noopener" },
+  "Send on GitHub");
+  const refresh = () => {
+    send.href = reportUrl({
+      name: R.name, par: R.par ? R.par.name : "",
+      line: R.wpos[at][0] + 1, quote,
+      fix: fix.value.trim(),
+      comment: note.value.trim(),
+      link: lineLink(at) });
+  };
+  fix.addEventListener("input", refresh);
+  note.addEventListener("input", refresh);
+  refresh();
+  const cancel = btn("Cancel", () => {
+    sentence(false);
+    choose(at);
+  });
+  openPanel("Report an error", "en",
+    h("p", { class: "item-quote", lang: "hy" },
+      "«" + (quote.length > 120
+        ? quote.slice(0, 119) + "…" : quote) + "»"),
+    h("label", { class: "rep-label" },
+      "What it should say", fix),
+    h("label", { class: "rep-label" },
+      "Comment, source (optional)", note),
+    h("p", { class: "none" },
+      "Opens a new issue on GitHub; you can read"
+      + " it there before you send it. You need a"
+      + " GitHub account."),
+    h("div", { class: "actions" }, send, cancel));
+  reveal(R.spans[at]);
+  fix.focus({ preventScroll: true });
+}
+
+function reportButton() {
+  return btn("⚑ Report an error", reportError);
+}
+
 function wordActions() {
   const on = !!markAt(R.sel);
   return h("div", { class: "actions" },
     btn(on ? "★ Bookmarked" : "☆ Bookmark",
       toggleMark, { "aria-pressed": String(on) }),
     btn("✎ Add note", () => editNote(-1)),
-    linkButton());
+    linkButton(), reportButton());
 }
 
 // draw the panel for the chosen word
@@ -1644,7 +1735,8 @@ async function drawWord() {
   // a later word may have been chosen meanwhile
   if (R.spans[R.sel] !== span) return;
   const parts = [STATIC
-    ? h("div", { class: "actions" }, linkButton())
+    ? h("div", { class: "actions" }, linkButton(),
+      reportButton())
     : wordActions(),
     placesNav()];
   if (data.error) {
