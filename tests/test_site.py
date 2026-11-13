@@ -204,7 +204,7 @@ def test_searchable(tmp_path, files):
     assert "Grabar (Classical Armenian)" in index
     assert '<header class="bar" data-nosnippet>' in index
     # the blog posts, each language on its own
-    # page, with their dates; drafts left out
+    # page, with their dates
     post = out / "blog/welcome.en.html"
     html = post.read_text("utf-8")
     assert '<html lang="en">' in html
@@ -214,15 +214,16 @@ def test_searchable(tmp_path, files):
         "nxGir</span> blog</h1>"
     ) in html
     assert "<h2>The idea</h2>" in html
-    # one language: no others to name
-    assert "hreflang" not in html
+    # the other languages are named
+    assert 'hreflang="hy"' in html
+    assert 'hreflang="en"' in html
     canon = bs.SITE + "/blog/welcome.en.html"
     assert (
         f"<url><loc>{canon}</loc>"
         "<lastmod>2026-11-07</lastmod></url>"
     ) in sm
     assert '<a href="blog/welcome.en.html">' in index
-    assert not (out / "blog/welcome.hy.html").exists()
+    assert (out / "blog/welcome.hy.html").exists()
     # the Features page as a plain page too
     feat = (out / "features.en.html").read_text("utf-8")
     assert 'href="./#/features/en"' in feat
