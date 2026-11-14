@@ -963,6 +963,46 @@ def test_shelf_crumbs(tmp_path):
     assert web.shelf_crumbs(app, d)[1] == "1-book"
 
 
+def test_part_title():
+    def e(title, n="", level=2, **kw):
+        return {
+            "title": title,
+            "n": n,
+            "level": level,
+            **kw,
+        }
+
+    start = e("Գիրք · 1/3", level=1, start=True)
+    # its own range heading, as in the Ամառան հատոր
+    one = [start, e("ԳԼՈՒԽ Ա-Ե", level=1), e("x", "Ա")]
+    assert web.part_title(one) == "ԳԼՈՒԽ Ա-Ե"
+    # else the range of its numbered chapters
+    two = [
+        start,
+        e("x", "առաջին"),
+        e("y", "Բ"),
+        e("z", "Զ"),
+    ]
+    assert web.part_title(two) == "ԳԼՈՒԽ Ա-Զ"
+    # one chapter: no range
+    assert web.part_title([start, e("x", "Է")]) == "ԳԼՈՒԽ Է"
+    # a book of questions: its Պրակ entries only
+    qs = [
+        start,
+        e("a", "Ա"),
+        e("b", "Բ", kind="Պրակ"),
+        e("c", "Գ", kind="Պրակ"),
+        e("d", "Դ"),
+    ]
+    assert web.part_title(qs) == "ՊՐԱԿ Բ-Գ"
+    # no numbers: the first heading, or nothing
+    assert (
+        web.part_title([start, e("տող", level=1)]) == "տող"
+    )
+    assert web.part_title([start]) == ""
+    assert web.part_title([]) == ""
+
+
 def test_report_url(tmp_path):
     """reportUrl() in web/app.js builds the issue."""
     import shutil

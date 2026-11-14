@@ -507,6 +507,38 @@ def library(app):
     return {"authors": out}
 
 
+# a group heading that is a range: ԳԼՈՒԽ Ա-Ե
+RANGE_RE = re.compile(r"^ԳԼՈՒԽ \S+-\S+$")
+# numbers written out in a heading, as letters
+ORDINALS = {"ԱՌԱՋԻՆ": "Ա"}
+
+
+def part_title(entries):
+    """What a part is named on its book's page: its
+    own range heading (ԳԼՈՒԽ Ա-Ե, as in the Ամառան
+    հատոր), else the range of its numbered sermons or
+    chapters (ԳԼՈՒԽ Ա-Զ; ՊՐԱԿ Բ-Զ for a book of
+    questions), else its first heading, or "" if none
+    (entries: contents())."""
+    heads = [e for e in entries if not e.get("start")]
+    if not heads:
+        return ""
+    if RANGE_RE.match(heads[0]["title"]):
+        return heads[0]["title"]
+    kinds = [e for e in heads if e.get("kind")]
+    use = kinds or [e for e in heads if e["level"] == 2]
+    nums = [e["n"].upper() for e in use if e["n"]]
+    if not nums:
+        return heads[0]["title"]
+    first, last = (
+        ORDINALS.get(n, n) for n in (nums[0], nums[-1])
+    )
+    word = use[0].get("kind", "Գլուխ").upper()
+    return f"{word} {first}" + (
+        f"-{last}" if last != first else ""
+    )
+
+
 def flat_author(app, top, who):
     """True if no book of an author is in parts, as in
     the Bible: the author's folder is a page."""
@@ -567,15 +599,9 @@ def volume(app, folder):
         m = PART_RE.match(line)
         if m:
             book_name = book_name or m.group(1)
-            heads = [
-                x
-                for x in contents(
-                    book_text(app, name).splitlines()
-                )
-                if not x.get("start")
-            ]
+            lines = book_text(app, name).splitlines()
             n = int(m.group(2))
-            title = heads[0]["title"] if heads else ""
+            title = part_title(contents(lines))
         else:
             file_key = name.partition("/")[2]
             n = len(groups.get(sub, ())) + 1
@@ -767,13 +793,10 @@ def parts(app, name):
         if k not in by_n:
             return None
         lines = book_text(app, by_n[k]).splitlines()
-        heads = [
-            h for h in contents(lines) if not h.get("start")
-        ]
         return {
             "name": by_n[k],
             "n": k,
-            "title": heads[0]["title"] if heads else "",
+            "title": part_title(contents(lines)),
         }
 
     # its short name in LIBRARY.tsv, for grabar/ and
