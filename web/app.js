@@ -1715,6 +1715,7 @@ async function offlinePage() {
   const btn = h("button", { type: "button",
     class: "icon-btn primary" }, "Save for offline");
   let now = { want: false };
+  let poll = 0;
   btn.addEventListener("click", () => {
     if (now.complete) {
       tellWorker("clear");
@@ -1731,6 +1732,12 @@ async function offlinePage() {
     const pct = st.total
       ? Math.round(100 * st.done / st.total) : 0;
     btn.disabled = st.busy;
+    // the worker can be stopped by the browser, or its
+    // last message lost: ask again until it is done
+    clearTimeout(poll);
+    if (st.busy) {
+      poll = setTimeout(() => tellWorker("status"), 2000);
+    }
     if (st.busy) {
       status.textContent = "Saving: " + st.done + " of "
         + st.total + " files (" + pct + "%). You can"
