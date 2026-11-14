@@ -156,14 +156,9 @@ self.addEventListener("message", (e) => {
   const type = e.data && e.data.type;
   if (type === "status") {
     e.waitUntil(state().then(tell));
-  } else if (type === "save" || type === "resume") {
-    if (type === "save") {
-      e.waitUntil(meta().then((m) => meta({
-        ...m, want: true })).then(saveAll));
-    } else {
-      e.waitUntil(meta().then((m) =>
-        m.want ? saveAll() : null));
-    }
+  } else if (type === "save") {
+    e.waitUntil(meta().then((m) => meta({
+      ...m, want: true })).then(saveAll));
   } else if (type === "clear") {
     e.waitUntil((async () => {
       await caches.delete(NAME);

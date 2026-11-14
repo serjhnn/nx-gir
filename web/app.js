@@ -1683,8 +1683,6 @@ function startWorker() {
     scope: "./", updateViaCache: "none" })
     .then((reg) => {
       reg.update().catch(() => {});
-      // went on saving everything, if it was asked to
-      tellWorker("resume");
     }).catch(() => {});
 }
 
