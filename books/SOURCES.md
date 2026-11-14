@@ -481,8 +481,8 @@ Notes:
   `:` for `։`, `` ` `` for `՝` and `'` for the
   stress mark `՛`, as in the Shnorhali works.
 
-Translation of part 1 (`01.txt`) was completed on
-2026-11-15 in modern Eastern Armenian, line for line
+Translation of part 1 (`01.txt`) was made by ChatGPT
+(GPT-6) on 2026-11-15 in modern Eastern Armenian, line for line
 (964 lines). It remains a machine draft, not yet
 human-reviewed; see `notes/grigor-narekatsi.md`.
 

@@ -16,7 +16,7 @@ sections, ending at `[ԼԶ]`.
 
 ## Part 1
 
-Translated in full on 2026-11-15. The translation has
+Translated in full on 2026-11-15 by GPT-6. The translation has
 the same 964 lines and blank-line positions as the
 Grabar. All section markers are preserved. The text
 uses modern Eastern Armenian reformed spelling
