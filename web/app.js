@@ -3380,6 +3380,11 @@ async function newText(lang) {
 
 // -- pages --
 
+function clearReading() {
+  document.body.classList.remove("reading",
+    "parallel", "full");
+}
+
 async function route() {
   // unsaved text: ask before leaving the editor
   if (E.back) {
@@ -3402,8 +3407,9 @@ async function route() {
   closePanel();
   R.panel = null;
   R.par = null;
-  document.body.classList.remove("reading",
-    "parallel", "full");
+  // going to another part keeps the reading layout,
+  // or the page would narrow and widen while it loads
+  if (!hash.startsWith("read/")) clearReading();
   // back to the top bar from the reading tools
   if (button.parentNode !== topBar) topBar.append(button);
   try {
@@ -3448,6 +3454,7 @@ async function route() {
     }
     visit("/" + decodeURIComponent(hash));
   } catch (e) {
+    clearReading();
     showError(e.message || "Something went wrong");
   }
 }
