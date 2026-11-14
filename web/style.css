@@ -1545,15 +1545,16 @@ body.reading .bar {
   border-color: var(--accent);
 }
 
+/* the main button: an outline in the accent color */
 .icon-btn.primary {
-  background: var(--accent-ink);
-  border-color: var(--accent-ink);
-  color: var(--on-accent);
+  background: transparent;
+  border-color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .icon-btn.primary:hover {
-  background: var(--accent);
-  color: var(--on-accent);
+  background: var(--hover);
+  color: var(--accent-ink);
 }
 
 textarea {
