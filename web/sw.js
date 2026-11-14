@@ -28,6 +28,22 @@ function fresh(path) {
   return new Request(path, { cache: "reload" });
 }
 
+// a request that gives up after ms (a stalled
+// connection must not keep the save busy for ever);
+// the timer runs until use(response) is done too
+async function load(path, ms, use) {
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), ms);
+  try {
+    const r = await fetch(new Request(path,
+      { cache: "reload" }), { signal: ctl.signal });
+    if (!r.ok) throw new Error(r.status);
+    return await use(r);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function tell(msg) {
   for (const c of await self.clients.matchAll()) {
     c.postMessage(msg);
@@ -86,9 +102,10 @@ self.addEventListener("activate", (e) => {
 async function saveAll() {
   if (busy) return;
   busy = true;
+  await tell(await state());
   try {
-    const info = await (await fetch(
-      fresh("offline.json"))).json();
+    const info = await load("offline.json", 30000,
+      (r) => r.json());
     if (info.build !== BUILD) return;
     const cache = await caches.open(NAME);
     const todo = [];
@@ -105,14 +122,18 @@ async function saveAll() {
     const work = async () => {
       while (todo.length) {
         const path = todo.pop();
-        try {
-          const r = await fetch(fresh(path));
-          if (!r.ok) throw new Error(r.status);
-          await cache.put(path, r);
-          done++;
-        } catch (err) {
-          bad++;
+        let ok = false;
+        for (let k = 0; k < 3 && !ok; k++) {
+          try {
+            await load(path, 60000,
+              (r) => cache.put(path, r));
+            ok = true;
+          } catch (err) {
+            // try again, then count it as missing
+          }
         }
+        if (ok) done++;
+        else bad++;
         if (Date.now() - last > 200) {
           last = Date.now();
           await tell(await state());

@@ -1738,7 +1738,11 @@ async function offlinePage() {
     if (st.busy) {
       poll = setTimeout(() => tellWorker("status"), 2000);
     }
-    if (st.busy) {
+    if (st.busy && !st.total) {
+      status.textContent = "Saving: getting the list of"
+        + " files…";
+      btn.textContent = "Saving…";
+    } else if (st.busy) {
       status.textContent = "Saving: " + st.done + " of "
         + st.total + " files (" + pct + "%). You can"
         + " keep reading.";
