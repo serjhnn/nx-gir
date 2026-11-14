@@ -121,7 +121,10 @@
   sub-folder, named in `LIBRARY.tsv`. The Library,
   the reader's back button, its ‹ n/N › part tools
   and `folderHref()` in `app.js` lead there; `up`
-  gives the links above it. Keep `PAGED` in
+  gives the links above it; the shelf's and the
+  reader's breadcrumbs use the same names
+  (`shelf_crumbs()`), and an old `#/f/` link to a
+  book's folder redirects there. Keep `PAGED` in
   `app.js` equal to `PARALLEL`
 - `books/TRANSLATIONS.tsv`: our translations in
   `books/ashkharhabar/` (all but `bible/`, which is

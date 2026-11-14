@@ -422,8 +422,10 @@ function showError(msg) {
   );
 }
 
-// Library / grabar / bible: links up the folders.
-function crumbs(path, last) {
+// Library / grabar / bible: links up the folders;
+// above: [{label, folder}] from the API, with the
+// names of LIBRARY.tsv, else the folder names.
+function crumbs(path, last, above) {
   const nav = h("nav", { class: "crumbs",
     "aria-label": "Folders" });
   const parts = path ? path.split("/") : [];
@@ -431,8 +433,11 @@ function crumbs(path, last) {
   nav.append(h("a", { href: "#/" }, "Library"));
   parts.forEach((p, i) => {
     const to = parts.slice(0, i + 1).join("/");
+    const a = above && above[i];
     nav.append(h("span", { class: "sep" }, "/"),
-      h("a", { href: "#/f/" + enc(to) }, p));
+      h("a", { href: a ? a.to : folderHref(to),
+        lang: a ? "hy"
+        : null }, a ? a.label : p));
   });
   return nav;
 }
@@ -548,7 +553,7 @@ function bookRow(item) {
 
 function folderRow(item) {
   return h("a", { class: "row",
-    href: "#/f/" + enc(item.name) },
+    href: folderHref(item.name) },
   icon(ICONS.folder, "ico"),
   h("span", { class: "name" },
     item.label.replace(/\/$/, "")),
@@ -617,8 +622,7 @@ function statusList(status) {
     const pct = Math.round(100 * b.done / b.parts);
     const fill = h("span");
     fill.style.width = pct + "%";
-    const to = b.first ? "#/read/" + enc(b.first)
-      : "#/f/" + enc(b.folder);
+    const to = folderHref(b.folder);
     list.append(h("li", {},
       h("a", { href: to }, b.name || b.title),
       h("span", { class: "meta" },
@@ -661,13 +665,20 @@ function mail() {
 }
 
 async function shelf(folder) {
+  // an old link to a book's folder: its page
+  const page = folderHref(folder);
+  if (page.startsWith("#/b/")) {
+    location.replace(page);
+    return;
+  }
   const q = encodeURIComponent(folder);
   const [data, last] = await Promise.all([
     api("shelf?folder=" + q),
     folder ? null : api("recent?n=" + RECENT)
       .catch(() => null)]);
   const title = folder
-    ? folder.split("/").pop() : "Library";
+    ? data.title || folder.split("/").pop()
+    : "Library";
   document.title = folder
     ? title + " · " + NAME : TOP_TITLE;
   const list = h("ul", { class: "shelf" });
@@ -677,7 +688,8 @@ async function shelf(folder) {
   }
   const lang = folder.split("/")[1];
   show(
-    folder ? crumbs(folder, false) : null,
+    folder ? crumbs(folder, false, data.crumbs)
+      : null,
     // at the top: the Library and the other
     // pages, what was read last, then the welcome
     folder ? null : h("p", { class: "lib-btn",
@@ -698,7 +710,8 @@ async function shelf(folder) {
     last && last.items.length
       ? recentCard(last.items) : null,
     folder ? null : intro(data.status, data.news),
-    h("h1", {}, title),
+    h("h1", { lang: data.title && data.title !== folder
+      .split("/").pop() ? "hy" : null }, title),
     h("p", { class: "sub" }, plural(data.count,
       data.unit)),
     data.editable ? h("div", { class: "actions" },
@@ -836,18 +849,19 @@ async function recentPage() {
 // -- a book's page --
 
 // the folders of the Library, whose books have a
-// page (volume() in nxgir_web.py)
+// page (volume() in nxgir_web.py); an author's own
+// folder, two levels down, stays on the shelf
 const PAGED = ["grabar", "ashkharhabar"];
 
 function dirOf(name) {
   return name.split("/").slice(0, -1).join("/");
 }
 
-// where a folder opens: the page of a book, or the
-// plain shelf
+// where a folder opens: the page of a book (three
+// levels down in grabar/), or the plain shelf
 function folderHref(dir) {
   const [top, ...rest] = dir.split("/");
-  if (rest.length && PAGED.includes(top)) {
+  if (rest.length > 1 && PAGED.includes(top)) {
     return "#/b/" + enc(dir);
   }
   return dir ? "#/f/" + enc(dir) : "#/";
@@ -967,7 +981,8 @@ async function libraryPage() {
     const page = a.books.every((b) => b.parts === 1);
     return h("section", { class: "author" },
       h("h2", {}, page
-        ? h("a", { href: folderHref(a.folder) }, a.name)
+        ? h("a", { href: "#/b/" + enc(a.folder) },
+          a.name)
         : a.name), list);
   });
   const n = data.authors.reduce(
@@ -1019,7 +1034,7 @@ function dayNo(start, iso) {
 // nxgir_web.py), or ""
 function eventHref(e) {
   if (e.to === "read") return "#/read/" + enc(e.link);
-  if (e.to === "folder") return "#/f/" + enc(e.link);
+  if (e.to === "folder") return folderHref(e.link);
   if (e.to === "url") return e.link;
   return "";
 }
@@ -2895,9 +2910,11 @@ async function book(name, line) {
   const pt = data.parts;
   show(pt ? upLinks(pt.up.concat([{ label: pt.book,
     to: folderHref(pt.folder) }]))
-    : crumbs(name, false),
-  h("h1", {}, pt ? pt.book + " · " + pt.n + "/"
-    + pt.total : title),
+    : crumbs(name, false, data.crumbs),
+  h("h1", { lang: data.label !== title ? "hy"
+    : null }, pt
+    ? pt.book + " · " + pt.n + "/" + pt.total
+    : data.label || title),
     h("p", { class: "sub" },
       plural(data.lines.length, "line") +
       " · tap a word to look it up"),

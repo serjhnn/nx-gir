@@ -913,6 +913,56 @@ def test_volume(tmp_path):
             web.volume(app, bad)
 
 
+def test_shelf_crumbs(tmp_path):
+    # the folders above a folder or book, with the
+    # names of LIBRARY.tsv under grabar/
+    names = tmp_path / "LIBRARY.tsv"
+    names.write_text(
+        "ann\tԱննա\nann/1-book\tԳիրքը\n"
+        "ann/1-book/01.txt\tԱռաջին\n",
+        encoding="utf-8",
+    )
+    part = tmp_path / "01.txt"
+    part.write_text("Գիրք · 1/1\n", encoding="utf-8")
+    one = tmp_path / "mt.txt"
+    one.write_text("Աւետարան\n", encoding="utf-8")
+    files = [
+        ("grabar/ann/1-book/01.txt", 9, part),
+        ("grabar/bib/nt/mt.txt", 9, one),
+    ]
+    app = App(files, library=names)
+    d = "grabar/ann/1-book"
+    # an author of single files has a page of its own
+    bib = web.shelf_crumbs(app, "grabar/bib/nt/mt.txt")
+    assert bib[0][1]["to"] == "#/b/grabar/bib"
+    got = web.shelf_crumbs(app, d)
+    assert got == (
+        [
+            {
+                "label": "grabar",
+                "folder": "grabar",
+                "to": "#/f/grabar",
+            },
+            {
+                "label": "Աննա",
+                "folder": "grabar/ann",
+                "to": "#/f/grabar/ann",
+            },
+        ],
+        "Գիրքը",
+    )
+    # a book: its own name
+    assert (
+        web.shelf_crumbs(app, d + "/01.txt")[1] == "Առաջին"
+    )
+    # other folders keep their names
+    other = web.shelf_crumbs(app, "notes/ann")
+    assert other[1] == "ann"
+    assert web.shelf_crumbs(app, "") == ([], "")
+    app = App([], library=None)
+    assert web.shelf_crumbs(app, d)[1] == "1-book"
+
+
 def test_report_url(tmp_path):
     """reportUrl() in web/app.js builds the issue."""
     import shutil

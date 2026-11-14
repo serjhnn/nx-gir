@@ -259,6 +259,34 @@ def split_words(line):
     return parts
 
 
+def shelf_crumbs(app, folder):
+    """The folders above one, as [{label, folder}], and
+    its own label: the names in LIBRARY.tsv under
+    grabar/ and ashkharhabar/, else the folder's name."""
+    names = read_names(app.library)
+    parts = folder.split("/") if folder else []
+    labels = []
+    for i, part in enumerate(parts):
+        key = "/".join(parts[1 : i + 1])
+        known = parts[0] in PARALLEL and key in names
+        labels.append(names[key] if known else part)
+    crumbs = []
+    for i in range(len(parts) - 1):
+        at = "/".join(parts[: i + 1])
+        to = "#/f/" + at
+        if parts[0] in PARALLEL and i >= 1:
+            # a book's page, or an author's if it is
+            # Bible-like
+            if i >= 2 or flat_author(
+                app, parts[0], parts[1]
+            ):
+                to = "#/b/" + at
+        crumbs.append(
+            {"label": labels[i], "folder": at, "to": to}
+        )
+    return crumbs, labels[-1] if labels else ""
+
+
 def shelf(app, folder=""):
     """One folder: its sub-folders and books."""
     folder = folder.strip("/")
@@ -281,8 +309,11 @@ def shelf(app, folder=""):
             row["progress"] = st.progress(item.name)
         items.append(row)
     count, unit = folder_count(app.files, folder)
+    crumbs, title = shelf_crumbs(app, folder)
     return {
         "folder": folder,
+        "title": title,
+        "crumbs": crumbs,
         "parent": folder.rpartition("/")[0],
         "count": count,
         "unit": unit,
@@ -476,6 +507,16 @@ def library(app):
     return {"authors": out}
 
 
+def flat_author(app, top, who):
+    """True if no book of an author is in parts, as in
+    the Bible: the author's folder is a page."""
+    return not any(
+        PART_RE.match(first_line(p))
+        for n, _, p in app.files
+        if n.startswith(f"{top}/{who}/")
+    )
+
+
 def up_links(app, folder):
     """The links above a book's folder: the Library,
     and its author (a page of its own only when all
@@ -486,12 +527,8 @@ def up_links(app, folder):
     up = [{"label": "Գրադարան", "to": "#/library"}]
     if "/" not in key:
         return up
-    flat = not any(
-        PART_RE.match(first_line(p))
-        for n, _, p in app.files
-        if n.startswith(f"{top}/{who}/")
-    )
     names = read_names(app.library)
+    flat = flat_author(app, top, who)
     to = f"#/b/{top}/{who}" if flat else "#/library"
     up.append({"label": names.get(who, who), "to": to})
     return up
@@ -670,7 +707,8 @@ def book(app, name):
     """A book's lines, cut into words, with where it
     was left ("at": its word), the first word of every
     sentence, its bookmarks and notes, its contents
-    (the chapters and sermons in it), for a .md
+    (the chapters and sermons in it), the folders above
+    it and its own name (shelf_crumbs()), for a .md
     book its bold, italic, headings and quotes, and
     for one of our translations who made and
     reviewed it and its license (credit), and for
@@ -683,8 +721,11 @@ def book(app, name):
     at = None
     if pos and lay.words:
         at = word_at(lay.words, pos)
+    crumbs, label = shelf_crumbs(app, name)
     return {
         "name": name,
+        "crumbs": crumbs,
+        "label": label,
         "lines": [
             split_words(line) for line in text.splitlines()
         ],
