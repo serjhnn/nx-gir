@@ -38,6 +38,14 @@ not see the #/ pages of app.js:
         same way
     sitemap.xml, robots.txt   where they are
 
+and, to read with no network, the whole site as one
+file (offline_zip()):
+
+    nxgir-site.zip   the pages and data, a static.js
+        with no visit counter, and scripts/offline/
+        (README.txt, serve.py); linked in the footer
+    download.json    its name and size, not in it
+
 The test texts of data/ and the user's own texts in
 interpretations/ are left out.
 
@@ -58,6 +66,7 @@ import shutil
 import sys
 import tempfile
 import time
+import zipfile
 from pathlib import Path
 from urllib.parse import quote
 
@@ -123,6 +132,16 @@ def folders(files):
     return sorted(out)
 
 
+STATIC_JS = (
+    "// the published copy: app.js reads data/\n"
+    "window.NXGIR_STATIC = true;\n"
+)
+# the offline copy: a zip of the site (offline_zip())
+ZIP = "nxgir-site.zip"
+# left out of it: the pages for search engines
+NOT_OFFLINE = ("read/", "sitemap.xml", "robots.txt")
+
+
 def pages(out, counter=GOATCOUNTER):
     """The pages of web/, told to read the files, and
     where to count visits (counter: a GoatCounter
@@ -147,9 +166,10 @@ def pages(out, counter=GOATCOUNTER):
         count = f'window.NXGIR_COUNT = "{url}";\n'
     build = f"{time.time_ns():x}"
     (out / "static.js").write_text(
-        "// the published copy: app.js reads data/\n"
-        "window.NXGIR_STATIC = true;\n"
-        f'window.NXGIR_BUILD = "{build}";\n' + count,
+        STATIC_JS
+        + f'window.NXGIR_BUILD = "{build}";\n'
+        + f'window.NXGIR_DOWNLOAD = "{ZIP}";\n'
+        + count,
         encoding="utf-8",
     )
     index = out / "index.html"
@@ -271,7 +291,55 @@ def build(
         data / "stats.json",
         stats(out, words, time.monotonic() - start),
     )
+    offline_zip(out)
     return len(files), len(dirs), len(words)
+
+
+def offline_zip(out):
+    """The site as one file, ZIP, to read with no
+    network: the pages and data (not the pages for
+    search engines), a static.js with no visit
+    counter and no link to this file, and
+    scripts/offline/ (README.txt, serve.py: file://
+    cannot read the data files). The address and
+    size of the file go to download.json, which is
+    not in it."""
+    base = "nxgir-site/"
+    path = out / ZIP
+    with zipfile.ZipFile(
+        path, "w", zipfile.ZIP_DEFLATED, compresslevel=9
+    ) as z:
+        for p in sorted(out.rglob("*")):
+            rel = p.relative_to(out).as_posix()
+            if (
+                not p.is_file()
+                or p == path
+                or rel == MARK
+                or rel == "static.js"
+                or rel.startswith(NOT_OFFLINE)
+            ):
+                continue
+            z.write(p, base + rel)
+        static = (out / "static.js").read_text("utf-8")
+        z.writestr(
+            base + "static.js",
+            "".join(
+                x
+                for x in static.splitlines(keepends=True)
+                if x.startswith(
+                    ("//", "window.NXGIR_STATIC")
+                )
+                or "NXGIR_BUILD" in x
+            ),
+        )
+        for p in sorted(
+            (ROOT / "scripts/offline").iterdir()
+        ):
+            z.write(p, base + p.name)
+    write_json(
+        out / "download.json",
+        {"file": ZIP, "bytes": path.stat().st_size},
+    )
 
 
 def page_path(name):

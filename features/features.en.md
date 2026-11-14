@@ -62,6 +62,10 @@ The Library page lists the Grabar books by author, with how many parts each has 
 
 The Blog tells what is new, in themes: about the site, about authors and about books. The Timeline shows the main steps of the project, and the Statistics page how big the library and the site are.
 
+## Offline copy
+
+"Offline copy" at the bottom of every page saves the whole site as one zip file. Unpack it, run python3 serve.py, and read with no network: all the books, translations and word meanings, on a phone too (in Termux).
+
 ## Become a contributor
 
 Միանալ on the home page, and the banner with the reader under the tree below it, open a page on how to help: make first drafts of translations with AI, read them beside the Grabar to correct them, or bring texts and words.

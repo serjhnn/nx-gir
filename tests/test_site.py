@@ -276,3 +276,45 @@ def test_build_volumes(tmp_path):
     assert got["groups"][0]["parts"][0]["n"] == 1
     # not for the top, or a folder of authors
     assert not (data / "volume/grabar.json").exists()
+
+
+def test_offline_zip(tmp_path, files):
+    import zipfile
+
+    out = tmp_path / "site"
+    tsv = tmp_path / "timeline.tsv"
+    tsv.write_text(
+        "2026-10-18\tBooks\t*\tJohn\t\tgrabar/john.txt\n",
+        encoding="utf-8",
+    )
+    bs.build(out, files, tsv)
+    # the published pages offer it, and tell its size
+    js = (out / "static.js").read_text("utf-8")
+    assert f'NXGIR_DOWNLOAD = "{bs.ZIP}"' in js
+    info = json.loads(
+        (out / "download.json").read_text("utf-8")
+    )
+    assert info["file"] == bs.ZIP
+    assert info["bytes"] == (out / bs.ZIP).stat().st_size
+    names = zipfile.ZipFile(out / bs.ZIP).namelist()
+    top = "nxgir-site/"
+    for n in ("index.html", "app.js", "serve.py"):
+        assert top + n in names
+    assert top + "README.txt" in names
+    assert top + "data/book/grabar/john.txt.json" in names
+    # not in it: itself, the pages for search engines
+    # and the size file
+    assert not any(
+        n.startswith(top + "read/") or "download.json" in n
+        for n in names
+    )
+    assert top + bs.ZIP not in names
+    assert top + "sitemap.xml" not in names
+    # its static.js has no link to the zip and no
+    # visit counter
+    z = zipfile.ZipFile(out / bs.ZIP)
+    inner = z.read(top + "static.js").decode("utf-8")
+    assert "NXGIR_STATIC = true" in inner
+    assert "NXGIR_BUILD" in inner
+    assert "NXGIR_DOWNLOAD" not in inner
+    assert "NXGIR_COUNT" not in inner

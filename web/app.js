@@ -406,8 +406,23 @@ function siteFooter() {
       h("a", { href: "#/contribute" },
         "Become a contributor"),
       " · ",
-      h("a", { href: REPO }, "GitHub")),
+      h("a", { href: REPO }, "GitHub"),
+      offlineLink()),
     h("p", {}, "Developed by S.O. and Claude"));
+}
+
+// the published site only: a link to the whole
+// site as one zip file for reading with no network
+// (offline_zip() in build-site.py), with its size
+function offlineLink() {
+  const file = window.NXGIR_DOWNLOAD;
+  if (!STATIC || !file) return null;
+  const a = h("a", { href: file, download: "" },
+    "Offline copy");
+  json("download.json").then((d) =>
+    a.append(" (" + size(d.bytes) + ")")
+  ).catch(() => {});
+  return [" · ", a];
 }
 
 // an error, and under it what the site is: a

@@ -57,5 +57,6 @@
 2026-11-13	Site		The blog and Features in three languages	Posts and the Features page in Armenian, English and Russian, with a new post on Mkhitar Gosh and the number six.	
 2026-11-14	Site		A page for each book	Open a long book from the Library to see all its parts with their headings, and move between parts while reading.	grabar/grigor-tatevatsi/3-amaran-hator
 2026-11-14	Site		Blog themes	The blog has a sub page for each theme: about the site, about authors and about books.	
+2026-11-14	Site		An offline copy	The whole site as one zip file, linked at the bottom of every page: unpack it, run python3 serve.py and read with no network.	
 next	Translation		All of Amaran hator in modern Armenian	Then the other works of Grigor Tatevatsi.	
 next	Site		A contents page for each book	What each part of a book is about.	

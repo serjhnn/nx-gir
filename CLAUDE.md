@@ -264,7 +264,12 @@
   and each blog post (`blog/<slug>.<lang>.html`),
   `sitemap.xml` and `robots.txt`; tested in
   `tests/test_site.py`. `bucket()` and `BUCKETS` must
-  match `app.js` (a test checks it)
+  match `app.js` (a test checks it). It also writes
+  `nxgir-site.zip` (`offline_zip()`: the site without
+  the pages for search engines and the visit counter,
+  with `scripts/offline/`: `serve.py` and `README.txt`),
+  linked in the footer by `offlineLink()` in `app.js`;
+  the zip is not counted in `data/stats.json`
 - `scripts/render-logo.py`, `scripts/render-screens.py`,
   `scripts/render-web.py`: regenerate the README
   images in `docs/` after changing the logo, the
