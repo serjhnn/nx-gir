@@ -470,13 +470,21 @@ Notes:
   chapter starts with its title (`Ի ԽՈՐՈՑ ՍՐՏԻՑ
   ԽԱՒՍՔ ԸՆԴ ԱՍՏՈՒԾՈՅ`) and the numbers of its
   parts (`Ա`, `Բ`, …) stand on lines of their own.
-- One verse per line.
+- The file is split into one sentence per line after `։`,
+  with blank lines at Digilib paragraph breaks. The
+  wording is unchanged; 964 reader lines, and no `։`
+  lacked a following space.
 - Digilib writes `~` for the exclamation mark `՜`,
   mostly inside a word (`Ձա~յն`), where the reader
   would cut the word in two; all 121 were replaced
   with `՜`. Otherwise the text is as on Digilib:
   `:` for `։`, `` ` `` for `՝` and `'` for the
   stress mark `՛`, as in the Shnorhali works.
+
+Translation of part 1 (`01.txt`) was completed on
+2026-11-15 in modern Eastern Armenian, line for line
+(964 lines). It remains a machine draft, not yet
+human-reviewed; see `notes/grigor-narekatsi.md`.
 
 ## grabar/anania-shirakatsi/
 
