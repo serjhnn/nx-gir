@@ -997,6 +997,22 @@ h1 {
   background: var(--accent);
   border-color: var(--accent);
 }
+.filters a {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-decoration: none;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+}
+.filters a:hover {
+  color: var(--text);
+}
+.filters a[aria-current="page"] {
+  color: var(--on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+}
 .tl {
   position: relative;
   margin: 0;

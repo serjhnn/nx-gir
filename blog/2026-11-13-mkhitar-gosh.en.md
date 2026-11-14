@@ -1,5 +1,7 @@
 # Mkhitar Gosh and the number six
 
+theme: authors
+
 ![Mkhitar Gosh: six, the first perfect number, with a medieval book, a castle in the mountains and a quill](mkhitar-gosh.jpg)
 
 > About the picture: the words in it are a modern paraphrase, not a quotation. Gosh writes «երկոտասան բաղկանայ յերկուց վեցից, եւ վեցն կատարեալ թիւ է»: "twelve is made of two sixes, and six is a perfect number", and then lists his reasons. The picture should be replaced with one that quotes this line.

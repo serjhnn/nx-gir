@@ -60,7 +60,7 @@ The Library page lists the Grabar books by author, with how many parts each has 
 
 ## Blog, Timeline and Statistics
 
-The Blog tells what is new. The Timeline shows the main steps of the project, and the Statistics page how big the library and the site are.
+The Blog tells what is new, in themes: about the site, about authors and about books. The Timeline shows the main steps of the project, and the Statistics page how big the library and the site are.
 
 ## Become a contributor
 

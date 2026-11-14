@@ -1140,15 +1140,25 @@ const BLOG = {
   hy: { name: "Հայերեն", title: "Բլոգ",
     sub: "Նորություններ և նշումներ Նախագրից",
     home: "← Գլխավոր", none: "Գրառումներ դեռ չկան։",
-    read: "Կարդալ →" },
+    read: "Կարդալ →", all: "Բոլորը" },
   en: { name: "English", title: "Blog",
     sub: "News and notes from nxGir",
     home: "← Home", none: "No posts yet.",
-    read: "Read →" },
+    read: "Read →", all: "All" },
   ru: { name: "Русский", title: "Блог",
     sub: "Новости и заметки nxGir",
     home: "← Главная", none: "Записей пока нет.",
-    read: "Читать →" },
+    read: "Читать →", all: "Все" },
+};
+// the themes of the posts: THEMES in nxgir_blog.py;
+// each has a sub page, #/blog/theme/<name>
+const BLOG_THEMES = {
+  site: { hy: "Կայքի մասին", en: "About the site",
+    ru: "О сайте" },
+  authors: { hy: "Հեղինակների մասին",
+    en: "About authors", ru: "Об авторах" },
+  books: { hy: "Գրքերի մասին", en: "About books",
+    ru: "О книгах" },
 };
 const BLOG_LANG = "nxgir-blog-lang";
 
@@ -1237,18 +1247,30 @@ function postCard(p, lang) {
 }
 
 // #/blog: every post, newest first; #/blog/<slug>
-// that one post; #/blog/<slug>/<lang> in lang
+// that one post; #/blog/<slug>/<lang> in lang;
+// #/blog/theme/<name> the posts of one theme
 async function blogPage(path) {
-  const [slug, want] = path.split("/");
+  let [slug, want] = path.split("/");
+  let theme = null;
+  if (slug === "theme") {
+    theme = want;
+    if (!(theme in BLOG_THEMES)) {
+      throw new Error("No such theme");
+    }
+    slug = want = "";
+  }
   if (want in BLOG) setBlogLang(want);
   const data = await api("blog");
   const one = slug
     ? data.posts.find((p) => p.slug === slug) : null;
   if (slug && !one) throw new Error("No such post");
+  const posts = theme
+    ? data.posts.filter((p) => p.theme === theme)
+    : data.posts;
   const draw = () => {
     // the languages the posts on this page have;
     // the one picked, if they have it
-    const have = new Set((one ? [one] : data.posts)
+    const have = new Set((one ? [one] : posts)
       .flatMap((p) => p.versions.map((v) => v.lang)));
     const langs = Object.keys(BLOG)
       .filter((l) => have.has(l));
@@ -1267,22 +1289,36 @@ async function blogPage(path) {
       });
       return b;
     }));
+    // All and one button for each theme
+    const tabs = h("nav", { class: "filters themes",
+      "aria-label": "Themes", lang },
+    [["", t.all], ...Object.entries(BLOG_THEMES)
+      .map(([k, v]) => [k, v[lang]])].map(([k, name]) =>
+      h("a", { href: "#/blog" + (k ? "/theme/" + k : ""),
+        "aria-current": k === (theme || "")
+          ? "page" : null }, name)));
+    const name = theme ? BLOG_THEMES[theme][lang] : "";
     document.title = (one ? version(one, lang).title
-      + " · " : "") + t.title + " · " + NAME;
+      + " · " : "") + (name ? name + " · " : "")
+      + t.title + " · " + NAME;
     show(
       h("p", { class: "crumbs", lang },
         h("a", { href: "#/" }, t.home),
-        one ? [" · ", h("a", { href: "#/blog" },
-          t.title)] : null),
-      one ? null : h("h1", { lang }, t.title),
+        one || theme ? [" · ", h("a", { href: "#/blog" },
+          t.title)] : null,
+        one && one.theme ? [" · ", h("a", {
+          href: "#/blog/theme/" + one.theme },
+        BLOG_THEMES[one.theme][lang])] : null),
+      one ? null : h("h1", { lang }, name || t.title),
       one ? null : h("p", { class: "sub", lang },
         named(t.sub)),
+      one ? null : tabs,
       langs.length > 1 ? pick : null,
       h("div", {
         class: "blog" + (one ? " one p-" + one.slug : "") },
         one ? postItem(one, lang)
-          : data.posts.length
-            ? data.posts.map((p) => postCard(p, lang))
+          : posts.length
+            ? posts.map((p) => postCard(p, lang))
             : h("p", { class: "empty", lang },
               t.none)));
   };

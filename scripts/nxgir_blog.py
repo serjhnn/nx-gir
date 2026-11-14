@@ -4,6 +4,11 @@ post and language, named YYYY-MM-DD-slug.LANG.md
 its date and slug.
 Drafts are in blog/drafts/, which is not read.
 
+A post can name its theme on the line after the
+title: "theme: site", "theme: authors" or "theme:
+books" (THEMES; one version is enough). The Blog
+page has a sub page for each theme.
+
 A post is a "# Title" line, then paragraphs split
 by empty lines; "## " starts a subheading; a line
 ![alt](name.jpg) alone is a picture, a file of
@@ -23,6 +28,10 @@ BLOG = ROOT / "blog"
 # the languages of the posts, in the order the
 # page offers them: Armenian first
 LANGS = ("hy", "en", "ru")
+# the themes of the posts, in the order the page
+# offers them: app.js has their names (BLOG_THEMES)
+THEMES = ("site", "authors", "books")
+THEME_RE = re.compile(r"theme: *([a-z]+)")
 NAME_RE = re.compile(
     r"(\d{4}-\d{2}-\d{2})-([a-z0-9]+(?:-[a-z0-9]+)*)"
     r"\.([a-z]{2})\.md"
@@ -36,6 +45,23 @@ IMG_RE = re.compile(
 
 class BlogError(ValueError):
     pass
+
+
+def split_theme(text, name):
+    """The theme named after the title line, or
+    None, and the text without that line."""
+    lines = text.splitlines(keepends=True)
+    i = 1
+    while i < len(lines) and not lines[i].strip():
+        i += 1
+    if i >= len(lines):
+        return None, text
+    m = THEME_RE.fullmatch(lines[i].strip())
+    if not m:
+        return None, text
+    if m.group(1) not in THEMES:
+        raise BlogError(f"{name}: theme not in {THEMES}")
+    return m.group(1), "".join(lines[:i] + lines[i + 1 :])
 
 
 def parse(text, name):
@@ -83,7 +109,8 @@ def parse(text, name):
 
 def read(folder=BLOG):
     """The posts in folder, newest first, as {slug,
-    date, versions}: versions [{lang, title,
+    date, theme, versions}: theme is one of THEMES
+    or None; versions [{lang, title,
     blocks}] in the order of LANGS. Files other
     than *.md (and README.md) are left alone."""
     folder = Path(folder)
@@ -117,6 +144,12 @@ def read(folder=BLOG):
                 f"{p.name}: two dates for {slug!r}"
             )
         text = p.read_text(encoding="utf-8")
+        theme, text = split_theme(text, p.name)
+        if theme:
+            if post.setdefault("theme", theme) != theme:
+                raise BlogError(
+                    f"{p.name}: two themes for {slug!r}"
+                )
         title, blocks = parse(text, p.name)
         post.setdefault("versions", []).append(
             {"lang": lang, "title": title, "blocks": blocks}
@@ -127,6 +160,7 @@ def read(folder=BLOG):
         reverse=True,
     )
     for post in out:
+        post.setdefault("theme", None)
         post["versions"].sort(
             key=lambda v: LANGS.index(v["lang"])
         )

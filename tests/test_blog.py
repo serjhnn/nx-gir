@@ -123,3 +123,53 @@ def test_pictures_exist():
                     assert (
                         bl.ROOT / "web/img" / b[1]
                     ).is_file()
+
+
+def test_theme(folder):
+    (folder / "2026-11-01-later.en.md").write_text(
+        "# Later\n\ntheme: books\n\nText.\n", "utf-8"
+    )
+    posts = {p["slug"]: p for p in bl.read(folder)}
+    assert posts["later"]["theme"] == "books"
+    assert posts["hello"]["theme"] is None
+    # the theme line is not part of the text
+    blocks = posts["later"]["versions"][0]["blocks"]
+    assert blocks == [["p", "Text."]]
+
+
+def test_theme_one_version_is_enough(folder):
+    (folder / "2026-10-07-hello.hy.md").write_text(
+        "# Բարև\n\ntheme: site\n\nԱռաջին։\n", "utf-8"
+    )
+    posts = {p["slug"]: p for p in bl.read(folder)}
+    assert posts["hello"]["theme"] == "site"
+
+
+def test_theme_bad(folder):
+    (folder / "2026-10-07-hello.hy.md").write_text(
+        "# Բարև\n\ntheme: site\n\nԱռաջին։\n", "utf-8"
+    )
+    (folder / "2026-10-07-hello.en.md").write_text(
+        "# Hello\n\ntheme: books\n\nText.\n", "utf-8"
+    )
+    with pytest.raises(bl.BlogError, match="two themes"):
+        bl.read(folder)
+    (folder / "2026-10-07-hello.en.md").write_text(
+        "# Hello\n\ntheme: cats\n\nText.\n", "utf-8"
+    )
+    with pytest.raises(bl.BlogError, match="theme"):
+        bl.read(folder)
+
+
+def test_posts_have_themes():
+    for post in bl.read():
+        assert post["theme"] in bl.THEMES, post["slug"]
+
+
+def test_themes_match_app():
+    js = (bl.ROOT / "web/app.js").read_text("utf-8")
+    block = js.split("const BLOG_THEMES = {")[1]
+    block = block.split("};")[0]
+    for t in bl.THEMES:
+        assert f"  {t}: " in block
+    assert block.count("hy:") == len(bl.THEMES)
