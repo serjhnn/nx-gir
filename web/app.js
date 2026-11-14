@@ -1,5 +1,6 @@
 // nx-gir web: the bookshelf and the theme button.
-// Pages are #/ (top), #/f/<folder>, #/read/<book>,
+// Pages are #/ (top), #/f/<folder>, #/b/<book>
+// (a book's parts), #/read/<book>,
 // #/library, #/timeline, #/blog, #/features,
 // #/contribute and #/stats; the
 // data
@@ -315,6 +316,20 @@ async function staticApi(path) {
   }
   if (route === "library") {
     return json("data/library.json");
+  }
+  if (route === "volume") {
+    const data = await json("data/volume/" +
+      enc(q.get("folder")) + ".json");
+    for (const g of data.groups) {
+      for (const p of g.parts) {
+        const r = readAt(p.name);
+        if (r) {
+          p.progress = r.pct;
+          p.seen = r.t || 0;
+        }
+      }
+    }
+    return data;
   }
   if (route === "book") {
     const name = q.get("name");
@@ -818,6 +833,101 @@ async function recentPage() {
         h("a", { href: "#/" }, "Գրադարան")));
 }
 
+// -- a book's page --
+
+// the folders of the Library, whose books have a
+// page (volume() in nxgir_web.py)
+const PAGED = ["grabar", "ashkharhabar"];
+
+function dirOf(name) {
+  return name.split("/").slice(0, -1).join("/");
+}
+
+// where a folder opens: the page of a book, or the
+// plain shelf
+function folderHref(dir) {
+  const [top, ...rest] = dir.split("/");
+  if (rest.length && PAGED.includes(top)) {
+    return "#/b/" + enc(dir);
+  }
+  return dir ? "#/f/" + enc(dir) : "#/";
+}
+
+// links up: [{label, to}] as volume() gives them
+function upLinks(up) {
+  const nav = h("nav", { class: "crumbs", lang: "hy",
+    "aria-label": "Library" });
+  up.forEach((u, i) => {
+    if (i) nav.append(h("span", { class: "sep" }, "/"));
+    nav.append(h("a", { href: u.to }, u.label));
+  });
+  return nav;
+}
+
+// one part of a book: its number, first heading,
+// whether it is translated, and how far it is read
+function partRow(p, here) {
+  const meta = h("span", { class: "meta" });
+  if (p.translated) {
+    meta.append(h("span", { class: "done" }, "⇆"));
+  }
+  if (p.progress != null) {
+    const fill = h("span");
+    fill.style.width = p.progress + "%";
+    meta.append(p.progress + "%",
+      h("span", { class: "progress", role: "img",
+        "aria-label": p.progress + "% read" }, fill));
+  }
+  const a = h("a", { class: "row part",
+    href: "#/read/" + enc(p.name) },
+  h("span", { class: "num" }, String(p.n)),
+  h("span", { class: "name", lang: "hy" },
+    p.title || "Մաս " + p.n),
+  meta);
+  if (here) a.setAttribute("aria-current", "true");
+  return a;
+}
+
+// #/b/<folder>: a book, its parts in order; the
+// button goes on from where it was left
+async function bookPage(folder) {
+  const data = await api("volume?folder=" +
+    encodeURIComponent(folder));
+  document.title = data.book + " · " + NAME;
+  let last = null;
+  for (const g of data.groups) {
+    for (const p of g.parts) {
+      if (p.progress != null && (!last
+        || p.seen > last.seen)) last = p;
+    }
+  }
+  const first = data.groups[0].parts[0];
+  const go = last || first;
+  const groups = data.groups.map((g) => {
+    const list = h("ul", { class: "shelf" });
+    for (const p of g.parts) {
+      list.append(h("li", {}, partRow(p)));
+    }
+    return h("section", { class: "volume-group" },
+      g.label ? h("h2", {}, g.label) : null, list);
+  });
+  show(
+    upLinks(data.up),
+    h("div", { class: "volume", lang: "hy" },
+      h("h1", {}, data.book),
+      data.title !== data.book
+        ? h("p", { class: "sub" }, data.title) : null,
+      h("p", { class: "sub" }, data.total + " մաս"
+        + (data.done ? " · թարգմանված "
+          + data.done + "/" + data.total : "")),
+      h("p", { class: "intro-btn" },
+        h("a", { class: "icon-btn primary",
+          href: "#/read/" + enc(go.name) },
+        last ? "Շարունակել → " + (go.title
+          || "մաս " + go.n) : "Սկսել կարդալ →")),
+      groups));
+}
+
 // -- library --
 
 // one book of #/library: its short name, how many
@@ -830,8 +940,11 @@ function libraryRow(b) {
       b.done === b.parts ? "թարգմանված"
         : "թարգմանված " + b.done + "/" + b.parts));
   }
+  // a long book opens on its page, a short one in
+  // the reader
   const a = h("a", { class: "row",
-    href: "#/read/" + enc(b.first) },
+    href: b.parts > 1 ? folderHref(dirOf(b.first))
+      : "#/read/" + enc(b.first) },
   icon(ICONS.book, "ico"),
   h("span", { class: "name" }, b.name),
   meta);
@@ -849,8 +962,13 @@ async function libraryPage() {
     for (const b of a.books) {
       list.append(h("li", {}, libraryRow(b)));
     }
+    // books that are all single files (the Bible)
+    // have a page of their own
+    const page = a.books.every((b) => b.parts === 1);
     return h("section", { class: "author" },
-      h("h2", {}, a.name), list);
+      h("h2", {}, page
+        ? h("a", { href: folderHref(a.folder) }, a.name)
+        : a.name), list);
   });
   const n = data.authors.reduce(
     (k, a) => k + a.books.length, 0);
@@ -1923,8 +2041,7 @@ function decorate() {
   const marks = "Bookmarks · " + R.marks.length;
   const notes = "Notes · " + R.notes.length;
   // back to the folder the book is in
-  const dir = (R.name || R.opening).split("/")
-    .slice(0, -1).join("/");
+  const dir = dirOf(R.name || R.opening);
   R.tools.replaceChildren(...[
     R.prog,
     // the site's mark, once the top bar has
@@ -1934,10 +2051,11 @@ function decorate() {
     document.querySelector(".brand-mark")
       .cloneNode(true)),
     h("a", { class: "icon-btn back",
-      href: dir ? "#/f/" + enc(dir) : "#/",
+      href: folderHref(dir),
       "aria-label": "Back to the folder",
       title: "Back to " + (dir || "the library") },
     icon(ICONS.back)),
+    R.parts ? partsBtn() : null,
     // a second click hides the list again
     R.contents.length ? btn(["☰ ", h("span",
       { class: "long" }, "Contents")],
@@ -2179,6 +2297,52 @@ function snippet(i, n = 70) {
 
 function lineOf(i) {
   return "line " + (R.wpos[i][0] + 1);
+}
+
+// -- the parts of a long book --
+
+// ‹ n/N › in the tools: the part before, the part
+// after, and (the middle) the list of all parts
+function partsBtn() {
+  const p = R.parts;
+  const arrow = (q, sign, label) => q
+    ? h("a", { class: "icon-btn part-step",
+      href: "#/read/" + enc(q.name),
+      "aria-label": label, title: label }, sign)
+    : h("span", { class: "icon-btn part-step off",
+      "aria-hidden": "true" }, sign);
+  return h("span", { class: "part-tools" },
+    arrow(p.prev, "‹", "Part " + (p.n - 1)),
+    btn(p.n + "/" + p.total, toggleParts, {
+      class: "icon-btn",
+      "aria-label": "All parts",
+      title: "All " + p.total + " parts of " + p.book }),
+    arrow(p.next, "›", "Part " + (p.n + 1)));
+}
+
+async function toggleParts() {
+  if (R.panel && !R.panel.hidden &&
+      R.panel.dataset.kind === "Parts") {
+    return closePanel();
+  }
+  closePanel();
+  let data;
+  try {
+    data = await api("volume?folder=" +
+      encodeURIComponent(R.parts.folder));
+  } catch (e) {
+    return alert("Could not load: " + e.message);
+  }
+  const list = h("ul", { class: "items toc" });
+  for (const g of data.groups) {
+    for (const p of g.parts) {
+      list.append(h("li", {}, partRow(p,
+        p.n === R.parts.n)));
+    }
+  }
+  openPanel("Parts", "en", list);
+  list.querySelector("[aria-current]")
+    ?.scrollIntoView({ block: "center" });
 }
 
 // -- the contents: the chapters and sermons --
@@ -2614,7 +2778,7 @@ function partEnd(p) {
     card(p.next, "next", "Part " + (p.n + 1)
       + " of " + p.total + " →")),
     h("p", { class: "part-all" },
-      h("a", { href: "#/f/" + enc(p.folder) },
+      h("a", { href: folderHref(p.folder) },
         "All " + p.total + " parts of ",
         h("span", { lang: "hy" }, p.book))));
 }
@@ -2637,7 +2801,7 @@ async function book(name, line) {
     notes: data.notes, sel: -1, refs: [],
     contents: data.contents || [],
     saved: "", editable: data.editable,
-    opening: name, par: null,
+    opening: name, par: null, parts: data.parts,
   });
   // the other version, read beside it on a wide
   // screen
@@ -2728,7 +2892,12 @@ async function book(name, line) {
   h("span", { class: "track" }, h("span")),
   h("span", { class: "pct" }, "0%"));
   document.body.classList.add("reading");
-  show(crumbs(name, false), h("h1", {}, title),
+  const pt = data.parts;
+  show(pt ? upLinks(pt.up.concat([{ label: pt.book,
+    to: folderHref(pt.folder) }]))
+    : crumbs(name, false),
+  h("h1", {}, pt ? pt.book + " · " + pt.n + "/"
+    + pt.total : title),
     h("p", { class: "sub" },
       plural(data.lines.length, "line") +
       " · tap a word to look it up"),
@@ -2996,6 +3165,8 @@ async function route() {
       await recentPage();
     } else if (hash === "library") {
       await libraryPage();
+    } else if (hash.startsWith("b/")) {
+      await bookPage(decodeURIComponent(hash.slice(2)));
     } else if (hash.startsWith("f/")) {
       await shelf(decodeURIComponent(hash.slice(2)));
     } else {

@@ -256,3 +256,23 @@ def test_describe():
     lines = ["Title", "", "one two", "three four"]
     assert bs.describe(lines) == "one two three four"
     assert bs.describe(lines, 10) == "one two…"
+
+
+def test_build_volumes(tmp_path):
+    # a page for each folder in a book's folder
+    d = tmp_path / "books/grabar/ann/1-book"
+    d.mkdir(parents=True)
+    one = d / "01.txt"
+    one.write_text("Գիրք · 1/1\n\nտող\n", encoding="utf-8")
+    files = [("grabar/ann/1-book/01.txt", 9, one)]
+    out = tmp_path / "site"
+    bs.build(out, files, None)
+    data = out / "data"
+    got = json.loads(
+        (data / "volume/grabar/ann/1-book.json").read_text(
+            "utf-8"
+        )
+    )
+    assert got["groups"][0]["parts"][0]["n"] == 1
+    # not for the top, or a folder of authors
+    assert not (data / "volume/grabar.json").exists()

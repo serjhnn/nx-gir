@@ -36,7 +36,7 @@ The site remembers where you stopped reading each book, in this browser. The hom
 
 ## From one part to the next
 
-At the end of each part of a long book, two cards lead to the part before and the part after it, with the chapters each one begins with, and a link to all the parts of the book. At the bottom of every page are the main pages of the site, the license of the translations and how to help.
+Every long book has a page of its own: open it from the Library to see all its parts in order, each with the chapters it begins with, a ⇆ mark where a translation exists and how far you have read. A button there starts the book or goes on from where you stopped. While reading, ‹ 7/24 › in the tools moves to the part before or after, and the middle button lists all the parts. At the end of each part, two cards lead to the part before and the part after it, with the chapters each one begins with, and a link to all the parts of the book. At the bottom of every page are the main pages of the site, the license of the translations and how to help.
 
 ## Report an error
 

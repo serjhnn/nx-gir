@@ -846,6 +846,73 @@ def test_parts(tmp_path):
     assert web.parts(app, d + "01.txt")["book"] == "Գիրք"
 
 
+def test_volume(tmp_path):
+    # a book's page: its parts in order, by sub-folder
+    files = []
+
+    def add(name, text):
+        p = tmp_path / name
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text, encoding="utf-8")
+        files.append((name, 9, p))
+
+    d = "grabar/ann/1-book/"
+    add(d + "02.txt", "Գիրք · 2/2\n\nԳԼՈՒԽ Գ\n")
+    add(d + "01.txt", "Գիրք · 1/2\n\nտող\n")
+    add("ashkharhabar/ann/1-book/02.txt", "Գիրք · 2/2\n")
+    add("grabar/bib/nt/1-mt.txt", "Աւետարան Մատթէոսի\n")
+    add("grabar/bib/ot/1-ps.txt", "Սաղմոս\n")
+    names = tmp_path / "LIBRARY.tsv"
+    names.write_text(
+        "ann\tԱննա\nann/1-book\tԳիրքը\n"
+        "bib\tԲիբլիա\nbib/nt\tՆոր\n"
+        "bib/nt/1-mt.txt\tՄատթէոս\n",
+        encoding="utf-8",
+    )
+    app = App(files, tmp_path / "s.json", library=names)
+    got = web.get(app, "/api/volume", {"folder": [d]})
+    assert got["book"] == "Գիրքը"
+    assert got["title"] == "Գիրք"
+    assert (got["total"], got["done"]) == (2, 1)
+    # in order, whatever the order of the files
+    parts = got["groups"][0]["parts"]
+    assert [p["n"] for p in parts] == [1, 2]
+    assert parts[1]["title"] == "ԳԼՈՒԽ Գ"
+    assert parts[0]["title"] == ""
+    assert parts[1]["translated"]
+    assert parts[0]["progress"] is None
+    assert [u["label"] for u in got["up"]] == [
+        "Գրադարան",
+        "Աննա",
+    ]
+    # an author with part-books: no page of its own
+    assert got["up"][1]["to"] == "#/library"
+    # single files: groups, a short name as the title,
+    # and the author has a page
+    bib = web.volume(app, "grabar/bib")
+    assert [g["label"] for g in bib["groups"]] == [
+        "Նոր",
+        "ot",
+    ]
+    assert (
+        bib["groups"][0]["parts"][0]["title"] == "Մատթէոս"
+    )
+    assert bib["up"] == [
+        {"label": "Գրադարան", "to": "#/library"}
+    ]
+    nt = web.volume(app, "grabar/bib/nt")
+    assert nt["up"][1] == {
+        "label": "Բիբլիա",
+        "to": "#/b/grabar/bib",
+    }
+    # the book page links up from a part too
+    two = web.parts(app, d + "02.txt")
+    assert two["up"] == got["up"]
+    for bad in ("", "grabar", "grabar/none", "x/y"):
+        with pytest.raises(web.ApiError):
+            web.volume(app, bad)
+
+
 def test_report_url(tmp_path):
     """reportUrl() in web/app.js builds the issue."""
     import shutil

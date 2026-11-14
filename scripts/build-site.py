@@ -19,6 +19,9 @@ the same functions (nxgir_web.py):
     data/titles.json                each book's title,
         for /api/recent (the rest is in the browser)
     data/library.json               /api/library
+    data/volume/<folder>.json       /api/volume, for each
+        folder two or more levels into grabar/ and
+        ashkharhabar/
     data/stats.json                 /api/stats, with
         this site's size and build time
 
@@ -237,6 +240,12 @@ def build(
         for f in dirs:
             path = data / "shelf" / f / "index.json"
             write_json(path, web.shelf(app, f))
+            top, _, key = f.partition("/")
+            if top in web.PARALLEL and key:
+                write_json(
+                    data / "volume" / f"{f}.json",
+                    web.volume(app, f),
+                )
         words = set()
         searchable(out, app, files)
         for name, _, _ in files:

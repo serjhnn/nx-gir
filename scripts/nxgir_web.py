@@ -16,6 +16,7 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/recent?n=          the books read last
   GET  /api/stats              how close to the limits
   GET  /api/library            the Grabar books
+  GET  /api/volume?folder=     a book's page: its parts
   POST /api/position           {name, pos, lines}
   POST /api/mark               {name, pos}
   POST /api/forget             {name}: off the list
@@ -475,6 +476,104 @@ def library(app):
     return {"authors": out}
 
 
+def up_links(app, folder):
+    """The links above a book's folder: the Library,
+    and its author (a page of its own only when all
+    the author's books are single files, as in the
+    Bible), as [{label, to}]."""
+    top, _, key = folder.partition("/")
+    who = key.partition("/")[0]
+    up = [{"label": "Գրադարան", "to": "#/library"}]
+    if "/" not in key:
+        return up
+    flat = not any(
+        PART_RE.match(first_line(p))
+        for n, _, p in app.files
+        if n.startswith(f"{top}/{who}/")
+    )
+    names = read_names(app.library)
+    to = f"#/b/{top}/{who}" if flat else "#/library"
+    up.append({"label": names.get(who, who), "to": to})
+    return up
+
+
+def volume(app, folder):
+    """The page of a book: a folder under grabar/ or
+    ashkharhabar/ at least two levels deep. {folder,
+    book (its short name in LIBRARY.tsv, or its title,
+    or the folder's name), title, up (links to the
+    Library and the author), total, done (parts with a
+    translation), groups}: groups are [{label, parts}],
+    one per sub-folder (label "" for the folder's own
+    files), each part {name, n, title (its first
+    heading, or the book's name for a single file),
+    translated, progress, seen}."""
+    folder = folder.strip("/")
+    top, _, key = folder.partition("/")
+    if top not in PARALLEL or not key:
+        raise ApiError(404, f"no such book: {folder}")
+    prefix = folder + "/"
+    mine = [
+        (n, p)
+        for n, _, p in app.files
+        if n.startswith(prefix)
+    ]
+    if not mine:
+        raise ApiError(404, f"no such book: {folder}")
+    names = read_names(app.library)
+    st = app.state()
+    groups = {}
+    book_name = ""
+    for name, path in mine:
+        sub = name[len(prefix) :].rpartition("/")[0]
+        line = first_line(path)
+        m = PART_RE.match(line)
+        if m:
+            book_name = book_name or m.group(1)
+            heads = [
+                x
+                for x in contents(
+                    book_text(app, name).splitlines()
+                )
+                if not x.get("start")
+            ]
+            n = int(m.group(2))
+            title = heads[0]["title"] if heads else ""
+        else:
+            file_key = name.partition("/")[2]
+            n = len(groups.get(sub, ())) + 1
+            title = names.get(file_key) or line
+        row = {
+            "name": name,
+            "n": n,
+            "title": title,
+            "translated": bool(app.parallel(name)),
+            "progress": st.progress(name),
+            "seen": st.books.get(name, {}).get("seen", 0),
+        }
+        groups.setdefault(sub, []).append(row)
+    out = []
+    for sub in sorted(groups):
+        label = (
+            names.get(f"{key}/{sub}", sub) if sub else ""
+        )
+        rows = sorted(groups[sub], key=lambda r: r["n"])
+        out.append({"label": label, "parts": rows})
+    rows = [r for g in out for r in g["parts"]]
+    up = up_links(app, folder)
+    return {
+        "folder": folder,
+        "book": names.get(key)
+        or book_name
+        or folder.rpartition("/")[2],
+        "title": book_name or names.get(key) or key,
+        "up": up,
+        "total": len(rows),
+        "done": sum(r["translated"] for r in rows),
+        "groups": out,
+    }
+
+
 def book_title(app, name):
     """A book's title: its first line, without a
     Markdown heading mark."""
@@ -643,6 +742,7 @@ def parts(app, name):
     return {
         "book": short or m.group(1),
         "folder": folder,
+        "up": up_links(app, folder),
         "n": n,
         "total": int(m.group(3)),
         "prev": side(n - 1),
@@ -886,6 +986,8 @@ def get(app, route, query):
         return stats(app)
     if route == "/api/library":
         return library(app)
+    if route == "/api/volume":
+        return volume(app, arg("folder"))
     raise ApiError(404, f"no such page: {route}")
 
 

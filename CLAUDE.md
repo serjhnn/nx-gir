@@ -112,6 +112,17 @@
   (`#/library`, `/api/library`): author names and
   short book names for `books/grabar/` (content; a
   test checks every path and author)
+- A book's page (`#/b/<folder>`, `/api/volume`,
+  `volume()` in `nxgir_web.py`; on the site
+  `data/volume/<folder>.json`): the parts of a book
+  under `grabar/` or `ashkharhabar/` in order, with
+  their first heading, a ⇆ mark and progress; a
+  folder of single files (the Bible) is grouped by
+  sub-folder, named in `LIBRARY.tsv`. The Library,
+  the reader's back button, its ‹ n/N › part tools
+  and `folderHref()` in `app.js` lead there; `up`
+  gives the links above it. Keep `PAGED` in
+  `app.js` equal to `PARALLEL`
 - `books/TRANSLATIONS.tsv`: our translations in
   `books/ashkharhabar/` (all but `bible/`, which is
   not ours): their status (`machine`, `review`,
