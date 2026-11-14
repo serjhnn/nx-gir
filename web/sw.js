@@ -20,6 +20,10 @@ const SHELL = ["./", "index.html", "style.css",
   "app.js", "theme.js", "fonts.css", "static.js",
   "icon.svg", "manifest.webmanifest"];
 
+// saving every book is switched off for now (app.js
+// OFFLINE_SAVE must match)
+const SAVE = false;
+
 let busy = false;
 let done = 0;
 let total = 0;
@@ -100,7 +104,7 @@ self.addEventListener("activate", (e) => {
 // six at a time; stops quietly when a newer build is
 // out (offline.json names another one)
 async function saveAll() {
-  if (busy) return;
+  if (!SAVE || busy) return;
   busy = true;
   await tell(await state());
   try {

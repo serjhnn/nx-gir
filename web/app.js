@@ -1686,6 +1686,10 @@ function startWorker() {
     }).catch(() => {});
 }
 
+// saving every book is switched off for now (the
+// button stays); SAVE in sw.js must match
+const OFFLINE_SAVE = false;
+
 // #/offline: install the app, save every book in
 // this browser, or download the site as a file
 async function offlinePage() {
@@ -1726,10 +1730,11 @@ async function offlinePage() {
   });
   offlineShow = (st) => {
     if (!document.body.contains(status)) return;
+    if (!OFFLINE_SAVE) return;
     now = st;
     const pct = st.total
       ? Math.round(100 * st.done / st.total) : 0;
-    btn.disabled = st.busy;
+    btn.disabled = st.busy || !OFFLINE_SAVE;
     // the worker can be stopped by the browser, or its
     // last message lost: ask again until it is done
     clearTimeout(poll);
@@ -1759,7 +1764,13 @@ async function offlinePage() {
       btn.textContent = "Save for offline";
     }
   };
-  tellWorker("status");
+  if (!OFFLINE_SAVE) {
+    status.textContent = "Saving the books is switched"
+      + " off for now.";
+    btn.disabled = true;
+  } else {
+    tellWorker("status");
+  }
   const how = installPrompt
     ? h("button", { type: "button",
       class: "icon-btn primary" }, "Install app")
