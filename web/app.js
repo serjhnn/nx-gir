@@ -1140,15 +1140,15 @@ const BLOG = {
   hy: { name: "Հայերեն", title: "Բլոգ",
     sub: "Նորություններ և նշումներ Նախագրից",
     home: "← Գլխավոր", none: "Գրառումներ դեռ չկան։",
-    read: "Կարդալ →", all: "Բոլորը" },
+    read: "Կարդալ →" },
   en: { name: "English", title: "Blog",
     sub: "News and notes from nxGir",
     home: "← Home", none: "No posts yet.",
-    read: "Read →", all: "All" },
+    read: "Read →" },
   ru: { name: "Русский", title: "Блог",
     sub: "Новости и заметки nxGir",
     home: "← Главная", none: "Записей пока нет.",
-    read: "Читать →", all: "Все" },
+    read: "Читать →" },
 };
 // the themes of the posts: THEMES in nxgir_blog.py;
 // each has a sub page, #/blog/theme/<name>
@@ -1246,7 +1246,8 @@ function postCard(p, lang) {
     : null);
 }
 
-// #/blog: every post, newest first; #/blog/<slug>
+// #/blog: the posts about the site, newest first,
+// always: no theme is remembered; #/blog/<slug>
 // that one post; #/blog/<slug>/<lang> in lang;
 // #/blog/theme/<name> the posts of one theme
 async function blogPage(path) {
@@ -1259,6 +1260,8 @@ async function blogPage(path) {
     }
     slug = want = "";
   }
+  const home = !slug && !theme;
+  if (home) theme = "site";
   if (want in BLOG) setBlogLang(want);
   const data = await api("blog");
   const one = slug
@@ -1289,22 +1292,23 @@ async function blogPage(path) {
       });
       return b;
     }));
-    // All and one button for each theme
+    // one tab for each theme
     const tabs = h("nav", { class: "filters themes",
       "aria-label": "Themes", lang },
-    [["", t.all], ...Object.entries(BLOG_THEMES)
-      .map(([k, v]) => [k, v[lang]])].map(([k, name]) =>
-      h("a", { href: "#/blog" + (k ? "/theme/" + k : ""),
-        "aria-current": k === (theme || "")
-          ? "page" : null }, name)));
-    const name = theme ? BLOG_THEMES[theme][lang] : "";
+    Object.entries(BLOG_THEMES).map(([k, v]) =>
+      h("a", { href: k === "site" ? "#/blog"
+        : "#/blog/theme/" + k,
+      "aria-current": k === theme ? "page" : null },
+      v[lang])));
+    const name = theme && !home
+      ? BLOG_THEMES[theme][lang] : "";
     document.title = (one ? version(one, lang).title
       + " · " : "") + (name ? name + " · " : "")
       + t.title + " · " + NAME;
     show(
       h("p", { class: "crumbs", lang },
         h("a", { href: "#/" }, t.home),
-        one || theme ? [" · ", h("a", { href: "#/blog" },
+        one || !home ? [" · ", h("a", { href: "#/blog" },
           t.title)] : null,
         one && one.theme ? [" · ", h("a", {
           href: "#/blog/theme/" + one.theme },

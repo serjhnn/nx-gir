@@ -16,7 +16,9 @@ read by `scripts/nxgir_blog.py`. Content, not code.
   version of a post is enough (the others must
   not differ). The Blog page has a sub page for
   each (`#/blog/theme/authors`) with tabs between
-  them. `THEMES` in `scripts/nxgir_blog.py` must
+  them. `#/blog` itself shows the `site` theme,
+  every time; nothing is remembered. A post
+  without a theme is on no page. `THEMES` in `scripts/nxgir_blog.py` must
   match `BLOG_THEMES` in `web/app.js` (a test
   checks it); a new theme is added to both.
 - A line `![alt](name.jpg)` on its own is a
