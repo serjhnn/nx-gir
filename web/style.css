@@ -1013,6 +1013,15 @@ h1 {
   background: var(--accent);
   border-color: var(--accent);
 }
+/* the blog's theme and language buttons: the chosen
+   one is an outline in the accent color, as the main
+   button */
+.filters.outline button[aria-pressed="true"],
+.filters.outline a[aria-current="page"] {
+  color: var(--accent-ink);
+  background: transparent;
+  border-color: var(--accent);
+}
 .tl {
   position: relative;
   margin: 0;

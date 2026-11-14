@@ -1280,7 +1280,7 @@ async function blogPage(path) {
     const lang = have.has(blogLang()) || !langs.length
       ? blogLang() : langs[0];
     const t = BLOG[lang];
-    const pick = h("div", { class: "filters",
+    const pick = h("div", { class: "filters outline",
       role: "group", "aria-label": "Language" },
     langs.map((l) => {
       const b = h("button", { type: "button",
@@ -1293,7 +1293,7 @@ async function blogPage(path) {
       return b;
     }));
     // one tab for each theme
-    const tabs = h("nav", { class: "filters themes",
+    const tabs = h("nav", { class: "filters outline themes",
       "aria-label": "Themes", lang },
     Object.entries(BLOG_THEMES).map(([k, v]) =>
       h("a", { href: k === "site" ? "#/blog"
@@ -1363,7 +1363,7 @@ async function featuresPage(want) {
       || !langs.length ? blogLang() : langs[0];
     const v = data.versions.find((x) =>
       x.lang === lang);
-    const pick = h("div", { class: "filters",
+    const pick = h("div", { class: "filters outline",
       role: "group", "aria-label": "Language" },
     langs.map((l) => {
       const b = h("button", { type: "button",
