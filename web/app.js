@@ -696,6 +696,11 @@ async function shelf(folder) {
   show(
     folder ? crumbs(folder, false, data.crumbs)
       : null,
+    // the top page's heading, as in index.html, for
+    // screen readers and search engines; not seen
+    folder ? null : h("h1", { class: "sr-only" },
+      "nxGir · ", h("span", { lang: "hy" },
+        "Նախագիր")),
     // at the top: the Library and the other
     // pages, what was read last, then the welcome
     folder ? null : h("p", { class: "lib-btn",
