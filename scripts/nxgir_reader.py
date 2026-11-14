@@ -501,6 +501,74 @@ def ordinal_entries(lines):
     return out if len(out) >= ORDINALS_MIN else []
 
 
+# a numbered song or sermon: the number in Armenian
+# letters (Ա, ԺԱ, Էա), a full stop, a title in capitals:
+# "Ա. ՏԱՂ ՅԱՐՈՒԹԵԱՆ. ԳՐԻԳՈՐ ՆԱՐԵԿԱՑՒՈՅՆ ԱՍԱՑԵԱԼ"
+NUMBERED_RE = re.compile(r"([Ա-Ֆ]{1,3}[ա-ֆ]?)\.\s*(\S.*)")
+# at least so many make a list of songs; fewer is a
+# verse or a note
+NUMBERED_MIN = 5
+# a heading written twice (a short form, then the full
+# one, a few lines below) is one entry
+NUMBERED_NEAR = 3
+
+
+def is_capitals(text, n=3, share=0.9):
+    """Is text, at least n letters, in capitals?"""
+    letters = [c for c in text if c.isalpha()]
+    return len(letters) >= n and (
+        sum(c.isupper() for c in letters)
+        >= share * len(letters)
+    )
+
+
+def numbered_entries(lines):
+    """Entries for a book of numbered songs or sermons
+    that has no other headings (the Գանձեր եւ Տաղեր of
+    Narekatsi): the lines "Ա. ՏԱՂ ...", the number in
+    letters, then a title in capitals; [] if there are
+    fewer than NUMBERED_MIN of them. A heading written
+    twice, the same number a few lines apart, is one
+    entry: at the first, with the longer title."""
+    out = []
+    for i, line in enumerate(lines):
+        m = NUMBERED_RE.fullmatch(
+            PAGE_RE.sub("", line.strip())
+        )
+        if not m or not is_capitals(m.group(2)):
+            continue
+        n, title = m.group(1), m.group(2)
+        last = out[-1] if out else None
+        if (
+            last
+            and last["n"] == n
+            and i - last["last"] <= NUMBERED_NEAR
+        ):
+            last["last"] = i
+            if len(title) > len(last["full"]):
+                last["full"] = title
+            continue
+        out.append(
+            {
+                "line": i,
+                "last": i,
+                "n": n,
+                "full": title,
+            }
+        )
+    if len(out) < NUMBERED_MIN:
+        return []
+    return [
+        {
+            "line": e["line"],
+            "n": e["n"],
+            "title": short(e["full"]),
+            "level": 2,
+        }
+        for e in out
+    ]
+
+
 def contents(lines):
     """The parts of a book, in order: [{"line": the
     line to go to, "n": its number or "", "title":
@@ -606,6 +674,8 @@ def contents(lines):
             )
     if not out:
         out = ordinal_entries(lines)
+    if not out:
+        out = numbered_entries(lines)
     # the text before the first heading is reachable
     # too: an entry for the start of the text
     first = next(

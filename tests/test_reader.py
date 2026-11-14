@@ -877,3 +877,54 @@ def test_contents_geography_and_its_translation():
     b = contents((t / name).read_text().split("\n")[:-1])
     assert len(a) > 40
     assert [e["line"] for e in a] == [e["line"] for e in b]
+
+
+SONGS = [
+    "Ա. ՏԱՂ ՅԱՐՈՒԹԵԱՆ. ԳՐԻԳՈՐ ՆԱՐԵԿԱՑՒՈՅՆ ԱՍԱՑԵԱԼ",
+    "Բ. ՏԱՂ ՅԱՒՐՀՆԵԼ, ՋՐՈՅՆ",
+    "Գ. ՏԱՂ ԾՆՆԴԵԱՆ",
+    "Դ. ՔԱՐՈԶ ՀԱՄՕՐԷՆ",
+    "Ե. ՓՈԽ",
+    "Էա. ՄԵՂԵԴԻ ՂԱԶԱՐՈՒ ՅԱՐՈՒԹԵԱՆ",
+]
+
+
+def test_contents_of_numbered_songs():
+    # songs numbered in letters, titles in capitals,
+    # when there are enough of them and no other
+    # heading; a heading written twice is one entry
+    lines = ["Գանձեր · 1/1", "", "Տաղեր, Փոխեր"]
+    for x in SONGS:
+        lines += ["", x, "Սայլն այն իջանէր ի լեռնէն։"]
+    # the short form, then the full one
+    lines[4:4] = ["Ա. ՏԱՂ ՅԱՐՈՒԹԵԱՆ", ""]
+    got = contents(lines)
+    assert [e["n"] for e in got] == [
+        "",
+        "Ա",
+        "Բ",
+        "Գ",
+        "Դ",
+        "Ե",
+        "Էա",
+    ]
+    assert got[0].get("start")
+    # the first of the two lines, with the longer title
+    assert got[1]["line"] == 4
+    assert got[1]["title"].startswith("ՏԱՂ ՅԱՐՈՒԹԵԱՆ.")
+    assert got[1]["level"] == 2
+    # a short title (ՓՈԽ) is a song too
+    assert got[5]["title"] == "ՓՈԽ"
+    # a few are a note, not a list of songs
+    assert contents(lines[:12]) == []
+    # a real heading wins: the songs are then text
+    got = contents(lines + ["Գլուխ Ա"])
+    assert [e["n"] for e in got] == ["", "Ա"]
+
+
+def test_numbered_lines_in_lowercase_are_text():
+    # "Ա. Սայլն ..." is a verse, not a heading
+    lines = []
+    for x in "ԱԲԳԴԵԶ":
+        lines += [f"{x}. Սայլն այն իջանէր ի լեռնէն։", ""]
+    assert contents(lines) == []

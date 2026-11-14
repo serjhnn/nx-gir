@@ -240,7 +240,27 @@
   ordinal and ՝ (`Երկրորդ՝ Բրիտանացւոցն է`,
   `Երկրորդը՝ ...`; `ordinal_entries()`, at least 5)
   as entries, titled `Երկրորդ · Բրիտանացւոց`; a
-  translation keeps the ՝ after each ordinal
+  translation keeps the ՝ after each ordinal.
+  A book of songs or sermons numbered in letters
+  with titles in capitals (`Ա. ՏԱՂ ՅԱՐՈՒԹԵԱՆ ...`,
+  Narekatsi's Գանձեր եւ Տաղեր) takes those lines
+  (`numbered_entries()`, at least 5; a heading
+  written twice a few lines apart is one entry).
+- **Every new book: fix its Contents.** After adding
+  a book or a new work, check the ☰ list of its
+  parts in the web reader, and run
+  `python3 -m pytest tests/test_contents.py`: every
+  part of 150 lines or more must have entries. If
+  one has none, or the list is wrong (a heading
+  missing, a line that is not a heading), teach
+  `contents()` in `nxgir_reader.py` the form of its
+  headings (a rule, as above, with a test in
+  `tests/test_reader.py`); never edit the text to
+  fit. Only a work with no headings at all goes in
+  `NO_CONTENTS` in `tests/test_contents.py`, with the
+  reason. Add the book's Library name
+  (`books/LIBRARY.tsv`), a Timeline line and a
+  limits record in the same change
 - `web/`: the web pages (plain HTML, CSS, JS, no
   build step, nothing loaded from other sites); the
   60-character limit applies here too. `wordKey()`

@@ -24,27 +24,33 @@ the git size is measured, and the site's size and
 build time are the last ones in `limits.tsv`. So
 record after big additions to keep them fresh.
 
-## State on 2026-11-13 (commit 3859010)
+## State on 2026-11-14 (commit 29dc9cf)
 
-Amaran hator parts 1–15 of 24 translated, the
-first part of Dzmeran hator, all of Datastanagirk
-(A and B), the first two parts of Girk harcmanc,
-and 19 works of Anania Shirakatsi (all in Grabar,
-seven short ones also in modern Armenian); 124 book
+As on 2026-11-13, plus the Gandzer and Tagher of
+Grigor Narekatsi (one Grabar part, 150 KB); 126 book
 files.
 
 | What | Now | Limit | Used |
 |---|---|---|---|
-| Book text (`books/`) | 20.9 MB, 124 files | — | — |
-| Grabar / translation | 15.8 MB / 5.1 MB | — | — |
-| Pages site | 96.5 MB | 1 GB | 9% |
-| Git history | 24.5 MB | 1 GB | 2% |
+| Book text (`books/`) | 21.1 MB, 126 files | — | — |
+| Grabar / translation | 16.0 MB / 5.1 MB | — | — |
+| Pages site | 116.0 MB | 1 GB | 11% |
+| Git history | 25.8 MB | 1 GB | 3% |
 | Largest file | 6.0 MB (`grabar/vocabulary-hy.tsv`) | 50 MB | 12% |
 | Largest book part | 310 KB (Girk harcmanc 01, translation) | 1 MB | 30% |
-| Site build | 23 s | 10 min | 4% |
+| Site build | 44 s | 10 min | 7% |
 | Browser tab, largest part | 297 MB (phone, measured 2026-11-11) | about 1 GB | 30% |
 
-Since 6591ae2: the 19 Anania Shirakatsi works (0.5 MB
+Since 3859010: the site grew by about 15 MB because of
+the offline copy: `nxgir-site.zip` (18 MB, the site
+without `read/`, compressed) is published with it, and
+`offline.json` lists the 75 MB that "Save for offline"
+keeps in a browser (that is on the device, not on
+Pages). Making the zip is most of the build's rise from
+23 s to 44 s. The git history grew by 1.4 MB: the
+Narekatsi part, the app icons and the new code.
+
+Before that, since 6591ae2: the 19 Anania Shirakatsi works (0.5 MB
 Grabar, with seven short ones cut into sentence
 lines) and their seven translations added about 3.4 MB
 to the site and 1.2 MB to git; the build took 23 s
