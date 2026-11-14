@@ -57,7 +57,7 @@
 2026-11-13	Site		The blog and Features in three languages	Posts and the Features page in Armenian, English and Russian, with a new post on Mkhitar Gosh and the number six.	
 2026-11-14	Site		A page for each book	Open a long book from the Library to see all its parts with their headings, and move between parts while reading.	grabar/grigor-tatevatsi/3-amaran-hator
 2026-11-14	Site		Blog themes	The blog has a sub page for each theme: about the site, about authors and about books.	
-2026-11-14	Site		An offline copy	The whole site as one zip file, linked at the bottom of every page: unpack it, run python3 serve.py and read with no network.	
+2026-11-14	Site		An offline copy	The whole site as one zip file to unpack and read with no network (python3 serve.py); not published now, the install and the saved copy replaced it.	
 2026-11-14	Site		Install and read offline	The site can be installed as an app, and every book saved in the browser (it updates itself), from the Offline page.	
 2026-11-14	Books		Gandzer and Tagher of Grigor Narekatsi	His songs and sermons from Digilib, 34 numbered works in one part, with a contents list of them.	grabar/grigor-narekatsi/2-gandzer-tagher
 next	Translation		All of Amaran hator in modern Armenian	Then the other works of Grigor Tatevatsi.	

@@ -287,7 +287,7 @@ def test_offline_zip(tmp_path, files):
         "2026-10-18\tBooks\t*\tJohn\t\tgrabar/john.txt\n",
         encoding="utf-8",
     )
-    bs.build(out, files, tsv)
+    bs.build(out, files, tsv, zip_site=True)
     # the published pages offer it, and tell its size
     js = (out / "static.js").read_text("utf-8")
     assert f'NXGIR_DOWNLOAD = "{bs.ZIP}"' in js
@@ -318,11 +318,32 @@ def test_offline_zip(tmp_path, files):
     assert "NXGIR_BUILD" in inner
     assert "NXGIR_DOWNLOAD" not in inner
     assert "NXGIR_COUNT" not in inner
+    # no worker and no list in the zip
+    assert "NXGIR_SW" not in inner
+    assert not any(
+        n.endswith(("sw.js", "offline.json")) for n in names
+    )
+
+
+def test_no_zip_by_default(tmp_path, files):
+    # the zip is kept for later, not built now
+    out = tmp_path / "site"
+    tsv = tmp_path / "timeline.tsv"
+    tsv.write_text(
+        "2026-10-18\tBooks\t*\tJohn\t\tgrabar/john.txt\n",
+        encoding="utf-8",
+    )
+    bs.build(out, files, tsv)
+    assert not (out / bs.ZIP).exists()
+    assert not (out / "download.json").exists()
+    js = (out / "static.js").read_text("utf-8")
+    assert "NXGIR_DOWNLOAD" not in js
+    # the saved copy and the install stay
+    assert 'NXGIR_SW = "sw.js"' in js
+    assert (out / "offline.json").is_file()
 
 
 def test_service_worker(tmp_path, files):
-    import zipfile
-
     out = tmp_path / "site"
     tsv = tmp_path / "timeline.tsv"
     tsv.write_text(
@@ -363,11 +384,3 @@ def test_service_worker(tmp_path, files):
         assert (out / icon["src"]).is_file()
     html = (out / "index.html").read_text("utf-8")
     assert 'rel="manifest"' in html
-    # not in the offline zip: no worker, no list
-    z = zipfile.ZipFile(out / bs.ZIP)
-    names = z.namelist()
-    assert not any(
-        n.endswith(("sw.js", "offline.json")) for n in names
-    )
-    inner = z.read("nxgir-site/static.js").decode("utf-8")
-    assert "NXGIR_SW" not in inner

@@ -285,12 +285,14 @@
   `sitemap.xml` and `robots.txt`; tested in
   `tests/test_site.py`. `bucket()` and `BUCKETS` must
   match `app.js` (a test checks it). It also writes
-  `nxgir-site.zip` (`offline_zip()`: the site without
+  `nxgir-site.zip` only with `--zip` (not built now,
+  kept for later: `offline_zip()`, the site without
   the pages for search engines and the visit counter,
-  with `scripts/offline/`: `serve.py` and `README.txt`),
-  linked on the Offline page (`#/offline`, footer
-  link `offlineLink()`, `offlinePage()` in `app.js`);
-  the zip is not counted in `data/stats.json`. The
+  with `scripts/offline/`: `serve.py` and `README.txt`;
+  the Offline page shows it when `static.js` has
+  `NXGIR_DOWNLOAD`). The Offline page (`#/offline`,
+  footer link `offlineLink()`, `offlinePage()` in
+  `app.js`) offers the install and the saved copy. The
   site is also an installable app: `manifest.webmanifest`
   (icons from `scripts/render-icons.py`) and the
   service worker `web/sw.js`, started by

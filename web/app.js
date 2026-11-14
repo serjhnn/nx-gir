@@ -413,7 +413,7 @@ function siteFooter() {
 
 // the published site only: a link to #/offline
 function offlineLink() {
-  if (!STATIC || !window.NXGIR_DOWNLOAD) return null;
+  if (!hasWorker()) return null;
   return [" · ", h("a", { href: "#/offline" },
     "Offline")];
 }
@@ -1707,8 +1707,10 @@ async function offlinePage() {
     .catch(() => null);
   const mb = info ? size(info.files.reduce(
     (n, f) => n + f[1], 0)) : "about 80 MB";
-  const zip = await json("download.json")
-    .catch(() => null);
+  // the zip is not built now (build-site.py --zip)
+  const zip = window.NXGIR_DOWNLOAD
+    ? await json("download.json").catch(() => null)
+    : null;
   const status = h("p", { class: "sub", role: "status" });
   const btn = h("button", { type: "button",
     class: "icon-btn primary" }, "Save for offline");
@@ -1766,7 +1768,8 @@ async function offlinePage() {
   show(
     ...head,
     h("p", { class: "sub" },
-      "Three ways to read with no network."),
+      (zip ? "Three" : "Two")
+      + " ways to read with no network."),
     h("h2", { class: "tl-next" }, "1. Install the app"),
     h("p", {}, "The site gets its own icon and opens in"
       + " its own window, like an app."),
@@ -1779,16 +1782,17 @@ async function offlinePage() {
       + " ones when the site changes."),
     status,
     h("p", {}, btn),
-    h("h2", { class: "tl-next" },
-      "3. Download the site as a file"),
-    h("p", {}, "One zip file" + (zip
-      ? " (" + size(zip.bytes) + ")" : "")
-      + ". Unpack it and run ", h("code", {},
-      "python3 serve.py"), " (Python 3 is needed; it"
-      + " is in Termux too). It does not update itself."),
-    h("p", {}, h("a", { class: "icon-btn",
-      href: window.NXGIR_DOWNLOAD, download: "" },
-    "Download the zip"))
+    zip ? [
+      h("h2", { class: "tl-next" },
+        "3. Download the site as a file"),
+      h("p", {}, "One zip file (" + size(zip.bytes)
+        + "). Unpack it and run ", h("code", {},
+        "python3 serve.py"), " (Python 3 is needed; it"
+        + " is in Termux too). It does not update"
+        + " itself."),
+      h("p", {}, h("a", { class: "icon-btn",
+        href: window.NXGIR_DOWNLOAD, download: "" },
+      "Download the zip"))] : null
   );
 }
 

@@ -41,14 +41,16 @@ files.
 | Site build | 44 s | 10 min | 7% |
 | Browser tab, largest part | 297 MB (phone, measured 2026-11-11) | about 1 GB | 30% |
 
-Since 3859010: the site grew by about 15 MB because of
-the offline copy: `nxgir-site.zip` (18 MB, the site
-without `read/`, compressed) is published with it, and
-`offline.json` lists the 75 MB that "Save for offline"
-keeps in a browser (that is on the device, not on
-Pages). Making the zip is most of the build's rise from
-23 s to 44 s. The git history grew by 1.4 MB: the
-Narekatsi part, the app icons and the new code.
+Since 3859010: the measured site grew by about 15 MB
+because the zip of the site (`nxgir-site.zip`, 18 MB)
+was published with it, and making it is most of the
+build's rise from 23 s to 44 s. The zip is not built
+now (`build-site.py --zip` makes it): the next record
+is lower by about that much. `offline.json` lists the
+75 MB that "Save for offline" keeps in a browser (on
+the device, not on Pages). The git history grew by
+1.4 MB: the Narekatsi part, the app icons and the new
+code.
 
 Before that, since 6591ae2: the 19 Anania Shirakatsi works (0.5 MB
 Grabar, with seven short ones cut into sentence

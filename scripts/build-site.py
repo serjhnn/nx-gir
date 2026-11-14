@@ -2,7 +2,7 @@
 """Build the published, read-only copy of the web
 reader: plain files for GitHub Pages, no server.
 
-    scripts/build-site.py [OUT]      (default: site/)
+    scripts/build-site.py [--zip] [OUT]   (default: site/)
 
 It holds the pages of web/ and, under data/, the
 answers `nxgir web` would give, worked out once with
@@ -38,12 +38,14 @@ not see the #/ pages of app.js:
         same way
     sitemap.xml, robots.txt   where they are
 
-and, to read with no network, the whole site as one
-file (offline_zip()):
+and, only with --zip (not built now, kept for later),
+the whole site as one file to read with no network
+(offline_zip()):
 
     nxgir-site.zip   the pages and data, a static.js
         with no visit counter, and scripts/offline/
-        (README.txt, serve.py); linked in the footer
+        (README.txt, serve.py); linked on the Offline
+        page
     download.json    its name and size, not in it
 
 The test texts of data/ and the user's own texts in
@@ -159,7 +161,7 @@ NOT_SAVED = NOT_OFFLINE + (
 )
 
 
-def pages(out, counter=GOATCOUNTER):
+def pages(out, counter=GOATCOUNTER, download=False):
     """The pages of web/, told to read the files, and
     where to count visits (counter: a GoatCounter
     code, or "").
@@ -185,7 +187,11 @@ def pages(out, counter=GOATCOUNTER):
     (out / "static.js").write_text(
         STATIC_JS
         + f'window.NXGIR_BUILD = "{build}";\n'
-        + f'window.NXGIR_DOWNLOAD = "{ZIP}";\n'
+        + (
+            f'window.NXGIR_DOWNLOAD = "{ZIP}";\n'
+            if download
+            else ""
+        )
         + 'window.NXGIR_SW = "sw.js";\n'
         + count,
         encoding="utf-8",
@@ -238,12 +244,14 @@ def build(
     timeline=web.tl.TIMELINE,
     blog=web.blog_posts.BLOG,
     features=web.feature_list.FEATURES,
+    zip_site=False,
 ):
     """Write the site for files [(name, size, path)],
     the events of timeline (timeline.tsv), the
     posts in blog (blog/) and the Features page
-    (features/) into out. Returns (books, folders,
-    words)."""
+    (features/) into out; with zip_site, also the
+    site as one zip file (offline_zip()). Returns
+    (books, folders, words)."""
     start = time.monotonic()
     out = Path(out)
     if out.exists():
@@ -255,7 +263,7 @@ def build(
         shutil.rmtree(out)
     out.mkdir(parents=True)
     (out / MARK).write_text("")
-    pages(out)
+    pages(out, download=zip_site)
     data = out / "data"
     with tempfile.TemporaryDirectory() as tmp:
         # an empty state: positions stay at home
@@ -320,7 +328,8 @@ def build(
         stats(out, words, time.monotonic() - start),
     )
     offline_list(out)
-    offline_zip(out)
+    if zip_site:
+        offline_zip(out)
     return len(files), len(dirs), len(words)
 
 
@@ -745,8 +754,12 @@ def size(path):
 
 
 def main(argv):
+    zip_site = "--zip" in argv
+    argv = [a for a in argv if a != "--zip"]
     out = Path(argv[0]) if argv else ROOT / "site"
-    books, dirs, words = build(out, shelf_files())
+    books, dirs, words = build(
+        out, shelf_files(), zip_site=zip_site
+    )
     print(
         f"{out}: {books} books, {dirs} folders,"
         f" {words} words, {size(out)}"

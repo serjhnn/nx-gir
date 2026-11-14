@@ -64,7 +64,7 @@ The Blog tells what is new, in themes: about the site, about authors and about b
 
 ## Offline copy
 
-"Offline" at the bottom of every page leads to three ways to read with no network: install the site as an app on the phone, save all the books in the browser (about 75 MB; it updates itself when the site changes), or download the whole site as one zip file and run python3 serve.py.
+"Offline" at the bottom of every page leads to two ways to read with no network: install the site as an app on the phone, and save all the books in the browser (about 75 MB; it updates itself when the site changes).
 
 ## Become a contributor
 
