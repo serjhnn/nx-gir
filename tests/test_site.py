@@ -318,3 +318,56 @@ def test_offline_zip(tmp_path, files):
     assert "NXGIR_BUILD" in inner
     assert "NXGIR_DOWNLOAD" not in inner
     assert "NXGIR_COUNT" not in inner
+
+
+def test_service_worker(tmp_path, files):
+    import zipfile
+
+    out = tmp_path / "site"
+    tsv = tmp_path / "timeline.tsv"
+    tsv.write_text(
+        "2026-10-18\tBooks\t*\tJohn\t\tgrabar/john.txt\n",
+        encoding="utf-8",
+    )
+    bs.build(out, files, tsv)
+    js = (out / "static.js").read_text("utf-8")
+    build = re.search(r'NXGIR_BUILD = "(\w+)"', js).group(1)
+    assert 'NXGIR_SW = "sw.js"' in js
+    # the worker names this build, so a new build is
+    # a new cache
+    sw = (out / "sw.js").read_text("utf-8")
+    assert f'const BUILD = "{build}";' in sw
+    assert 'BUILD = "dev"' not in sw
+    # the list of what "Save for offline" keeps
+    info = json.loads(
+        (out / "offline.json").read_text("utf-8")
+    )
+    assert info["build"] == build
+    paths = [p for p, _ in info["files"]]
+    assert "app.js" in paths
+    assert "data/book/grabar/john.txt.json" in paths
+    assert "data/stats.json" in paths
+    assert not any(
+        p.startswith(("read/", "blog/", "sw.js"))
+        or p.endswith((".zip", ".xml"))
+        for p in paths
+    )
+    for p, n in info["files"]:
+        assert (out / p).stat().st_size == n
+    # the app can be installed
+    assert (out / "manifest.webmanifest").is_file()
+    manifest = json.loads(
+        (out / "manifest.webmanifest").read_text("utf-8")
+    )
+    for icon in manifest["icons"]:
+        assert (out / icon["src"]).is_file()
+    html = (out / "index.html").read_text("utf-8")
+    assert 'rel="manifest"' in html
+    # not in the offline zip: no worker, no list
+    z = zipfile.ZipFile(out / bs.ZIP)
+    names = z.namelist()
+    assert not any(
+        n.endswith(("sw.js", "offline.json")) for n in names
+    )
+    inner = z.read("nxgir-site/static.js").decode("utf-8")
+    assert "NXGIR_SW" not in inner

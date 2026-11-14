@@ -411,18 +411,11 @@ function siteFooter() {
     h("p", {}, "Developed by S.O. and Claude"));
 }
 
-// the published site only: a link to the whole
-// site as one zip file for reading with no network
-// (offline_zip() in build-site.py), with its size
+// the published site only: a link to #/offline
 function offlineLink() {
-  const file = window.NXGIR_DOWNLOAD;
-  if (!STATIC || !file) return null;
-  const a = h("a", { href: file, download: "" },
-    "Offline copy");
-  json("download.json").then((d) =>
-    a.append(" (" + size(d.bytes) + ")")
-  ).catch(() => {});
-  return [" · ", a];
+  if (!STATIC || !window.NXGIR_DOWNLOAD) return null;
+  return [" · ", h("a", { href: "#/offline" },
+    "Offline")];
 }
 
 // an error, and under it what the site is: a
@@ -1629,6 +1622,173 @@ async function statsPage() {
       h("p", { class: "sub" }, plural(top.count,
         top.unit)),
       shelfList(top)) : null
+  );
+}
+
+// -- offline --
+
+// "Install app": the browser's own prompt, kept
+// until the Offline page asks for it
+let installPrompt = null;
+window.addEventListener("beforeinstallprompt", (e) => {
+  e.preventDefault();
+  installPrompt = e;
+});
+window.addEventListener("appinstalled", () => {
+  installPrompt = null;
+});
+
+// does this copy have a service worker (sw.js)? only
+// the published site does
+function hasWorker() {
+  return STATIC && !!window.NXGIR_SW
+    && "serviceWorker" in navigator;
+}
+
+// a message to the service worker, once it is there
+function tellWorker(type) {
+  if (!hasWorker()) return;
+  navigator.serviceWorker.ready.then((reg) => {
+    if (reg.active) reg.active.postMessage({ type });
+  }).catch(() => {});
+}
+
+// who shows the state of the saved copy: a function
+// of the Offline page while it is open
+let offlineShow = null;
+if (hasWorker()) {
+  navigator.serviceWorker.addEventListener("message",
+    (e) => {
+      const m = e.data;
+      if (offlineShow && m && m.type === "state") {
+        offlineShow(m);
+      }
+    });
+}
+
+// the published site keeps what you open, and a new
+// build replaces the old one: the page reloads once
+// when the new worker takes over
+function startWorker() {
+  if (!hasWorker()) return;
+  const had = !!navigator.serviceWorker.controller;
+  let reloading = false;
+  navigator.serviceWorker.addEventListener(
+    "controllerchange", () => {
+      if (!had || reloading) return;
+      reloading = true;
+      location.reload();
+    });
+  navigator.serviceWorker.register(window.NXGIR_SW, {
+    scope: "./", updateViaCache: "none" })
+    .then((reg) => {
+      reg.update().catch(() => {});
+      // went on saving everything, if it was asked to
+      tellWorker("resume");
+    }).catch(() => {});
+}
+
+// #/offline: install the app, save every book in
+// this browser, or download the site as a file
+async function offlinePage() {
+  document.title = "Offline · " + NAME;
+  const head = [
+    h("p", { class: "crumbs" },
+      h("a", { href: "#/" }, "← Home")),
+    h("h1", {}, "Read offline"),
+  ];
+  if (!hasWorker()) {
+    show(...head, h("p", { class: "sub" },
+      "This copy already runs on this device: no"
+      + " network is needed."));
+    return;
+  }
+  const info = await json("offline.json")
+    .catch(() => null);
+  const mb = info ? size(info.files.reduce(
+    (n, f) => n + f[1], 0)) : "about 80 MB";
+  const zip = await json("download.json")
+    .catch(() => null);
+  const status = h("p", { class: "sub", role: "status" });
+  const btn = h("button", { type: "button",
+    class: "icon-btn primary" }, "Save for offline");
+  let now = { want: false };
+  btn.addEventListener("click", () => {
+    if (now.complete) {
+      tellWorker("clear");
+    } else {
+      if (navigator.storage && navigator.storage.persist) {
+        navigator.storage.persist().catch(() => {});
+      }
+      tellWorker("save");
+    }
+  });
+  offlineShow = (st) => {
+    if (!document.body.contains(status)) return;
+    now = st;
+    const pct = st.total
+      ? Math.round(100 * st.done / st.total) : 0;
+    btn.disabled = st.busy;
+    if (st.busy) {
+      status.textContent = "Saving: " + st.done + " of "
+        + st.total + " files (" + pct + "%). You can"
+        + " keep reading.";
+      btn.textContent = "Saving…";
+    } else if (st.complete) {
+      status.textContent = "Saved: all " + st.total
+        + " files are on this device. It updates"
+        + " itself when you are online.";
+      btn.textContent = "Remove the saved copy";
+    } else if (st.want) {
+      status.textContent = "Partly saved: " + st.done
+        + " of " + st.total + " files. Press to go on.";
+      btn.textContent = "Continue saving";
+    } else {
+      status.textContent = "Nothing saved yet.";
+      btn.textContent = "Save for offline";
+    }
+  };
+  tellWorker("status");
+  const how = installPrompt
+    ? h("button", { type: "button",
+      class: "icon-btn primary" }, "Install app")
+    : h("p", {}, "In Chrome: the ⋮ menu, then Install"
+      + " app (or Add to Home screen). On an iPhone, in"
+      + " Safari: Share, then Add to Home Screen.");
+  if (installPrompt) {
+    how.addEventListener("click", async () => {
+      installPrompt.prompt();
+      await installPrompt.userChoice;
+      installPrompt = null;
+      how.remove();
+    });
+  }
+  show(
+    ...head,
+    h("p", { class: "sub" },
+      "Three ways to read with no network."),
+    h("h2", { class: "tl-next" }, "1. Install the app"),
+    h("p", {}, "The site gets its own icon and opens in"
+      + " its own window, like an app."),
+    how,
+    h("h2", { class: "tl-next" },
+      "2. Save the books in this browser"),
+    h("p", {}, "All the books, translations and word"
+      + " meanings: " + mb + ". They stay in the browser"
+      + " on this device, and are replaced by the new"
+      + " ones when the site changes."),
+    status,
+    h("p", {}, btn),
+    h("h2", { class: "tl-next" },
+      "3. Download the site as a file"),
+    h("p", {}, "One zip file" + (zip
+      ? " (" + size(zip.bytes) + ")" : "")
+      + ". Unpack it and run ", h("code", {},
+      "python3 serve.py"), " (Python 3 is needed; it"
+      + " is in Termux too). It does not update itself."),
+    h("p", {}, h("a", { class: "icon-btn",
+      href: window.NXGIR_DOWNLOAD, download: "" },
+    "Download the zip"))
   );
 }
 
@@ -3260,6 +3420,8 @@ async function route() {
       contributePage();
     } else if (hash === "stats") {
       await statsPage();
+    } else if (hash === "offline") {
+      await offlinePage();
     } else if (hash === "recent") {
       await recentPage();
     } else if (hash === "library") {
@@ -3281,3 +3443,4 @@ window.addEventListener("hashchange", route);
 drawTheme();
 drawView();
 route();
+startWorker();

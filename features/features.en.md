@@ -64,7 +64,7 @@ The Blog tells what is new, in themes: about the site, about authors and about b
 
 ## Offline copy
 
-"Offline copy" at the bottom of every page saves the whole site as one zip file. Unpack it, run python3 serve.py, and read with no network: all the books, translations and word meanings, on a phone too (in Termux).
+"Offline" at the bottom of every page leads to three ways to read with no network: install the site as an app on the phone, save all the books in the browser (about 75 MB; it updates itself when the site changes), or download the whole site as one zip file and run python3 serve.py.
 
 ## Become a contributor
 

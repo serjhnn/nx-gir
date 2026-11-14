@@ -268,8 +268,15 @@
   `nxgir-site.zip` (`offline_zip()`: the site without
   the pages for search engines and the visit counter,
   with `scripts/offline/`: `serve.py` and `README.txt`),
-  linked in the footer by `offlineLink()` in `app.js`;
-  the zip is not counted in `data/stats.json`
+  linked on the Offline page (`#/offline`, footer
+  link `offlineLink()`, `offlinePage()` in `app.js`);
+  the zip is not counted in `data/stats.json`. The
+  site is also an installable app: `manifest.webmanifest`
+  (icons from `scripts/render-icons.py`) and the
+  service worker `web/sw.js`, started by
+  `startWorker()` on the published site only; the build
+  writes its build id into it and `offline.json`, the
+  files "Save for offline" keeps (`offline_list()`)
 - `scripts/render-logo.py`, `scripts/render-screens.py`,
   `scripts/render-web.py`: regenerate the README
   images in `docs/` after changing the logo, the

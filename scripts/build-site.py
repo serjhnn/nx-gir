@@ -62,6 +62,7 @@ import hashlib
 import html as htm
 import importlib.util
 import json
+import re
 import shutil
 import sys
 import tempfile
@@ -139,7 +140,23 @@ STATIC_JS = (
 # the offline copy: a zip of the site (offline_zip())
 ZIP = "nxgir-site.zip"
 # left out of it: the pages for search engines
-NOT_OFFLINE = ("read/", "sitemap.xml", "robots.txt")
+NOT_OFFLINE = (
+    "read/",
+    "sitemap.xml",
+    "robots.txt",
+    "sw.js",
+    "offline.json",
+)
+# not saved by "Save for offline" either (sw.js)
+NOT_SAVED = NOT_OFFLINE + (
+    "blog/",
+    "features.",
+    "og-image.png",
+    "download.json",
+    ZIP,
+    MARK,
+    ".nojekyll",
+)
 
 
 def pages(out, counter=GOATCOUNTER):
@@ -169,7 +186,18 @@ def pages(out, counter=GOATCOUNTER):
         STATIC_JS
         + f'window.NXGIR_BUILD = "{build}";\n'
         + f'window.NXGIR_DOWNLOAD = "{ZIP}";\n'
+        + 'window.NXGIR_SW = "sw.js";\n'
         + count,
+        encoding="utf-8",
+    )
+    # the service worker names the build, so a new
+    # build is a new cache (web/sw.js)
+    sw = (out / "sw.js").read_text(encoding="utf-8")
+    mark = 'const BUILD = "dev";'
+    if mark not in sw:
+        raise SystemExit("sw.js: no BUILD line")
+    (out / "sw.js").write_text(
+        sw.replace(mark, f'const BUILD = "{build}";'),
         encoding="utf-8",
     )
     index = out / "index.html"
@@ -291,8 +319,29 @@ def build(
         data / "stats.json",
         stats(out, words, time.monotonic() - start),
     )
+    offline_list(out)
     offline_zip(out)
     return len(files), len(dirs), len(words)
+
+
+def offline_list(out):
+    """offline.json: the build and every file the
+    service worker keeps when asked to save the
+    whole site, [path, bytes] (web/sw.js). The pages
+    for search engines are not in it."""
+    build = re.search(
+        r'NXGIR_BUILD = "(\w+)"',
+        (out / "static.js").read_text("utf-8"),
+    ).group(1)
+    files = []
+    for p in sorted(out.rglob("*")):
+        rel = p.relative_to(out).as_posix()
+        if p.is_file() and not rel.startswith(NOT_SAVED):
+            files.append([quote(rel), p.stat().st_size])
+    write_json(
+        out / "offline.json",
+        {"build": build, "files": files},
+    )
 
 
 def offline_zip(out):
