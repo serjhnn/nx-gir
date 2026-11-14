@@ -664,6 +664,17 @@ function mail() {
   return a;
 }
 
+// the folders or books of a shelf as a list
+function shelfList(data) {
+  const list = h("ul", { class: "shelf" });
+  for (const item of data.items) {
+    list.append(h("li", {}, item.folder
+      ? folderRow(item) : bookRow(item)));
+  }
+  return data.items.length ? list
+    : h("p", { class: "empty" }, "No books here.");
+}
+
 async function shelf(folder) {
   // an old link to a book's folder: its page
   const page = folderHref(folder);
@@ -681,11 +692,6 @@ async function shelf(folder) {
     : "Library";
   document.title = folder
     ? title + " · " + NAME : TOP_TITLE;
-  const list = h("ul", { class: "shelf" });
-  for (const item of data.items) {
-    list.append(h("li", {}, item.folder
-      ? folderRow(item) : bookRow(item)));
-  }
   const lang = folder.split("/")[1];
   show(
     folder ? crumbs(folder, false, data.crumbs)
@@ -710,16 +716,19 @@ async function shelf(folder) {
     last && last.items.length
       ? recentCard(last.items) : null,
     folder ? null : intro(data.status, data.news),
-    h("h1", { lang: data.title && data.title !== folder
-      .split("/").pop() ? "hy" : null }, title),
-    h("p", { class: "sub" }, plural(data.count,
-      data.unit)),
-    data.editable ? h("div", { class: "actions" },
+    // the top page has no list of folders: it is
+    // at the bottom of #/stats
+    folder ? h("h1", { lang: data.title
+      && data.title !== folder.split("/").pop()
+      ? "hy" : null }, title) : null,
+    folder ? h("p", { class: "sub" }, plural(
+      data.count, data.unit)) : null,
+    folder && data.editable ? h("div",
+      { class: "actions" },
       h("a", { class: "icon-btn",
         href: "#/new/" + (lang || "ru") },
       "+ New text")) : null,
-    data.items.length ? list
-      : h("p", { class: "empty" }, "No books here.")
+    folder ? shelfList(data) : null
   );
 }
 
@@ -1561,6 +1570,10 @@ async function statsPage() {
   const f = data.folders || {};
   const near = data.limits.find((x) =>
     x.key === data.closest);
+  // the folders of the library, as the top page
+  // once listed them
+  const top = await api("shelf?folder=")
+    .catch(() => null);
   show(
     ...head,
     h("p", { class: "sub" },
@@ -1590,7 +1603,12 @@ async function statsPage() {
       historyTable(data.history)) : null,
     h("p", { class: "more-link" },
       "What each limit means: ",
-      h("a", { href: NOTES }, "notes/limits.md"))
+      h("a", { href: NOTES }, "notes/limits.md")),
+    top ? h("section", {},
+      h("h2", { class: "tl-next" }, "Folders"),
+      h("p", { class: "sub" }, plural(top.count,
+        top.unit)),
+      shelfList(top)) : null
   );
 }
 
