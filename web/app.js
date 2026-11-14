@@ -925,8 +925,12 @@ async function bookPage(folder) {
     return h("section", { class: "volume-group" },
       g.label ? h("h2", {}, g.label) : null, list);
   });
+  // back up one level, as the Library's ← Home
+  const up = data.up[data.up.length - 1];
   show(
-    upLinks(data.up),
+    h("p", { class: "crumbs" },
+      h("a", { href: up.to, lang: "hy" },
+        "← " + up.label)),
     h("div", { class: "volume", lang: "hy" },
       h("h1", {}, data.book),
       data.title !== data.book
