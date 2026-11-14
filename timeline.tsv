@@ -61,5 +61,6 @@
 2026-11-14	Site		Install and read offline	The site can be installed as an app, and every book saved in the browser (it updates itself), from the Offline page.	
 2026-11-14	Books		Gandzer and Tagher of Grigor Narekatsi	His songs and sermons from Digilib, 34 numbered works in one part, with a contents list of them.	grabar/grigor-narekatsi/2-gandzer-tagher
 2026-11-14	Books		Eghts aghandots of Yeznik Koghbatsi	The 5th-century refutation of the sects from Digilib, 93 sections in two parts, with a contents list.	grabar/eznik-koghbatsi/1-yeghts-aghandots
+2026-11-15	Translation	*	The first part of Narekatsi's Book of Lamentations in modern Armenian	All 964 lines of part 1 translated line for line; the draft is open for human review.	grabar/grigor-narekatsi/1-matean-voghbergutyan/01.txt
 next	Translation		All of Amaran hator in modern Armenian	Then the other works of Grigor Tatevatsi.	
 next	Site		A contents page for each book	What each part of a book is about.	
