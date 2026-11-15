@@ -33,6 +33,7 @@ Twenty-two section files have been committed to this branch:
 | 625 | books/grabar/smbat-sparapet/1-taregirk/0625.txt |
 | 626 | books/grabar/smbat-sparapet/1-taregirk/0626.txt |
 | 717 | books/grabar/smbat-sparapet/1-taregirk/0717.txt |
+| 702 | books/grabar/smbat-sparapet/1-taregirk/0702.txt |
 | 718 | books/grabar/smbat-sparapet/1-taregirk/0718.txt |
 
 ## Source retrieval notes
@@ -67,3 +68,10 @@ Sections 616 and 622 were available as complete indexed text passages; direct pa
 - Verify source completeness before treating a section as ready for translation.
 - Commit only to this branch; never push to `main`.
 - Open a PR when a substantial, checked batch is ready; do not merge automatically.
+
+
+## Additional retrieval — section 702
+
+- File: `books/grabar/smbat-sparapet/1-taregirk/0702.txt`
+- Source: https://www.digilib.am/book/333/339/7585/Տարեգիրք
+- The text was captured from Digilib's indexed search result. The direct page could not be retrieved during this pass, so completeness has not been independently verified. No missing text was reconstructed.
