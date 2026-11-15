@@ -8,10 +8,12 @@
 
 ## Imported sections
 
-The following six sections have been retrieved as complete page text from Digilib and committed as individual Grabar text files:
+The following eight sections have been retrieved as complete page text from Digilib and committed as individual Grabar text files:
 
 | Section | File |
 |---|---|
+| 410 | books/grabar/smbat-sparapet/1-taregirk/0410.txt |
+| 418 | books/grabar/smbat-sparapet/1-taregirk/0418.txt |
 | 432 | books/grabar/smbat-sparapet/1-taregirk/0432.txt |
 | 511 | books/grabar/smbat-sparapet/1-taregirk/0511.txt |
 | 523 | books/grabar/smbat-sparapet/1-taregirk/0523.txt |
@@ -20,6 +22,8 @@ The following six sections have been retrieved as complete page text from Digili
 | 718 | books/grabar/smbat-sparapet/1-taregirk/0718.txt |
 
 Source pages:
+- https://www.digilib.am/book/333/339/7434/Տարեգիրք (410)
+- https://www.digilib.am/book/333/339/7436/Տարեգիրք (418)
 - https://www.digilib.am/book/333/339/7441/Տարեգիրք (432)
 - https://www.digilib.am/book/333/339/7472/Տարեգիրք (511)
 - https://www.digilib.am/book/333/339/7480/Տարեգիրք (523)
@@ -31,7 +35,7 @@ Text is preserved in Grabar, including page/folio markers and the source's ortho
 
 ## Remaining inventory
 
-The Digilib index exposes 173 linked entries in total. Only the six sections above are imported so far. Other sections are not assumed to be sequential; use the actual linked pages and verify each source passage before committing it.
+The Digilib index exposes 173 linked entries in total. Only the eight sections above are imported so far. Other sections are not assumed to be sequential; use the actual linked pages and verify each source passage before committing it.
 
 Some direct page fetches return 404 or time out. Retry individual pages through indexed Digilib results and alternate retrieval attempts. If only a search excerpt is available, do not label it a complete section or silently fill missing text.
 
