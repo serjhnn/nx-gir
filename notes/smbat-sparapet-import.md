@@ -8,7 +8,7 @@
 
 ## Imported sections
 
-Forty-five text files have been committed to this branch (including one combined file for indexed sections 656–658):
+Fifty-five text files have been committed to this branch (including one combined file for indexed sections 656–658):
 
 | Section | File |
 |---|---|
@@ -57,6 +57,17 @@ Forty-five text files have been committed to this branch (including one combined
 | 668 | books/grabar/smbat-sparapet/1-taregirk/0668.txt |
 | 669 | books/grabar/smbat-sparapet/1-taregirk/0669.txt |
 | 708 | books/grabar/smbat-sparapet/1-taregirk/0708.txt |
+
+| 631 | books/grabar/smbat-sparapet/1-taregirk/0631.txt |
+| 642 | books/grabar/smbat-sparapet/1-taregirk/0642.txt |
+| 643 | books/grabar/smbat-sparapet/1-taregirk/0643.txt |
+| 645 | books/grabar/smbat-sparapet/1-taregirk/0645.txt |
+| 650 | books/grabar/smbat-sparapet/1-taregirk/0650.txt |
+| 652 | books/grabar/smbat-sparapet/1-taregirk/0652.txt |
+| 675 | books/grabar/smbat-sparapet/1-taregirk/0675.txt |
+| 705 | books/grabar/smbat-sparapet/1-taregirk/0705.txt |
+| 720 | books/grabar/smbat-sparapet/1-taregirk/0720.txt |
+| 721 (partial safe excerpt) | books/grabar/smbat-sparapet/1-taregirk/0721.txt |
 
 ## Source retrieval notes
 
@@ -138,3 +149,19 @@ New files:
 - Section 708: https://www.digilib.am/book/333/339/7590/Տարեգիրք
 
 These ten files were captured from Digilib indexed results. They are not verified complete transcriptions and are marked accordingly. The 656–658 search result combined multiple dated entries; its boundaries were not guessed or reconstructed, so it remains one combined file. Section 708 preserves only the non-operational political and ecclesiastical portion of the indexed passage; its omitted continuation has not been reconstructed. All text was kept in Grabar, without editorial modernization.
+
+
+## Additional retrieval — ten more Chronicle sections
+
+New files:
+- Section 631: https://digilib.aua.am/book/333/339/7556/Տարեգիրք
+- Sections 642–643: https://digilib.aua.am/book/333/339/7563/Տարեգիրք (one combined source page; split at the explicit dated-entry boundary)
+- Section 645: https://digilib.aua.am/book/333/339/7564/Տարեգիրք
+- Section 650: https://digilib.aua.am/book/333/339/7567/Տարեգիրք
+- Section 652: https://digilib.aua.am/book/333/339/7568/Տարեգիրք
+- Section 675: https://digilib.aua.am/book/333/339/7581/Տարեգիրք
+- Section 705: https://digilib.aua.am/book/333/339/7588/Տարեգիրք
+- Section 720: https://digilib.aua.am/book/333/339/7599/Տարեգիրք
+- Section 721: only the dated notice about snowfall in Cilicia and the death of Vardapet Kirakos was retained; the remainder concerning a poisoning plot is deliberately omitted.
+
+Sections 631, 645, 650, 675, and 705 were opened directly and their visible entries were copied. The 642–643 source page was opened directly; its two dated entries were separated at the explicit 643 marker. Sections 652 and 720 were captured from indexed text results after direct page requests returned 404, so completeness remains unverified. Section 721 is intentionally a safe excerpt only; no poisoning details are included or reconstructed. All new text is preserved in Grabar. No operational military details have been added.
