@@ -42,6 +42,13 @@ Narekatsi's Matean in translation; 133 book files.
 | Site build | 29 s | 10 min | 5% |
 | Browser tab, largest part | 297 MB (phone, measured 2026-11-11) | about 1 GB | 30% |
 
+Later on 2026-11-15 (commit b92dc68, after the Digilib
+batch and the translations of Narekatsi, Agathangelos,
+Yeghishe and Smbat Sparapet): 209 book files, 37.9 MB
+of text; the Pages site 156.3 MB (15%); git 33.0 MB
+(3%); the build 43 s (7%). The largest file and the
+largest part are the same as above (30% at most).
+
 Since 29dc9cf (2026-11-14): the site fell from 116 MB
 to 104 MB because the zip of the site is no longer
 built (it was 18 MB; `build-site.py --zip` makes it),

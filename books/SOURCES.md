@@ -319,6 +319,29 @@ damaged in the source (the Digilib text has broken
 words) are marked with a trailing `*` (63 lines).
 Machine translation, not human-reviewed.
 
+## ashkharhabar/smbat-sparapet/1-datastanagirk/
+
+`01.txt`: a translation into modern Eastern
+Armenian of `grabar/smbat-sparapet/1-datastanagirk/01.txt`
+(Սմբատ Սպարապետ, Դատաստանագիրք: the law book of
+the Cilician Armenian kingdom, 1265, in his own
+words "moved from the old and hard language into
+ours": the rights of kings, princes, spoils and
+taxes; the church, its orders, bishops, priests and
+monks; marriage and divorce; murder and wounds;
+inheritance, slaves, pledges, sales, damages and
+wages), made by Claude (Anthropic's AI model) on
+2026-11-15 at the user's request, in chunks of about
+100 lines, each checked against the Grabar before
+the next (section 6 of `TRANSLATION_GUIDE.md`). It is
+a machine translation, not a published or reviewed
+one: read it as a help to the Grabar, not in its
+place. The Grabar is in the Middle Armenian of the
+13th century, full of words from French, Greek,
+Arabic and Persian that no list of ours covers;
+the words that stay unclear, and the guesses, are
+in `notes/smbat-sparapet.md`.
+
 ## All translations
 
 - License: CC BY-SA 4.0 (see `CONTRIBUTING.md`).
@@ -557,3 +580,15 @@ Part 1 had 847 lines before sentence splitting and has
 between the source paragraphs. Only line breaks and
 paragraph spacing were changed; the Grabar wording is
 unchanged.
+
+## grabar/smbat-sparapet/1-datastanagirk/
+
+*Դատաստանագիրք* by Smbat Sparapet, from Digilib
+(<https://www.digilib.am/book/332/>; book 332), in
+211 sections and one part. Part 1 had 1059 lines
+before sentence splitting and has 1707 lines after
+it, split at `։`, with blank lines between the
+source paragraphs. One `։` had no space after it in
+the source; it is cut there like the others. Only
+line breaks and paragraph spacing were changed; the
+Grabar wording is unchanged.
