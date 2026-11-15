@@ -294,8 +294,9 @@ PRAK_RE = re.compile(r"\(Պրակ\s+([Ա-Ֆա-ֆ]{1,4})\)\s*(.*)")
 # lines that open a question, not a title
 PRAK_SKIP = ("հարց", "պատասխան", "պատասխանեմք")
 # Digilib's section number on a line of its own,
-# [Ա]; the section's title is the next line
-SECTION_RE = re.compile(r"\[([Ա-Ֆ]{1,4})\]")
+# [Ա] (the first may be [Գլուխ Ա]); the section's
+# title is the next line
+SECTION_RE = re.compile(r"\[(?:Գլուխ\s+)?([Ա-Ֆ]{1,4})\]")
 # a verse at the end: Սաղ. 131. 9. or 1 Թագ. 2. 7։
 REF_RE = re.compile(
     r"(\d\s+)?\S+\.?\s+\d+\s*[.։]\s*\d+[\d\s,-]*[.։]?\s*$"

@@ -33,7 +33,10 @@ Agathangelos (54) is in `books/` too (2026-11-15,
 Digilib: group headings with no text of their own.
 Pavstos Buzand (310) is in `books/` too (2026-11-15,
 148 sections in three parts; five are empty group
-headings). Next: Koriun (252).
+headings). Koriun (252) is in `books/` too (2026-11-15, 91
+sections in two parts: Digilib holds four editions of
+the text, kept as they are; chapters `[Գլուխ Ա]`,
+`[Բ]`). Next: Movses Khorenatsi (286).
 
 Also Եղիշէ Խրատք 1395, Ղազար Փարպեցի Թուղթ 1592.
 These are the most read and the best sources for

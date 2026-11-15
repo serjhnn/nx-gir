@@ -944,3 +944,12 @@ def test_contents_of_chapters_with_a_lone_number():
     assert c[0]["line"] == 2
     # fewer than five are not chapters
     assert contents(lines[:8]) == []
+
+
+def test_contents_of_first_section_with_word():
+    lines = ["Գիրք · 1/1", "", "[Գլուխ Ա]", "Տեքստ։", "[Բ]"]
+    got = contents(lines)
+    assert [(e["n"], e["line"]) for e in got[1:]] == [
+        ("Ա", 2),
+        ("Բ", 4),
+    ]
