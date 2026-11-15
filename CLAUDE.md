@@ -96,7 +96,11 @@
   1895 Grabar Bible into `books/` (see
   `books/SOURCES.md`)
 - `scripts/fetch-digilib.py`: downloads a book from
-  digilib.am into `books/`, cut into parts
+  digilib.am into `books/`, cut into parts. Digilib
+  lists some books out of order: check the ☰ list and
+  the first chapters, and fetch again with `--by-id`
+  (the cache is kept); a section that only repeats the
+  one before it is left empty
 - `scripts/list-digilib.py`: lists every Digilib
   book in `notes/digilib.tsv`, with a link and a
   guess whether it is Grabar (tested in
@@ -256,6 +260,10 @@
   A critical edition (Եղիշէ, Մեկնութիւն Արարածոց)
   has `Ա (Ա II)` section lines, read like Digilib's
   `[Ա]`, and ԾԱՆՕԹԱԳՐՈՒԹԻՒՆՆԵՐ, ՅԱՒԵԼՈՒԱԾ as groups.
+  A `[Ա]` line followed by `ԳԼՈՒԽ Ա` is one entry,
+  titled by the line after the ԳԼՈՒԽ line (Ուխտանէս).
+  A chronicle in `[1]`, `[2]` sections with no other
+  headings has no list (`NO_CONTENTS`).
   A book of songs or sermons numbered in letters
   with titles in capitals (`Ա. ՏԱՂ ՅԱՐՈՒԹԵԱՆ ...`,
   Narekatsi's Գանձեր եւ Տաղեր) takes those lines

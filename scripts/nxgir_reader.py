@@ -677,8 +677,11 @@ def contents(lines):
     start comes first (its title the first line, level
     1, "start": True)."""
     out = []
+    skip = set()
     for i, line in enumerate(lines):
         t = line.strip()
+        if i in skip:
+            continue
         if GROUP_RE.match(t):
             out.append(
                 {
@@ -698,6 +701,17 @@ def contents(lines):
                 if not MS_PAGE_RE.fullmatch(x)
             )
             title = next((x for x in nxt if x), "")
+            if GROUP_RE.match(title):
+                # [Ա], then ԳԼՈՒԽ Ա and its subject: one
+                # entry, titled by the subject
+                j = next(
+                    k
+                    for k in range(i + 1, len(lines))
+                    if lines[k].strip() == title
+                )
+                skip.add(j)
+                rest = (x.strip() for x in lines[j + 1 :])
+                title = next((x for x in rest if x), "")
             if SECTION_RE.fullmatch(title):
                 title = ""
             if m.group(2):

@@ -109,6 +109,18 @@ the fetch script must cut it.
 Քանաքեռցի (135), Գրիգոր Դարանաղցի (177), Առաքել
 Դաւրիժեցի (60), Արիստակէս Լաստիվերցի (26)
 
+Status (2026-11-15): in `books/`: Ukhtanes (350), Movses
+Daskhurantsi (283), Grigor Daranaghtsi (172), Hovhannes
+Drasxanakertsi (214), Aristakes (126), Arakel
+Davrizhetsi (121). Digilib lists 350, 283 and 121 out
+of order: fetched with `--by-id`. Daranaghtsi and
+Drasxanakertsi are in sections marked [1], [2], ...
+and have no Contents (`NUMBERED_ONLY` in
+`tests/test_contents.py`). Ukhtanes has two `<font>`
+fragments of Digilib's own markup in its text. Still to
+do: Zakaria Kanakertsi (367; 133 of 135 sections
+cached, Digilib was down).
+
 ## 4. Law, theology and poetry (close to the
    existing library)
 

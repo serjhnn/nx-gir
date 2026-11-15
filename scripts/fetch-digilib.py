@@ -150,7 +150,8 @@ class Text(HTMLParser):
         for parts in self.lines:
             line = " ".join("".join(parts).split())
             line = line.replace("﻿", "")
-            if line:
+            # a broken tag in a page leaves a "> behind
+            if line and line != '">':
                 out.append(line)
         return out
 
@@ -171,15 +172,17 @@ def split(sections, size):
 
 def blank_repeats(sections):
     """Sections with the very same paragraphs as the one
-    before them (Digilib shows the text above again
-    for a heading with none of its own) lose them."""
+    before them, spaces aside (Digilib shows the text
+    above again for a heading with none of its own)
+    lose them."""
     out = []
     last = None
     for head, paras in sections:
-        if paras and paras == last:
+        same = "".join(paras).replace(" ", "")
+        if paras and same == last:
             paras = []
         elif paras:
-            last = paras
+            last = same
         out.append((head, paras))
     return out
 
@@ -212,7 +215,7 @@ def main(argv):
     for k, (n, (href, head)) in enumerate(found, 1):
         url = urllib.parse.urljoin(SITE, href)
         paras = section(url, cache / f"{n:04}.txt")
-        paras = [p for p in paras if p]
+        paras = [p for p in paras if p and p != '">']
         if paras and paras[0] == head:
             paras = paras[1:]  # the heading is repeated
         sections.append((head, paras))

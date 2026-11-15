@@ -1039,3 +1039,27 @@ def test_contents_of_titled_lines_alone():
     got = contents(lines)
     assert [e["n"] for e in got[1:]] == list("ԲԳԴԵԶ")
     assert got[1]["title"] == "Վասն Բ։"
+
+
+def test_contents_section_before_a_chapter_line():
+    # Ուխտանէս: [Ա], ԳԼՈՒԽ Ա, then its subject: one
+    # entry, with the subject as its title
+    lines = [
+        "Գիրք · 1/1",
+        "",
+        "[Ա]",
+        "ԳԼՈՒԽ Ա",
+        "Յաղագս լերանց:",
+    ]
+    lines += [
+        "Տեքստ։",
+        "[Բ]",
+        "ԳԼՈՒԽ Բ",
+        "Յաղագս ծովու:",
+        "Տ։",
+    ]
+    got = contents(lines)
+    assert [(e["n"], e["title"]) for e in got[1:]] == [
+        ("Ա", "Յաղագս լերանց:"),
+        ("Բ", "Յաղագս ծովու:"),
+    ]
