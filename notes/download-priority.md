@@ -41,7 +41,11 @@ the text, kept as they are; chapters `[Գլուխ Ա]`,
 lists its sections sorted by title, so the three
 books come mixed: fetched with `--by-id`; chapter
 numbers restart at Ա for Books II and III (no book
-headings on Digilib). Next: Ghazar Parpetsi (1591).
+headings on Digilib). Ghazar Parpetsi (1591) is in `books/` too
+(2026-11-15, 104 sections in three parts; three are
+empty; chapters are lines `Ա.`, with footnote
+numbers at some line starts, left as on Digilib).
+Next: Yeghishe, Vasn Vardanay (150).
 
 Also Եղիշէ Խրատք 1395, Ղազար Փարպեցի Թուղթ 1592.
 These are the most read and the best sources for
