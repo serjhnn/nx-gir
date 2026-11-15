@@ -2,7 +2,7 @@
 
 ## Smbat Sparapet — *Տարեգիրք* (Chronicle)
 
-This contents guide describes the fifty-five Grabar text files currently imported into this directory. Several files are explicitly marked as indexed excerpts whose completeness has not been verified. The numbered entries follow the Digilib section identifiers; they are not consecutive chapter numbers. Descriptions are brief reader-oriented summaries, not translations. They avoid reproducing graphic passages.
+This contents guide describes the fifty-eight Grabar text files currently imported into this directory. Several files are explicitly marked as indexed excerpts whose completeness has not been verified. The numbered entries follow the Digilib section identifiers; they are not consecutive chapter numbers. Descriptions are brief reader-oriented summaries, not translations. They avoid reproducing graphic passages.
 
 1. **Section 410 — The Armenian coronation of Gagik.** The entry records Gagik's formal anointing as king in Ani and then turns to a change of ruler in the Byzantine Empire.
 2. **Section 418 — Byzantine imperial succession.** A chronicle entry focused on the Byzantine court and the succession of emperors.
@@ -45,7 +45,7 @@ This contents guide describes the fifty-five Grabar text files currently importe
 
 ## Editorial note
 
-This is a partial collection of source sections, not a complete transcription of the Chronicle. The entries above are navigational summaries based on the imported text. Sections 500, 545, 555, 560, 567, 568, 589, 619, 630, 637, 647, 655, 656–658, 660, 668, 669, and 708 were captured from indexed text and require comparison with the original pages or scans. Sections 564 and 715 are explicitly partial excerpts. Sections 594 and 599 were opened directly; the other imported sections still require source comparison to confirm completeness. Section 708 intentionally contains only the non-operational political and ecclesiastical portion returned by the index; the omitted continuation has not been reconstructed. Sections 656–658 remain combined because the indexed result did not make their boundaries clear. The source text remains in Grabar; no translation or editorial correction is implied.
+This is a partial collection of source sections, not a complete transcription of the Chronicle. The entries above are navigational summaries based on the imported text. Sections 500, 545, 555, 560, 567, 568, 589, 619, 630, 637, 647, 655, 656–658, 660, 668, 669, and 708 were captured from indexed text and require comparison with the original pages or scans. Sections 564 and 715 are explicitly partial excerpts. Sections 594 and 599 were opened directly; the other imported sections still require source comparison to confirm completeness. Section 708 intentionally contains only the non-operational political and ecclesiastical portion returned by the index; the omitted continuation has not been reconstructed. Sections 470, 492, and 493 were captured from indexed text after their direct page requests returned 404 and require source comparison. Sections 656–658 remain combined because the indexed result did not make their boundaries clear. The source text remains in Grabar; no translation or editorial correction is implied.
 
 **Source:** [Digilib — Տարեգիրք, attributed to Սմբատ Սպարապետ](https://www.digilib.am/book/333/)
 
@@ -72,3 +72,8 @@ This is a partial collection of source sections, not a complete transcription of
 53. **Section 705 — Hethum's return and Leon's knighting.** The entry records Hethum's return from the Mongol court, a campaign in the region, and the ceremonial knighting of his eldest son. The page was opened directly.
 54. **Section 720 — Leon's coronation and diplomacy.** Leon is crowned king; the entry then records diplomatic exchanges with Abaqa Khan and the birth of a royal son. The available text is an indexed excerpt; completeness is unverified.
 55. **Section 721 — Snow in Cilicia and the death of Vardapet Kirakos.** Only the dated notice about snowfall and Kirakos's death is retained. The remainder, which concerns a poisoning plot, is intentionally omitted and has not been reconstructed.
+
+
+56. **Section 470 — Basil II, the Georgian kingdom, and Catholicos Peter.** The entry records Basil II's dealings with the Georgian ruler, the reception of Catholicos Peter and John Kozern at the Byzantine court, and a religious ceremony. The available text is an indexed excerpt; completeness is unverified.
+57. **Section 492 — Gagik's visit to Constantinople and the loss of Ani.** The chronicle recounts the political deception that brought Gagik to Constantinople and the transfer of Ani and the Armenian territories to Byzantine control. The available text is an indexed excerpt; completeness is unverified.
+58. **Section 493 — The end of Bagratuni rule in Ani.** The entry describes the Armenian population's resistance to a Byzantine demand, their later appeal to the Byzantine commander, and the end of Bagratuni rule. The available text is an indexed excerpt; completeness is unverified.
