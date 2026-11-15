@@ -809,34 +809,10 @@ h1 {
   font: 500 0.8rem var(--sans);
   opacity: 0.8;
 }
-/* a swipe to the next tab: its list slides in
-   from that side */
+/* a swipe to the next tab: the rows slide in
+   (slideIn() in app.js), never wider than the page */
 .lib-panes {
   overflow-x: clip;
-}
-.lib-panes .from-right {
-  animation: lib-in-right 0.25s ease-out;
-}
-.lib-panes .from-left {
-  animation: lib-in-left 0.25s ease-out;
-}
-@keyframes lib-in-right {
-  from {
-    transform: translateX(30%);
-    opacity: 0;
-  }
-}
-@keyframes lib-in-left {
-  from {
-    transform: translateX(-30%);
-    opacity: 0;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .lib-panes .from-right,
-  .lib-panes .from-left {
-    animation: none;
-  }
 }
 /* a phone: the count under the label */
 @media (max-width: 480px) {

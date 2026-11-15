@@ -1069,6 +1069,27 @@ function libraryRow(b, by) {
   return a;
 }
 
+// a tab's list slides in from the side of its tab
+// (dir > 0: from the right). Only the rows on the
+// screen move: a whole long list at once is too
+// much for a phone, which then shows no slide.
+function slideIn(pane, dir) {
+  if (matchMedia("(prefers-reduced-motion: reduce)")
+    .matches) return;
+  const rows = pane.querySelectorAll(
+    "h2, li, p.empty");
+  for (const r of rows) {
+    const box = r.getBoundingClientRect();
+    if (box.bottom < 0) continue;
+    if (box.top > innerHeight) break;
+    r.animate([
+      { transform: `translateX(${dir * 48}px)`,
+        opacity: 0 },
+      { transform: "none", opacity: 1 },
+    ], { duration: 250, easing: "ease-out" });
+  }
+}
+
 // #/library: the Grabar books, by author, or the
 // starred ones, or those being read (tabs);
 // #/library/<author> scrolls to that author
@@ -1169,7 +1190,8 @@ async function libraryPage(who) {
       "aria-controls": "lib-" + t },
     h("span", { class: "label" }, labels[t][0]),
     labels[t][1]);
-    b.addEventListener("click", () => pick(t, true));
+    b.addEventListener("click",
+      () => pick(t, true, true));
     tabBtn[t] = b;
     tabs.append(b);
     Object.assign(panes[t], { id: "lib-" + t });
@@ -1199,7 +1221,8 @@ async function libraryPage(who) {
       x.title = on ? "Հանել աստղը" : "Աստղանշել";
     }
   };
-  const pick = (tab, keep) => {
+  const pick = (tab, keep, slide) => {
+    const from = LIB_TABS.indexOf(tabs.dataset.tab);
     tabs.dataset.tab = tab;
     for (const t of LIB_TABS) {
       const on = t === tab;
@@ -1207,6 +1230,14 @@ async function libraryPage(who) {
         String(on));
       tabBtn[t].tabIndex = on ? 0 : -1;
       panes[t].hidden = !on;
+    }
+    if (slide) {
+      // the tabs in sight, if scrolled past them
+      if (tabs.getBoundingClientRect().top < 0) {
+        tabs.scrollIntoView();
+      }
+      const to = LIB_TABS.indexOf(tab);
+      if (to !== from) slideIn(panes[tab], to - from);
     }
     if (!keep) return;
     try {
@@ -1219,7 +1250,7 @@ async function libraryPage(who) {
     if (!step) return;
     const i = LIB_TABS.indexOf(tabs.dataset.tab);
     const t = LIB_TABS[(i + step + 3) % 3];
-    pick(t, true);
+    pick(t, true, true);
     tabBtn[t].focus();
   });
   // a swipe left or right on the page moves to the
@@ -1260,17 +1291,7 @@ async function libraryPage(who) {
     const i = LIB_TABS.indexOf(tabs.dataset.tab);
     const t = LIB_TABS[i + (dx < 0 ? 1 : -1)];
     if (!t) return;
-    pick(t, true);
-    const pane = panes[t];
-    pane.classList.remove("from-left",
-      "from-right");
-    void pane.offsetWidth; // start it again
-    pane.classList.add(dx < 0 ? "from-right"
-      : "from-left");
-    // the tabs in sight, if scrolled past them
-    if (tabs.getBoundingClientRect().top < 0) {
-      tabs.scrollIntoView();
-    }
+    pick(t, true, true);
   };
   page.addEventListener("touchstart", onStart,
     { passive: true });
