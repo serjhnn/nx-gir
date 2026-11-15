@@ -64,13 +64,33 @@ def test_report():
 def test_record(tmp_path):
     tsv = tmp_path / "limits.tsv"
     cl.record(measures(), tsv)
-    cl.record(measures(site=10, build=61.4), tsv)
+    cl.record(
+        measures(date="2026-11-08", site=10, build=61.4),
+        tsv,
+    )
     lines = tsv.read_text().splitlines()
     head = [x for x in lines if x.startswith("date")]
     assert head == ["\t".join(cl.FIELDS)]
     rows = [x.split("\t") for x in lines[-2:]]
     assert rows[0][-2:] == ["", ""]
     assert rows[1][-2:] == ["10", "61"]
+
+
+def test_record_keeps_one_line_for_a_date(tmp_path):
+    tsv = tmp_path / "limits.tsv"
+    cl.record(measures(site=10, build=61.4), tsv)
+    # the quick form measures no site: it keeps the old
+    cl.record(measures(books=4), tsv)
+    rows = cl.history(tsv)
+    assert len(rows) == 1
+    assert rows[0]["books"] == 4
+    assert (rows[0]["site"], rows[0]["build"]) == (10, 61)
+    cl.record(measures(site=20, build=30), tsv)
+    assert [r["site"] for r in cl.history(tsv)] == [20]
+    # a line of the old kind, many for a date: the last
+    with tsv.open("a") as fh:
+        fh.write("2026-11-07\tzzz\t9\t0\t0\t0\t0\t0\t0\n")
+    assert [r["books"] for r in cl.history(tsv)] == [9]
 
 
 def test_history_matches_head():
@@ -121,7 +141,10 @@ def test_history(tmp_path):
     tsv = tmp_path / "limits.tsv"
     assert cl.history(tsv) == []
     cl.record(measures(), tsv)
-    cl.record(measures(site=10, build=61.4), tsv)
+    cl.record(
+        measures(date="2026-11-08", site=10, build=61.4),
+        tsv,
+    )
     rows = cl.history(tsv)
     assert [r["site"] for r in rows] == ["", 10]
     assert rows[1]["build"] == 61

@@ -24,33 +24,42 @@ the git size is measured, and the site's size and
 build time are the last ones in `limits.tsv`. So
 record after big additions to keep them fresh.
 
-## State on 2026-11-14 (commit 29dc9cf)
+## State on 2026-11-15 (commit 2119dba)
 
-As on 2026-11-13, plus the Gandzer and Tagher of
-Grigor Narekatsi (one Grabar part, 150 KB); 126 book
-files.
+As on 2026-11-14, plus Eznik Koghbatsi (Eghts
+aghandots, two parts), Agathangelos (Patmutiun
+Hayots, four parts, 0.8 MB) and the first part of
+Narekatsi's Matean in translation; 133 book files.
 
 | What | Now | Limit | Used |
 |---|---|---|---|
-| Book text (`books/`) | 21.1 MB, 126 files | — | — |
-| Grabar / translation | 16.0 MB / 5.1 MB | — | — |
-| Pages site | 116.0 MB | 1 GB | 11% |
-| Git history | 25.8 MB | 1 GB | 3% |
+| Book text (`books/`) | 22.6 MB, 133 files | — | — |
+| Grabar / translation | 17.1 MB / 5.5 MB | — | — |
+| Pages site | 103.7 MB | 1 GB | 10% |
+| Git history | 26.9 MB | 1 GB | 3% |
 | Largest file | 6.0 MB (`grabar/vocabulary-hy.tsv`) | 50 MB | 12% |
 | Largest book part | 310 KB (Girk harcmanc 01, translation) | 1 MB | 30% |
-| Site build | 44 s | 10 min | 7% |
+| Site build | 29 s | 10 min | 5% |
 | Browser tab, largest part | 297 MB (phone, measured 2026-11-11) | about 1 GB | 30% |
 
-Since 3859010: the measured site grew by about 15 MB
+Since 29dc9cf (2026-11-14): the site fell from 116 MB
+to 104 MB because the zip of the site is no longer
+built (it was 18 MB; `build-site.py --zip` makes it),
+and the build from 44 s to 29 s. The text grew by 1.5 MB
+(Eznik, Agathangelos, the Narekatsi translation),
+the site by about 4 MB, git by 1.1 MB. `limits.tsv` has
+one line for each date: a second record on the same day
+replaces the first (what it did not measure stays), so
+the Statistics page shows one row a day.
+
+Before that, since 3859010: the measured site grew by about 15 MB
 because the zip of the site (`nxgir-site.zip`, 18 MB)
 was published with it, and making it is most of the
-build's rise from 23 s to 44 s. The zip is not built
-now (`build-site.py --zip` makes it): the next record
-is lower by about that much. `offline.json` lists the
-75 MB that "Save for offline" keeps in a browser (on
-the device, not on Pages). The git history grew by
-1.4 MB: the Narekatsi part, the app icons and the new
-code.
+build's rise from 23 s to 44 s. `offline.json` lists the
+75 MB that "Save for offline" kept in a browser (on
+the device, not on Pages; saving is switched off now).
+The git history grew by 1.4 MB: the Narekatsi part,
+the app icons and the new code.
 
 Before that, since 6591ae2: the 19 Anania Shirakatsi works (0.5 MB
 Grabar, with seven short ones cut into sentence

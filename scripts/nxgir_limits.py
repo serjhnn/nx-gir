@@ -214,7 +214,10 @@ def report(m):
 
 
 def record(m, path=HISTORY):
-    """Add m as a line to path (made with its head)."""
+    """Add m as a line to path (made with its head).
+    One line for each date: a second record on the
+    same day replaces the first, and what it did not
+    measure (the site, the build) stays as it was."""
     if not path.exists():
         path.write_text(HEAD, encoding="utf-8")
     vals = []
@@ -223,8 +226,16 @@ def record(m, path=HISTORY):
         if f == "build" and v != "":
             v = f"{v:.0f}"
         vals.append(str(v))
-    with path.open("a", encoding="utf-8") as fh:
-        fh.write("\t".join(vals) + "\n")
+    lines = path.read_text("utf-8").splitlines()
+    for i, row in enumerate(lines):
+        old = row.split("\t")
+        if old[0] == vals[0] and len(old) == len(vals):
+            vals = [v or o for v, o in zip(vals, old)]
+            lines[i] = "\t".join(vals)
+            break
+    else:
+        lines.append("\t".join(vals))
+    path.write_text("\n".join(lines) + "\n", "utf-8")
 
 
 def history(path=HISTORY):
@@ -242,6 +253,8 @@ def history(path=HISTORY):
         d = dict(zip(FIELDS, vals))
         for k in FIELDS[2:]:
             d[k] = int(d[k]) if d.get(k) else ""
+        if out and out[-1]["date"] == d["date"]:
+            out.pop()  # one line for each date: the last
         out.append(d)
     return out
 
