@@ -8,7 +8,7 @@
 
 ## Imported sections
 
-Twenty-five section files have been committed to this branch:
+Thirty-five section files have been committed to this branch:
 
 | Section | File |
 |---|---|
@@ -37,10 +37,20 @@ Twenty-five section files have been committed to this branch:
 | 702 | books/grabar/smbat-sparapet/1-taregirk/0702.txt |
 | 715 | books/grabar/smbat-sparapet/1-taregirk/0715.txt |
 | 718 | books/grabar/smbat-sparapet/1-taregirk/0718.txt |
+| 545 | books/grabar/smbat-sparapet/1-taregirk/0545.txt |
+| 555 | books/grabar/smbat-sparapet/1-taregirk/0555.txt |
+| 560 | books/grabar/smbat-sparapet/1-taregirk/0560.txt |
+| 567 | books/grabar/smbat-sparapet/1-taregirk/0567.txt |
+| 568 | books/grabar/smbat-sparapet/1-taregirk/0568.txt |
+| 589 | books/grabar/smbat-sparapet/1-taregirk/0589.txt |
+| 594 | books/grabar/smbat-sparapet/1-taregirk/0594.txt |
+| 599 | books/grabar/smbat-sparapet/1-taregirk/0599.txt |
+| 619 | books/grabar/smbat-sparapet/1-taregirk/0619.txt |
+| 630 | books/grabar/smbat-sparapet/1-taregirk/0630.txt |
 
 ## Source retrieval notes
 
-Digilib's index lists 173 linked entries. For this batch, direct page retrieval was intermittent (404 responses and timeouts). The ten new files preserve the Grabar text returned by Digilib's indexed page results; section 508 was also opened as a full page. Because indexed results may truncate long passages, the new batch should be checked against the original pages or scans before being treated as a verified complete transcription or used for translation. No missing text has been reconstructed.
+Digilib's index lists 173 linked entries. Across the import, direct page retrieval has been intermittent (404 responses and timeouts). The latest ten files preserve the Grabar text returned by Digilib's indexed page results or directly opened pages. Sections 594 and 599 were opened as full pages; sections 545, 555, 560, 567, 568, 589, 619, and 630 were captured from indexed results and still need source-page comparison. Indexed results may truncate longer passages, so these files should not be treated as verified complete transcriptions until compared with the original pages or scans. No missing text has been reconstructed.
 
 Source page links for the additional sections:
 - https://www.digilib.am/book/333/339/7545/Տարեգիրք (616)
@@ -84,3 +94,20 @@ Sections 616 and 622 were available as complete indexed text passages; direct pa
 - Section 564: https://www.digilib.am/book/333/339/7513/Տարեգիրք
 - Section 715: https://www.digilib.am/book/333/339/7595/Տարեգիրք
 - Both files preserve the indexed text returned by Digilib, with an explicit marker where the available excerpt ends. Direct page retrieval returned 404 during this pass, so neither file should be treated as a complete transcription. No missing text has been reconstructed.
+
+
+## Additional retrieval — sections 545, 555, 560, 567, 568, 589, 594, 599, 619, and 630
+
+Source page links:
+- https://www.digilib.am/book/333/339/7495/Տարեգիրք (545)
+- https://www.digilib.am/book/333/339/7505/Տարեգիրք (555)
+- https://www.digilib.am/book/333/339/7509/Տարեգիրք (560)
+- https://www.digilib.am/book/333/339/7516/Տարեգիրք (567)
+- https://www.digilib.am/book/333/339/7517/Տարեգիրք (568)
+- https://www.digilib.am/book/333/339/7533/Տարեգիրք (589)
+- https://www.digilib.am/book/333/339/7537/Տարեգիրք (594)
+- https://www.digilib.am/book/333/339/7541/Տարեգիրք (599)
+- https://www.digilib.am/book/333/339/7548/Տարեգիրք (619)
+- https://www.digilib.am/book/333/339/7555/Տարեգիրք (630)
+
+Sections 594 and 599 were opened directly and their complete visible entries were saved. The other eight were preserved from Digilib's indexed text results; their completeness is not verified. Each file carries a provenance marker. No missing text was reconstructed.
