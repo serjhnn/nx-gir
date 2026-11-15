@@ -685,7 +685,7 @@ h1 {
   display: block;
   color: var(--accent-ink);
 }
-/* ☆ beside a book; the starred ones go first */
+/* ☆ beside a book; it stars the book */
 .library .shelf li {
   display: flex;
   align-items: center;
@@ -714,77 +714,67 @@ h1 {
 .library .star:focus-visible {
   background: var(--hover);
 }
-/* the starred books: a box of their own, that
-   opens and closes (the height slides where the
-   browser can, else it just opens) */
-.library .starred {
+/* the tabs: all the books, or the starred ones;
+   a segmented switch, its thumb slides */
+.lib-tabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0 0 1.5rem;
+  padding: 4px;
   border-radius: 12px;
   background: var(--surface);
-  interpolate-size: allow-keywords;
 }
-.library .starred summary {
+.lib-tabs .thumb {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  border-radius: 9px;
+  background: var(--bg);
+  box-shadow: 0 1px 3px var(--shadow);
+  transition: transform 0.25s ease;
+}
+.lib-tabs[data-tab="starred"] .thumb {
+  transform: translateX(100%);
+}
+.lib-tabs button {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.8rem 0.9rem;
-  border-radius: 12px;
-  list-style: none;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 0.5rem;
+  border: 0;
+  border-radius: 9px;
+  background: none;
+  color: var(--muted);
+  font: 500 0.95rem/1.3 var(--serif);
   cursor: pointer;
-  user-select: none;
+  transition: color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-.library .starred summary::-webkit-details-marker {
-  display: none;
+.lib-tabs button[aria-selected="true"] {
+  color: var(--accent-ink);
 }
-.library .starred summary:focus-visible {
+.lib-tabs button:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  outline-offset: 1px;
 }
-.library .starred summary h2 {
-  margin: 0;
-}
-.library .starred .count {
-  min-width: 1.5rem;
-  padding: 0.05rem 0.45rem;
+.lib-tabs .count {
+  min-width: 1.4rem;
+  padding: 0 0.4rem;
   border-radius: 99px;
   background: var(--accent);
   color: var(--on-accent);
-  font: 600 0.75rem/1.4 var(--sans);
+  font: 600 0.72rem/1.45 var(--sans);
   text-align: center;
 }
-.library .starred .chev {
-  width: 1.2rem;
-  height: 1.2rem;
-  margin-left: auto;
-  color: var(--muted);
-  transition: transform 0.25s ease;
-}
-.library .starred[open] .chev {
-  transform: rotate(180deg);
-}
-.library .starred::details-content {
-  height: 0;
-  overflow: clip;
-  transition: height 0.3s ease,
-    content-visibility 0.3s allow-discrete;
-}
-.library .starred[open]::details-content {
-  height: auto;
-}
-.library .starred-body {
-  padding: 0 0.75rem 0.25rem;
-}
 @media (prefers-reduced-motion: reduce) {
-  .library .starred .chev,
-  .library .starred::details-content {
+  .lib-tabs .thumb {
     transition: none;
   }
-}
-.library .starred .shelf li:last-child {
-  border-bottom: 0;
-}
-.library .starred .row:hover,
-.library .starred .star:hover {
-  background: var(--bg);
 }
 .library .name .by {
   display: block;
