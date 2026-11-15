@@ -603,10 +603,8 @@ made and Robert Bedrosian put on the Internet
 Archive
 (<https://archive.org/details/SmbatGrabarTaregirk1859>;
 PDF pages 26–156, where 51–60 scan 41–50 a second
-time). Digilib (book 333, from the Venice 1956
-edition) was down on 2026-11-15, and the Archive's
-own text of both editions is unreadable, so the text
-was typed by Claude (Anthropic's AI model) from the
+time). The Archive's own text of the scan is
+unreadable, so the text was typed by Claude (Anthropic's AI model) from the
 page images, with a Tesseract OCR (`hye`) as a
 first draft, page by page, each page read against
 its image. 50 words whose letters were hard to read
