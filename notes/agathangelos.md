@@ -12,11 +12,10 @@ use the same paths under `books/ashkharhabar/`.
 ## Part 1 progress
 
 The Grabar file has 1,300 sentence/heading/blank lines.
-Chunks 1–4 (lines 1–300) have been translated. Each chunk
-contains 75 lines and is aligned with the source, including
-blank lines. Structural checks have passed for the first
-300 lines. The translation remains `machine` and requires
-human review against the Grabar text.
+Chunks 1–9 (lines 1–675) have been translated in nine
+75-line chunks. The first 675 lines have matching line
+counts and blank-line positions. The translation remains
+`machine` and requires human review against the Grabar text.
 
 ## Translation decisions
 
@@ -46,5 +45,20 @@ return of the Christian faith to Armenia.
   teaching, and theological themes.
 - Chunk 4: lines 226–300 — the apostles, the return of
   Christianity to Armenia, and the restoration of shrines.
+- Chunk 5: lines 301–375 — the closing contents entries,
+  the selection of Gregory as bishop, and the beginning
+  of the account of the Armenian–Persian conflict.
+- Chunk 6: lines 376–450 — the conflict involving Anak,
+  the survival of the two children, and the early life of
+  Tiridates and Gregory.
+- Chunk 7: lines 451–525 — Tiridates' rise, Gregory's
+  refusal to worship the gods, and their debate about
+  divine worship and the idols.
+- Chunk 8: lines 526–600 — Gregory's response to the
+  king, his prayer on creation and the fall, and the
+  Christian understanding of the cross.
+- Chunk 9: lines 601–675 — Gregory's prayer for Armenia,
+  resurrection and judgment, and the beginning of his
+  further exchange with Tiridates.
 
 The translation is a machine draft, not a reviewed edition.
