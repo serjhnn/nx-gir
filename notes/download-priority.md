@@ -117,9 +117,9 @@ of order: fetched with `--by-id`. Daranaghtsi and
 Drasxanakertsi are in sections marked [1], [2], ...
 and have no Contents (`NUMBERED_ONLY` in
 `tests/test_contents.py`). Ukhtanes has two `<font>`
-fragments of Digilib's own markup in its text. Still to
-do: Zakaria Kanakertsi (367; 133 of 135 sections
-cached, Digilib was down).
+fragments of Digilib's own markup in its text. Zakaria
+Kanakertsi (367, 135 sections in three parts) too: group 3
+is done.
 
 ## 4. Law, theology and poetry (close to the
    existing library)
