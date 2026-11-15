@@ -553,7 +553,8 @@ def up_links(app, folder):
     """The links above a book's folder: the Library,
     and its author (a page of its own only when all
     the author's books are single files, as in the
-    Bible), as [{label, to}]."""
+    Bible; else the author on the Library page), as
+    [{label, to}]."""
     top, _, key = folder.partition("/")
     who = key.partition("/")[0]
     up = [{"label": "Գրադարան", "to": "#/library"}]
@@ -561,7 +562,7 @@ def up_links(app, folder):
         return up
     names = read_names(app.library)
     flat = flat_author(app, top, who)
-    to = f"#/b/{top}/{who}" if flat else "#/library"
+    to = f"#/b/{top}/{who}" if flat else f"#/library/{who}"
     up.append({"label": names.get(who, who), "to": to})
     return up
 

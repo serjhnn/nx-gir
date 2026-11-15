@@ -897,8 +897,9 @@ def test_volume(tmp_path):
         "Գրադարան",
         "Աննա",
     ]
-    # an author with part-books: no page of its own
-    assert got["up"][1]["to"] == "#/library"
+    # an author with part-books: no page of its own,
+    # the author on the Library page
+    assert got["up"][1]["to"] == "#/library/ann"
     # single files: groups, a short name as the title,
     # and the author has a page
     bib = web.volume(app, "grabar/bib")

@@ -993,8 +993,9 @@ function libraryRow(b) {
   return a;
 }
 
-// #/library: the Grabar books, by author
-async function libraryPage() {
+// #/library: the Grabar books, by author;
+// #/library/<author> scrolls to that author
+async function libraryPage(who) {
   const data = await api("library");
   document.title = "Գրադարան · " + NAME;
   const groups = data.authors.map((a) => {
@@ -1005,7 +1006,8 @@ async function libraryPage() {
     // books that are all single files (the Bible)
     // have a page of their own
     const page = a.books.every((b) => b.parts === 1);
-    return h("section", { class: "author" },
+    return h("section", { class: "author",
+      id: "author-" + a.folder.split("/").pop() },
       h("h2", {}, page
         ? h("a", { href: "#/b/" + enc(a.folder) },
           a.name)
@@ -1023,6 +1025,9 @@ async function libraryPage() {
       groups.length ? groups
         : h("p", { class: "empty" },
           "Գրքեր դեռ չկան։")));
+  const at = who
+    && document.getElementById("author-" + who);
+  if (at) at.scrollIntoView();
 }
 
 // -- timeline --
@@ -3455,8 +3460,10 @@ async function route() {
       await offlinePage();
     } else if (hash === "recent") {
       await recentPage();
-    } else if (hash === "library") {
-      await libraryPage();
+    } else if (hash === "library"
+      || hash.startsWith("library/")) {
+      await libraryPage(decodeURIComponent(
+        hash.slice(8)));
     } else if (hash.startsWith("b/")) {
       await bookPage(decodeURIComponent(hash.slice(2)));
     } else if (hash.startsWith("f/")) {
