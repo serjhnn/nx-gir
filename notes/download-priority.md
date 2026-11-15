@@ -26,19 +26,12 @@ than the import).
 | 1394 | Եղիշէ, Մեկնութիւն Արարածոց | 108 | grabar |
 
 Status (2026-11-14): Eznik (162) is in `books/`.
-Agathangelos (54) is **partly fetched**: 37 of 138
-sections are in `.digilib-cache/54/` (not in git),
-then digilib.am timed out and answered 502. No book
-files yet (`fetch-digilib.py` writes them only when
-all sections are read). Run the same command again
-to continue from the cache:
-
-    scripts/fetch-digilib.py 54 \
-      "Ագաթանգեղոս, Պատմութիւն Հայոց" \
-      books/grabar/agathangelos/1-patmutiun-hayots
-
-Cached sections 1 and 3 are empty files: check
-whether they are really empty before trusting them.
+Agathangelos (54) is in `books/` too (2026-11-15,
+138 sections in four parts; its chapters are lines
+`Ա.` on their own, read by `lone_numbers()` in
+`nxgir_reader.py`). Five sections are empty on
+Digilib: group headings with no text of their own.
+Next: Pavstos Buzand (310).
 
 Also Եղիշէ Խրատք 1395, Ղազար Փարպեցի Թուղթ 1592.
 These are the most read and the best sources for

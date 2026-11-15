@@ -928,3 +928,19 @@ def test_numbered_lines_in_lowercase_are_text():
     for x in "ԱԲԳԴԵԶ":
         lines += [f"{x}. Սայլն այն իջանէր ի լեռնէն։", ""]
     assert contents(lines) == []
+
+
+def test_contents_of_chapters_with_a_lone_number():
+    # Agathangelos: "Ա." on a line of its own, then the
+    # text, which repeats the number
+    lines = ["Title · 1/1", ""]
+    for x in "ԱԲԳԴԵ":
+        lines += [f"{x}.", "", f"{x}. Իսկ ի գալուստ ամին։"]
+    c = contents(lines)
+    assert c[0].get("start")
+    c = c[1:]
+    assert [e["n"] for e in c] == list("ԱԲԳԴԵ")
+    assert c[0]["title"] == "Իսկ ի գալուստ ամին։"
+    assert c[0]["line"] == 2
+    # fewer than five are not chapters
+    assert contents(lines[:8]) == []

@@ -569,6 +569,36 @@ def numbered_entries(lines):
     ]
 
 
+LONE_RE = re.compile(r"([Ա-Ֆ]{1,4})\.")
+LONE_MIN = 5
+
+
+def lone_numbers(lines):
+    """Entries for a book whose chapters start with a
+    line of their own that is only the number in
+    letters and a full stop (Agathangelos: "Ա.", "ՃԶ."),
+    the text on the next line, which repeats the number;
+    [] if there are fewer than LONE_MIN of them. The
+    title is the start of that text."""
+    out = []
+    for i, line in enumerate(lines):
+        m = LONE_RE.fullmatch(line.strip())
+        if not m:
+            continue
+        nxt = (x.strip() for x in lines[i + 1 :])
+        text = next((x for x in nxt if x), "")
+        text = re.sub(rf"^{m.group(1)}\.\s*", "", text)
+        out.append(
+            {
+                "line": i,
+                "n": m.group(1),
+                "title": short(text, 60),
+                "level": 2,
+            }
+        )
+    return out if len(out) >= LONE_MIN else []
+
+
 def contents(lines):
     """The parts of a book, in order: [{"line": the
     line to go to, "n": its number or "", "title":
@@ -676,6 +706,8 @@ def contents(lines):
         out = ordinal_entries(lines)
     if not out:
         out = numbered_entries(lines)
+    if not out:
+        out = lone_numbers(lines)
     # the text before the first heading is reachable
     # too: an entry for the start of the text
     first = next(
