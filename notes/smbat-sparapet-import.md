@@ -8,7 +8,7 @@
 
 ## Imported sections
 
-Twenty-three section files have been committed to this branch:
+Twenty-five section files have been committed to this branch:
 
 | Section | File |
 |---|---|
@@ -25,6 +25,7 @@ Twenty-three section files have been committed to this branch:
 | 546 | books/grabar/smbat-sparapet/1-taregirk/0546.txt |
 | 547 | books/grabar/smbat-sparapet/1-taregirk/0547.txt |
 | 562 | books/grabar/smbat-sparapet/1-taregirk/0562.txt |
+| 564 | books/grabar/smbat-sparapet/1-taregirk/0564.txt |
 | 598 | books/grabar/smbat-sparapet/1-taregirk/0598.txt |
 | 610 | books/grabar/smbat-sparapet/1-taregirk/0610.txt |
 | 616 | books/grabar/smbat-sparapet/1-taregirk/0616.txt |
@@ -34,6 +35,7 @@ Twenty-three section files have been committed to this branch:
 | 626 | books/grabar/smbat-sparapet/1-taregirk/0626.txt |
 | 717 | books/grabar/smbat-sparapet/1-taregirk/0717.txt |
 | 702 | books/grabar/smbat-sparapet/1-taregirk/0702.txt |
+| 715 | books/grabar/smbat-sparapet/1-taregirk/0715.txt |
 | 718 | books/grabar/smbat-sparapet/1-taregirk/0718.txt |
 
 ## Source retrieval notes
@@ -75,3 +77,10 @@ Sections 616 and 622 were available as complete indexed text passages; direct pa
 - File: `books/grabar/smbat-sparapet/1-taregirk/0702.txt`
 - Source: https://www.digilib.am/book/333/339/7585/Տարեգիրք
 - The text was captured from Digilib's indexed search result. The direct page could not be retrieved during this pass, so completeness has not been independently verified. No missing text was reconstructed.
+
+
+## Additional indexed excerpts — sections 564 and 715
+
+- Section 564: https://www.digilib.am/book/333/339/7513/Տարեգիրք
+- Section 715: https://www.digilib.am/book/333/339/7595/Տարեգիրք
+- Both files preserve the indexed text returned by Digilib, with an explicit marker where the available excerpt ends. Direct page retrieval returned 404 during this pass, so neither file should be treated as a complete transcription. No missing text has been reconstructed.
