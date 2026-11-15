@@ -8,7 +8,7 @@
 
 ## Imported sections
 
-Thirty-five section files have been committed to this branch:
+Forty-five text files have been committed to this branch (including one combined file for indexed sections 656–658):
 
 | Section | File |
 |---|---|
@@ -47,6 +47,16 @@ Thirty-five section files have been committed to this branch:
 | 599 | books/grabar/smbat-sparapet/1-taregirk/0599.txt |
 | 619 | books/grabar/smbat-sparapet/1-taregirk/0619.txt |
 | 630 | books/grabar/smbat-sparapet/1-taregirk/0630.txt |
+| 500 | books/grabar/smbat-sparapet/1-taregirk/0500.txt |
+| 637 | books/grabar/smbat-sparapet/1-taregirk/0637.txt |
+| 641 | books/grabar/smbat-sparapet/1-taregirk/0641.txt |
+| 647 | books/grabar/smbat-sparapet/1-taregirk/0647.txt |
+| 655 | books/grabar/smbat-sparapet/1-taregirk/0655.txt |
+| 656–658 | books/grabar/smbat-sparapet/1-taregirk/0656-0658.txt |
+| 660 | books/grabar/smbat-sparapet/1-taregirk/0660.txt |
+| 668 | books/grabar/smbat-sparapet/1-taregirk/0668.txt |
+| 669 | books/grabar/smbat-sparapet/1-taregirk/0669.txt |
+| 708 | books/grabar/smbat-sparapet/1-taregirk/0708.txt |
 
 ## Source retrieval notes
 
@@ -111,3 +121,20 @@ Source page links:
 - https://www.digilib.am/book/333/339/7555/Տարեգիրք (630)
 
 Sections 594 and 599 were opened directly and their complete visible entries were saved. The other eight were preserved from Digilib's indexed text results; their completeness is not verified. Each file carries a provenance marker. No missing text was reconstructed.
+
+
+## Additional retrieval — ten more Chronicle parts (10 files)
+
+New files:
+- Section 500: https://digilib.aua.am/book/333/339/7478/Տարեգիրք
+- Section 637: https://www.digilib.am/book/333/339/7559/Տարեգիրք
+- Section 641: https://www.digilib.am/book/333/339/7562/Տարեգիրք
+- Section 647: https://www.digilib.am/book/333/339/7566/?siteMapItem=lib
+- Section 655: https://digilib.aua.am/book/333/339/7571/Տարեգիրք
+- Sections 656–658 (combined indexed passage): https://www.digilib.am/book/333/339/7572/Տարեգիրք
+- Section 660: https://digilib.aua.am/book/333/339/7574/Տարեգիրք
+- Section 668: https://digilib.aua.am/book/333/339/7578/Տարեգիրք
+- Section 669: https://digilib.aua.am/book/333/339/7579/Տարեգիրք
+- Section 708: https://www.digilib.am/book/333/339/7590/Տարեգիրք
+
+These ten files were captured from Digilib indexed results. They are not verified complete transcriptions and are marked accordingly. The 656–658 search result combined multiple dated entries; its boundaries were not guessed or reconstructed, so it remains one combined file. Section 708 preserves only the non-operational political and ecclesiastical portion of the indexed passage; its omitted continuation has not been reconstructed. All text was kept in Grabar, without editorial modernization.
