@@ -1063,3 +1063,28 @@ def test_contents_section_before_a_chapter_line():
         ("Ա", "Յաղագս լերանց:"),
         ("Բ", "Յաղագս ծովու:"),
     ]
+
+
+def test_contents_of_titles_alone():
+    # Ներսէս Լամբրոնացի: a title alone between blank
+    # lines, then the text; only in a long part
+    lines = ["Գիրք · 1/1", ""]
+    for n in range(4):
+        lines += [
+            f"Զի՞նչ է {n}",
+            "",
+            "Տեքստ։",
+            "Տեքստ։",
+            "",
+        ]
+    lines += ["Տեքստ։"] * 150
+    got = contents(lines)
+    assert [e["title"] for e in got[1:]] == [
+        f"Զի՞նչ է {n}" for n in range(4)
+    ]
+    # a short part has none
+    assert contents(lines[:22]) == []
+    # nor has running text in [1], [2] sections
+    assert contents(["[1]", ""] + lines) == contents(
+        ["[1]"]
+    )

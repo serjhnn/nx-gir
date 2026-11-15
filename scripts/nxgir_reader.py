@@ -668,6 +668,43 @@ def titled_numbers(lines):
     return out if len(out) >= LONE_MIN else []
 
 
+# a long part with no numbers at all: its sections
+# are a title line alone between blank lines, then the
+# text (Ներսէս Լամբրոնացի, Խորհրդածութիւնք)
+TITLES_MIN = 3
+TITLES_PART = 150
+DIGIT_SECTION_RE = re.compile(r"\[\d+\]")
+
+
+def title_lines(lines):
+    """Entries for a long part whose sections start with
+    a title alone between blank lines; [] when the part
+    is short, has Digilib's [1], [2] sections (running
+    text) or has fewer than TITLES_MIN of them."""
+    if len(lines) < TITLES_PART or any(
+        DIGIT_SECTION_RE.fullmatch(x.strip()) for x in lines
+    ):
+        return []
+    out = []
+    for i, line in enumerate(lines):
+        t = line.strip()
+        if not t or i == 0 or len(t) > TITLE_MAX * 2:
+            continue
+        if lines[i - 1].strip() or i + 1 >= len(lines):
+            continue
+        if lines[i + 1].strip():
+            continue
+        out.append(
+            {
+                "line": i,
+                "n": "",
+                "title": short(t),
+                "level": 2,
+            }
+        )
+    return out if len(out) >= TITLES_MIN else []
+
+
 def contents(lines):
     """The parts of a book, in order: [{"line": the
     line to go to, "n": its number or "", "title":
@@ -800,6 +837,8 @@ def contents(lines):
         out = lone_numbers(lines)
     if not out:
         out = titled_numbers(lines)
+    if not out:
+        out = title_lines(lines)
     # the text before the first heading is reachable
     # too: an entry for the start of the text
     first = next(

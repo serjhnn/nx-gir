@@ -264,6 +264,10 @@
   titled by the line after the ԳԼՈՒԽ line (Ուխտանէս).
   A chronicle in `[1]`, `[2]` sections with no other
   headings has no list (`NO_CONTENTS`).
+  A long part (150 lines or more, no `[1]` sections)
+  whose sections start with a title alone between blank
+  lines, three or more, is read as that (`title_lines()`,
+  the last rule; Ներսէս Լամբրոնացի).
   A book of songs or sermons numbered in letters
   with titles in capitals (`Ա. ՏԱՂ ՅԱՐՈՒԹԵԱՆ ...`,
   Narekatsi's Գանձեր եւ Տաղեր) takes those lines

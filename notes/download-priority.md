@@ -124,6 +124,16 @@ is done.
 ## 4. Law, theology and poetry (close to the
    existing library)
 
+Status (2026-11-15): Smbat Sparapet's Datastanagirk
+(Digilib 332, 211 sections in one part) and Nerses
+Lambronatsi's Khorhrdatsutiunk (1483, 133 sections in
+seven parts, fetched with `--by-id`) are in `books/`.
+The ids in the list below are not Digilib ids: Vardan
+Aygektsi is 352 (Zhoghovatsoy arakats; Armat havatoy
+353 is the other), Shahamirian 195 (194 is his
+second Orogayt), Sukias 342. 352, 195 and 342 failed
+when Digilib went down (404 on every page): to do.
+
 - Սմբատ Սպարապետ, Դատաստանագիրք (211, 169 parts):
   joins Gosh's law book
 - Վարդան Այգեկցի, Ժողովածոյ առակաց (389)
