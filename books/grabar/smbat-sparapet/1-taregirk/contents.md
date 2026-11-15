@@ -2,7 +2,7 @@
 
 ## Smbat Sparapet — *Տարեգիրք* (Chronicle)
 
-This contents guide describes the twenty-five Grabar section files (including two explicitly marked partial excerpts) currently imported into this directory. The numbered entries follow the Digilib section identifiers; they are not consecutive chapter numbers. Descriptions are brief reader-oriented summaries, not translations. They avoid reproducing graphic passages.
+This contents guide describes the thirty-five Grabar section files currently imported into this directory. Several files are explicitly marked as indexed excerpts whose completeness has not been verified. The numbered entries follow the Digilib section identifiers; they are not consecutive chapter numbers. Descriptions are brief reader-oriented summaries, not translations. They avoid reproducing graphic passages.
 
 1. **Section 410 — The Armenian coronation of Gagik.** The entry records Gagik's formal anointing as king in Ani and then turns to a change of ruler in the Byzantine Empire.
 2. **Section 418 — Byzantine imperial succession.** A chronicle entry focused on the Byzantine court and the succession of emperors.
@@ -32,8 +32,19 @@ This contents guide describes the twenty-five Grabar section files (including tw
 24. **Section 564 — A strange fire in Amid and regional alliances.** The entry records an unusual event in Amid and a coalition of regional rulers during conflict near Antioch. The imported text is only an indexed excerpt and ends before the source entry is complete.
 25. **Section 715 — The Mamluk campaign and Hethum's diplomacy.** The passage describes the sultan's campaign, territorial demands, and Hethum's diplomatic efforts. The imported text is only an indexed excerpt and ends mid-entry.
 
+26. **Section 545 — Melitene and the arrival of western nobles.** The entry recounts a threat to Melitene and the arrival of western nobles to support the region. The available text is an indexed excerpt.
+27. **Section 555 — Gregory the Witness-Lover and the Armenian Catholicosate.** The passage concerns the reception of Catholicos Barsegh, the care of young members of the Pahlavuni family, and the death and burial of Gregory.
+28. **Section 560 — Regional conflict around Tilkurna and Tilbashar.** The entry follows shifting alliances and a confrontation that ends without a battle. The available text is an indexed excerpt.
+29. **Section 567 — Baldwin's succession in Jerusalem and the Armenian prince Leon.** The chronicle records a royal succession, developments in Persia, and Leon's growing prominence. The available text is an indexed excerpt.
+30. **Section 568 — The death of Roger of Antioch and changes in the region.** The entry records a major defeat, the death of Roger, and subsequent political changes, as well as the Byzantine succession. The available text is an indexed excerpt.
+31. **Section 589 — The Catholicosate finds a home at Hromkla.** The account describes displacement in the Taurus region and how Gregory and Nerses secured Hromkla as the Armenian Catholicosate's seat. The available text is an indexed excerpt.
+32. **Section 594 — The return of Thoros to his ancestral lands.** Thoros escapes captivity in Constantinople, gathers support, and gradually re-establishes control in the Taurus region. The page was opened directly.
+33. **Section 599 — Hromkla becomes the Armenian Catholicosate's seat.** Gregory and Nerses seek a secure home for the Catholicosate; Joscelin grants Hromkla and confirms its use in a written document. The page was opened directly.
+34. **Section 619 — Earthquake and conflict in Cilicia.** The entry records an earthquake affecting Antioch and Aleppo and renewed tension between the Roupenian and Het'umid houses. The available text is an indexed excerpt.
+35. **Section 630 — Ruben's marriage and Leon's departure.** The chronicle describes Ruben's marriage and Leon's departure for Constantinople after political suspicion arose. The available text is an indexed excerpt.
+
 ## Editorial note
 
-This is a partial collection of source sections, not a complete transcription of the Chronicle. The entries above are navigational summaries based on the imported text. Sections 564 and 715 are explicitly partial indexed excerpts; other imported sections still require comparison with the original Digilib pages or scans to confirm completeness. The source text remains in Grabar; no translation or editorial correction is implied.
+This is a partial collection of source sections, not a complete transcription of the Chronicle. The entries above are navigational summaries based on the imported text. Sections 545, 555, 560, 567, 568, 589, 619, and 630 were captured from indexed text and require comparison with the original pages or scans. Sections 564 and 715 are explicitly partial excerpts. Sections 594 and 599 were opened directly; the other imported sections still require source comparison to confirm completeness. The source text remains in Grabar; no translation or editorial correction is implied.
 
 **Source:** [Digilib — Տարեգիրք, attributed to Սմբատ Սպարապետ](https://www.digilib.am/book/333/)
