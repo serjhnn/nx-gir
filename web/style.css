@@ -739,31 +739,33 @@ h1 {
 .library .star:focus-visible {
   background: var(--hover);
 }
-/* the tabs: all the books, or the starred ones;
-   a switch, the chosen half filled (it slides) */
+/* the tabs: all the books, the starred ones, the
+   ones being read; the chosen tab outlined in the
+   accent color (the outline slides) */
 .lib-tabs {
   position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin: 0 0 1.5rem;
-  border: 1px solid var(--accent);
+  border: 1px solid var(--rule);
   border-radius: 10px;
-  overflow: hidden;
+  --i: 0;
+}
+.lib-tabs[data-tab="starred"] {
+  --i: 1;
+}
+.lib-tabs[data-tab="reading"] {
+  --i: 2;
 }
 .lib-tabs .thumb {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: calc(100% / 3);
-  background: var(--accent);
-  transition: transform 0.25s ease;
-}
-.lib-tabs[data-tab="starred"] .thumb {
-  transform: translateX(100%);
-}
-.lib-tabs[data-tab="reading"] .thumb {
-  transform: translateX(200%);
+  top: -1px;
+  bottom: -1px;
+  left: calc(var(--i) * 100% / 3 - 1px);
+  width: calc(100% / 3 + 2px);
+  border: 1.5px solid var(--accent);
+  border-radius: 10px;
+  transition: left 0.25s ease;
 }
 .lib-tabs button {
   position: relative;
@@ -774,15 +776,18 @@ h1 {
   padding: 0.55rem 0.4rem;
   border: 0;
   background: none;
-  color: var(--accent-ink);
+  color: var(--muted);
   font: 500 0.95rem/1.3 var(--serif);
   white-space: nowrap;
   cursor: pointer;
   transition: color 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
+.lib-tabs button:hover {
+  color: var(--text);
+}
 .lib-tabs button[aria-selected="true"] {
-  color: var(--on-accent);
+  color: var(--accent-ink);
 }
 /* a thin, dim line between the tabs, short of
    the outline; none beside the chosen one */
@@ -793,8 +798,7 @@ h1 {
   bottom: 25%;
   left: 0;
   width: 1px;
-  background: var(--accent);
-  opacity: 0.35;
+  background: var(--rule);
   transition: opacity 0.2s ease;
 }
 .lib-tabs button[aria-selected="true"]::before,
