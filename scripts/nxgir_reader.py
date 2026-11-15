@@ -635,15 +635,27 @@ TITLED_RE = re.compile(r"([Ա-Ֆ]{1,4})\.\s+(\S.*)")
 
 def titled_numbers(lines):
     """Entries for a book whose chapters start with a
-    line "Ա. Title" and then the number alone, "Ա"; []
-    if there are fewer than LONE_MIN of them."""
+    line "Ա. Title" and then the number alone, "Ա", or
+    that stands alone between blank lines (Եղիշէ,
+    Խրատք); [] if there are fewer than LONE_MIN."""
     out = []
     for i, line in enumerate(lines):
         m = TITLED_RE.fullmatch(line.strip())
         if not m:
             continue
         nxt = (x.strip() for x in lines[i + 1 :])
-        if next((x for x in nxt if x), "") != m.group(1):
+        after = next((x for x in nxt if x), "")
+        # or the line stands alone between blank lines
+        # and text follows, not another such line (a
+        # list of verses)
+        alone = (
+            i > 0
+            and not lines[i - 1].strip()
+            and i + 1 < len(lines)
+            and not lines[i + 1].strip()
+            and not TITLED_RE.fullmatch(after)
+        )
+        if after != m.group(1) and not alone:
             continue
         out.append(
             {

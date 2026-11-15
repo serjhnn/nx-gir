@@ -1024,3 +1024,18 @@ def test_contents_of_titled_numbers():
     assert [(e["n"], e["title"]) for e in got[1:]] == [
         (n, f"Յաղագս {n}") for n in "ԱԲԳԴԵ"
     ]
+
+
+def test_contents_of_titled_lines_alone():
+    lines = ["Գիրք · 1/1", ""]
+    for n in "ԲԳԴԵԶ":
+        lines += [
+            f"{n}. Վասն {n}։",
+            "",
+            "Տեքստ։",
+            "Տեքստ։",
+            "",
+        ]
+    got = contents(lines)
+    assert [e["n"] for e in got[1:]] == list("ԲԳԴԵԶ")
+    assert got[1]["title"] == "Վասն Բ։"

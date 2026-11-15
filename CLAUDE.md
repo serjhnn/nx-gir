@@ -250,7 +250,9 @@
   is the whole line).
   A book with `Ա. Title` lines, each followed by
   the number alone (`titled_numbers()`, at least 5)
-  is read too (Գրիգոր Լուսաւորիչ).
+  is read too (Գրիգոր Լուսաւորիչ), and so is an
+  `Ա. Title` line alone between blank lines with text
+  after it (Եղիշէ, Խրատք).
   A critical edition (Եղիշէ, Մեկնութիւն Արարածոց)
   has `Ա (Ա II)` section lines, read like Digilib's
   `[Ա]`, and ԾԱՆՕԹԱԳՐՈՒԹԻՒՆՆԵՐ, ՅԱՒԵԼՈՒԱԾ as groups.

@@ -54,8 +54,11 @@ parts; a critical edition with manuscript marks, fetched
 with `--by-id`: Digilib lists the first 22 sections
 out of order; its headings `Ա (Ա II)`, and the notes
 and appendix, are read by `contents()`).
-Group 1 is done except Yeghishe's Khratk (1395) and
-Ghazar's Tught (1592).
+Group 1 is done, with Yeghishe's Khratk (1395, 32
+sections in three parts: counsels, a treatise on
+souls, a commentary on Joshua and Judges; its Contents
+lists only the lettered chapters, `Բ. Վասն ...`) and
+Ghazar's Tught (1592, one short part).
 
 Group 2 (2026-11-15): Grigor Lusavorich, Yachakhapatum
 charq (1596) is in `books/` (25 sections in three
