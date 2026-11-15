@@ -1,7 +1,8 @@
 # Sources
 
 Copies of the sources used for the Grabar helper data,
-so every entry can be checked by hand.
+so every entry can be checked by hand, and the scan
+behind a book typed from print.
 
 ## abrahamyan-1959/
 
@@ -96,3 +97,23 @@ the letters and the grammar in nx-gir (e.g. ամցն =
 ամենեցուն) and are not from a published source, so there
 is no copy here. When a source turns up, add its copy
 here and change the mark.
+
+## shahnazareants-1859/
+
+`taregirk-1859.pdf`: Տարեգիրք Սմբատայ Սպարապետի,
+Paris 1859, edited by K. Shahnazareants (public
+domain), 267 PDF pages (5.4 MB), the scan made by
+Google and put on the Internet Archive by Robert
+Bedrosian: <https://archive.org/details/SmbatGrabarTaregirk1859>
+(file `Smbat_grabar_taregirk_1859.pdf`, copied
+unchanged on 2026-11-15).
+
+The text of `books/grabar/smbat-sparapet/2-taregirk/`
+was typed from it: printed pages 21-141 are PDF pages
+26-156 (pages 51-60 scan 41-50 a second time, so a
+printed page p is PDF page p + 5 up to page 45 and
+p + 15 after it). The 50 words that were hard to read
+are in `notes/smbat-sparapet-taregirk.md`, by printed
+page; check them here. The rest of the book (the
+editor's preface and notes, and Vahram Rabuni's
+history of the Rubenians) is not in the library.
