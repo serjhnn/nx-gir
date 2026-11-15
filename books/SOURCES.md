@@ -544,3 +544,16 @@ one sentence per line, with blank lines between the
 source paragraphs. No `։` lacked a following space in
 the source. Only line breaks and paragraph spacing were
 changed; the Grabar wording is unchanged.
+
+## grabar/yeghishe/2-meknutiun-ararodzots/
+
+*Մեկնութիւն Արարածոց* by Yeghishe, from Digilib
+(<https://www.digilib.am/book/1394/>; book 1394), a
+critical edition of fragments attributed to him, in
+108 sections and three parts; fetched with `--by-id`
+(Digilib lists the first sections out of order).
+Part 1 had 847 lines before sentence splitting and has
+1483 lines after it, split at `։`, with blank lines
+between the source paragraphs. Only line breaks and
+paragraph spacing were changed; the Grabar wording is
+unchanged.

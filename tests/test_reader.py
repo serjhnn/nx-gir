@@ -1088,3 +1088,15 @@ def test_contents_of_titles_alone():
     assert contents(["[1]", ""] + lines) == contents(
         ["[1]"]
     )
+
+
+def test_contents_of_critical_edition_translation():
+    # the translation has Ա (Ա Բ) for Ա (Ա II): the
+    # same entries as the Grabar
+    # (a stray space before ) is in the source too)
+    src = ["Ա (Ա)", "Ա. 1ա", "1 Տ։", "Բ (Ա II )", "Տ։"]
+    out = ["Ա (Ա)", "Ա 1ա", "1 Տ։", "Բ (Ա Բ)", "Տ։"]
+    a = contents(["Գիրք · 1/1", ""] + src)
+    b = contents(["Գիրք · 1/1", ""] + out)
+    assert [e["n"] for e in a] == [e["n"] for e in b]
+    assert [e["line"] for e in a] == [e["line"] for e in b]

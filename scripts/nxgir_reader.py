@@ -302,12 +302,13 @@ PRAK_SKIP = ("հարց", "պատասխան", "պատասխանեմք")
 # [Ա] (the first may be [Գլուխ Ա]); the section's
 # title is the next line. In a critical edition
 # (Եղիշէ, Մեկնութիւն Արարածոց) the number is Ա (Ա II),
-# the edition's own in brackets, and a manuscript page
+# the edition's own in brackets (a translation has
+# Ա (Ա Բ) for Ա (Ա II)), and a manuscript page
 # mark (Ա. 1ա) comes before the text, with a verse
 # number at its start (1 Անմարմին ...)
 SECTION_RE = re.compile(
     r"\[(?:Գլուխ\s+)?([Ա-Ֆ]{1,4})\]"
-    r"|([Ա-Ֆ]{1,4})\s\([Ա-Ֆ]{1,4}(?:\s[IVX]+)?\)"
+    r"|([Ա-Ֆ]{1,4})\s\([Ա-Ֆ]{1,4}(?:\s[IVX]+|\s[Ա-Ֆ]{1,4})?\s?\)"
 )
 MS_PAGE_RE = re.compile(r"[Ա-Ֆ]\.\s+\d+[ա-ֆ]")
 # a verse at the end: Սաղ. 131. 9. or 1 Թագ. 2. 7։

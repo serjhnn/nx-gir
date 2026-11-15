@@ -43,9 +43,31 @@ the firmament and the Greek and Hebrew terms for wind and
 spirit; the creation of light; and the beginning of the
 commentary on the second day.
 
+## Review (2026-11-15, after the draft)
+
+Fixed in the repository after the draft:
+
+- The `machine` record is in `books/TRANSLATIONS.tsv`
+  (its model is not stated in the draft: to fill in).
+- The 224 lines with added « » lost them, as the guide
+  says (the check showed 480 extra marks); five lines
+  that lost their closing `։` have it again.
+- The headings `Բ (Ա II)` are `Բ (Ա Բ)` in the
+  translation (no Latin letters); `contents()` reads
+  both, so the two lists have the same 91 entries.
+
+To check in the human review:
+
+- The Grabar has editorial `[ ]` for letters or words
+  restored by the editors (18 of them); the draft drops
+  all but one. Compare them line by line.
+- The parentheses differ in 34 lines.
+- Without « » some quoted speech reads less clearly;
+  the sentence before it ends with `.`.
+
 ## How to do the next part
 
-Part 1 translation is complete. Next step: human review against the Grabar source, with particular attention to damaged or uncertain OCR passages and theological terminology. After Part 1 is complete, run the repository
-structure check, add the translation record as `machine`,
-update the source and timeline records, and run the
-repository tests. Then continue with Parts 2 and 3.
+Part 1 translation is complete. Next step: human review
+against the Grabar source, with particular attention to
+damaged or uncertain OCR passages and theological
+terminology. Then continue with Parts 2 and 3.
