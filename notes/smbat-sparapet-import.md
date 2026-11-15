@@ -8,42 +8,52 @@
 
 ## Imported sections
 
-The following eight sections have been retrieved as complete page text from Digilib and committed as individual Grabar text files:
+Eighteen section files have been committed to this branch:
 
 | Section | File |
 |---|---|
 | 410 | books/grabar/smbat-sparapet/1-taregirk/0410.txt |
 | 418 | books/grabar/smbat-sparapet/1-taregirk/0418.txt |
+| 421 | books/grabar/smbat-sparapet/1-taregirk/0421.txt |
+| 424 | books/grabar/smbat-sparapet/1-taregirk/0424.txt |
 | 432 | books/grabar/smbat-sparapet/1-taregirk/0432.txt |
+| 494 | books/grabar/smbat-sparapet/1-taregirk/0494.txt |
+| 508 | books/grabar/smbat-sparapet/1-taregirk/0508.txt |
 | 511 | books/grabar/smbat-sparapet/1-taregirk/0511.txt |
 | 523 | books/grabar/smbat-sparapet/1-taregirk/0523.txt |
+| 541 | books/grabar/smbat-sparapet/1-taregirk/0541.txt |
+| 546 | books/grabar/smbat-sparapet/1-taregirk/0546.txt |
+| 547 | books/grabar/smbat-sparapet/1-taregirk/0547.txt |
+| 562 | books/grabar/smbat-sparapet/1-taregirk/0562.txt |
+| 598 | books/grabar/smbat-sparapet/1-taregirk/0598.txt |
+| 610 | books/grabar/smbat-sparapet/1-taregirk/0610.txt |
 | 618 | books/grabar/smbat-sparapet/1-taregirk/0618.txt |
 | 717 | books/grabar/smbat-sparapet/1-taregirk/0717.txt |
 | 718 | books/grabar/smbat-sparapet/1-taregirk/0718.txt |
 
-Source pages:
-- https://www.digilib.am/book/333/339/7434/Տարեգիրք (410)
-- https://www.digilib.am/book/333/339/7436/Տարեգիրք (418)
-- https://www.digilib.am/book/333/339/7441/Տարեգիրք (432)
-- https://www.digilib.am/book/333/339/7472/Տարեգիրք (511)
-- https://www.digilib.am/book/333/339/7480/Տարեգիրք (523)
-- https://www.digilib.am/book/333/339/7547/Տարեգիրք (618)
-- https://www.digilib.am/book/333/339/7597/Տարեգիրք (717)
-- https://www.digilib.am/book/333/339/7598/Տարեգիրք (718)
+## Source retrieval notes
 
-Text is preserved in Grabar, including page/folio markers and the source's orthography. No translation or editorial correction has been applied.
+Digilib's index lists 173 linked entries. For this batch, direct page retrieval was intermittent (404 responses and timeouts). The ten new files preserve the Grabar text returned by Digilib's indexed page results; section 508 was also opened as a full page. Because indexed results may truncate long passages, the new batch should be checked against the original pages or scans before being treated as a verified complete transcription or used for translation. No missing text has been reconstructed.
 
-## Remaining inventory
+Source page links for the latest batch:
+- https://www.digilib.am/book/333/339/7438/Տարեգիրք (421)
+- https://www.digilib.am/book/333/339/7439/Տարեգիրք (424)
+- https://www.digilib.am/book/333/339/7463/Տարեգիրք (494)
+- https://www.digilib.am/book/333/339/7471/Տարեգիրք (508)
+- https://www.digilib.am/book/333/339/7491/Տարեգիրք (541)
+- https://www.digilib.am/book/333/339/7496/Տարեգիրք (546)
+- https://www.digilib.am/book/333/339/7497/Տարեգիրք (547)
+- https://www.digilib.am/book/333/339/7511/Տարեգիրք (562)
+- https://www.digilib.am/book/333/339/7540/Տարեգիրք (598)
+- https://www.digilib.am/book/333/339/7543/Տարեգիրք (610)
 
-The Digilib index exposes 173 linked entries in total. Only the eight sections above are imported so far. Other sections are not assumed to be sequential; use the actual linked pages and verify each source passage before committing it.
-
-Some direct page fetches return 404 or time out. Retry individual pages through indexed Digilib results and alternate retrieval attempts. If only a search excerpt is available, do not label it a complete section or silently fill missing text.
+The earlier eight imports were retrieved and checked in their respective source-page attempts. Text is preserved in Grabar; no translation or editorial correction has been applied.
 
 ## Workflow
 
 - Retrieve in small batches.
 - Preserve original Grabar text, folio markers, section labels, and paragraph boundaries.
 - Keep each section in its own numbered text file.
-- Verify source completeness before treating a section as imported.
+- Verify source completeness before treating a section as ready for translation.
 - Commit only to this branch; never push to `main`.
 - Open a PR when a substantial, checked batch is ready; do not merge automatically.
