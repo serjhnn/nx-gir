@@ -8,7 +8,7 @@
 
 ## Imported sections
 
-Twenty section files have been committed to this branch:
+Twenty-two section files have been committed to this branch:
 
 | Section | File |
 |---|---|
@@ -30,6 +30,8 @@ Twenty section files have been committed to this branch:
 | 616 | books/grabar/smbat-sparapet/1-taregirk/0616.txt |
 | 618 | books/grabar/smbat-sparapet/1-taregirk/0618.txt |
 | 622 | books/grabar/smbat-sparapet/1-taregirk/0622.txt |
+| 625 | books/grabar/smbat-sparapet/1-taregirk/0625.txt |
+| 626 | books/grabar/smbat-sparapet/1-taregirk/0626.txt |
 | 717 | books/grabar/smbat-sparapet/1-taregirk/0717.txt |
 | 718 | books/grabar/smbat-sparapet/1-taregirk/0718.txt |
 
@@ -40,6 +42,8 @@ Digilib's index lists 173 linked entries. For this batch, direct page retrieval 
 Source page links for the additional sections:
 - https://www.digilib.am/book/333/339/7545/Տարեգիրք (616)
 - https://www.digilib.am/book/333/339/7549/Տարեգիրք (622)
+- https://www.digilib.am/book/333/339/7551/Տարեգիրք (625)
+- https://www.digilib.am/book/333/339/7552/Տարեգիրք (626)
 
 Source page links for the earlier batch:
 - https://www.digilib.am/book/333/339/7438/Տարեգիրք (421)
@@ -53,7 +57,7 @@ Source page links for the earlier batch:
 - https://www.digilib.am/book/333/339/7540/Տարեգիրք (598)
 - https://www.digilib.am/book/333/339/7543/Տարեգիրք (610)
 
-Sections 616 and 622 were available as complete indexed text passages; direct page requests returned 404. Their text was saved as shown by the indexed results and checked back from GitHub. The ten sections in the previous batch still need source-page comparison because some were indexed excerpts. The earlier eight imports were retrieved and checked in their respective source-page attempts. Text is preserved in Grabar; no translation or editorial correction has been applied.
+Sections 616 and 622 were available as complete indexed text passages; direct page requests returned 404. Their text was saved as shown by the indexed results and checked back from GitHub. Sections 625 and 626 were opened as full Digilib pages and their complete short entries were copied and checked back from GitHub. The ten sections in the previous batch still need source-page comparison because some were indexed excerpts. The earlier eight imports were retrieved and checked in their respective source-page attempts. Text is preserved in Grabar; no translation or editorial correction has been applied.
 
 ## Workflow
 
