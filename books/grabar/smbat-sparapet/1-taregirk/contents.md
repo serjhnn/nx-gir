@@ -2,7 +2,7 @@
 
 ## Smbat Sparapet — *Տարեգիրք* (Chronicle)
 
-This contents guide describes the forty-five Grabar text files currently imported into this directory. Several files are explicitly marked as indexed excerpts whose completeness has not been verified. The numbered entries follow the Digilib section identifiers; they are not consecutive chapter numbers. Descriptions are brief reader-oriented summaries, not translations. They avoid reproducing graphic passages.
+This contents guide describes the fifty-five Grabar text files currently imported into this directory. Several files are explicitly marked as indexed excerpts whose completeness has not been verified. The numbered entries follow the Digilib section identifiers; they are not consecutive chapter numbers. Descriptions are brief reader-oriented summaries, not translations. They avoid reproducing graphic passages.
 
 1. **Section 410 — The Armenian coronation of Gagik.** The entry records Gagik's formal anointing as king in Ani and then turns to a change of ruler in the Byzantine Empire.
 2. **Section 418 — Byzantine imperial succession.** A chronicle entry focused on the Byzantine court and the succession of emperors.
@@ -60,3 +60,15 @@ This is a partial collection of source sections, not a complete transcription of
 43. **Section 668 — Leon's final counsel and the succession of Zabel.** The chronicle describes the transfer of Hromkla to the Catholicosate and King Leon's final instructions concerning his daughter and successor. The imported passage is an indexed excerpt.
 44. **Section 669 — A revolt against the Armenian bailiff.** The available excerpt describes unrest among Armenian and Greek nobles and the response of Constantine, the Armenian bailiff.
 45. **Section 708 — Hethum's diplomacy and an ecclesiastical appointment.** Hethum reconciles his son-in-law in Tripoli; the entry also records a church council in Tarsus and the ordination of Baldwin. Only the political and ecclesiastical portion of the indexed text is included.
+
+
+46. **Section 631 — Ruben's detention in Antioch.** Leon returns from Constantinople to his brother Ruben; political and personal tensions lead to Ruben's detention by the prince of Antioch. The page was opened directly.
+47. **Section 642 — Leon and the prince of Antioch; changes in the Catholicosate.** The entry records Leon's dealings with the prince of Antioch, Saladin's demands, and developments in the Armenian Church. The source page combines sections 642–643; this text is split at the explicit dated-entry boundary.
+48. **Section 643 — Gregory Apirat and dynastic arrangements.** The continuation records Gregory Apirat's appointment and marriage arrangements linking the Armenian and Antiochene ruling houses. It comes from the combined 642–643 page.
+49. **Section 645 — A diplomatic gift from the Byzantine emperor.** The emperor sends Leon a precious crown and seeks a friendly alliance. The page was opened directly.
+50. **Section 650 — Tughril Shah and the city of Karin.** The entry describes the succession in Karin and Tughril Shah's friendly relationship with King Leon. The page was opened directly.
+51. **Section 652 — The election of Catholicos John.** The death of Gregory and the election of John as Catholicos are recorded. The available text is an indexed excerpt; completeness is unverified.
+52. **Section 675 — Hethum's accession.** The Armenian princes and Catholicos Constantine choose Hethum as king and arrange his marriage to Zabel, after which the chronicle notes a period of peace.
+53. **Section 705 — Hethum's return and Leon's knighting.** The entry records Hethum's return from the Mongol court, a campaign in the region, and the ceremonial knighting of his eldest son. The page was opened directly.
+54. **Section 720 — Leon's coronation and diplomacy.** Leon is crowned king; the entry then records diplomatic exchanges with Abaqa Khan and the birth of a royal son. The available text is an indexed excerpt; completeness is unverified.
+55. **Section 721 — Snow in Cilicia and the death of Vardapet Kirakos.** Only the dated notice about snowfall and Kirakos's death is retained. The remainder, which concerns a poisoning plot, is intentionally omitted and has not been reconstructed.
