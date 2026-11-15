@@ -17,7 +17,7 @@ paragraph breaks. No full stop lacked a following space.
 Only line breaks and paragraph spacing were changed; the
 Grabar wording was not edited.
 
-Chunks 1–13: lines 1–975 translated in thirteen 75-line
+Chunks 1–16: lines 1–1,200 translated in sixteen 75-line
 chunks. Source and translation line counts match for the
 translated prefix, and blank-line positions match. The
 draft is being added incrementally and is not yet complete
@@ -49,7 +49,7 @@ commentary on the second day.
 
 ## How to do the next part
 
-Continue Part 1 at source line 976, in chunks of 75–150
+Continue Part 1 at source line 1,201, in chunks of 75–150
 lines. After Part 1 is complete, run the repository
 structure check, add the translation record as `machine`,
 update the source and timeline records, and run the
