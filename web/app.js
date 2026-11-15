@@ -987,16 +987,45 @@ function starsHere() {
 }
 
 // the tab of the Library last shown in this
-// browser: "all" or "starred"
+// browser: "all", "starred" or "reading"
 const LIB_TAB = "nxgir-library-tab";
+const LIB_TABS = ["all", "starred", "reading"];
 
 function libraryTab() {
   try {
-    return localStorage.getItem(LIB_TAB)
-      === "starred" ? "starred" : "all";
+    const t = localStorage.getItem(LIB_TAB);
+    return LIB_TABS.includes(t) ? t : "all";
   } catch (e) {
     return "all";
   }
+}
+
+// the books of the Library being read, last read
+// first: [{b, by, at: the part read last, its
+// progress, part ("3/12" for a book in parts) and
+// seen}]. A translation read counts for its book.
+function readingBooks(data, items) {
+  const of = new Map();
+  for (const a of data.authors) {
+    for (const b of a.books) {
+      const key = b.parts > 1 ? dirOf(b.first)
+        : b.first;
+      of.set(key, { b, by: a.name });
+    }
+  }
+  const out = new Map();
+  for (const r of items) {
+    const name = r.name.replace(
+      /^ashkharhabar\//, "grabar/");
+    const x = of.get(name) || of.get(dirOf(name));
+    if (!x || out.has(x.b.first)) continue;
+    const m = /· (\d+\/\d+)$/.exec(r.title || "");
+    out.set(x.b.first, { ...x, at: r.name,
+      progress: r.progress || 0,
+      part: x.b.parts > 1 && m ? m[1] : "",
+      seen: r.seen });
+  }
+  return [...out.values()];
 }
 
 // star a book (named by its first file), or take
@@ -1041,10 +1070,13 @@ function libraryRow(b, by) {
 }
 
 // #/library: the Grabar books, by author, or the
-// starred ones (a tab); #/library/<author> scrolls
-// to that author
+// starred ones, or those being read (tabs);
+// #/library/<author> scrolls to that author
 async function libraryPage(who) {
-  const data = await api("library");
+  const [data, recent] = await Promise.all([
+    api("library"),
+    api("recent?n=0").catch(() => ({ items: [] })),
+  ]);
   document.title = "Գրադարան · " + NAME;
   let stars = data.stars || [];
   // first file -> the book and its author
@@ -1071,49 +1103,8 @@ async function libraryPage(who) {
     buttons.push(btn);
     return btn;
   };
-  // the tabs: all the books, or the starred ones
-  const n = data.authors.reduce(
-    (k, a) => k + a.books.length, 0);
-  const count = h("span", { class: "count" });
-  const tabAll = h("button", { type: "button",
-    role: "tab", id: "tab-all",
-    "aria-controls": "lib-all" }, "Բոլոր գրքերը",
-  h("span", { class: "count" }, String(n)));
-  const tabStar = h("button", { type: "button",
-    role: "tab", id: "tab-starred",
-    "aria-controls": "lib-starred" },
-  "★ Ընտրված", count);
-  const tabs = h("div", { class: "lib-tabs",
-    role: "tablist", "aria-label": "Գրադարան" },
-  h("span", { class: "thumb",
-    "aria-hidden": "true" }),
-  tabAll, tabStar);
-  const starPane = h("div", { id: "lib-starred",
-    role: "tabpanel", "aria-labelledby":
-      "tab-starred" });
-  const drawStars = () => {
-    const list = h("ul", { class: "shelf" });
-    for (const k of stars) {
-      const x = books.get(k);
-      if (!x) continue;
-      list.append(h("li", {},
-        libraryRow(x.b, x.by), starBtn(x.b)));
-    }
-    const k = list.children.length;
-    starPane.replaceChildren(k ? list
-      : h("p", { class: "empty" },
-        "Ընտրված գրքեր դեռ չկան։ Գրքի կողքի ☆-ով"
-        + " ավելացրեք այստեղ։"));
-    count.textContent = String(k);
-    count.hidden = !k;
-    buttons = buttons.filter((x) => x.isConnected);
-    for (const x of buttons) {
-      const on = stars.includes(x.dataset.name);
-      x.textContent = on ? "★" : "☆";
-      x.setAttribute("aria-pressed", String(on));
-      x.title = on ? "Հանել աստղը" : "Աստղանշել";
-    }
-  };
+  const empty = (t) => h("p", { class: "empty" }, t);
+  // the panes, one per tab
   const groups = data.authors.map((a) => {
     const list = h("ul", { class: "shelf" });
     for (const b of a.books) {
@@ -1130,38 +1121,106 @@ async function libraryPage(who) {
           a.name)
         : a.name), list);
   });
-  const allPane = h("div", { id: "lib-all",
-    role: "tabpanel", "aria-labelledby": "tab-all" },
-  groups.length ? groups
-    : h("p", { class: "empty" }, "Գրքեր դեռ չկան։"));
+  const panes = {
+    all: h("div", {}, groups.length ? groups
+      : empty("Գրքեր դեռ չկան։")),
+    starred: h("div"),
+    reading: h("div"),
+  };
+  // being read: each opens where it was left
+  const reading = readingBooks(data, recent.items);
+  const readList = h("ul", { class: "shelf" });
+  for (const r of reading) {
+    const row = libraryRow(r.b, r.by);
+    row.href = "#/read/" + enc(r.at);
+    const meta = row.querySelector(".meta");
+    const fill = h("span");
+    fill.style.width = r.progress + "%";
+    meta.replaceChildren(
+      (r.part ? "մաս " + r.part + " · " : "")
+        + r.progress + "%",
+      h("span", { class: "progress", role: "img",
+        "aria-label": r.progress + "%" }, fill));
+    readList.append(h("li", {}, row, starBtn(r.b)));
+  }
+  panes.reading.append(reading.length ? readList
+    : empty("Դեռ ոչինչ չեք կարդում։ Բացեք գիրքը՝"
+      + " այն կհայտնվի այստեղ։"));
+  // the tabs
+  const n = data.authors.reduce(
+    (k, a) => k + a.books.length, 0);
+  const count = (k) => h("span", { class: "count" },
+    String(k));
+  const starCount = count(0);
+  const labels = {
+    all: ["Բոլոր գրքերը", count(n)],
+    starred: ["★ Ընտրված", starCount],
+    reading: ["Ընթերցվող", reading.length
+      ? count(reading.length) : null],
+  };
+  const tabs = h("div", { class: "lib-tabs",
+    role: "tablist", "aria-label": "Գրադարան" },
+  h("span", { class: "thumb",
+    "aria-hidden": "true" }));
+  const tabBtn = {};
+  for (const t of LIB_TABS) {
+    const b = h("button", { type: "button",
+      role: "tab", id: "tab-" + t,
+      "aria-controls": "lib-" + t },
+    h("span", { class: "label" }, labels[t][0]),
+    labels[t][1]);
+    b.addEventListener("click", () => pick(t, true));
+    tabBtn[t] = b;
+    tabs.append(b);
+    Object.assign(panes[t], { id: "lib-" + t });
+    panes[t].setAttribute("role", "tabpanel");
+    panes[t].setAttribute("aria-labelledby",
+      "tab-" + t);
+  }
+  const drawStars = () => {
+    const list = h("ul", { class: "shelf" });
+    for (const k of stars) {
+      const x = books.get(k);
+      if (!x) continue;
+      list.append(h("li", {},
+        libraryRow(x.b, x.by), starBtn(x.b)));
+    }
+    const k = list.children.length;
+    panes.starred.replaceChildren(k ? list
+      : empty("Ընտրված գրքեր դեռ չկան։ Գրքի կողքի"
+        + " ☆-ով ավելացրեք այստեղ։"));
+    starCount.textContent = String(k);
+    starCount.hidden = !k;
+    buttons = buttons.filter((x) => x.isConnected);
+    for (const x of buttons) {
+      const on = stars.includes(x.dataset.name);
+      x.textContent = on ? "★" : "☆";
+      x.setAttribute("aria-pressed", String(on));
+      x.title = on ? "Հանել աստղը" : "Աստղանշել";
+    }
+  };
   const pick = (tab, keep) => {
-    const star = tab === "starred";
     tabs.dataset.tab = tab;
-    tabAll.setAttribute("aria-selected",
-      String(!star));
-    tabStar.setAttribute("aria-selected",
-      String(star));
-    tabAll.tabIndex = star ? -1 : 0;
-    tabStar.tabIndex = star ? 0 : -1;
-    allPane.hidden = star;
-    starPane.hidden = !star;
+    for (const t of LIB_TABS) {
+      const on = t === tab;
+      tabBtn[t].setAttribute("aria-selected",
+        String(on));
+      tabBtn[t].tabIndex = on ? 0 : -1;
+      panes[t].hidden = !on;
+    }
     if (!keep) return;
     try {
       localStorage.setItem(LIB_TAB, tab);
     } catch (e) {}
   };
-  tabAll.addEventListener("click",
-    () => pick("all", true));
-  tabStar.addEventListener("click",
-    () => pick("starred", true));
   // ← and → move between the tabs
   tabs.addEventListener("keydown", (e) => {
-    if (e.key !== "ArrowLeft"
-      && e.key !== "ArrowRight") return;
-    const to = tabs.dataset.tab === "all"
-      ? tabStar : tabAll;
-    to.click();
-    to.focus();
+    const step = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
+    if (!step) return;
+    const i = LIB_TABS.indexOf(tabs.dataset.tab);
+    const t = LIB_TABS[(i + step + 3) % 3];
+    pick(t, true);
+    tabBtn[t].focus();
   });
   show(
     h("p", { class: "crumbs" },
@@ -1170,7 +1229,8 @@ async function libraryPage(who) {
       h("h1", {}, "Գրադարան"),
       h("p", { class: "sub" },
         "Գրաբար գրքեր · " + n),
-      tabs, allPane, starPane));
+      tabs, panes.all, panes.starred,
+      panes.reading));
   drawStars();
   // an author's link opens all the books
   pick(who ? "all" : libraryTab(), false);
