@@ -45,7 +45,11 @@ headings on Digilib). Ghazar Parpetsi (1591) is in `books/` too
 (2026-11-15, 104 sections in three parts; three are
 empty; chapters are lines `Ա.`, with footnote
 numbers at some line starts, left as on Digilib).
-Next: Yeghishe, Vasn Vardanay (150).
+Yeghishe, Vasn Vardanay (150) is in `books/` too
+(2026-11-15, 8 sections in two parts; its seven
+`Առաջին յեղանակ՝` headings are read by
+`ordinal_entries()`). Next: Yeghishe, Meknutiun
+Arardatsots (1394).
 
 Also Եղիշէ Խրատք 1395, Ղազար Փարպեցի Թուղթ 1592.
 These are the most read and the best sources for

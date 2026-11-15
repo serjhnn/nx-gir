@@ -241,6 +241,9 @@
   `Երկրորդը՝ ...`; `ordinal_entries()`, at least 5)
   as entries, titled `Երկրորդ · Բրիտանացւոց`; a
   translation keeps the ՝ after each ordinal.
+  Եղիշէ's `Առաջին յեղանակ՝ Ժամանակն` headings
+  count too (three in a part are enough; the title
+  is the whole line).
   A book of songs or sermons numbered in letters
   with titles in capitals (`Ա. ՏԱՂ ՅԱՐՈՒԹԵԱՆ ...`,
   Narekatsi's Գանձեր եւ Տաղեր) takes those lines

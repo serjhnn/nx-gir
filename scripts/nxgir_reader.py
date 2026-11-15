@@ -448,12 +448,15 @@ def is_body_below(lines, i):
 ORDINAL_RE = re.compile(
     r"((?:[^\W\d_]+\s+){0,2}?"
     r"(?:առաջին|երկրորդ|երրորդ|չորրորդ|[^\W\d_]*երորդ))"
-    r"[ըն]?՝\s*(\S.*)",
+    r"[ըն]?(?:\s+(յեղանակ))?՝\s*(\S.*)",
     re.IGNORECASE,
 )
 # a book with at least so many of them is a list of
 # regions; fewer is the running text of a sermon
 ORDINALS_MIN = 5
+# the Առաջին յեղանակ՝ headings are rarer in a part
+# and never running text: three are enough
+MODES_MIN = 3
 # a Digilib page mark at the start of a line: /171a/
 PAGE_RE = re.compile(r"^/\d+[ab]/\s*")
 # small words before the ordinal: Իսկ երրորդ
@@ -474,8 +477,8 @@ def ordinal_title(rest):
 def ordinal_entries(lines):
     """Entries for a book of regions that has no other
     headings (the Աշխարհացոյց): the lines that start
-    with an ordinal and ՝; [] if there are fewer than
-    ORDINALS_MIN of them."""
+    with an ordinal and ՝ (or Առաջին յեղանակ՝); []
+    if there are fewer than ORDINALS_MIN of them."""
     out = []
     for i, line in enumerate(lines):
         m = ORDINAL_RE.match(PAGE_RE.sub("", line.strip()))
@@ -488,7 +491,11 @@ def ordinal_entries(lines):
             # in a translation: it goes into the title,
             # so that a book and its translation have
             # the same entries
-            name = ordinal_title(m.group(2))
+            # an Առաջին յեղանակ՝ heading (Եղիշէ) is
+            # a title in full, not a name
+            name = m.group(3)
+            if not m.group(2):
+                name = ordinal_title(name)
             out.append(
                 {
                     "line": i,
@@ -497,9 +504,16 @@ def ordinal_entries(lines):
                         f"{' '.join(n)} · {name}"
                     ),
                     "level": 2,
+                    "mode": bool(m.group(2)),
                 }
             )
-    return out if len(out) >= ORDINALS_MIN else []
+    modes = sum(1 for e in out if e.get("mode"))
+    if len(out) >= ORDINALS_MIN or modes >= MODES_MIN:
+        return [
+            {k: v for k, v in e.items() if k != "mode"}
+            for e in out
+        ]
+    return []
 
 
 # a numbered song or sermon: the number in Armenian

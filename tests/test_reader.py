@@ -953,3 +953,21 @@ def test_contents_of_first_section_with_word():
         ("Ա", 2),
         ("Բ", 4),
     ]
+
+
+def test_contents_of_modes_by_ordinals():
+    # Եղիշէ: Առաջին յեղանակ՝ Ժամանակն (the list in the
+    # preface has a space before ՝ and is text)
+    names = ["Առաջին", "Երկրորդ", "Երրորդ", "Չորրորդ"]
+    names += ["Հինգերորդ", "Վեցերորդ", "Եւթներորդ"]
+    lines = ["Գիրք · 1/1", "", "Առաջին ՝ զԺամանակն ։"]
+    for n in names:
+        lines += [
+            "",
+            f"{n} յեղանակ՝ Վասն իրաց եւ այլոց",
+            "Տեքստ։",
+        ]
+    got = contents(lines)
+    assert len(got) == 8
+    assert got[1]["title"] == "Առաջին · Վասն իրաց եւ այլոց"
+    assert got[1]["line"] == 4
