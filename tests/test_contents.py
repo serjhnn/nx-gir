@@ -25,6 +25,9 @@ NO_CONTENTS = {
     "grabar/nerses-shnorhali/2-voghb-edesioy/01.txt": (
         "a poem in stanzas, marked [1], [2]"
     ),
+    "grabar/hetum-patmich/2-zhamanakagrutyun/01.txt": (
+        "a chronicle by years, in four sections marked [1]"
+    ),
 }
 
 

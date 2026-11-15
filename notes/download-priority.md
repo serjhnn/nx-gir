@@ -64,8 +64,15 @@ the next line, `titled_numbers()`; three headings
 have broken characters from Digilib, left as they
 are; the edition note at the start is kept). The two
 Kanonk (370, 371) are in `books/` too (one part each,
-under 150 lines). Next: Shirakatsi's rest (grabar
-ones, e.g. 64, 67, 68, 70), then Hetum Patmich.
+under 150 lines). Shirakatsi was already complete (19 works, see
+`books/SOURCES.md`). Hetum Patmich: 203 and 204 are in
+`books/` (one part each; the chronicle, 204, has four
+sections marked [1]-[4] and no headings: in
+`NO_CONTENTS`). Not taken: 1588, a modern edition
+with a long modern foreword, a table of three
+editions and a variants apparatus; 202 (Hetum II's
+annals, unclear). Next: Ghevond (44), Tovma Metsopetsi
+(76), Kirakos Gandzaketsi (66), Tovma Artsruni (64).
 
 Also Եղիշէ Խրատք 1395, Ղազար Փարպեցի Թուղթ 1592.
 These are the most read and the best sources for
