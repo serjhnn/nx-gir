@@ -784,6 +784,10 @@ h1 {
 .lib-tabs button[aria-selected="true"] {
   color: var(--on-accent);
 }
+/* a thin line between the tabs */
+.lib-tabs button + button {
+  border-left: 1px solid var(--accent);
+}
 .lib-tabs button:focus-visible {
   outline: 2px solid var(--text);
   outline-offset: -4px;
