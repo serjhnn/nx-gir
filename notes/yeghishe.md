@@ -17,8 +17,11 @@ paragraph breaks. No full stop lacked a following space.
 Only line breaks and paragraph spacing were changed; the
 Grabar wording was not edited.
 
-Chunk 1: lines 1–75 translated. The draft is being added
-incrementally and is not yet complete or reviewed.
+Chunks 1–4: lines 1–300 translated in four 75-line
+chunks. Source and translation line counts match for the
+translated prefix, and blank-line positions match. The
+draft is being added incrementally and is not yet complete
+or reviewed.
 
 ## Translation decisions
 
