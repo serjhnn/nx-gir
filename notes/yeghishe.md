@@ -25,10 +25,10 @@ incrementally and is not yet complete or reviewed.
 - Modern Eastern Armenian, reformed spelling.
 - One translation line per Grabar line; preserve blank
   lines and the edition's section and folio markers.
-- Manuscript sigla A and H, and lowercase note marker a,
-  are represented in the translation by Armenian-letter
-  equivalents Ա, Հ and ա, to avoid Latin text in the
-  Armenian translation. The Grabar source remains unchanged.
+- Manuscript sigla A and H, lowercase note marker a,
+  and Roman-numeral heading labels are represented in
+  the translation by Armenian equivalents Ա, Հ, ա and
+  Armenian numerals. The Grabar source remains unchanged.
 - Preserve the Greek and Hebrew terms in Armenian
   transcription where the passage discusses their forms.
 - Translate faithfully without adding explanations.
