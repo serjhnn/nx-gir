@@ -1008,3 +1008,19 @@ def test_contents_of_notes_and_appendix_headings():
         "ՅԱՒԵԼՈՒԱԾ",
     ]
     assert got[1]["level"] == 1
+
+
+def test_contents_of_titled_numbers():
+    lines = ["Գիրք · 1/1", ""]
+    for n in "ԱԲԳԴԵ":
+        lines += [
+            f"{n}. Յաղագս {n}",
+            "",
+            n,
+            "ՅԱՂԱԳՍ",
+            "1 Տեքստ։",
+        ]
+    got = contents(lines)
+    assert [(e["n"], e["title"]) for e in got[1:]] == [
+        (n, f"Յաղագս {n}") for n in "ԱԲԳԴԵ"
+    ]

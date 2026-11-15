@@ -248,6 +248,9 @@
   Եղիշէ's `Առաջին յեղանակ՝ Ժամանակն` headings
   count too (three in a part are enough; the title
   is the whole line).
+  A book with `Ա. Title` lines, each followed by
+  the number alone (`titled_numbers()`, at least 5)
+  is read too (Գրիգոր Լուսաւորիչ).
   A critical edition (Եղիշէ, Մեկնութիւն Արարածոց)
   has `Ա (Ա II)` section lines, read like Digilib's
   `[Ա]`, and ԾԱՆՕԹԱԳՐՈՒԹԻՒՆՆԵՐ, ՅԱՒԵԼՈՒԱԾ as groups.

@@ -627,6 +627,35 @@ def lone_numbers(lines):
     return out if len(out) >= LONE_MIN else []
 
 
+# a chapter with its title first, Ա. Յաղագս ...,
+# and the number alone on the line after it (Գրիգոր
+# Լուսաւորիչ, Յաճախապատում ճառք)
+TITLED_RE = re.compile(r"([Ա-Ֆ]{1,4})\.\s+(\S.*)")
+
+
+def titled_numbers(lines):
+    """Entries for a book whose chapters start with a
+    line "Ա. Title" and then the number alone, "Ա"; []
+    if there are fewer than LONE_MIN of them."""
+    out = []
+    for i, line in enumerate(lines):
+        m = TITLED_RE.fullmatch(line.strip())
+        if not m:
+            continue
+        nxt = (x.strip() for x in lines[i + 1 :])
+        if next((x for x in nxt if x), "") != m.group(1):
+            continue
+        out.append(
+            {
+                "line": i,
+                "n": m.group(1),
+                "title": short(m.group(2)),
+                "level": 2,
+            }
+        )
+    return out if len(out) >= LONE_MIN else []
+
+
 def contents(lines):
     """The parts of a book, in order: [{"line": the
     line to go to, "n": its number or "", "title":
@@ -743,6 +772,8 @@ def contents(lines):
         out = numbered_entries(lines)
     if not out:
         out = lone_numbers(lines)
+    if not out:
+        out = titled_numbers(lines)
     # the text before the first heading is reachable
     # too: an entry for the start of the text
     first = next(

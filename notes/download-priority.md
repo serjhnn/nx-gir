@@ -54,8 +54,16 @@ parts; a critical edition with manuscript marks, fetched
 with `--by-id`: Digilib lists the first 22 sections
 out of order; its headings `Ա (Ա II)`, and the notes
 and appendix, are read by `contents()`).
-Next: group 2 (short and cheap), then Yeghishe's
-Khratk (1395) and Ghazar's Tught (1592).
+Group 1 is done except Yeghishe's Khratk (1395) and
+Ghazar's Tught (1592).
+
+Group 2 (2026-11-15): Grigor Lusavorich, Yachakhapatum
+charq (1596) is in `books/` (25 sections in three
+parts; chapters `Ա. Title` with the number alone on
+the next line, `titled_numbers()`; three headings
+have broken characters from Digilib, left as they
+are; the edition note at the start is kept). Next:
+the Kanonk (370, 371), then Shirakatsi's rest.
 
 Also Եղիշէ Խրատք 1395, Ղազար Փարպեցի Թուղթ 1592.
 These are the most read and the best sources for
