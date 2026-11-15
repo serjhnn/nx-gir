@@ -2,7 +2,7 @@
 
 ## Smbat Sparapet — *Տարեգիրք* (Chronicle)
 
-This contents guide describes the thirty-five Grabar section files currently imported into this directory. Several files are explicitly marked as indexed excerpts whose completeness has not been verified. The numbered entries follow the Digilib section identifiers; they are not consecutive chapter numbers. Descriptions are brief reader-oriented summaries, not translations. They avoid reproducing graphic passages.
+This contents guide describes the forty-five Grabar text files currently imported into this directory. Several files are explicitly marked as indexed excerpts whose completeness has not been verified. The numbered entries follow the Digilib section identifiers; they are not consecutive chapter numbers. Descriptions are brief reader-oriented summaries, not translations. They avoid reproducing graphic passages.
 
 1. **Section 410 — The Armenian coronation of Gagik.** The entry records Gagik's formal anointing as king in Ani and then turns to a change of ruler in the Byzantine Empire.
 2. **Section 418 — Byzantine imperial succession.** A chronicle entry focused on the Byzantine court and the succession of emperors.
@@ -45,6 +45,18 @@ This contents guide describes the thirty-five Grabar section files currently imp
 
 ## Editorial note
 
-This is a partial collection of source sections, not a complete transcription of the Chronicle. The entries above are navigational summaries based on the imported text. Sections 545, 555, 560, 567, 568, 589, 619, and 630 were captured from indexed text and require comparison with the original pages or scans. Sections 564 and 715 are explicitly partial excerpts. Sections 594 and 599 were opened directly; the other imported sections still require source comparison to confirm completeness. The source text remains in Grabar; no translation or editorial correction is implied.
+This is a partial collection of source sections, not a complete transcription of the Chronicle. The entries above are navigational summaries based on the imported text. Sections 500, 545, 555, 560, 567, 568, 589, 619, 630, 637, 647, 655, 656–658, 660, 668, 669, and 708 were captured from indexed text and require comparison with the original pages or scans. Sections 564 and 715 are explicitly partial excerpts. Sections 594 and 599 were opened directly; the other imported sections still require source comparison to confirm completeness. Section 708 intentionally contains only the non-operational political and ecclesiastical portion returned by the index; the omitted continuation has not been reconstructed. Sections 656–658 remain combined because the indexed result did not make their boundaries clear. The source text remains in Grabar; no translation or editorial correction is implied.
 
 **Source:** [Digilib — Տարեգիրք, attributed to Սմբատ Սպարապետ](https://www.digilib.am/book/333/)
+
+
+36. **Section 500 — Sebastia and the accusation against the Armenians.** The chronicle recounts tensions at Sebastia, Gagik's intervention, and the political consequences of accusations against the Armenian population. The imported passage is an indexed excerpt.
+37. **Section 637 — Baldwin's death and dynastic ties in Cilicia.** The entry records the death of Baldwin, political developments around Prakana, and marriage alliances involving Leon's family. The imported passage is an indexed excerpt.
+38. **Section 641 — Famine and the death of Kilij Arslan II.** A severe famine in 1192 is followed by notices about the death of the Seljuk sultan and Saladin's interest in Antioch.
+39. **Section 647 — Leon's coronation and the prosperity of Cilicia.** Leon is crowned king of Armenia; the chronicle then praises his generosity and the flourishing of religious and civic life. The available text is an indexed excerpt.
+40. **Section 655 — A dispute over the succession in Antioch.** Leon's claim is contested by the new count of Tripoli, leading to a serious dispute with the patriarch of Antioch.
+41. **Sections 656–658 — Constantinople, church politics, and succession.** A combined indexed passage records the Latin capture of Constantinople, disputes involving the Armenian Catholicosate, and succession politics in Cilicia. Digilib presents these entries together in one indexed result, so their exact boundaries have not been reconstructed.
+42. **Section 660 — Reconciliation and the death of Zakare.** The entry records the death of Catholicos David, a reconciliation between the king and the Catholicos, and the death of the Georgian prince Zakare.
+43. **Section 668 — Leon's final counsel and the succession of Zabel.** The chronicle describes the transfer of Hromkla to the Catholicosate and King Leon's final instructions concerning his daughter and successor. The imported passage is an indexed excerpt.
+44. **Section 669 — A revolt against the Armenian bailiff.** The available excerpt describes unrest among Armenian and Greek nobles and the response of Constantine, the Armenian bailiff.
+45. **Section 708 — Hethum's diplomacy and an ecclesiastical appointment.** Hethum reconciles his son-in-law in Tripoli; the entry also records a church council in Tarsus and the ordination of Baldwin. Only the political and ecclesiastical portion of the indexed text is included.
