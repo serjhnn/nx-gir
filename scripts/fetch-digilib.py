@@ -19,7 +19,10 @@ Each section of the book becomes a heading line
 followed by its paragraphs, one per line. The text
 of each section is kept in CACHE (default
 .digilib-cache/ID), so an interrupted run continues
-where it stopped. A report goes to stderr.
+where it stopped. A section with the very same text as
+the one before it (Digilib does that for a heading
+with no text, Թովմա Մեծոփեցի's appendix) keeps its
+heading and has no text. A report goes to stderr.
 
 Digilib lists the sections of some books sorted by
 title, not in reading order (Movses Khorenatsi: the
@@ -166,6 +169,21 @@ def split(sections, size):
     return parts + [cur] if cur else parts
 
 
+def blank_repeats(sections):
+    """Sections with the very same paragraphs as the one
+    before them (Digilib shows the text above again
+    for a heading with none of its own) lose them."""
+    out = []
+    last = None
+    for head, paras in sections:
+        if paras and paras == last:
+            paras = []
+        elif paras:
+            last = paras
+        out.append((head, paras))
+    return out
+
+
 def section_id(href):
     """The section number in a Digilib address
     (/book/286/291/6043/...), as a number."""
@@ -188,7 +206,6 @@ def main(argv):
     toc.feed(get(f"{SITE}/book/{book}/"))
     print(f"{len(toc.found)} sections", file=sys.stderr)
     sections = []
-    empty = []
     found = list(enumerate(toc.found, 1))
     if by_id:
         found.sort(key=lambda x: section_id(x[1][0]))
@@ -198,11 +215,11 @@ def main(argv):
         paras = [p for p in paras if p]
         if paras and paras[0] == head:
             paras = paras[1:]  # the heading is repeated
-        if not paras:
-            empty.append(head)
         sections.append((head, paras))
         if k % 25 == 0:
             print(f"{n}/{len(toc.found)}", file=sys.stderr)
+    sections = blank_repeats(sections)
+    empty = [h for h, paras in sections if not paras]
     folder = Path(out)
     folder.mkdir(parents=True, exist_ok=True)
     parts = split(sections, PART)

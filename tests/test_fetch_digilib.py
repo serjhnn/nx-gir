@@ -81,3 +81,20 @@ def test_split_keeps_sections_whole():
 def test_section_id():
     url = "https://www.digilib.am/book/286/291/6043/x"
     assert fd.section_id(url) == 6043
+
+
+def test_blank_repeats():
+    secs = [
+        ("Ա", ["x"]),
+        ("Բ", ["x"]),
+        ("Գ", []),
+        ("Դ", ["x"]),
+        ("Ե", ["y"]),
+    ]
+    assert fd.blank_repeats(secs) == [
+        ("Ա", ["x"]),
+        ("Բ", []),
+        ("Գ", []),
+        ("Դ", []),
+        ("Ե", ["y"]),
+    ]

@@ -74,8 +74,12 @@ editions and a variants apparatus; 202 (Hetum II's
 annals, unclear). Ghevond (168) is in `books/` (2026-11-15, 44
 sections in two parts, one empty). Next, with the Digilib ids (the
 numbers in group 2 below are not ids: 64, 66, 76 are
-Shirakatsi's): Tovma Metsopetsi (347),
-Kirakos Gandzaketsi (250), Tovma Artsruni (346).
+Shirakatsi's): Kirakos Gandzaketsi (250),
+Tovma Artsruni (346), Kirakos Rshtuntsi (251).
+Tovma Metsopetsi (347) is in `books/` (76 sections in one
+part; the five appendix headings at the end have no
+text on Digilib, which shows the last chapter again
+for them: `blank_repeats()` in `fetch-digilib.py`).
 
 Also Եղիշէ Խրատք 1395, Ղազար Փարպեցի Թուղթ 1592.
 These are the most read and the best sources for
