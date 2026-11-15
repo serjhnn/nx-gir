@@ -62,8 +62,10 @@ charq (1596) is in `books/` (25 sections in three
 parts; chapters `Ա. Title` with the number alone on
 the next line, `titled_numbers()`; three headings
 have broken characters from Digilib, left as they
-are; the edition note at the start is kept). Next:
-the Kanonk (370, 371), then Shirakatsi's rest.
+are; the edition note at the start is kept). The two
+Kanonk (370, 371) are in `books/` too (one part each,
+under 150 lines). Next: Shirakatsi's rest (grabar
+ones, e.g. 64, 67, 68, 70), then Hetum Patmich.
 
 Also Եղիշէ Խրատք 1395, Ղազար Փարպեցի Թուղթ 1592.
 These are the most read and the best sources for
