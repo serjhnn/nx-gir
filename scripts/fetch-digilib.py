@@ -46,7 +46,7 @@ def get(url):
     for attempt in range(4):
         try:
             with urllib.request.urlopen(
-                req, timeout=60
+                req, timeout=180
             ) as r:
                 return r.read().decode("utf-8")
         except OSError as e:
