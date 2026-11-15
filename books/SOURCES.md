@@ -525,3 +525,22 @@ were taken after the user read a sentence of each
 and judged them Grabar (many are lists of numbers
 and measures). Not taken: 58 and 65 (tables of
 letter-numerals), 73 and 78 (no typed text).
+
+## grabar/agathangelos/1-patmutiun-hayots/
+
+*Պատմութիւն Հայոց* by Agathangelos, from Digilib,
+the digital library of Armenian literature of the
+American University of Armenia
+(<https://www.digilib.am/book/54/>; book 54).
+The work has 138 sections in four parts. The text is
+from an old printed edition; the work is in the public
+domain, while Digilib does not state a license for its
+typed copy.
+
+Downloaded with `scripts/fetch-digilib.py`. Each part
+is split at section boundaries. Part 1 had 499 lines
+before sentence splitting and has 1300 lines after it;
+one sentence per line, with blank lines between the
+source paragraphs. No `։` lacked a following space in
+the source. Only line breaks and paragraph spacing were
+changed; the Grabar wording is unchanged.
