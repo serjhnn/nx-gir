@@ -8,7 +8,7 @@
 
 ## Imported sections
 
-Fifty-five text files have been committed to this branch (including one combined file for indexed sections 656–658):
+Fifty-eight text files have been committed to this branch (including one combined file for indexed sections 656–658):
 
 | Section | File |
 |---|---|
@@ -68,6 +68,9 @@ Fifty-five text files have been committed to this branch (including one combined
 | 705 | books/grabar/smbat-sparapet/1-taregirk/0705.txt |
 | 720 | books/grabar/smbat-sparapet/1-taregirk/0720.txt |
 | 721 (partial safe excerpt) | books/grabar/smbat-sparapet/1-taregirk/0721.txt |
+| 470 | books/grabar/smbat-sparapet/1-taregirk/0470.txt |
+| 492 | books/grabar/smbat-sparapet/1-taregirk/0492.txt |
+| 493 | books/grabar/smbat-sparapet/1-taregirk/0493.txt |
 
 ## Source retrieval notes
 
@@ -165,3 +168,12 @@ New files:
 - Section 721: only the dated notice about snowfall in Cilicia and the death of Vardapet Kirakos was retained; the remainder concerning a poisoning plot is deliberately omitted.
 
 Sections 631, 645, 650, 675, and 705 were opened directly and their visible entries were copied. The 642–643 source page was opened directly; its two dated entries were separated at the explicit 643 marker. Sections 652 and 720 were captured from indexed text results after direct page requests returned 404, so completeness remains unverified. Section 721 is intentionally a safe excerpt only; no poisoning details are included or reconstructed. All new text is preserved in Grabar. No operational military details have been added.
+
+
+## Additional retrieval — sections 470, 492, and 493
+
+- Section 470: https://www.digilib.am/book/333/339/7451/Տարեգիրք
+- Section 492: https://www.digilib.am/book/333/339/7461/Տարեգիրք
+- Section 493: https://www.digilib.am/book/333/339/7462/Տարեգիրք
+
+All three were copied from Digilib's indexed text results. Direct page retrieval returned 404 for each page, so completeness is unverified and the files should be treated as indexed excerpts pending comparison with the original pages or scans. The passages contain historical political and ecclesiastical narrative; no operational military details were added, and no missing text was reconstructed. The branch now contains fifty-eight section text files.
