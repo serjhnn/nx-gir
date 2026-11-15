@@ -714,6 +714,19 @@ h1 {
 .library .star:focus-visible {
   background: var(--hover);
 }
+/* the starred books: a box of their own */
+.library .starred {
+  padding: 0.75rem 0.75rem 0.25rem;
+  border-radius: 10px;
+  background: var(--surface);
+}
+.library .starred .shelf li:last-child {
+  border-bottom: 0;
+}
+.library .starred .row:hover,
+.library .starred .star:hover {
+  background: var(--bg);
+}
 .library .name .by {
   display: block;
   color: var(--muted);
