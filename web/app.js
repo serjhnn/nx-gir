@@ -1070,7 +1070,7 @@ async function libraryPage(who) {
     }
     const any = list.children.length > 0;
     starBox.replaceChildren(...(any
-      ? [h("h2", {}, "★ Աստղանշված"), list] : []));
+      ? [h("h2", {}, "★ Ընտրված"), list] : []));
     starBox.hidden = !any;
     buttons = buttons.filter((x) => x.isConnected);
     for (const x of buttons) {
