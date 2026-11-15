@@ -8,7 +8,7 @@
 
 ## Imported sections
 
-Nineteen section files have been committed to this branch:
+Twenty section files have been committed to this branch:
 
 | Section | File |
 |---|---|
@@ -29,6 +29,7 @@ Nineteen section files have been committed to this branch:
 | 610 | books/grabar/smbat-sparapet/1-taregirk/0610.txt |
 | 616 | books/grabar/smbat-sparapet/1-taregirk/0616.txt |
 | 618 | books/grabar/smbat-sparapet/1-taregirk/0618.txt |
+| 622 | books/grabar/smbat-sparapet/1-taregirk/0622.txt |
 | 717 | books/grabar/smbat-sparapet/1-taregirk/0717.txt |
 | 718 | books/grabar/smbat-sparapet/1-taregirk/0718.txt |
 
@@ -36,8 +37,9 @@ Nineteen section files have been committed to this branch:
 
 Digilib's index lists 173 linked entries. For this batch, direct page retrieval was intermittent (404 responses and timeouts). The ten new files preserve the Grabar text returned by Digilib's indexed page results; section 508 was also opened as a full page. Because indexed results may truncate long passages, the new batch should be checked against the original pages or scans before being treated as a verified complete transcription or used for translation. No missing text has been reconstructed.
 
-Source page link for the additional section:
+Source page links for the additional sections:
 - https://www.digilib.am/book/333/339/7545/Տարեգիրք (616)
+- https://www.digilib.am/book/333/339/7549/Տարեգիրք (622)
 
 Source page links for the earlier batch:
 - https://www.digilib.am/book/333/339/7438/Տարեգիրք (421)
@@ -51,7 +53,7 @@ Source page links for the earlier batch:
 - https://www.digilib.am/book/333/339/7540/Տարեգիրք (598)
 - https://www.digilib.am/book/333/339/7543/Տարեգիրք (610)
 
-Section 616 was available as a complete indexed text passage; the direct page request returned 404. The text was saved as shown by the indexed result and checked back from GitHub. The ten sections in the previous batch still need source-page comparison because some were indexed excerpts. The earlier eight imports were retrieved and checked in their respective source-page attempts. Text is preserved in Grabar; no translation or editorial correction has been applied.
+Sections 616 and 622 were available as complete indexed text passages; direct page requests returned 404. Their text was saved as shown by the indexed results and checked back from GitHub. The ten sections in the previous batch still need source-page comparison because some were indexed excerpts. The earlier eight imports were retrieved and checked in their respective source-page attempts. Text is preserved in Grabar; no translation or editorial correction has been applied.
 
 ## Workflow
 
