@@ -377,6 +377,14 @@ function show(...kids) {
   window.scrollTo(0, 0);
 }
 
+// a page without the footer (the Library: its
+// lists go on to the bottom of the screen)
+function showBare(...kids) {
+  main.replaceChildren(
+    ...kids.filter((k) => k != null));
+  window.scrollTo(0, 0);
+}
+
 // the bottom of every page: the main pages, the
 // license, how to help and who made it
 const REPO = "https://github.com/serjhnn/nx-gir";
@@ -1298,7 +1306,7 @@ async function libraryPage(who) {
     { passive: true });
   page.addEventListener("touchend", onEnd,
     { passive: true });
-  show(
+  showBare(
     h("p", { class: "crumbs" },
       h("a", { href: "#/" }, "← Home")),
     h("div", { class: "library", lang: "hy" },
