@@ -5,7 +5,7 @@ Digilib (digilib.am) is the Armenian digital library of
 the American University of Armenia; its classical
 section has typed texts of Grabar works. Usage:
 
-    scripts/fetch-digilib.py ID TITLE OUT [CACHE]
+    scripts/fetch-digilib.py [--by-id] ID TITLE OUT [CACHE]
 
 e.g. scripts/fetch-digilib.py 1476 \\
     "Գիրք քարոզութեան որ կոչի Ձմեռան հատոր" \\
@@ -20,6 +20,12 @@ followed by its paragraphs, one per line. The text
 of each section is kept in CACHE (default
 .digilib-cache/ID), so an interrupted run continues
 where it stopped. A report goes to stderr.
+
+Digilib lists the sections of some books sorted by
+title, not in reading order (Movses Khorenatsi: the
+chapter Ա of all three books, then Բ, …). With
+--by-id the sections are put in the order of their
+numbers in the addresses, which is the book's own.
 """
 
 import re
@@ -160,7 +166,15 @@ def split(sections, size):
     return parts + [cur] if cur else parts
 
 
+def section_id(href):
+    """The section number in a Digilib address
+    (/book/286/291/6043/...), as a number."""
+    return int(href.split("/")[6])
+
+
 def main(argv):
+    by_id = "--by-id" in argv
+    argv = [a for a in argv if a != "--by-id"]
     if len(argv) not in (3, 4):
         sys.exit(__doc__)
     book, title, out = argv[:3]
@@ -175,7 +189,10 @@ def main(argv):
     print(f"{len(toc.found)} sections", file=sys.stderr)
     sections = []
     empty = []
-    for n, (href, head) in enumerate(toc.found, 1):
+    found = list(enumerate(toc.found, 1))
+    if by_id:
+        found.sort(key=lambda x: section_id(x[1][0]))
+    for k, (n, (href, head)) in enumerate(found, 1):
         url = urllib.parse.urljoin(SITE, href)
         paras = section(url, cache / f"{n:04}.txt")
         paras = [p for p in paras if p]
@@ -184,7 +201,7 @@ def main(argv):
         if not paras:
             empty.append(head)
         sections.append((head, paras))
-        if n % 25 == 0:
+        if k % 25 == 0:
             print(f"{n}/{len(toc.found)}", file=sys.stderr)
     folder = Path(out)
     folder.mkdir(parents=True, exist_ok=True)

@@ -76,3 +76,8 @@ def test_split_keeps_sections_whole():
         [("Ա", ["x" * 500])]
     ]
     assert fd.split([], 100) == []
+
+
+def test_section_id():
+    url = "https://www.digilib.am/book/286/291/6043/x"
+    assert fd.section_id(url) == 6043

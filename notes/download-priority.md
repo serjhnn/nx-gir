@@ -36,7 +36,12 @@ Pavstos Buzand (310) is in `books/` too (2026-11-15,
 headings). Koriun (252) is in `books/` too (2026-11-15, 91
 sections in two parts: Digilib holds four editions of
 the text, kept as they are; chapters `[Գլուխ Ա]`,
-`[Բ]`). Next: Movses Khorenatsi (286).
+`[Բ]`). Movses Khorenatsi (286) is in `books/` too
+(2026-11-15, 194 sections in three parts). Digilib
+lists its sections sorted by title, so the three
+books come mixed: fetched with `--by-id`; chapter
+numbers restart at Ա for Books II and III (no book
+headings on Digilib). Next: Ghazar Parpetsi (1591).
 
 Also Եղիշէ Խրատք 1395, Ղազար Փարպեցի Թուղթ 1592.
 These are the most read and the best sources for
