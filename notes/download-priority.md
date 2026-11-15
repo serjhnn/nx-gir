@@ -77,8 +77,10 @@ editions and a variants apparatus; 202 (Hetum II's
 annals, unclear). Ghevond (168) is in `books/` (2026-11-15, 44
 sections in two parts, one empty). Next, with the Digilib ids (the
 numbers in group 2 below are not ids: 64, 66, 76 are
-Shirakatsi's): Kirakos Gandzaketsi (250),
-Tovma Artsruni (346), Kirakos Rshtuntsi (251).
+Shirakatsi's): Kirakos Gandzaketsi (250, 66 sections), Tovma
+Artsruni (346, 64 sections in three books, chapters
+restart at Ա) and Kirakos Rshtuntsi (251, 47 lines) are
+in `books/` too. Group 2 is done.
 Tovma Metsopetsi (347) is in `books/` (76 sections in one
 part; the five appendix headings at the end have no
 text on Digilib, which shows the last chapter again
