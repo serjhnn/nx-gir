@@ -23,6 +23,7 @@ Source pages:
 - https://www.digilib.am/book/333/339/7441/Տարեգիրք (432)
 - https://www.digilib.am/book/333/339/7472/Տարեգիրք (511)
 - https://www.digilib.am/book/333/339/7480/Տարեգիրք (523)
+- https://www.digilib.am/book/333/339/7547/Տարեգիրք (618)
 - https://www.digilib.am/book/333/339/7597/Տարեգիրք (717)
 - https://www.digilib.am/book/333/339/7598/Տարեգիրք (718)
 
@@ -30,7 +31,7 @@ Text is preserved in Grabar, including page/folio markers and the source's ortho
 
 ## Remaining inventory
 
-The Digilib index exposes 173 linked entries in total. Only the five sections above are imported so far. Other sections are not assumed to be sequential; use the actual linked pages and verify each source passage before committing it.
+The Digilib index exposes 173 linked entries in total. Only the six sections above are imported so far. Other sections are not assumed to be sequential; use the actual linked pages and verify each source passage before committing it.
 
 Some direct page fetches return 404 or time out. Retry individual pages through indexed Digilib results and alternate retrieval attempts. If only a search excerpt is available, do not label it a complete section or silently fill missing text.
 
