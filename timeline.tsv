@@ -88,6 +88,6 @@
 2026-11-15	Books		Khorhrdatsutiunk of Nerses Lambronatsi	The 12th-century commentary on the church and the liturgy from Digilib, 133 sections in seven parts, with a contents list of its questions.	grabar/nerses-lambronatsi/1-khorhrdatsutiunk
 2026-11-15	Translation	*	The first part of Narekatsi's Book of Lamentations in modern Armenian	All 964 lines of part 1 translated line for line by GPT-6; the draft is open for human review.	grabar/grigor-narekatsi/1-matean-voghbergutyan/01.txt
 2026-11-15	Translation	*	The first part of Agathangelos' History of Armenia in modern Armenian	All 1,300 lines of part 1 (the Grabar split one sentence to a line) translated line for line by GPT-6; the draft is open for human review.	grabar/agathangelos/1-patmutiun-hayots/01.txt
-2026-11-15	Translation	*	The first part of Yeghishe's Commentary on Genesis in modern Armenian	All 1,483 lines of part 1 (the Grabar split one sentence to a line) translated line for line; the draft is open for human review.	grabar/yeghishe/2-meknutiun-ararodzots/01.txt
+2026-11-15	Translation	*	The first part of Yeghishe's Commentary on Genesis in modern Armenian	All 1,483 lines of part 1 (the Grabar split one sentence to a line) translated line for line by GPT-6; the draft is open for human review.	grabar/yeghishe/2-meknutiun-ararodzots/01.txt
 next	Translation		All of Amaran hator in modern Armenian	Then the other works of Grigor Tatevatsi.	
 next	Site		A contents page for each book	What each part of a book is about.	

@@ -48,7 +48,7 @@ commentary on the second day.
 Fixed in the repository after the draft:
 
 - The `machine` record is in `books/TRANSLATIONS.tsv`
-  (its model is not stated in the draft: to fill in).
+  (the model is GPT-6).
 - The 224 lines with added « » lost them, as the guide
   says (the check showed 480 extra marks); five lines
   that lost their closing `։` have it again.
