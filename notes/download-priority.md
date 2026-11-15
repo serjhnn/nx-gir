@@ -71,9 +71,10 @@ sections marked [1]-[4] and no headings: in
 `NO_CONTENTS`). Not taken: 1588, a modern edition
 with a long modern foreword, a table of three
 editions and a variants apparatus; 202 (Hetum II's
-annals, unclear). Next, with the Digilib ids (the
+annals, unclear). Ghevond (168) is in `books/` (2026-11-15, 44
+sections in two parts, one empty). Next, with the Digilib ids (the
 numbers in group 2 below are not ids: 64, 66, 76 are
-Shirakatsi's): Ghevond (168), Tovma Metsopetsi (347),
+Shirakatsi's): Tovma Metsopetsi (347),
 Kirakos Gandzaketsi (250), Tovma Artsruni (346).
 
 Also Եղիշէ Խրատք 1395, Ղազար Փարպեցի Թուղթ 1592.
