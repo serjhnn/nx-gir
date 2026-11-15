@@ -104,6 +104,8 @@ const ICONS = {
     "M5 4v16M3 6l2-2l2 2M3 18l2 2l2-2"],
   center: ["M4 6h16M7 10h10M4 14h16M7 18h10"],
   back: ["M19 12H5M11 6l-6 6l6 6"],
+  // a chevron: a list that opens
+  down: ["M6 9l6 6l6-6"],
   // a phone: the phone view
   phone: ["M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1"
     + "H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z",
@@ -986,6 +988,18 @@ function starsHere() {
   }
 }
 
+// whether the starred list is open (closed until
+// it is opened)
+const STARRED_OPEN = "nxgir-starred-open";
+
+function starredOpen() {
+  try {
+    return localStorage.getItem(STARRED_OPEN) === "1";
+  } catch (e) {
+    return false;
+  }
+}
+
 // star a book (named by its first file), or take
 // the star off; the stars after it
 async function toggleStar(name) {
@@ -1042,8 +1056,23 @@ async function libraryPage(who) {
     }
   }
   let buttons = [];
-  const starBox = h("section",
-    { class: "author starred" });
+  // the starred books: a list that opens and
+  // closes, as it was left in this browser
+  const count = h("span", { class: "count" });
+  const starList = h("div", { class: "starred-body" });
+  const starBox = h("details",
+    { class: "author starred" },
+    h("summary", {},
+      h("h2", {}, "★ Ընտրված"), count,
+      icon(ICONS.down, "chev")),
+    starList);
+  starBox.open = starredOpen();
+  starBox.addEventListener("toggle", () => {
+    try {
+      localStorage.setItem(STARRED_OPEN,
+        starBox.open ? "1" : "0");
+    } catch (e) {}
+  });
   // ☆ beside a book
   const starBtn = (b) => {
     const btn = h("button", { type: "button",
@@ -1069,8 +1098,8 @@ async function libraryPage(who) {
         libraryRow(x.b, x.by), starBtn(x.b)));
     }
     const any = list.children.length > 0;
-    starBox.replaceChildren(...(any
-      ? [h("h2", {}, "★ Ընտրված"), list] : []));
+    starList.replaceChildren(list);
+    count.textContent = String(list.children.length);
     starBox.hidden = !any;
     buttons = buttons.filter((x) => x.isConnected);
     for (const x of buttons) {
