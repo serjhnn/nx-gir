@@ -2,7 +2,7 @@
 
 ## Smbat Sparapet — *Տարեգիրք* (Chronicle)
 
-This contents guide describes the twenty-two Grabar sections currently imported into this directory. The numbered entries follow the Digilib section identifiers; they are not consecutive chapter numbers. Descriptions are brief reader-oriented summaries, not translations. They avoid reproducing graphic passages.
+This contents guide describes the twenty-five Grabar section files (including two explicitly marked partial excerpts) currently imported into this directory. The numbered entries follow the Digilib section identifiers; they are not consecutive chapter numbers. Descriptions are brief reader-oriented summaries, not translations. They avoid reproducing graphic passages.
 
 1. **Section 410 — The Armenian coronation of Gagik.** The entry records Gagik's formal anointing as king in Ani and then turns to a change of ruler in the Byzantine Empire.
 2. **Section 418 — Byzantine imperial succession.** A chronicle entry focused on the Byzantine court and the succession of emperors.
@@ -28,8 +28,12 @@ This contents guide describes the twenty-two Grabar sections currently imported 
 22. **Section 702 — Hethum's journey to Möngke Khan.** Hethum's journey east, his reception by Möngke, the gifts exchanged, and a dynastic marriage linking the Armenian and Antiochene courts. This entry was captured from Digilib's indexed text; completeness remains unverified.
 23. **Section 718 — Earthquake and diplomacy in Cilicia.** A destructive earthquake in Cilicia is followed by Prince Leon's visit to Abaqa Khan and several deaths in the ruling family.
 
+
+24. **Section 564 — A strange fire in Amid and regional alliances.** The entry records an unusual event in Amid and a coalition of regional rulers during conflict near Antioch. The imported text is only an indexed excerpt and ends before the source entry is complete.
+25. **Section 715 — The Mamluk campaign and Hethum's diplomacy.** The passage describes the sultan's campaign, territorial demands, and Hethum's diplomatic efforts. The imported text is only an indexed excerpt and ends mid-entry.
+
 ## Editorial note
 
-This is a partial collection of source sections, not a complete transcription of the Chronicle. The entries above are navigational summaries based on the imported text. Some imported sections still require comparison with the original Digilib pages or scans to confirm completeness. The source text remains in Grabar; no translation or editorial correction is implied.
+This is a partial collection of source sections, not a complete transcription of the Chronicle. The entries above are navigational summaries based on the imported text. Sections 564 and 715 are explicitly partial indexed excerpts; other imported sections still require comparison with the original Digilib pages or scans to confirm completeness. The source text remains in Grabar; no translation or editorial correction is implied.
 
 **Source:** [Digilib — Տարեգիրք, attributed to Սմբատ Սպարապետ](https://www.digilib.am/book/333/)
