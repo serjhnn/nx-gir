@@ -17,11 +17,7 @@ paragraph breaks. No full stop lacked a following space.
 Only line breaks and paragraph spacing were changed; the
 Grabar wording was not edited.
 
-Chunks 1–16: lines 1–1,200 translated in sixteen 75-line
-chunks. Source and translation line counts match for the
-translated prefix, and blank-line positions match. The
-draft is being added incrementally and is not yet complete
-or reviewed.
+Part 1: all 1,483 source lines translated in twenty chunks (nineteen 75-line chunks and a final 58-line chunk). Source and translation line counts match, and all blank-line positions match. The machine draft is complete but has not yet undergone human review.
 
 ## Translation decisions
 
@@ -49,8 +45,7 @@ commentary on the second day.
 
 ## How to do the next part
 
-Continue Part 1 at source line 1,201, in chunks of 75–150
-lines. After Part 1 is complete, run the repository
+Part 1 translation is complete. Next step: human review against the Grabar source, with particular attention to damaged or uncertain OCR passages and theological terminology. After Part 1 is complete, run the repository
 structure check, add the translation record as `machine`,
 update the source and timeline records, and run the
 repository tests. Then continue with Parts 2 and 3.
