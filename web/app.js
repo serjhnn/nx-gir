@@ -1315,6 +1315,11 @@ async function libraryPage(who) {
         "Գրաբար գրքեր · " + n),
       tabs, body));
   drawStars();
+  // the lists at least a screen high: a short one
+  // still lets the tabs stay where they are, at the
+  // top of the screen, when switched to
+  body.style.minHeight =
+    `calc(100vh - ${tabs.offsetHeight}px)`;
   // an author's link opens all the books
   pick(who ? "all" : libraryTab(), false);
   const at = who
