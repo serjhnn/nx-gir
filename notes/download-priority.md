@@ -71,8 +71,10 @@ sections marked [1]-[4] and no headings: in
 `NO_CONTENTS`). Not taken: 1588, a modern edition
 with a long modern foreword, a table of three
 editions and a variants apparatus; 202 (Hetum II's
-annals, unclear). Next: Ghevond (44), Tovma Metsopetsi
-(76), Kirakos Gandzaketsi (66), Tovma Artsruni (64).
+annals, unclear). Next, with the Digilib ids (the
+numbers in group 2 below are not ids: 64, 66, 76 are
+Shirakatsi's): Ghevond (168), Tovma Metsopetsi (347),
+Kirakos Gandzaketsi (250), Tovma Artsruni (346).
 
 Also Եղիշէ Խրատք 1395, Ղազար Փարպեցի Թուղթ 1592.
 These are the most read and the best sources for
@@ -87,8 +89,8 @@ the fetch script must cut it.
   grabar (e.g. 64, 67, 68, 70)
 - Հեթում Պատմիչ (3 books, 10 parts)
 - Եղիշէ, Խրատք (32)
-- Ղեւոնդ (44), Թովմա Մեծոփեցի (76), Կիրակոս
-  Գանձակեցի (66), Թովմա Արծրունի (64)
+- Ղեւոնդ (168), Թովմա Մեծոփեցի (347), Կիրակոս
+  Գանձակեցի (250), Թովմա Արծրունի (346)
 
 ## 3. Medieval histories (grabar, 40 to 200 parts)
 
