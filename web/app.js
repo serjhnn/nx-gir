@@ -1229,8 +1229,21 @@ async function libraryPage(who) {
       x.title = on ? "Հանել աստղը" : "Աստղանշել";
     }
   };
+  // how far down each tab's list was scrolled,
+  // from its start just below the tabs: a tab goes
+  // back to its place
+  const place = {};
+  const start = () => body.getBoundingClientRect()
+    .top + scrollY - tabs.offsetHeight;
   const pick = (tab, keep, slide) => {
-    const from = LIB_TABS.indexOf(tabs.dataset.tab);
+    const old = tabs.dataset.tab;
+    const from = LIB_TABS.indexOf(old);
+    const moved = slide && old && old !== tab;
+    if (moved) {
+      // (a pixel or so off is no place)
+      const off = Math.round(scrollY - start());
+      place[old] = off > 2 ? off : 0;
+    }
     tabs.dataset.tab = tab;
     for (const t of LIB_TABS) {
       const on = t === tab;
@@ -1239,14 +1252,16 @@ async function libraryPage(who) {
       tabBtn[t].tabIndex = on ? 0 : -1;
       panes[t].hidden = !on;
     }
-    if (slide) {
-      // scrolled down the list before: the new
-      // one from its start, just below the tabs
-      const top = panes[tab].getBoundingClientRect()
-        .top - tabs.offsetHeight;
-      if (top < 0) scrollBy(0, top);
-      const to = LIB_TABS.indexOf(tab);
-      if (to !== from) slideIn(panes[tab], to - from);
+    if (moved) {
+      // where this list was left; one not scrolled
+      // yet from its start, below the tabs if they
+      // were at the top of the screen
+      const top = start();
+      const off = place[tab] || 0;
+      if (off > 0 || scrollY > top) {
+        scrollTo(0, top + off);
+      }
+      slideIn(panes[tab], LIB_TABS.indexOf(tab) - from);
     }
     if (!keep) return;
     try {
