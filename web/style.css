@@ -750,6 +750,15 @@ h1 {
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
   --i: 0;
+  /* kept at the top of the screen on scrolling */
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--bg);
+}
+/* an author the Library opens at: below the tabs */
+.library .author {
+  scroll-margin-top: 4.5rem;
 }
 .lib-tabs[data-tab="starred"] {
   --i: 1;

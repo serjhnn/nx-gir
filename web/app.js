@@ -1232,10 +1232,11 @@ async function libraryPage(who) {
       panes[t].hidden = !on;
     }
     if (slide) {
-      // the tabs in sight, if scrolled past them
-      if (tabs.getBoundingClientRect().top < 0) {
-        tabs.scrollIntoView();
-      }
+      // scrolled down the list before: the new
+      // one from its start, just below the tabs
+      const top = panes[tab].getBoundingClientRect()
+        .top - tabs.offsetHeight;
+      if (top < 0) scrollBy(0, top);
       const to = LIB_TABS.indexOf(tab);
       if (to !== from) slideIn(panes[tab], to - from);
     }
