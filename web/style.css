@@ -784,9 +784,22 @@ h1 {
 .lib-tabs button[aria-selected="true"] {
   color: var(--on-accent);
 }
-/* a thin line between the tabs */
-.lib-tabs button + button {
-  border-left: 1px solid var(--accent);
+/* a thin, dim line between the tabs, short of
+   the outline; none beside the chosen one */
+.lib-tabs button + button::before {
+  content: "";
+  position: absolute;
+  top: 25%;
+  bottom: 25%;
+  left: 0;
+  width: 1px;
+  background: var(--accent);
+  opacity: 0.35;
+  transition: opacity 0.2s ease;
+}
+.lib-tabs button[aria-selected="true"]::before,
+.lib-tabs [aria-selected="true"] + button::before {
+  opacity: 0;
 }
 .lib-tabs button:focus-visible {
   outline: 2px solid var(--text);
