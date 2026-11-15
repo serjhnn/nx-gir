@@ -8,7 +8,7 @@
 
 ## Imported sections
 
-Twenty-two section files have been committed to this branch:
+Twenty-three section files have been committed to this branch:
 
 | Section | File |
 |---|---|
