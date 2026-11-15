@@ -592,3 +592,44 @@ source paragraphs. One `։` had no space after it in
 the source; it is cut there like the others. Only
 line breaks and paragraph spacing were changed; the
 Grabar wording is unchanged.
+
+## grabar/smbat-sparapet/2-taregirk/
+
+*Տարեգիրք* (the Chronicle) of Smbat Sparapet, from
+the Paris 1859 edition: Տարեգիրք Սմբատայ
+Սպարապետի, edited by K. Shahnazareants (public
+domain), printed pages 21–141, from the scan Google
+made and Robert Bedrosian put on the Internet
+Archive
+(<https://archive.org/details/SmbatGrabarTaregirk1859>;
+PDF pages 26–156, where 51–60 scan 41–50 a second
+time). Digilib (book 333, from the Venice 1956
+edition) was down on 2026-11-15, and the Archive's
+own text of both editions is unreadable, so the text
+was typed by Claude (Anthropic's AI model) from the
+page images, with a Tesseract OCR (`hye`) as a
+first draft, page by page, each page read against
+its image. 50 words whose letters were hard to read
+in the scan are listed in
+`notes/smbat-sparapet-taregirk.md`.
+
+- Two parts, cut at the year 516 (`Ի թուին 516`),
+  each under the library's 150,000 letters.
+- One sentence per line, split at `։`; a blank line
+  between the edition's paragraphs; the words cut at
+  the line ends joined again.
+- The editor's note numbers `(1)`–`(92)` are left
+  out; his notes (pages 142–181) are not copied.
+  His own additions in brackets, `(զնա)`, stay.
+- Kept as printed: the misprints of the edition
+  (`Ի թուին 841` for 741, `620` for 720), its
+  spelling and its punctuation.
+- After the chronicle the edition prints lists that
+  belong to it (pages 133–141: the sees of Antioch,
+  the princes and kings of Cilicia, the Roman
+  emperors, the patriarchs of Constantinople, the
+  eras, two last entries); they are at the end of
+  part 2, their titles as lines of their own.
+- The edition differs from the Venice 1956 one that
+  Digilib has; when Digilib is back, its text can
+  be compared with this one.

@@ -706,6 +706,45 @@ def title_lines(lines):
     return out if len(out) >= TITLES_MIN else []
 
 
+# a chronicle by years (Սմբատ Սպարապետ's Տարեգիրք):
+# paragraphs that start with the year, "Ի թուին 413",
+# "Իսկ ի թուականին Հայոց 410"
+YEAR_RE = re.compile(
+    r"(?:(?:Իսկ|Եւ|Դարձեալ՝)\s+)?[Իի]\s+"
+    r"թու(?:ին|ականին|ականութեանն)"
+    r"\s+(?:Հայոց\s+)?(\d{3})\b"
+)
+YEARS_MIN = 10
+
+
+def year_entries(lines):
+    """Entries for a chronicle whose paragraphs start
+    with their year (YEAR_RE), at least YEARS_MIN of
+    them; the title is the paragraph's first sentence,
+    "n" the year. [] for a part with Digilib's [1], [2]
+    sections."""
+    if any(
+        DIGIT_SECTION_RE.fullmatch(x.strip()) for x in lines
+    ):
+        return []
+    out = []
+    for i, line in enumerate(lines):
+        t = line.strip()
+        if i and lines[i - 1].strip():
+            continue
+        m = YEAR_RE.match(t)
+        if m:
+            out.append(
+                {
+                    "line": i,
+                    "n": m.group(1),
+                    "title": short(t),
+                    "level": 2,
+                }
+            )
+    return out if len(out) >= YEARS_MIN else []
+
+
 def contents(lines):
     """The parts of a book, in order: [{"line": the
     line to go to, "n": its number or "", "title":
@@ -838,6 +877,8 @@ def contents(lines):
         out = lone_numbers(lines)
     if not out:
         out = titled_numbers(lines)
+    if not out:
+        out = year_entries(lines)
     if not out:
         out = title_lines(lines)
     # the text before the first heading is reachable
