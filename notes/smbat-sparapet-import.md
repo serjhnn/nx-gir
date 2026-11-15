@@ -8,13 +8,14 @@
 
 ## Imported sections
 
-The following five sections have been retrieved as complete page text from Digilib and committed as individual Grabar text files:
+The following six sections have been retrieved as complete page text from Digilib and committed as individual Grabar text files:
 
 | Section | File |
 |---|---|
 | 432 | books/grabar/smbat-sparapet/1-taregirk/0432.txt |
 | 511 | books/grabar/smbat-sparapet/1-taregirk/0511.txt |
 | 523 | books/grabar/smbat-sparapet/1-taregirk/0523.txt |
+| 618 | books/grabar/smbat-sparapet/1-taregirk/0618.txt |
 | 717 | books/grabar/smbat-sparapet/1-taregirk/0717.txt |
 | 718 | books/grabar/smbat-sparapet/1-taregirk/0718.txt |
 
