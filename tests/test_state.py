@@ -55,6 +55,19 @@ def test_toggle_mark_adds_then_removes():
     assert st.marks("b") == [[0, 0]]
 
 
+def test_toggle_star(tmp_path):
+    path = tmp_path / "state.json"
+    st = State(path)
+    assert st.toggle_star("a") is True
+    assert st.toggle_star("b") is True
+    # newest first
+    assert st.stars == ["b", "a"]
+    st.save()
+    assert State.load(path).stars == ["b", "a"]
+    assert st.toggle_star("b") is False
+    assert st.stars == ["a"]
+
+
 def test_progress():
     st = State("unused.json")
     assert st.progress("b") is None

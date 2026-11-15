@@ -1,5 +1,5 @@
-"""Saved reading state: positions, bookmarks, notes
-and settings.
+"""Saved reading state: positions, bookmarks, notes,
+starred books and settings.
 
 Stored as JSON in $NXGIR_STATE, else
 $XDG_STATE_HOME/nxgir/state.json, else
@@ -52,6 +52,8 @@ class State:
         self.path = Path(path or default_path())
         self.settings = dict(SETTINGS)
         self.books = {}
+        # starred books of the Library, newest first
+        self.stars = []
 
     @classmethod
     def load(cls, path=None):
@@ -65,6 +67,11 @@ class State:
             )
             st.settings.update(data.get("settings", {}))
             st.books = dict(data.get("books", {}))
+            st.stars = [
+                k
+                for k in data.get("stars", [])
+                if isinstance(k, str)
+            ]
             for b in st.books.values():
                 if "notes" in b:
                     b["notes"] = [
@@ -79,6 +86,7 @@ class State:
                 pass
             st.settings = dict(SETTINGS)
             st.books = {}
+            st.stars = []
         return st
 
     def save(self):
@@ -87,6 +95,7 @@ class State:
             "version": VERSION,
             "settings": self.settings,
             "books": self.books,
+            "stars": self.stars,
         }
         text = json.dumps(
             data, ensure_ascii=False, indent=1
@@ -113,6 +122,15 @@ class State:
             return False
 
     # -- books --
+
+    def toggle_star(self, key):
+        """Star a book of the Library (it goes first),
+        or take its star off. True if starred."""
+        if key in self.stars:
+            self.stars.remove(key)
+            return False
+        self.stars.insert(0, key)
+        return True
 
     def book(self, key):
         """The saved entry for a book (created if new)."""

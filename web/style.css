@@ -685,6 +685,40 @@ h1 {
   display: block;
   color: var(--accent-ink);
 }
+/* ☆ beside a book; the starred ones go first */
+.library .shelf li {
+  display: flex;
+  align-items: center;
+}
+.library .shelf .row {
+  flex: 1;
+  min-width: 0;
+}
+.library .star {
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.library .star[aria-pressed="true"] {
+  color: var(--accent);
+}
+.library .star:hover,
+.library .star:focus-visible {
+  background: var(--hover);
+}
+.library .name .by {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
 
 /* #/b/<folder>: a book's page, its parts */
 .volume h1 {

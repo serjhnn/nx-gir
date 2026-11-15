@@ -16,10 +16,12 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/recent?n=          the books read last
   GET  /api/stats              how close to the limits
   GET  /api/library            the Grabar books
+                               and the starred ones
   GET  /api/volume?folder=     a book's page: its parts
   POST /api/position           {name, pos, lines}
   POST /api/mark               {name, pos}
   POST /api/forget             {name}: off the list
+  POST /api/star               {name}: star a book
   POST /api/note               {name, pos, text}
   GET  /api/source?name=       an interpretation as is
   POST /api/save               {name, text, version}
@@ -886,6 +888,17 @@ def forget(app, body):
     return {"ok": True}
 
 
+def star(app, body):
+    """Star a book of the Library, or take its star
+    off; a book is named by its first file."""
+    name = text_arg(body, "name")
+    app.path(name)
+    st = app.state()
+    added = st.toggle_star(name)
+    saved(st)
+    return {"starred": added, "stars": st.stars}
+
+
 def toggle_mark(app, body):
     name = text_arg(body, "name")
     app.path(name)
@@ -1050,7 +1063,10 @@ def get(app, route, query):
     if route == "/api/stats":
         return stats(app)
     if route == "/api/library":
-        return library(app)
+        # the stars are this reader's, so not in
+        # library() (the site's library.json)
+        stars = app.state().stars
+        return {**library(app), "stars": stars}
     if route == "/api/volume":
         return volume(app, arg("folder"))
     raise ApiError(404, f"no such page: {route}")
@@ -1060,6 +1076,7 @@ POSTS = {
     "/api/position": set_position,
     "/api/mark": toggle_mark,
     "/api/forget": forget,
+    "/api/star": star,
     "/api/note": note,
     "/api/save": save_text,
     "/api/new": new_text,

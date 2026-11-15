@@ -315,7 +315,8 @@ async function staticApi(path) {
     return json("data/stats.json");
   }
   if (route === "library") {
-    return json("data/library.json");
+    return { ...(await json("data/library.json")),
+      stars: starsHere() };
   }
   if (route === "volume") {
     const data = await json("data/volume/" +
@@ -970,9 +971,41 @@ async function bookPage(folder) {
 
 // -- library --
 
+// starred books of the Library, newest first:
+// in the saved state on the local server, in this
+// browser on the published copy
+const STARS = "nxgir-stars";
+
+function starsHere() {
+  try {
+    const s = JSON.parse(
+      localStorage.getItem(STARS) || "[]");
+    return Array.isArray(s) ? s : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+// star a book (named by its first file), or take
+// the star off; the stars after it
+async function toggleStar(name) {
+  if (!STATIC) {
+    return (await send("star", { name })).stars;
+  }
+  const s = starsHere();
+  const i = s.indexOf(name);
+  if (i >= 0) s.splice(i, 1);
+  else s.unshift(name);
+  try {
+    localStorage.setItem(STARS, JSON.stringify(s));
+  } catch (e) {}
+  return s;
+}
+
 // one book of #/library: its short name, how many
-// parts and how much is translated
-function libraryRow(b) {
+// parts and how much is translated; by: its
+// author, in the starred list
+function libraryRow(b, by) {
   const meta = h("span", { class: "meta" });
   if (b.parts > 1) meta.append(b.parts + " մաս");
   if (b.done) {
@@ -986,22 +1019,72 @@ function libraryRow(b) {
     href: b.parts > 1 ? folderHref(dirOf(b.first))
       : "#/read/" + enc(b.first) },
   icon(ICONS.book, "ico"),
-  h("span", { class: "name" }, b.name),
+  h("span", { class: "name" }, b.name,
+    by ? h("span", { class: "by" }, by) : null),
   meta);
   // the full title, when the name is short
   if (b.title !== b.name) a.title = b.title;
   return a;
 }
 
-// #/library: the Grabar books, by author;
-// #/library/<author> scrolls to that author
+// #/library: the Grabar books, by author, the
+// starred ones first; #/library/<author> scrolls
+// to that author
 async function libraryPage(who) {
   const data = await api("library");
   document.title = "Գրադարան · " + NAME;
+  let stars = data.stars || [];
+  // first file -> the book and its author
+  const books = new Map();
+  for (const a of data.authors) {
+    for (const b of a.books) {
+      books.set(b.first, { b, by: a.name });
+    }
+  }
+  let buttons = [];
+  const starBox = h("section",
+    { class: "author starred" });
+  // ☆ beside a book
+  const starBtn = (b) => {
+    const btn = h("button", { type: "button",
+      class: "star" });
+    btn.dataset.name = b.first;
+    btn.addEventListener("click", async () => {
+      try {
+        stars = await toggleStar(b.first);
+      } catch (e) {
+        return;
+      }
+      drawStars();
+    });
+    buttons.push(btn);
+    return btn;
+  };
+  const drawStars = () => {
+    const list = h("ul", { class: "shelf" });
+    for (const k of stars) {
+      const x = books.get(k);
+      if (!x) continue;
+      list.append(h("li", {},
+        libraryRow(x.b, x.by), starBtn(x.b)));
+    }
+    const any = list.children.length > 0;
+    starBox.replaceChildren(...(any
+      ? [h("h2", {}, "★ Աստղանշված"), list] : []));
+    starBox.hidden = !any;
+    buttons = buttons.filter((x) => x.isConnected);
+    for (const x of buttons) {
+      const on = stars.includes(x.dataset.name);
+      x.textContent = on ? "★" : "☆";
+      x.setAttribute("aria-pressed", String(on));
+      x.title = on ? "Հանել աստղը" : "Աստղանշել";
+    }
+  };
   const groups = data.authors.map((a) => {
     const list = h("ul", { class: "shelf" });
     for (const b of a.books) {
-      list.append(h("li", {}, libraryRow(b)));
+      list.append(h("li", {}, libraryRow(b),
+        starBtn(b)));
     }
     // books that are all single files (the Bible)
     // have a page of their own
@@ -1022,9 +1105,11 @@ async function libraryPage(who) {
       h("h1", {}, "Գրադարան"),
       h("p", { class: "sub" },
         "Գրաբար գրքեր · " + n),
+      starBox,
       groups.length ? groups
         : h("p", { class: "empty" },
           "Գրքեր դեռ չկան։")));
+  drawStars();
   const at = who
     && document.getElementById("author-" + who);
   if (at) at.scrollIntoView();
