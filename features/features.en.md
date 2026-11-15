@@ -56,7 +56,7 @@ A bar above the text shows how much of the part you have read.
 
 ## The Library
 
-The Library page lists the Grabar books by author, with how many parts each has and how much of it is translated. Tap ☆ beside a book to star it: the Ընտրված (chosen) tab lists them, beside Բոլոր գրքերը (all books); Ընթերցվող (being read) lists the books you have started, each opening where you stopped.
+The Library page lists the Grabar books by author, with how many parts each has and how much of it is translated. Tap ☆ beside a book to star it: the Ընտրված (chosen) tab lists them, beside Բոլոր գրքերը (all books); Ընթերցվող (being read) lists the books you have started, each opening where you stopped. On a phone, swipe left or right to move between the tabs.
 
 ## Blog, Timeline and Statistics
 

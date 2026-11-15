@@ -1222,6 +1222,60 @@ async function libraryPage(who) {
     pick(t, true);
     tabBtn[t].focus();
   });
+  // a swipe left or right on the page moves to the
+  // next tab or the one before (not past the ends);
+  // the new list slides in from that side
+  const body = h("div", { class: "lib-panes" },
+    panes.all, panes.starred, panes.reading);
+  let touch = null;
+  // the whole page, so a short list is no smaller
+  // a place to swipe
+  const page = main;
+  const onStart = (e) => {
+    const p = e.touches[0];
+    // one finger, away from the screen's edges
+    // (the phone's own back gesture)
+    touch = e.touches.length === 1
+      && p.clientX > 24
+      && p.clientX < innerWidth - 24
+      ? { x: p.clientX, y: p.clientY,
+        t: Date.now() } : null;
+  };
+  const onEnd = (e) => {
+    // gone to another page
+    if (!body.isConnected) {
+      page.removeEventListener("touchstart",
+        onStart);
+      page.removeEventListener("touchend", onEnd);
+      return;
+    }
+    if (!touch) return;
+    const p = e.changedTouches[0];
+    const dx = p.clientX - touch.x;
+    const dy = p.clientY - touch.y;
+    const quick = Date.now() - touch.t < 700;
+    touch = null;
+    if (!quick || Math.abs(dx) < 60
+      || Math.abs(dx) < 2 * Math.abs(dy)) return;
+    const i = LIB_TABS.indexOf(tabs.dataset.tab);
+    const t = LIB_TABS[i + (dx < 0 ? 1 : -1)];
+    if (!t) return;
+    pick(t, true);
+    const pane = panes[t];
+    pane.classList.remove("from-left",
+      "from-right");
+    void pane.offsetWidth; // start it again
+    pane.classList.add(dx < 0 ? "from-right"
+      : "from-left");
+    // the tabs in sight, if scrolled past them
+    if (tabs.getBoundingClientRect().top < 0) {
+      tabs.scrollIntoView();
+    }
+  };
+  page.addEventListener("touchstart", onStart,
+    { passive: true });
+  page.addEventListener("touchend", onEnd,
+    { passive: true });
   show(
     h("p", { class: "crumbs" },
       h("a", { href: "#/" }, "← Home")),
@@ -1229,8 +1283,7 @@ async function libraryPage(who) {
       h("h1", {}, "Գրադարան"),
       h("p", { class: "sub" },
         "Գրաբար գրքեր · " + n),
-      tabs, panes.all, panes.starred,
-      panes.reading));
+      tabs, body));
   drawStars();
   // an author's link opens all the books
   pick(who ? "all" : libraryTab(), false);
