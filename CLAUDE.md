@@ -244,6 +244,9 @@
   Եղիշէ's `Առաջին յեղանակ՝ Ժամանակն` headings
   count too (three in a part are enough; the title
   is the whole line).
+  A critical edition (Եղիշէ, Մեկնութիւն Արարածոց)
+  has `Ա (Ա II)` section lines, read like Digilib's
+  `[Ա]`, and ԾԱՆՕԹԱԳՐՈՒԹԻՒՆՆԵՐ, ՅԱՒԵԼՈՒԱԾ as groups.
   A book of songs or sermons numbered in letters
   with titles in capitals (`Ա. ՏԱՂ ՅԱՐՈՒԹԵԱՆ ...`,
   Narekatsi's Գանձեր եւ Տաղեր) takes those lines

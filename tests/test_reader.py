@@ -971,3 +971,40 @@ def test_contents_of_modes_by_ordinals():
     assert len(got) == 8
     assert got[1]["title"] == "Առաջին · Վասն իրաց եւ այլոց"
     assert got[1]["line"] == 4
+
+
+def test_contents_of_critical_edition_sections():
+    lines = [
+        "Գիրք · 1/1",
+        "",
+        "Ա (Ա)",
+        "",
+        "Ա. 1ա",
+        "1 Անմարմին է Աստուած։",
+        "Բ (Ա II)",
+        "Ա. 2ա",
+        "110 Ընդէ՞ր ասէ։",
+    ]
+    got = contents(lines)
+    assert [(e["n"], e["title"]) for e in got[1:]] == [
+        ("Ա", "Անմարմին է Աստուած։"),
+        ("Բ", "Ընդէ՞ր ասէ։"),
+    ]
+
+
+def test_contents_of_notes_and_appendix_headings():
+    lines = [
+        "Գիրք · 3/3",
+        "",
+        "ԾԱՆՕԹԱԳՐՈՒԹԻՒՆՆԵՐ",
+        "Ա. 4 ...",
+        "",
+        "ՅԱՒԵԼՈՒԱԾ",
+        "Տեքստ։",
+    ]
+    got = contents(lines)
+    assert [e["title"] for e in got[1:]] == [
+        "ԾԱՆՕԹԱԳՐՈՒԹԻՒՆՆԵՐ",
+        "ՅԱՒԵԼՈՒԱԾ",
+    ]
+    assert got[1]["level"] == 1

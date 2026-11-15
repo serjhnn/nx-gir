@@ -48,8 +48,14 @@ numbers at some line starts, left as on Digilib).
 Yeghishe, Vasn Vardanay (150) is in `books/` too
 (2026-11-15, 8 sections in two parts; its seven
 `Առաջին յեղանակ՝` headings are read by
-`ordinal_entries()`). Next: Yeghishe, Meknutiun
-Arardatsots (1394).
+`ordinal_entries()`). Yeghishe, Meknutiun Arardatsots (1394) is in
+`books/` too (2026-11-15, 108 sections in three
+parts; a critical edition with manuscript marks, fetched
+with `--by-id`: Digilib lists the first 22 sections
+out of order; its headings `Ա (Ա II)`, and the notes
+and appendix, are read by `contents()`).
+Next: group 2 (short and cheap), then Yeghishe's
+Khratk (1395) and Ghazar's Tught (1592).
 
 Also Եղիշէ Խրատք 1395, Ղազար Փարպեցի Թուղթ 1592.
 These are the most read and the best sources for

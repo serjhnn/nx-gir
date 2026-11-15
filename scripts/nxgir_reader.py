@@ -275,7 +275,12 @@ def sentence_starts(lay):
 # heading ((Գլուխ. ՃԶ), (Գլուխ ՃԶ)), or a line
 # that starts with Գլուխ and its number; a heading
 # not yet cut into sentences ends with its number
-GROUP_RE = re.compile(r"ԳԼՈՒԽ\s+\S")
+# (a critical edition ends with ԾԱՆՕԹԱԳՐՈՒԹԻՒՆՆԵՐ,
+# notes, and ՅԱՒԵԼՈՒԱԾ, an appendix, alone on a line:
+# they are groups too)
+GROUP_RE = re.compile(
+    r"ԳԼՈՒԽ\s+\S|(?:ԾԱՆՕԹԱԳՐՈՒԹԻՒՆՆԵՐ|ՅԱՒԵԼՈՒԱԾ)$"
+)
 NUMBER_RE = re.compile(r"\(Գլուխ\.?\s*([^\s.)]+)\.?\s*\)$")
 # (the number is Armenian letters starting with a
 # capital (Ժէ), digits or առաջին: a sentence that
@@ -295,8 +300,16 @@ PRAK_RE = re.compile(r"\(Պրակ\s+([Ա-Ֆա-ֆ]{1,4})\)\s*(.*)")
 PRAK_SKIP = ("հարց", "պատասխան", "պատասխանեմք")
 # Digilib's section number on a line of its own,
 # [Ա] (the first may be [Գլուխ Ա]); the section's
-# title is the next line
-SECTION_RE = re.compile(r"\[(?:Գլուխ\s+)?([Ա-Ֆ]{1,4})\]")
+# title is the next line. In a critical edition
+# (Եղիշէ, Մեկնութիւն Արարածոց) the number is Ա (Ա II),
+# the edition's own in brackets, and a manuscript page
+# mark (Ա. 1ա) comes before the text, with a verse
+# number at its start (1 Անմարմին ...)
+SECTION_RE = re.compile(
+    r"\[(?:Գլուխ\s+)?([Ա-Ֆ]{1,4})\]"
+    r"|([Ա-Ֆ]{1,4})\s\([Ա-Ֆ]{1,4}(?:\s[IVX]+)?\)"
+)
+MS_PAGE_RE = re.compile(r"[Ա-Ֆ]\.\s+\d+[ա-ֆ]")
 # a verse at the end: Սաղ. 131. 9. or 1 Թագ. 2. 7։
 REF_RE = re.compile(
     r"(\d\s+)?\S+\.?\s+\d+\s*[.։]\s*\d+[\d\s,-]*[.։]?\s*$"
@@ -638,13 +651,20 @@ def contents(lines):
         m = SECTION_RE.fullmatch(t)
         if m:
             nxt = (x.strip() for x in lines[i + 1 :])
+            nxt = (
+                x
+                for x in nxt
+                if not MS_PAGE_RE.fullmatch(x)
+            )
             title = next((x for x in nxt if x), "")
             if SECTION_RE.fullmatch(title):
                 title = ""
+            if m.group(2):
+                title = re.sub(r"^\d+\s+", "", title)
             out.append(
                 {
                     "line": i,
-                    "n": m.group(1),
+                    "n": m.group(1) or m.group(2),
                     "title": short(title),
                     "level": 2,
                 }
