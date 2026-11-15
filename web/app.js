@@ -1072,10 +1072,13 @@ async function libraryPage(who) {
     return btn;
   };
   // the tabs: all the books, or the starred ones
+  const n = data.authors.reduce(
+    (k, a) => k + a.books.length, 0);
   const count = h("span", { class: "count" });
   const tabAll = h("button", { type: "button",
     role: "tab", id: "tab-all",
-    "aria-controls": "lib-all" }, "Բոլորը");
+    "aria-controls": "lib-all" }, "Բոլոր գրքերը",
+  h("span", { class: "count" }, String(n)));
   const tabStar = h("button", { type: "button",
     role: "tab", id: "tab-starred",
     "aria-controls": "lib-starred" },
@@ -1096,13 +1099,13 @@ async function libraryPage(who) {
       list.append(h("li", {},
         libraryRow(x.b, x.by), starBtn(x.b)));
     }
-    const n = list.children.length;
-    starPane.replaceChildren(n ? list
+    const k = list.children.length;
+    starPane.replaceChildren(k ? list
       : h("p", { class: "empty" },
         "Ընտրված գրքեր դեռ չկան։ Գրքի կողքի ☆-ով"
         + " ավելացրեք այստեղ։"));
-    count.textContent = String(n);
-    count.hidden = !n;
+    count.textContent = String(k);
+    count.hidden = !k;
     buttons = buttons.filter((x) => x.isConnected);
     for (const x of buttons) {
       const on = stars.includes(x.dataset.name);
@@ -1160,8 +1163,6 @@ async function libraryPage(who) {
     to.click();
     to.focus();
   });
-  const n = data.authors.reduce(
-    (k, a) => k + a.books.length, 0);
   show(
     h("p", { class: "crumbs" },
       h("a", { href: "#/" }, "← Home")),
