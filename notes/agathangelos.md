@@ -12,8 +12,8 @@ use the same paths under `books/ashkharhabar/`.
 ## Part 1 progress
 
 The Grabar file has 1,300 sentence/heading/blank lines.
-Chunks 1–12 (lines 1–900) have been translated in twelve
-75-line chunks. The first 900 lines have matching line
+Chunks 1–15 (lines 1–1,125) have been translated in fifteen
+75-line chunks. The first 1,125 lines have matching line
 counts and blank-line positions. The translation remains
 `machine` and requires human review against the Grabar text.
 
@@ -69,5 +69,12 @@ return of the Christian faith to Armenia.
 - Chunk 12: lines 826–900 — Diocletian's letter, the
   search for Hripsime, and the prayers of Hripsime and
   Gayaneh.
+- Chunk 13: lines 901–975 — the divine thunder, Hripsime's
+  prayer, and her resistance to Tiridates.
+- Chunk 14: lines 976–1,050 — Hripsime's martyrdom,
+  Gayaneh's exhortation, and the martyrdom of her companions.
+- Chunk 15: lines 1,051–1,125 — Tiridates' affliction,
+  Gregory's release from the pit, and the beginning of his
+  teaching to the king and his court.
 
 The translation is a machine draft, not a reviewed edition.
