@@ -31,7 +31,9 @@ Agathangelos (54) is in `books/` too (2026-11-15,
 `Ա.` on their own, read by `lone_numbers()` in
 `nxgir_reader.py`). Five sections are empty on
 Digilib: group headings with no text of their own.
-Next: Pavstos Buzand (310).
+Pavstos Buzand (310) is in `books/` too (2026-11-15,
+148 sections in three parts; five are empty group
+headings). Next: Koriun (252).
 
 Also Եղիշէ Խրատք 1395, Ղազար Փարպեցի Թուղթ 1592.
 These are the most read and the best sources for
