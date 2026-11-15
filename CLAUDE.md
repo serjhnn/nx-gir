@@ -111,7 +111,11 @@
 - `books/LIBRARY.tsv`: the Library page
   (`#/library`, `/api/library`): author names and
   short book names for `books/grabar/` (content; a
-  test checks every path and author)
+  test checks every path and author). Authors are
+  shown in its order. **Always last, in this order:**
+  Շնորհալի (`nerses-shnorhali`), Շիրակացի
+  (`anania-shirakatsi`), Աստվածաշունչ (`bible`): put a
+  new author above them (a test checks it)
 - A book's page (`#/b/<folder>`, `/api/volume`,
   `volume()` in `nxgir_web.py`; on the site
   `data/volume/<folder>.json`): the parts of a book

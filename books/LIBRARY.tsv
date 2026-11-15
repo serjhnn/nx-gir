@@ -6,6 +6,9 @@
 # - a book (a folder of parts, or a single file):
 #   its short name; a book not listed here shows
 #   its first line
+# - the last authors, always, in this order:
+#   Շնորհալի, Շիրակացի, Աստվածաշունչ; a new
+#   author goes above them (a test checks it)
 grigor-tatevatsi	Գրիգոր Տաթևացի
 grigor-tatevatsi/1-girk-harcmanc	Գիրք հարցմանց
 grigor-tatevatsi/2-dzmeran-hator	Ձմեռան հատոր
@@ -21,6 +24,17 @@ eznik-koghbatsi	Եզնիկ Կողբացի
 eznik-koghbatsi/1-yeghts-aghandots	Եղծ աղանդոց
 agathangelos	Ագաթանգեղոս
 agathangelos/1-patmutiun-hayots	Պատմութիւն Հայոց
+pavstos-buzand	Փաւստոս Բուզանդ
+pavstos-buzand/1-patmutiun-hayots	Պատմութիւն Հայոց
+koriun	Կորիւն
+koriun/1-vark-mashtotsi	Վարք Մաշտոցի
+movses-khorenatsi	Մովսէս Խորենացի
+movses-khorenatsi/1-patmutiun-hayots	Պատմութիւն Հայոց
+ghazar-parpetsi	Ղազար Փարպեցի
+ghazar-parpetsi/1-patmutiun-hayots	Պատմութիւն Հայոց
+yeghishe	Եղիշէ
+yeghishe/1-vasn-vardanay	Վասն Վարդանայ
+yeghishe/2-meknutiun-ararodzots	Մեկնութիւն Արարածոց
 nerses-shnorhali	Ներսես Շնորհալի
 nerses-shnorhali/1-tught-yndhanrakan	Թուղթ ընդհանրական
 nerses-shnorhali/2-voghb-edesioy	Ողբ Եդեսիոյ
@@ -57,14 +71,3 @@ bible/new-testament/2-mark.txt	Մարկոս
 bible/new-testament/3-luke.txt	Ղուկաս
 bible/new-testament/4-john.txt	Յովհաննէս
 bible/old-testament/psalm-118.txt	Սաղմոս ՃԺԸ
-pavstos-buzand	Փաւստոս Բուզանդ
-pavstos-buzand/1-patmutiun-hayots	Պատմութիւն Հայոց
-koriun	Կորիւն
-koriun/1-vark-mashtotsi	Վարք Մաշտոցի
-movses-khorenatsi	Մովսէս Խորենացի
-movses-khorenatsi/1-patmutiun-hayots	Պատմութիւն Հայոց
-ghazar-parpetsi	Ղազար Փարպեցի
-ghazar-parpetsi/1-patmutiun-hayots	Պատմութիւն Հայոց
-yeghishe	Եղիշէ
-yeghishe/1-vasn-vardanay	Վասն Վարդանայ
-yeghishe/2-meknutiun-ararodzots	Մեկնութիւն Արարածոց

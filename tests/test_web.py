@@ -807,6 +807,18 @@ def test_library_names_are_on_the_shelf():
             assert d.name in names, d.name
 
 
+def test_library_last_authors():
+    """Շնորհալի, Շիրակացի and Աստվածաշունչ are always
+    the last authors, in this order."""
+    names = web.read_names(web.LIBRARY)
+    authors = [k for k in names if "/" not in k]
+    assert authors[-3:] == [
+        "nerses-shnorhali",
+        "anania-shirakatsi",
+        "bible",
+    ]
+
+
 def test_parts(tmp_path):
     # a part of a long book knows the parts beside
     # it, with their first heading
