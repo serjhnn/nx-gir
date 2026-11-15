@@ -789,6 +789,17 @@ h1 {
 .lib-tabs button[aria-selected="true"] {
   color: var(--accent-ink);
 }
+/* a thin, dim line between the tabs, short of
+   the lines above and below */
+.lib-tabs button + button::before {
+  content: "";
+  position: absolute;
+  top: 25%;
+  bottom: 25%;
+  left: 0;
+  width: 1px;
+  background: var(--rule);
+}
 .lib-tabs button:focus-visible {
   outline: 2px solid var(--text);
   outline-offset: -4px;
