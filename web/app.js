@@ -3397,6 +3397,7 @@ function clearReading() {
 }
 
 async function route() {
+  clearTimeout(placeTimer);
   // unsaved text: ask before leaving the editor
   if (E.back) {
     E.back = false;
@@ -3463,11 +3464,42 @@ async function route() {
     } else {
       await shelf("");
     }
+    backToPlace(hash);
     visit("/" + decodeURIComponent(hash));
   } catch (e) {
     clearReading();
     showError(e.message || "Something went wrong");
   }
+}
+
+// Back (the phone's back button too) returns to the
+// place on the page left: each history entry keeps its
+// scroll, written as the page scrolls; a new page has
+// none and starts at the top. The reader keeps its own
+// place (savePos), so not for read/.
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
+function reading(hash) {
+  return hash.startsWith("read/");
+}
+
+let placeTimer = 0;
+window.addEventListener("scroll", () => {
+  clearTimeout(placeTimer);
+  placeTimer = setTimeout(() => {
+    const hash = location.hash.replace(/^#\/?/, "");
+    if (reading(hash)) return;
+    history.replaceState(
+      { ...(history.state || {}), y: window.scrollY },
+      "");
+  }, 150);
+}, { passive: true });
+
+function backToPlace(hash) {
+  const y = history.state && history.state.y;
+  if (!reading(hash) && y) window.scrollTo(0, y);
 }
 
 window.addEventListener("hashchange", route);
