@@ -585,7 +585,7 @@ const START = "grabar/grigor-tatevatsi/" +
 // where visitors can write: kept in parts and put
 // together only in the page, so that programs
 // gathering addresses from the files do not find it
-const CONTACT = ["serj.hnn13", "gmail.com"];
+const CONTACT = ["nxgir.lib", "gmail.com"];
 
 // the welcome above the library, in Armenian:
 // questions a first-time visitor may ask
