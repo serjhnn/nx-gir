@@ -2,7 +2,7 @@
 // Pages are #/ (top), #/f/<folder>, #/b/<book>
 // (a book's parts), #/read/<book>,
 // #/library, #/timeline, #/blog, #/features,
-// #/contribute and #/stats; the
+// #/contribute, #/news and #/stats; the
 // data
 // comes from
 // /api/.
@@ -77,6 +77,11 @@ const ICONS = {
     "M9 11a3.5 3.5 0 1 0 0-7a3.5 3.5 0 0 0 0 7z",
     "M3 20a6 6 0 0 1 12 0",
     "M19 8v6M16 11h6",
+  ],
+  // a horn: the announcements
+  horn: [
+    "M4 10v4h3l7 4V6L7 10z",
+    "M17.5 9a4 4 0 0 1 0 6",
   ],
   // a ticked box: the features
   tick: [
@@ -415,6 +420,9 @@ function siteFooter() {
       h("a", { href: "#/contribute" },
         "Become a contributor"),
       " · ",
+      h("a", { href: "#/news" },
+        "Announcements"),
+      " · ",
       h("a", { href: REPO }, "GitHub"),
       offlineLink()),
     h("p", {}, "Developed by S.O. and Claude"));
@@ -733,7 +741,11 @@ async function shelf(folder) {
     icon(ICONS.tick), "Հնարավորություններ"),
     h("a", { class: "icon-btn",
       href: "#/contribute" },
-    icon(ICONS.join), "Միանալ")),
+    icon(ICONS.join), "Միանալ"),
+    h("a", { class: "icon-btn",
+      href: "#/news" },
+    icon(ICONS.horn), "Հայտարարություններ")),
+    folder ? null : newsBanner(),
     folder ? null : joinBanner(),
     last && last.items.length
       ? recentCard(last.items) : null,
@@ -767,6 +779,22 @@ function joinBanner() {
       + " առկա թարգմանությունները"),
     h("span", { class: "join-go" },
       "Ինչպես միանալ →")));
+}
+
+// a narrow banner on the top page, with the
+// picture of the newest announcement, leading to
+// #/news
+function newsBanner() {
+  const a = NEWS[0];
+  return h("a", { class: "join-banner news-banner",
+    href: "#/news", lang: "hy" },
+  h("img", { src: a.face, alt: "",
+    width: "600", height: "400" }),
+  h("span", { class: "join-text" },
+    h("b", {}, a.banner[0]),
+    h("span", {}, a.banner[1]),
+    h("span", { class: "join-go" },
+      "Կարդալ →")));
 }
 
 // -- readings --
@@ -1790,6 +1818,160 @@ function contributePage() {
       rel: "license" }, "CC BY-SA 4.0"), "; by"
       + " sending one you agree to publish it"
       + " under this license."));
+}
+
+// -- announcements --
+
+// #/news: what is new on the shelf, newest first.
+// Each: a date, a picture, a title, a lead,
+// sections [heading, paragraphs...], links
+// [label, href] (the first the main one), and the
+// two lines of the banner on the top page, over
+// face, a crop of the picture
+const SMBAT = "#/b/grabar/smbat-sparapet/";
+
+const NEWS = [{
+  date: "2026-11-16",
+  img: "smbat-sparapet.jpg",
+  face: "smbat-sparapet-face.jpg",
+  alt: "Smbat Sparapet in a red cloak, a quill"
+    + " and a book in his hands; behind him a"
+    + " fortress under a snowy mountain, and a"
+    + " Mongol khan receiving an envoy",
+  title: "Smbat Sparapet on the shelf",
+  lead: "Smbat Sparapet (Սմբատ Սպարապետ,"
+    + " 1208–1276) was not just a warrior: he was"
+    + " a diplomat, a lawgiver and a historian."
+    + " Both of his books are now in the nxGir"
+    + " Library, in Grabar and in modern"
+    + " Armenian, side by side.",
+  banner: ["Սմբատ Սպարապետ",
+    "Զորավար, դիվանագետ և պատմիչ. նրա"
+    + " գրքերը գրադարանում են"],
+  sections: [
+    ["Who he was",
+      "Smbat was born in 1208 in the Armenian"
+      + " kingdom of Cilicia, on the Mediterranean"
+      + " coast, the son of Constantine of"
+      + " Baberon, the regent of the kingdom. When"
+      + " his younger brother Hetum I was crowned"
+      + " king in 1226, Smbat became his sparapet:"
+      + " the constable, commander of the army.",
+      "He held that office for half a century. He"
+      + " led the army against the Seljuk sultans"
+      + " of Rum and the Mamluks of Egypt, and fell"
+      + " in battle in 1276, at Sarvandikar, an old"
+      + " man still in the saddle."],
+    ["A journey to the Great Khan",
+      "In 1247, when the Mongols had become the"
+      + " greatest power of Asia, Hetum sent Smbat"
+      + " to their court at Karakorum. He crossed"
+      + " Persia and Central Asia, met Güyük Khan,"
+      + " and came home in 1250 with an agreement"
+      + " that kept Cilicia safe for years, as an"
+      + " ally rather than a conquered land.",
+      "On the way he wrote from Samarkand to his"
+      + " brother-in-law, the king of Cyprus,"
+      + " about the lands and peoples he saw. The"
+      + " letter was copied in Latin and read in"
+      + " Europe: one of the first eyewitness"
+      + " accounts of the Mongol empire to reach"
+      + " it."],
+    ["A translator of laws",
+      "Cilicia lived beside the crusader states,"
+      + " and Smbat knew their French. He"
+      + " translated the Assizes of Antioch, the"
+      + " laws of the Frankish principality, into"
+      + " Armenian. The French original is lost:"
+      + " the laws survive only in his"
+      + " translation."],
+    ["The Datastanagirk, his book of laws",
+      "In 1265 he made a law book for the kingdom,"
+      + " reworking the Datastanagirk of Mkhitar"
+      + " Gosh, a century older. He says he moved"
+      + " the laws out of old, hard books into the"
+      + " everyday words people spoke; so it is"
+      + " written in the Middle Armenian of"
+      + " Cilicia, with French, Greek and Arabic"
+      + " words in it.",
+      "Its 211 sections cover the whole life of a"
+      + " kingdom: the rights of the king, coin and"
+      + " castles; war and spoils; the church and"
+      + " its offices; marriage and divorce;"
+      + " inheritance; trade, mills and gardens;"
+      + " slaves and hired labour; loans and"
+      + " usury; damage done by fire, floods and"
+      + " animals; killing and wounding, willing"
+      + " and unwilling."],
+    ["The Taregirk, his chronicle",
+      "His chronicle tells the story of Armenia"
+      + " year by year, from 951 to his own time:"
+      + " the Bagratid kings of Ani and the"
+      + " emperors of Byzantium; the fall of Ani"
+      + " to Alp Arslan in 1064; the death of the"
+      + " last king, Gagik II; the Rubenid princes"
+      + " of Cilicia and the crowning of Levon,"
+      + " its first king, in 1198.",
+      "Then it comes to the events he lived"
+      + " through, and to the sieges of Tarsus"
+      + " he told himself. Others carried it on to"
+      + " 1331, and added lists of the princes and"
+      + " kings of Cilicia, its constables and the"
+      + " emperors of Rome and Byzantium. Each"
+      + " part opens with a contents list by"
+      + " year."],
+    ["Read them",
+      "Both books are in the Library, with every"
+      + " Grabar line beside its modern Armenian"
+      + " translation and every word open to look"
+      + " up. The translations are first drafts,"
+      + " made with AI: they wait for readers who"
+      + " know Grabar to check them line by"
+      + " line."],
+  ],
+  links: [
+    ["Read the Taregirk", SMBAT + "2-taregirk"],
+    ["Read the Datastanagirk",
+      SMBAT + "1-datastanagirk"],
+    ["Help review the translations",
+      "#/contribute"],
+  ],
+  ask: "How many remarkable stories from"
+    + " Armenian history are still waiting to be"
+    + " rediscovered?",
+}];
+
+function newsItem(a) {
+  const [main, ...more] = a.links;
+  return h("article", { class: "news" },
+    h("figure", { class: "hero wide" },
+      h("img", { src: a.img, width: "1200",
+        height: "800", alt: a.alt })),
+    h("p", { class: "sub" },
+      h("time", { datetime: a.date },
+        day(a.date, true))),
+    h("h2", { class: "news-title" }, a.title),
+    h("p", { class: "lead" }, named(a.lead)),
+    h("ul", { class: "features" },
+      a.sections.map(([title, ...text]) =>
+        h("li", {}, h("h2", {}, title),
+          text.map((t) => h("p", {}, t))))),
+    h("figure", { class: "mission" },
+      h("p", {}, a.ask)),
+    h("p", { class: "cta" },
+      h("a", { class: "cta-main", href: main[1] },
+        main[0]),
+      more.map(([label, to]) =>
+        h("a", { href: to }, label))));
+}
+
+function newsPage() {
+  document.title = "Announcements · " + NAME;
+  show(
+    h("p", { class: "crumbs" },
+      h("a", { href: "#/" }, "Home")),
+    h("h1", {}, "Announcements"),
+    ...NEWS.map(newsItem));
 }
 
 // -- statistics --
@@ -3751,6 +3933,8 @@ async function route() {
       await featuresPage(hash.slice(9));
     } else if (hash === "contribute") {
       contributePage();
+    } else if (hash === "news") {
+      newsPage();
     } else if (hash === "stats") {
       await statsPage();
     } else if (hash === "offline") {

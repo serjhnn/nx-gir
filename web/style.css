@@ -623,6 +623,28 @@ h1 {
   font-weight: 500;
 }
 
+/* #/news: the whole picture, its words in it */
+.hero.wide img {
+  aspect-ratio: 3 / 2;
+}
+.news {
+  margin: 0 0 2.5rem;
+}
+.news .sub {
+  margin-bottom: 0.3rem;
+}
+.news-title {
+  margin: 0 0 0.6rem;
+  font: 500 1.5rem/1.25 var(--serif);
+}
+.news .lead {
+  margin: 0 0 1.5rem;
+  font: 1.1rem/1.55 var(--serif);
+}
+.news .mission {
+  margin: 0 0 1.5rem;
+}
+
 /* the top page: a narrow banner to #/contribute,
    its picture behind the words */
 .join-banner {
@@ -662,6 +684,21 @@ h1 {
   max-width: 24rem;
   font-size: 0.85rem;
   line-height: 1.35;
+}
+/* the announcement: a crop of the picture (the
+   face, none of its words) on the right */
+.news-banner {
+  background: #1d140e;
+}
+.news-banner img {
+  left: auto;
+  width: 62%;
+  object-position: 50% 10%;
+}
+.news-banner .join-text {
+  background: linear-gradient(90deg,
+    #1d140e 38%, rgb(29 20 14 / 0.6) 62%,
+    rgb(0 0 0 / 0));
 }
 .join-banner .join-go {
   margin-top: 0.3rem;

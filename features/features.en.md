@@ -69,3 +69,7 @@ The Blog tells what is new, in themes: about the site, about authors and about b
 ## Become a contributor
 
 Միանալ on the home page, and the banner with the reader under the tree below it, open a page on how to help: make first drafts of translations with AI, read them beside the Grabar to correct them, or bring texts and words.
+
+## Announcements
+
+Հայտարարություններ on the home page, and the banner with Smbat Sparapet below it, open a page on what is new on the shelf, with a picture, a story and links to the books; the first is on Smbat Sparapet and his two books, the Datastanagirk and the Taregirk.
