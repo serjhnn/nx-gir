@@ -199,3 +199,23 @@ collection (`why`):
 The page height stays within 0.1% of what it was, and
 line links, the saved position and Side by side off
 and on land where they did.
+
+## In pages (2026-11-16)
+
+A part can be read a page at a time (▤ Pages; on by
+default on a phone with 2 GB or less): about 10,000
+characters of Grabar are in the page, the rest is
+only data (`showPage()` in `app.js`; plan:
+`notes/ram-plan.md`). Same part, phone screen:
+
+| Case | One long text | In pages |
+|---|---|---|
+| Side by side | 144 MB | 82 MB |
+| One column | 118 MB | 78 MB |
+| Elements, side by side | 125,533 | 7,313 |
+| Peak when opening (5 largest, `fresh 5`) | 249 MB | 128 MB |
+
+The home page is 70 MB, so a page adds about 12 MB
+(against about 75 MB). All 15 pages one after
+another: no growth (heap 5.3 MB, 7,300 to 8,400
+elements). Ctrl-F finds the page only.

@@ -46,6 +46,10 @@ See a mistake in the Grabar text or in a translation? Tap the word, press Report
 
 Make the text bigger or smaller, set it on the left or in the center, change the line spacing, put each sentence on its own line, read in a column or across the whole width, and choose the font. On a phone these are behind the settings button. The site remembers your choice.
 
+## Pages for a long part
+
+A long part can be read a page at a time: press ▤ Pages and the text is cut into pages of a few minutes each, with ‹ Previous and Next › above and below. The reader then holds only one page, so it works on an old phone with little memory; the progress bar still shows how far you are in the whole part. Phones that report 2 GB of memory or less start in pages; you can turn it on or off at any time.
+
 ## Light, dark and black
 
 The theme button switches between a light page, a dark one and a black one for reading at night.

@@ -1860,6 +1860,12 @@ const R = {
   lineEls: [], // the <p> of each line (not .par)
   ready: false, // the lines are in the page
   parBuilt: false, // the other version is in the page
+  src: [], // the lines of the part: [text, word, ...]
+  first: [], // the first word of each line (+ the end)
+  pages: [], // [first line, last line + 1] of each page
+  page: 0, // the page in the page now
+  lo: 0, // words of that page: [lo, hi)
+  hi: 0,
   credited: false, // the part has its own credit
   contents: [], // its chapters: [{line, n, title,
   // level}]
@@ -2122,8 +2128,7 @@ function reportError() {
   mark(false);
   sentence(true, at);
   const [lo, hi] = lit;
-  const quote = R.spans.slice(lo, hi)
-    .map((s) => s.textContent).join(" ");
+  const quote = wordsOf(lo, hi);
   const fix = h("textarea", { rows: "4",
     "aria-label": "The correct text" });
   const note = h("textarea", { rows: "3",
@@ -2183,9 +2188,9 @@ function wordActions() {
 
 // draw the panel for the chosen word
 async function drawWord() {
-  const span = R.spans[R.sel];
-  if (!R.panel || !span) return;
-  const w = span.textContent;
+  const at = R.sel;
+  if (!R.panel || at < 0) return;
+  const w = wordAt(at);
   openPanel(w, "hy",
     h("p", { class: "loading" }, "Looking up…"));
   let data;
@@ -2195,7 +2200,7 @@ async function drawWord() {
     data = { error: e.message };
   }
   // a later word may have been chosen meanwhile
-  if (R.spans[R.sel] !== span) return;
+  if (R.sel !== at) return;
   const parts = [STATIC
     ? h("div", { class: "actions" }, linkButton(),
       reportButton())
@@ -2219,11 +2224,12 @@ async function drawWord() {
 }
 
 function mark(on) {
+  // only the words of the page in the page
   for (const i of R.refs) {
-    R.spans[i].classList.toggle("ref", on);
+    R.spans[i]?.classList.toggle("ref", on);
   }
   if (R.sel >= 0) {
-    R.spans[R.sel].classList.toggle("sel", on);
+    R.spans[R.sel]?.classList.toggle("sel", on);
   }
 }
 
@@ -2241,14 +2247,14 @@ let lit = null; // the sentence shown for a note
 function sentence(on, i) {
   if (lit) {
     for (let j = lit[0]; j < lit[1]; j++) {
-      R.spans[j].classList.remove("sent");
+      R.spans[j]?.classList.remove("sent");
     }
     lit = null;
   }
   if (!on) return;
   lit = sentenceOf(i);
   for (let j = lit[0]; j < lit[1]; j++) {
-    R.spans[j].classList.add("sent");
+    R.spans[j]?.classList.add("sent");
   }
 }
 
@@ -2260,6 +2266,7 @@ function bar() {
 // keep a word in view between the toolbar and the
 // bottom sheet
 function reveal(span) {
+  if (!span) return;
   const r = span.getBoundingClientRect();
   const cover = sheet()
     ? R.panel.getBoundingClientRect().height : 0;
@@ -2281,6 +2288,7 @@ function choose(i) {
       if (k === key) R.refs.push(j);
     });
   }
+  ensure(i);
   R.sel = i;
   mark(true);
   drawWord().then(() => reveal(R.spans[i]));
@@ -2295,6 +2303,7 @@ function step(d) {
 
 // scroll to word i and make it blink once
 function go(i) {
+  ensure(i);
   const s = R.spans[i];
   if (!s) return;
   if (sheet()) closePanel();
@@ -2368,6 +2377,17 @@ function decorate() {
       "aria-label": "Show the two versions",
       title: "Side by side with "
         + parLabel(R.par.name) }) : null,
+    // a long part in pages: a page at a time is in
+    // the browser, a few MB instead of hundreds
+    btn(["▤ ", h("span", { class: "long" },
+      "Pages")],
+    () => setView({ paged: !paged() }), {
+      "aria-pressed": String(paged()),
+      "aria-label": "Read in pages",
+      title: paged()
+        ? "In pages (click for one long text)"
+        : "One long text (click for pages: lighter"
+          + " on a phone)" }),
     // on a wide screen: each line under its pair,
     // as on a phone, or beside it
     R.par && view.parallel ? btn(icon(ICONS[
@@ -2423,7 +2443,9 @@ const FONT_NAMES = { grqi: "Arian Grqi",
   oldstandard: "Old Standard" };
 const view = { size: SIZE, center: false, line: 0,
   font: 0, parallel: true, sentences: false,
-  full: false, stacked: false };
+  full: false, stacked: false,
+  // read in pages: null = by the phone's memory
+  paged: null };
 try {
   const v = JSON.parse(
     localStorage.getItem("nxgir-view") || "{}");
@@ -2439,6 +2461,8 @@ try {
   view.sentences = v.sentences === true;
   view.full = v.full === true;
   view.stacked = v.stacked === true;
+  view.paged = typeof v.paged === "boolean"
+    ? v.paged : null;
 } catch (e) {}
 
 function applyView() {
@@ -2473,7 +2497,7 @@ function applyView() {
 
 function setView(change) {
   // keep the word at the top of the screen there
-  const i = R.spans.length ? topWord() : -1;
+  const i = R.spans[R.lo] ? topWord() : -1;
   const before = i >= 0
     ? R.spans[i].getBoundingClientRect().top : 0;
   Object.assign(view, change);
@@ -2486,9 +2510,14 @@ function setView(change) {
         parallel: view.parallel,
         sentences: view.sentences,
         full: view.full,
-        stacked: view.stacked }));
+        stacked: view.stacked,
+        paged: view.paged }));
   } catch (e) {}
   applyView();
+  if ("paged" in change) {
+    R.pages = pagesOf();
+    showPage(pageOfWord(Math.max(i, 0)), false);
+  }
   if (i >= 0) {
     const after = R.spans[i].getBoundingClientRect().top;
     window.scrollBy(0, after - before);
@@ -2573,10 +2602,9 @@ async function toggleMark() {
 
 // the text of a line from word i on, cut to n
 function snippet(i, n = 70) {
-  const s = R.spans[i];
-  const nodes = [...s.parentElement.childNodes];
-  const t = nodes.slice(nodes.indexOf(s))
-    .map((x) => x.textContent).join("").trim();
+  const [line, k] = R.wpos[i];
+  const t = R.src[line].slice(2 * k + 1).join("")
+    .trim();
   return t.length > n
     ? t.slice(0, n - 1).trimEnd() + "…" : t;
 }
@@ -2773,8 +2801,7 @@ function editNote(i) {
   mark(false);
   sentence(true, at);
   const [lo, hi] = lit;
-  const words = R.spans.slice(lo, hi)
-    .map((s) => s.textContent).join(" ");
+  const words = wordsOf(lo, hi);
   const box = h("textarea", { rows: "5",
     "aria-label": "Note" });
   box.value = old ? old.text : "";
@@ -2810,8 +2837,8 @@ function editNote(i) {
 // hidden under the toolbar
 function topWord() {
   const edge = R.tools.getBoundingClientRect().bottom;
-  let lo = 0;
-  let hi = R.spans.length - 1;
+  let lo = Math.min(R.lo, R.spans.length - 1);
+  let hi = Math.max(lo, R.hi - 1);
   while (lo < hi) {
     const mid = (lo + hi) >> 1;
     const r = R.spans[mid].getBoundingClientRect();
@@ -2871,8 +2898,8 @@ if (STATIC && window.NXGIR_COUNT) {
 // the last word on the screen
 function lastWord() {
   const edge = window.innerHeight;
-  let lo = 0;
-  let hi = R.spans.length - 1;
+  let lo = Math.min(R.lo, R.spans.length - 1);
+  let hi = Math.max(lo, R.hi - 1);
   while (lo < hi) {
     const mid = (lo + hi + 1) >> 1;
     const r = R.spans[mid].getBoundingClientRect();
@@ -2927,7 +2954,11 @@ function progress() {
   const seen = window.innerHeight - r.top;
   const f = r.height > 0
     ? Math.min(1, Math.max(0, seen / r.height)) : 1;
-  const pct = Math.round(f * 100);
+  // of the page, then of the whole part
+  const [a, b] = R.pages[R.page] || [0, R.lines];
+  const all = R.lines > 0
+    ? (a + f * (b - a)) / R.lines : f;
+  const pct = Math.round(all * 100);
   R.prog.firstChild.firstChild.style.width =
     pct + "%";
   R.prog.lastChild.textContent = pct + "%";
@@ -3015,6 +3046,166 @@ function parHead(name, other) {
   ];
 }
 
+// -- pages: a long part is read a page at a time --
+//
+// Only the lines of one page are in the page (the
+// DOM), so a phone with little memory holds a few
+// MB for a part instead of hundreds. Everything else
+// (R.keys, R.wpos, R.src) is data, for all the words
+// of the part: R.spans has the word elements of the
+// page only, at the index of the word in the part.
+
+// the characters of a page
+const PAGE_CHARS = 10000;
+
+// Read in pages? Chosen with the Pages button; until
+// then, on a phone that says it has 2 GB of memory
+// or less (navigator.deviceMemory, Chrome).
+function paged() {
+  if (typeof view.paged === "boolean") {
+    return view.paged;
+  }
+  return (navigator.deviceMemory || 8) <= 2;
+}
+
+// [first line, last line + 1] of each page; the whole
+// part is one page when it is short or not in pages
+function pagesOf() {
+  const n = R.src.length;
+  const size = R.src.map((parts) =>
+    parts.join("").length);
+  const total = size.reduce((x, y) => x + y, 0);
+  if (!paged() || total < PAGE_CHARS * 1.5) {
+    return [[0, n]];
+  }
+  const out = [];
+  let from = 0;
+  let sum = 0;
+  size.forEach((c, line) => {
+    sum += c;
+    if (sum >= PAGE_CHARS && line + 1 < n) {
+      out.push([from, line + 1]);
+      from = line + 1;
+      sum = 0;
+    }
+  });
+  // not a last page of a few lines
+  if (sum < PAGE_CHARS / 3 && out.length) {
+    out[out.length - 1][1] = n;
+  } else {
+    out.push([from, n]);
+  }
+  return out;
+}
+
+// the page with word i
+function pageOfWord(i) {
+  let k = 0;
+  while (k + 1 < R.pages.length
+    && R.first[R.pages[k][1]] <= i) k++;
+  return k;
+}
+
+// show the page with word i (before using its
+// element)
+function ensure(i) {
+  if (i < R.lo || i >= R.hi) {
+    showPage(pageOfWord(i), false);
+  }
+}
+
+// the text of word i, from the data (its element may
+// not be in the page)
+function wordAt(i) {
+  const [line, n] = R.wpos[i];
+  return R.src[line][2 * n + 1];
+}
+
+function wordsOf(lo, hi) {
+  const out = [];
+  for (let j = lo; j < hi; j++) out.push(wordAt(j));
+  return out.join(" ");
+}
+
+// ‹ 2 / 11 › above and under the text
+function pager(where) {
+  const n = R.pages.length;
+  if (n < 2) return null;
+  const k = R.page;
+  const to = (d) => () => turnPage(k + d);
+  return h("div", { class: "pager " + where,
+    role: "navigation", "aria-label": "Pages" },
+  btn("‹ Previous", to(-1), {
+    disabled: k === 0 ? "" : null }),
+  h("span", {}, (k + 1) + " / " + n),
+  btn("Next ›", to(1), {
+    disabled: k === n - 1 ? "" : null }));
+}
+
+// to the top of another page
+function turnPage(k) {
+  showPage(k, false);
+  const top = R.text.getBoundingClientRect().top
+    + window.scrollY;
+  window.scrollTo(0, top - bar() - 16);
+  stick();
+  progress();
+}
+
+// Build page k in .text. fresh: the book is being
+// opened, its toolbar is not there yet.
+function showPage(k, fresh) {
+  mark(false);
+  sentence(false);
+  R.spans.fill(undefined, R.lo, R.hi);
+  const [a, b] = R.pages[k];
+  Object.assign(R, { page: k, lo: R.first[a],
+    hi: R.first[b], lineEls: [], parBuilt: false });
+  const frag = document.createDocumentFragment();
+  if (k === 0 && R.credit) {
+    frag.append(trCredit(R.credit, false));
+  }
+  frag.append(pager("top") || "");
+  let at = R.lo;
+  for (let line = a; line < b; line++) {
+    const parts = R.src[line];
+    const p = document.createElement("p");
+    const f = R.format[line];
+    if (f && f.h) p.className = "md-h md-h" + f.h;
+    if (f && f.q) p.classList.add("md-q");
+    p.style.setProperty("--rows",
+      rows(parts.join("").length));
+    const spans = f ? f.spans : [];
+    let chars = 0; // characters before this part
+    parts.forEach((t, j) => {
+      const nodes = styled(t, chars, spans);
+      chars += Array.from(t).length;
+      if (j % 2 === 0) {
+        if (t) p.append(...nodes);
+        return;
+      }
+      if (j > 1 && R.startSet.has(at)) {
+        p.append(cut());
+      }
+      const s = document.createElement("span");
+      s.className = "w";
+      s.dataset.i = at;
+      s.append(...nodes);
+      R.spans[at++] = s;
+      p.append(s);
+    });
+    frag.append(p);
+    R.lineEls[line] = p;
+  }
+  frag.append(pager("end") || "");
+  R.text.replaceChildren(frag);
+  R.ready = true;
+  syncPar();
+  if (fresh) return;
+  decorate();
+  mark(true);
+}
+
 // Rows a paragraph of n characters takes, for the
 // height the browser guesses before it is drawn
 // (--rows, see content-visibility in style.css)
@@ -3061,16 +3252,24 @@ function syncPar() {
       ".par, .of-par")) e.remove();
     return;
   }
+  // (R.lineEls has the lines of this page only)
   R.lineEls.forEach((p, line) => {
     p.after(parLine(line));
   });
-  // lines the other version has more of
-  for (let line = R.lineEls.length;
-    line < R.par.lines.length; line++) {
-    R.text.append(h("p", { class: "par" }),
-      parLine(line));
+  // lines the other version has more of: at the end
+  // of the last page
+  if (R.page === R.pages.length - 1) {
+    const end = R.text.querySelector(".pager.end");
+    for (let line = R.lines;
+      line < R.par.lines.length; line++) {
+      const more = [h("p", { class: "par" }),
+        parLine(line)];
+      if (end) end.before(...more);
+      else R.text.append(...more);
+    }
   }
-  const of = !R.credited && R.par.credit;
+  const of = R.page === 0 && !R.credited
+    && R.par.credit;
   R.text.prepend(...parHead(R.opening, R.par.name),
     ...(of ? [trCredit(R.par.credit, true)] : []));
 }
@@ -3122,7 +3321,7 @@ async function book(name, line) {
   document.title = title + " · " + NAME;
   Object.assign(R, {
     name: "", lines: data.lines.length,
-    spans: [], keys: [], wpos: [],
+    spans: [], keys: [], wpos: [], lo: 0, hi: 0,
     starts: data.starts, marks: data.marks,
     notes: data.notes, sel: -1, refs: [],
     contents: data.contents || [],
@@ -3130,7 +3329,23 @@ async function book(name, line) {
     opening: name, par: null, parts: data.parts,
     lineEls: [], ready: false, parBuilt: false,
     credited: Boolean(data.credit),
+    credit: data.credit, src: data.lines,
+    format: data.format || {},
+    startSet: new Set(data.starts || []),
   });
+  // every word as data; the elements are made a
+  // page at a time (showPage)
+  R.first = [];
+  data.lines.forEach((parts, line) => {
+    R.first.push(R.keys.length);
+    for (let j = 1; j < parts.length; j += 2) {
+      R.keys.push(wordKey(parts[j]));
+      R.wpos.push([line, (j - 1) / 2]);
+    }
+  });
+  R.first.push(R.keys.length);
+  R.spans = new Array(R.keys.length);
+  R.pages = pagesOf();
   // the other version, read beside it on a wide
   // screen
   const other = (data.parallel || [])[0];
@@ -3152,48 +3367,13 @@ async function book(name, line) {
     lang: "hy" });
   R.text = text;
   applyView();
-  const frag = document.createDocumentFragment();
-  const format = data.format || {};
-  const starts = new Set(data.starts || []);
-  // the other version is built by syncPar(), only
-  // while it is shown
-  if (data.credit) {
-    frag.append(trCredit(data.credit, false));
-  }
-  data.lines.forEach((parts, line) => {
-    const p = document.createElement("p");
-    const f = format[line];
-    if (f && f.h) p.className = "md-h md-h" + f.h;
-    if (f && f.q) p.classList.add("md-q");
-    const spans = f ? f.spans : [];
-    p.style.setProperty("--rows",
-      rows(parts.join("").length));
-    let at = 0; // characters before this part
-    parts.forEach((t, k) => {
-      const nodes = styled(t, at, spans);
-      at += Array.from(t).length;
-      if (k % 2 === 0) {
-        if (t) p.append(...nodes);
-        return;
-      }
-      if (k > 1 && starts.has(R.spans.length)) {
-        p.append(cut());
-      }
-      const s = document.createElement("span");
-      s.className = "w";
-      s.dataset.i = R.spans.length;
-      s.append(...nodes);
-      R.spans.push(s);
-      R.keys.push(wordKey(t));
-      R.wpos.push([line, (k - 1) / 2]);
-      p.append(s);
-    });
-    frag.append(p);
-    R.lineEls.push(p);
-  });
-  text.append(frag);
-  R.ready = true;
-  syncPar();
+  // the page with the line asked for, the saved
+  // place, or the start
+  const want = line >= 1 && R.keys.length
+    ? Math.min(line, data.lines.length) - 1 : -1;
+  const first = want >= 0 ? wordOfLine(want)
+    : Math.max(0, data.at || 0);
+  showPage(pageOfWord(first), true);
   text.addEventListener("click", (e) => {
     const s = e.target.closest(".w");
     if (!s) return;
@@ -3233,8 +3413,6 @@ async function book(name, line) {
       partEnd(data.parts)));
   decorate();
   // a link to a line: open exactly there
-  const want = line >= 1 && R.spans.length
-    ? Math.min(line, data.lines.length) - 1 : -1;
   if (want >= 0) {
     go(wordOfLine(want));
   } else if (data.at > 0 && R.spans[data.at]) {

@@ -2040,6 +2040,19 @@ body.panel-open main {
   }
 }
 
+/* ‹ 2 / 11 › above and under a page of a long
+   part (Pages); across both columns */
+.text .pager {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0.8em 0;
+  font: 0.9rem var(--sans);
+  color: var(--muted);
+}
+
 /* who made and reviewed a translation, and its
    license (books/TRANSLATIONS.tsv): above the
    text; of the other version only when it is

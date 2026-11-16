@@ -24,11 +24,12 @@ likelihood:
 |---|---|---|
 | A | Build the translation only while shown | **done** |
 | B | `content-visibility: auto` on paragraphs | **done** |
-| C | Lower the opening peak | to do |
+| P | Read a part in pages (option 2) | **done** |
+| C | Lower the opening peak | to do, maybe not needed |
 | D | Smaller parts (150 KB) | to do, optional |
-| E | Old browsers: fallback page | to do, first |
+| E | Old browsers: fallback page | to do, next |
 | F | Old browsers: transpile / fallbacks | to do |
-| G | Low-memory mode (default one column) | to do |
+| G | Low-memory mode | done as P (auto by memory) |
 | H | Fewer nodes per word | later, big |
 | I | A window of lines | later, biggest |
 
@@ -44,6 +45,69 @@ why <part>`):
 | Side by side, scrolled to the end | 190 MB | 160 MB |
 | One column | 154 MB | 117 MB |
 | One column, elements | 125,525 | 73,668 |
+
+After P (pages), same part, phone screen:
+
+| Case | After A+B | With pages |
+|---|---|---|
+| Side by side | 144 MB | 82 MB |
+| One column | 118 MB | 78 MB |
+| Elements, side by side | 125,533 | 7,313 |
+| Peak when opening, 5 largest parts (`fresh 5`) | 249 MB | 128 MB |
+
+The home page alone is 70 MB, so a page costs about
+12 MB on top of it instead of about 75 MB. Going
+through all 15 pages of a part: no leak (7,300 to
+8,400 elements, heap 5.3 MB at both ends).
+
+## Done: P (pages)
+
+The idea (option 2 of the discussion): the part is
+cut into pages of about 10,000 characters of Grabar
+(`PAGE_CHARS` in `app.js`); only one page is in the
+DOM, with ‹ Previous / Next › above and below.
+Parallel stays: a page holds its lines and their
+pairs. A part under 15,000 characters is one page.
+
+How (`web/app.js`, `web/style.css`):
+- `book()` makes every word as *data* (`R.keys`,
+  `R.wpos`, `R.first`, `R.src`) and `showPage(k)`
+  makes the elements of page k only. `R.spans` has
+  a hole for each word not in the page (index =
+  word of the part), `R.lo`/`R.hi` the page's
+  words. `topWord()`/`lastWord()` search the page.
+- `ensure(i)` shows the page of word i; `go()` and
+  `choose()` call it first (Contents, bookmarks,
+  `?line=`, the n/N keys across pages). Texts of
+  words not on the page come from the data:
+  `wordAt()`, `wordsOf()`, `snippet()`.
+- `pagesOf()` decides the pages; `paged()` says if
+  they are on: the ▤ Pages button, else a phone with
+  `navigator.deviceMemory` 2 or less. Kept in the
+  `nxgir-view` setting as `paged` (null = by memory).
+- The progress bar counts the whole part
+  (`progress()`); a saved position is a word, so it
+  opens on the right page.
+- Not in pages: one page = the whole part, the same
+  code, nothing changes.
+
+Cost: Ctrl-F finds only the page; the scroll bar is
+a page's. Translation credit is on the first page.
+
+Checked with Playwright (phone): `?line=` links to
+lines 3, 400, 1500, 1990; next/previous page; the
+saved position after a reload; Contents jump to
+a heading on another page; a word tapped and its
+panel; Pages off and on keeping the place. The
+measurements: `PHONE=1 node scripts/measure-memory.js
+why <part>` (the new rows) and `VIEW='{"paged":true}'
+PHONE=1 node scripts/measure-memory.js fresh 5`.
+Added to the Features page in hy, en, ru.
+
+Not checked: a real old phone; wide-screen use of
+pages beyond a look at a screenshot; the published
+site (`site/`, `NXGIR_STATIC`) is the same code but
+was not opened; try `scripts/build-site.py`.
 
 ## Done: A and B
 
