@@ -2126,6 +2126,12 @@ function newsItem(a0, lang) {
 
 // #/news: narrow banners, newest first; #/news/<id>
 // one announcement
+// the language of the announcements: Armenian on
+// every visit, English only when picked here (not
+// the blog's choice; it is kept until the page is
+// closed, for the post a banner opens)
+let newsLang = "hy";
+
 function newsPage(id) {
   const one = id ? NEWS.find((a) => a.id === id)
     : null;
@@ -2133,7 +2139,7 @@ function newsPage(id) {
     throw new Error("No such announcement");
   }
   const draw = () => {
-    const lang = blogLang() === "en" ? "en" : "hy";
+    const lang = newsLang;
     const t = NEWS_UI[lang];
     const pick = h("div", { class: "filters outline news-lang",
       role: "group", "aria-label": "Language" },
@@ -2142,7 +2148,7 @@ function newsPage(id) {
         lang: l, "aria-pressed": String(l === lang) },
       BLOG[l].name);
       b.addEventListener("click", () => {
-        setBlogLang(l);
+        newsLang = l;
         draw();
       });
       return b;
