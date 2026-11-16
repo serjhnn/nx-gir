@@ -784,8 +784,7 @@ function joinBanner() {
 // a narrow banner on the top page, with the
 // picture of the newest announcement, leading to
 // #/news
-function newsBanner() {
-  const a = NEWS[0];
+function newsBanner(a = NEWS[0]) {
   return h("a", { class: "join-banner news-banner",
     href: "#/news/" + a.id, lang: "hy" },
   h("img", { src: a.face, alt: "",
@@ -1992,25 +1991,7 @@ function newsItem(a) {
         h("a", { href: to }, label))));
 }
 
-// a panel in the list: the picture and the words
-// both lead to the announcement
-function newsPanel(a) {
-  const to = "#/news/" + a.id;
-  return h("li", { class: "ncard" },
-    h("a", { class: "ncard-img", href: to,
-      tabindex: "-1", "aria-hidden": "true" },
-    h("img", { src: a.img, alt: "", width: "600",
-      height: "400", loading: "lazy" })),
-    h("div", { class: "ncard-body" },
-      h("time", { datetime: a.date },
-        day(a.date, true)),
-      h("h2", {}, h("a", { href: to }, a.title)),
-      h("p", {}, named(a.lead)),
-      h("a", { class: "ncard-go", href: to },
-        "Read →")));
-}
-
-// #/news: the panels, newest first; #/news/<id>
+// #/news: narrow banners, newest first; #/news/<id>
 // one announcement
 function newsPage(id) {
   const one = id ? NEWS.find((a) => a.id === id)
@@ -2027,8 +2008,8 @@ function newsPage(id) {
         "Announcements")] : null),
     one ? null : h("h1", {}, "Announcements"),
     one ? newsItem(one)
-      : h("ul", { class: "news-cards" },
-        NEWS.map(newsPanel)));
+      : h("div", { class: "news-list" },
+        NEWS.map((a) => newsBanner(a))));
 }
 
 // -- statistics --
@@ -2495,7 +2476,7 @@ function openPanel(title, titleLang, ...body) {
   R.panel.replaceChildren(
     h("div", { class: "panel-head" },
       h("h2", { lang: titleLang }, title), close),
-    h("div", { class: "ncard-body" }, ...body));
+    h("div", { class: "panel-body" }, ...body));
   R.panel.hidden = false;
   R.panel.dataset.kind = title;
   document.body.classList.add("panel-open");
@@ -3957,7 +3938,7 @@ async function book(name, line) {
     if (i === R.sel) closePanel();
     else choose(i);
   });
-  R.panel = h("aside", { class: "ncard",
+  R.panel = h("aside", { class: "panel",
     "aria-label": "Word", "aria-live": "polite" });
   R.panel.hidden = true;
   R.tools = h("div", { class: "tools" });
