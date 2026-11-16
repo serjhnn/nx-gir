@@ -2135,7 +2135,7 @@ function newsPage(id) {
   const draw = () => {
     const lang = blogLang() === "en" ? "en" : "hy";
     const t = NEWS_UI[lang];
-    const pick = h("div", { class: "filters outline",
+    const pick = h("div", { class: "filters outline news-lang",
       role: "group", "aria-label": "Language" },
     ["hy", "en"].map((l) => {
       const b = h("button", { type: "button",

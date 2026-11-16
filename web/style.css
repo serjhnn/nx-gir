@@ -647,6 +647,9 @@ h1 {
 
 /* #/news: the banners of the top page, one under
    the other */
+.filters.news-lang {
+  margin-top: 1rem;
+}
 .news-list {
   margin: 1rem 0 2rem;
 }
