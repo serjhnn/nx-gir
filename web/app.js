@@ -784,16 +784,17 @@ function joinBanner() {
 // a narrow banner on the top page, with the
 // picture of the newest announcement, leading to
 // #/news
-function newsBanner(a = NEWS[0]) {
+function newsBanner(a = NEWS[0], lang = "hy") {
+  const en = lang === "en" && a.banner_en;
   return h("a", { class: "join-banner news-banner",
-    href: "#/news/" + a.id, lang: "hy" },
+    href: "#/news/" + a.id, lang },
   h("img", { src: a.face, alt: "",
     width: "600", height: "400" }),
   h("span", { class: "join-text" },
-    h("b", {}, a.banner[0]),
-    h("span", {}, a.banner[1]),
+    h("b", {}, (en || a.banner)[0]),
+    h("span", {}, (en || a.banner)[1]),
     h("span", { class: "join-go" },
-      "Կարդալ →")));
+      NEWS_UI[lang].read)));
 }
 
 // -- readings --
@@ -1829,6 +1830,14 @@ function contributePage() {
 // face, a crop of the picture
 const SMBAT = "#/b/grabar/smbat-sparapet/";
 
+// the words of the page itself, by language
+const NEWS_UI = {
+  hy: { home: "Գլխավոր", title: "Հայտարարություններ",
+    read: "Կարդալ →" },
+  en: { home: "Home", title: "Announcements",
+    read: "Read →" },
+};
+
 const NEWS = [{
   id: "smbat-sparapet",
   date: "2026-11-16",
@@ -1848,6 +1857,9 @@ const NEWS = [{
   banner: ["Սմբատ Սպարապետ",
     "Զորավար, դիվանագետ և պատմիչ. նրա"
     + " գրքերը գրադարանում են"],
+  banner_en: ["Smbat Sparapet",
+    "Commander, diplomat and historian: his"
+    + " books are in the Library"],
   sections: [
     ["Who he was",
       "Smbat was born in 1208 in the Armenian"
@@ -2121,12 +2133,11 @@ function newsPage(id) {
     throw new Error("No such announcement");
   }
   const draw = () => {
-    const langs = one && one.hy ? ["hy", "en"] : [];
-    const lang = langs.includes(blogLang())
-      ? blogLang() : langs[0] || "en";
+    const lang = blogLang() === "en" ? "en" : "hy";
+    const t = NEWS_UI[lang];
     const pick = h("div", { class: "filters outline",
       role: "group", "aria-label": "Language" },
-    langs.map((l) => {
+    ["hy", "en"].map((l) => {
       const b = h("button", { type: "button",
         lang: l, "aria-pressed": String(l === lang) },
       BLOG[l].name);
@@ -2137,17 +2148,17 @@ function newsPage(id) {
       return b;
     }));
     document.title = (one ? newsText(one, lang).title
-      + " · " : "") + "Announcements · " + NAME;
+      + " · " : "") + t.title + " · " + NAME;
     show(
-      h("p", { class: "crumbs" },
-        h("a", { href: "#/" }, "Home"),
+      h("p", { class: "crumbs", lang },
+        h("a", { href: "#/" }, t.home),
         one ? [" · ", h("a", { href: "#/news" },
-          "Announcements")] : null),
-      one ? null : h("h1", {}, "Announcements"),
-      langs.length ? pick : null,
+          t.title)] : null),
+      h("h1", { lang }, t.title),
+      pick,
       one ? newsItem(one, lang)
         : h("div", { class: "news-list" },
-          NEWS.map((a) => newsBanner(a))));
+          NEWS.map((a) => newsBanner(a, lang))));
   };
   draw();
 }
