@@ -2380,95 +2380,51 @@ body.reading.full .bar {
   border-color: var(--accent);
 }
 
-/* on a phone the text tools hide behind the
-   settings button and open in a row below */
-@media (max-width: 30rem) {
-  .tools {
-    gap: 0.35rem;
-  }
-
-  .tools .more {
-    display: inline-flex;
-    margin-left: auto;
-  }
-
-  .tools .view {
-    display: none;
-  }
-
-  .tools.open .view {
-    display: flex;
-    flex-basis: 100%;
-  }
-}
-
-/* the same in the phone view (the view
-   button), on a wide screen */
-.phone .tools {
+/* When the buttons do not fit in one row (fit() in
+   app.js: a phone, a folding phone, a tablet), the
+   text settings hide behind the settings button and
+   open in a column, each button with its name beside
+   it (its aria-label); a long list scrolls instead
+   of covering the page */
+.tools.collapsed {
   gap: 0.35rem;
 }
 
-.phone .tools .more {
+.tools.collapsed .more {
   display: inline-flex;
   margin-left: auto;
 }
 
-.phone .tools .view {
+.tools.collapsed .view {
   display: none;
 }
 
-.phone .tools.open .view {
+/* and still too wide: icons only */
+.tools.compact .long {
+  display: none;
+}
+
+.tools.collapsed.open .view {
   display: flex;
   flex-basis: 100%;
-}
-
-/* the settings open in a column, each button with
-   its name beside it (its aria-label); a long list
-   scrolls instead of covering the page */
-@media (max-width: 30rem) {
-  .tools.open .view {
-    flex-direction: column;
-    gap: 0.4rem;
-    max-height: 60vh;
-    overflow-y: auto;
-  }
-
-  .tools.open .view .icon-btn,
-  .tools.open .view #theme {
-    justify-content: flex-start;
-    gap: 0.6rem;
-  }
-
-  .tools.open .view .icon-btn::after {
-    content: attr(aria-label);
-    font-size: 0.9rem;
-  }
-
-  .tools.open .view .font-pick {
-    max-width: none;
-    width: 100%;
-  }
-}
-
-.phone .tools.open .view {
   flex-direction: column;
   gap: 0.4rem;
   max-height: 60vh;
   overflow-y: auto;
 }
 
-.phone .tools.open .view .icon-btn,
-.phone .tools.open .view #theme {
+.tools.collapsed.open .view .icon-btn,
+.tools.collapsed.open .view #theme {
   justify-content: flex-start;
   gap: 0.6rem;
 }
 
-.phone .tools.open .view .icon-btn::after {
+.tools.collapsed.open .view .icon-btn::after {
   content: attr(aria-label);
   font-size: 0.9rem;
 }
 
-.phone .tools.open .view .font-pick {
+.tools.collapsed.open .view .font-pick {
   max-width: none;
   width: 100%;
 }

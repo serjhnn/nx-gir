@@ -2889,7 +2889,44 @@ function decorate() {
     viewTools(),
   ].filter(Boolean));
   const more = R.tools.querySelector(".more");
+  fit();
 }
+
+// Do all the buttons fit in one row? If not, the text
+// settings hide behind the settings button (class
+// collapsed); if they still do not, the names of the
+// buttons go and only their icons stay (compact; both
+// in style.css). Measured with everything shown, so it
+// follows the width of the window, the names and the
+// counts, not a fixed breakpoint.
+function fit() {
+  const t = R.tools;
+  if (!t || !t.isConnected) return;
+  const one = () => {
+    const kids = [...t.children].filter((e) =>
+      e.offsetParent
+      && !e.classList.contains("readbar"));
+    const edge = t.getBoundingClientRect().right;
+    return !kids.some((e) =>
+      e.offsetTop !== kids[0].offsetTop
+      || e.getBoundingClientRect().right > edge + 1);
+  };
+  // the widest case: the home button shown too
+  const stuck = t.classList.contains("stuck");
+  t.classList.add("stuck");
+  t.classList.remove("collapsed", "compact");
+  if (!one()) {
+    t.classList.add("collapsed");
+    if (!one()) t.classList.add("compact");
+  }
+  t.classList.toggle("stuck", stuck);
+}
+
+let fitting = 0;
+window.addEventListener("resize", () => {
+  cancelAnimationFrame(fitting);
+  fitting = requestAnimationFrame(fit);
+}, { passive: true });
 
 // -- how the text looks: size and alignment, kept
 // in this browser (a phone and a computer may want
