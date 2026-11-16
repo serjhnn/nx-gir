@@ -127,8 +127,8 @@
   their first heading, a ⇆ mark and progress; a
   folder of single files (the Bible) is grouped by
   sub-folder, named in `LIBRARY.tsv`. The Library,
-  the reader's back button, its ‹ n/N › part tools
-  and `folderHref()` in `app.js` lead there; `up`
+  the reader's back button and `folderHref()` in
+  `app.js` lead there; `up`
   gives the links above it; the shelf's and the
   reader's breadcrumbs use the same names
   (`shelf_crumbs()`), and an old `#/f/` link to a

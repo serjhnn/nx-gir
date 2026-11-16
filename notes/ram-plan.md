@@ -86,6 +86,10 @@ How (`web/app.js`, `web/style.css`):
   off with the ▤ button in the text settings (beside
   the font list). Kept in the `nxgir-view` setting
   as `paged` (null = on, the default).
+- The reader's tools show ‹ n/N › for the pages
+  (`pagesBtn()`), where the parts buttons were (the
+  back button leads to the book's page); the cards to
+  the other parts show on the last page only.
 - The progress bar counts the whole part
   (`progress()`); a saved position is a word, so it
   opens on the right page.

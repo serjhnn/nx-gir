@@ -2344,6 +2344,7 @@ const R = {
   lineEls: [], // the <p> of each line (not .par)
   ready: false, // the lines are in the page
   parBuilt: false, // the other version is in the page
+  end: null, // the cards to the next part (partEnd)
   src: [], // the lines of the part: [text, word, ...]
   first: [], // the first word of each line (+ the end)
   pages: [], // [first line, last line + 1] of each page
@@ -2833,7 +2834,7 @@ function decorate() {
       "aria-label": "Back to the folder",
       title: "Back to " + (dir || "the library") },
     icon(ICONS.back)),
-    R.parts ? partsBtn() : null,
+    pagesBtn(),
     // a second click hides the list again
     R.contents.length ? btn(["☰ ", h("span",
       { class: "long" }, "Contents")],
@@ -3100,50 +3101,27 @@ function lineOf(i) {
   return "line " + (R.wpos[i][0] + 1);
 }
 
-// -- the parts of a long book --
+// -- pages of a part --
 
-// ‹ n/N › in the tools: the part before, the part
-// after, and (the middle) the list of all parts
-function partsBtn() {
-  const p = R.parts;
-  const arrow = (q, sign, label) => q
-    ? h("a", { class: "icon-btn part-step",
-      href: "#/read/" + enc(q.name),
-      "aria-label": label, title: label }, sign)
-    : h("span", { class: "icon-btn part-step off",
-      "aria-hidden": "true" }, sign);
+// ‹ n/N › in the tools: the page before and the page
+// after, and the number of this one. Only when the
+// part is in pages. (The other parts of the book are
+// one step back: the back button.)
+function pagesBtn() {
+  const n = R.pages.length;
+  if (n < 2) return null;
+  const k = R.page;
+  const arrow = (to, sign, label, off) => btn(sign,
+    () => turnPage(to), {
+      class: "icon-btn part-step" + (off ? " off" : ""),
+      "aria-label": label, title: label });
   return h("span", { class: "part-tools" },
-    arrow(p.prev, "‹", "Part " + (p.n - 1)),
-    btn(p.n + "/" + p.total, toggleParts, {
-      class: "icon-btn",
-      "aria-label": "All parts",
-      title: "All " + p.total + " parts of " + p.book }),
-    arrow(p.next, "›", "Part " + (p.n + 1)));
-}
-
-async function toggleParts() {
-  if (R.panel && !R.panel.hidden &&
-      R.panel.dataset.kind === "Parts") {
-    return closePanel();
-  }
-  closePanel();
-  let data;
-  try {
-    data = await api("volume?folder=" +
-      encodeURIComponent(R.parts.folder));
-  } catch (e) {
-    return alert("Could not load: " + e.message);
-  }
-  const list = h("ul", { class: "items toc" });
-  for (const g of data.groups) {
-    for (const p of g.parts) {
-      list.append(h("li", {}, partRow(p,
-        p.n === R.parts.n)));
-    }
-  }
-  openPanel("Parts", "en", list);
-  list.querySelector("[aria-current]")
-    ?.scrollIntoView({ block: "center" });
+    arrow(k - 1, "‹", "Previous page", k === 0),
+    h("span", { class: "icon-btn",
+      "aria-label": "Page " + (k + 1) + " of " + n,
+      title: "Page " + (k + 1) + " of " + n },
+    (k + 1) + "/" + n),
+    arrow(k + 1, "›", "Next page", k === n - 1));
 }
 
 // -- the contents: the chapters and sermons --
@@ -3682,6 +3660,12 @@ function showPage(k, fresh) {
   }
   frag.append(pager("end") || "");
   R.text.replaceChildren(frag);
+  // the cards to the parts before and after: at the
+  // end of the last page only
+  if (R.end) {
+    R.end.style.display = k < R.pages.length - 1
+      ? "none" : "";
+  }
   R.ready = true;
   syncPar();
   if (fresh) return;
@@ -3834,6 +3818,7 @@ async function book(name, line) {
     saved: "", editable: data.editable,
     opening: name, par: null, parts: data.parts,
     lineEls: [], ready: false, parBuilt: false,
+    end: null,
     credited: Boolean(data.credit),
     credit: data.credit, src: data.lines,
     format: data.format || {},
@@ -3895,6 +3880,10 @@ async function book(name, line) {
   h("span", { class: "pct" }, "0%"));
   document.body.classList.add("reading");
   const pt = data.parts;
+  R.end = partEnd(pt);
+  if (R.end && R.page < R.pages.length - 1) {
+    R.end.style.display = "none";
+  }
   show(pt ? upLinks(pt.up.concat([{ label: pt.book,
     to: folderHref(pt.folder) }]))
     : crumbs(name, false, data.crumbs),
@@ -3907,7 +3896,7 @@ async function book(name, line) {
       " · tap a word to look it up"),
     R.tools,
     h("div", { class: "reader" }, text, R.panel,
-      partEnd(data.parts)));
+      R.end));
   decorate();
   // a link to a line: open exactly there
   if (want >= 0) {

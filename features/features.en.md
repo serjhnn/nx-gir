@@ -36,7 +36,7 @@ The site remembers where you stopped reading each book, in this browser. The hom
 
 ## From one part to the next
 
-Every long book has a page of its own: open it from the Library to see all its parts in order, each with the chapters it begins with, a ⇆ mark where a translation exists and how far you have read. A button there starts the book or goes on from where you stopped. While reading, ‹ 7/24 › in the tools moves to the part before or after, and the middle button lists all the parts. At the end of each part, two cards lead to the part before and the part after it, with the chapters each one begins with, and a link to all the parts of the book. At the bottom of every page are the main pages of the site, the license of the translations and how to help.
+Every long book has a page of its own: open it from the Library to see all its parts in order, each with the chapters it begins with, a ⇆ mark where a translation exists and how far you have read. A button there starts the book or goes on from where you stopped. While reading, the back button returns to the book's page with all its parts. At the end of each part, two cards lead to the part before and the part after it, with the chapters each one begins with, and a link to all the parts of the book. At the bottom of every page are the main pages of the site, the license of the translations and how to help.
 
 ## Report an error
 
@@ -48,7 +48,7 @@ Make the text bigger or smaller, set it on the left or in the center, change the
 
 ## Pages for a long part
 
-A long part can be read a page at a time: the text is cut into pages of a few minutes each, with ‹ Previous and Next › above and below. The reader then holds only one page, so it works on an old phone with little memory; the progress bar still shows how far you are in the whole part. This is how every long part opens; the ▤ button in the text settings turns it off, to read one long text.
+A long part can be read a page at a time: the text is cut into pages of a few minutes each, with ‹ Previous and Next › above and below, and ‹ 3/15 › in the tools. The reader then holds only one page, so it works on an old phone with little memory; the progress bar still shows how far you are in the whole part. This is how every long part opens; the ▤ button in the text settings turns it off, to read one long text.
 
 ## Light, dark and black
 
