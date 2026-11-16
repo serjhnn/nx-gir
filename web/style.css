@@ -1328,6 +1328,23 @@ body.reading .bar {
     var(--text-line, 1.75) var(--book);
 }
 
+/* A long part is 2,000 paragraphs, 125,000 nodes:
+   the browser lays out only those near the screen
+   (content-visibility, Chrome 85+; others ignore
+   it). Until a paragraph has been drawn its height
+   is a guess from its length (--rows, set by
+   app.js); after that the browser remembers the
+   real one (auto, Chrome 107+). */
+@supports (content-visibility: auto) {
+  .text > p {
+    content-visibility: auto;
+    contain-intrinsic-height: calc(
+      var(--rows, 1) * var(--text-line, 1.75) * 1em);
+    contain-intrinsic-height: auto calc(
+      var(--rows, 1) * var(--text-line, 1.75) * 1em);
+  }
+}
+
 /* Markdown in .md texts: headings, quotes, bold and
    italic */
 

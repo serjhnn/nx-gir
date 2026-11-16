@@ -1857,6 +1857,10 @@ const R = {
   saved: "", // the position last saved
   timer: 0,
   par: null, // the other version: book() data
+  lineEls: [], // the <p> of each line (not .par)
+  ready: false, // the lines are in the page
+  parBuilt: false, // the other version is in the page
+  credited: false, // the part has its own credit
   contents: [], // its chapters: [{line, n, title,
   // level}]
 };
@@ -2457,6 +2461,7 @@ function applyView() {
   // the whole width of the screen, not a column
   R.text.classList.toggle("full", view.full);
   document.body.classList.toggle("full", view.full);
+  syncPar();
   const par = Boolean(R.par && view.parallel);
   R.text.classList.toggle("parallel", par);
   R.text.classList.toggle("stacked",
@@ -3010,9 +3015,20 @@ function parHead(name, other) {
   ];
 }
 
+// Rows a paragraph of n characters takes, for the
+// height the browser guesses before it is drawn
+// (--rows, see content-visibility in style.css)
+const ROW = 36;
+
+function rows(n) {
+  return String(Math.max(1, Math.ceil(n / ROW)));
+}
+
 function parLine(line) {
   const parts = R.par.lines[line] || [""];
   const p = h("p", { class: "par" });
+  p.style.setProperty("--rows",
+    rows(parts.join("").length));
   let i = R.par.first[line] || 0;
   parts.forEach((t, k) => {
     if (k % 2 && k > 1 && R.par.starts.has(i)) {
@@ -3029,6 +3045,35 @@ function parLine(line) {
 // of the other version (of), it hides with it
 const HELP = "https://github.com/serjhnn/nx-gir/"
   + "blob/main/CONTRIBUTING.md";
+
+// The other version is built only while it is
+// shown (Side by side on): about 55,000 nodes and
+// 30 MB of layout for a long part. Turning it off
+// removes it again. Called by applyView() and once
+// the lines are in the page.
+function syncPar() {
+  const want = Boolean(R.par && view.parallel
+    && R.ready);
+  if (want === R.parBuilt) return;
+  R.parBuilt = want;
+  if (!want) {
+    for (const e of R.text.querySelectorAll(
+      ".par, .of-par")) e.remove();
+    return;
+  }
+  R.lineEls.forEach((p, line) => {
+    p.after(parLine(line));
+  });
+  // lines the other version has more of
+  for (let line = R.lineEls.length;
+    line < R.par.lines.length; line++) {
+    R.text.append(h("p", { class: "par" }),
+      parLine(line));
+  }
+  const of = !R.credited && R.par.credit;
+  R.text.prepend(...parHead(R.opening, R.par.name),
+    ...(of ? [trCredit(R.par.credit, true)] : []));
+}
 
 function trCredit(c, of) {
   return h("p", { class: "tr-credit"
@@ -3083,6 +3128,8 @@ async function book(name, line) {
     contents: data.contents || [],
     saved: "", editable: data.editable,
     opening: name, par: null, parts: data.parts,
+    lineEls: [], ready: false, parBuilt: false,
+    credited: Boolean(data.credit),
   });
   // the other version, read beside it on a wide
   // screen
@@ -3108,18 +3155,19 @@ async function book(name, line) {
   const frag = document.createDocumentFragment();
   const format = data.format || {};
   const starts = new Set(data.starts || []);
-  if (R.par) {
-    frag.append(...parHead(name, R.par.name));
+  // the other version is built by syncPar(), only
+  // while it is shown
+  if (data.credit) {
+    frag.append(trCredit(data.credit, false));
   }
-  const of = !data.credit && R.par && R.par.credit;
-  const credit = data.credit || of;
-  if (credit) frag.append(trCredit(credit, of));
   data.lines.forEach((parts, line) => {
     const p = document.createElement("p");
     const f = format[line];
     if (f && f.h) p.className = "md-h md-h" + f.h;
     if (f && f.q) p.classList.add("md-q");
     const spans = f ? f.spans : [];
+    p.style.setProperty("--rows",
+      rows(parts.join("").length));
     let at = 0; // characters before this part
     parts.forEach((t, k) => {
       const nodes = styled(t, at, spans);
@@ -3141,15 +3189,11 @@ async function book(name, line) {
       p.append(s);
     });
     frag.append(p);
-    if (R.par) frag.append(parLine(line));
+    R.lineEls.push(p);
   });
-  // lines the other version has more of
-  for (let line = data.lines.length;
-    R.par && line < R.par.lines.length; line++) {
-    frag.append(h("p", { class: "par" }),
-      parLine(line));
-  }
   text.append(frag);
+  R.ready = true;
+  syncPar();
   text.addEventListener("click", (e) => {
     const s = e.target.closest(".w");
     if (!s) return;

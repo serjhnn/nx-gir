@@ -177,3 +177,25 @@ The phone readers today (Chrome on Android with
 first sign of trouble would be Android reloading
 the tab in the background (the position is saved,
 so nothing is lost). Start with 1 and 2 then.
+
+## After steps 1 and 2 (2026-11-16)
+
+Both are done (plan: `notes/ram-plan.md`): the other
+version is built only while Side by side is on
+(`syncPar()` in `app.js`), and `.text > p` has
+`content-visibility: auto` with a height guess from
+the line's length (`--rows`, `style.css`).
+
+Datastanagirk A 01, phone screen, after a garbage
+collection (`why`):
+
+| Case | Before | After |
+|---|---|---|
+| Side by side | 184 MB | 140 MB |
+| Side by side, scrolled to the end | 190 MB | 160 MB |
+| One column | 154 MB | 117 MB |
+| One column, elements | 125,525 | 73,668 |
+
+The page height stays within 0.1% of what it was, and
+line links, the saved position and Side by side off
+and on land where they did.
