@@ -16,9 +16,9 @@
 //     where the memory of one part goes
 //
 // PHONE=1: a phone screen (390x844, touch).
-// VIEW='{"paged":true}': the saved text settings
-// (localStorage nxgir-view) for parts/fresh: e.g.
-// read in pages, or {"paged":false} for one text.
+// VIEW='{"paged":false}': the saved text settings
+// (localStorage nxgir-view) for parts/fresh: pages
+// are the default, {"paged":false} is one long text.
 
 const { chromium } = require("playwright");
 const fs = require("fs");

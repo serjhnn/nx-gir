@@ -2861,17 +2861,6 @@ function decorate() {
       "aria-label": "Show the two versions",
       title: "Side by side with "
         + parLabel(R.par.name) }) : null,
-    // a long part in pages: a page at a time is in
-    // the browser, a few MB instead of hundreds
-    btn(["▤ ", h("span", { class: "long" },
-      "Pages")],
-    () => setView({ paged: !paged() }), {
-      "aria-pressed": String(paged()),
-      "aria-label": "Read in pages",
-      title: paged()
-        ? "In pages (click for one long text)"
-        : "One long text (click for pages: lighter"
-          + " on a phone)" }),
     // on a wide screen: each line under its pair,
     // as on a phone, or beside it
     R.par && view.parallel ? btn(icon(ICONS[
@@ -2928,7 +2917,7 @@ const FONT_NAMES = { grqi: "Arian Grqi",
 const view = { size: SIZE, center: false, line: 0,
   font: 0, parallel: true, sentences: false,
   full: false, stacked: false,
-  // read in pages: null = by the phone's memory
+  // read in pages: null = yes (the default)
   paged: null };
 try {
   const v = JSON.parse(
@@ -3050,6 +3039,15 @@ function viewTools() {
         ? "Whole width (click for a column)"
         : "Text in a column (click for whole"
           + " width)" }),
+  // a long part in pages: a page at a time is in
+  // the browser, a few MB instead of hundreds
+  btn("▤", () => setView({ paged: !paged() }), {
+    "aria-label": "Read a long part in pages",
+    "aria-pressed": String(paged()),
+    title: paged()
+      ? "In pages (click for one long text)"
+      : "One long text (click for pages: lighter"
+        + " on a phone)" }),
   fontPick(),
   // the theme button joins the row while reading
   button);
@@ -3542,14 +3540,10 @@ function parHead(name, other) {
 // the characters of a page
 const PAGE_CHARS = 10000;
 
-// Read in pages? Chosen with the Pages button; until
-// then, on a phone that says it has 2 GB of memory
-// or less (navigator.deviceMemory, Chrome).
+// Read in pages? Yes, unless the reader turned it
+// off in the text settings (the ▤ button).
 function paged() {
-  if (typeof view.paged === "boolean") {
-    return view.paged;
-  }
-  return (navigator.deviceMemory || 8) <= 2;
+  return view.paged !== false;
 }
 
 // [first line, last line + 1] of each page; the whole

@@ -48,7 +48,7 @@ Make the text bigger or smaller, set it on the left or in the center, change the
 
 ## Pages for a long part
 
-A long part can be read a page at a time: press ▤ Pages and the text is cut into pages of a few minutes each, with ‹ Previous and Next › above and below. The reader then holds only one page, so it works on an old phone with little memory; the progress bar still shows how far you are in the whole part. Phones that report 2 GB of memory or less start in pages; you can turn it on or off at any time.
+A long part can be read a page at a time: the text is cut into pages of a few minutes each, with ‹ Previous and Next › above and below. The reader then holds only one page, so it works on an old phone with little memory; the progress bar still shows how far you are in the whole part. This is how every long part opens; the ▤ button in the text settings turns it off, to read one long text.
 
 ## Light, dark and black
 

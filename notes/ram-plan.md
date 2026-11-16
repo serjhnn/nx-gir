@@ -29,7 +29,7 @@ likelihood:
 | D | Smaller parts (150 KB) | to do, optional |
 | E | Old browsers: fallback page | to do, next |
 | F | Old browsers: transpile / fallbacks | to do |
-| G | Low-memory mode | done as P (auto by memory) |
+| G | Low-memory mode | done as P (pages are the default) |
 | H | Fewer nodes per word | later, big |
 | I | A window of lines | later, biggest |
 
@@ -82,9 +82,10 @@ How (`web/app.js`, `web/style.css`):
   words not on the page come from the data:
   `wordAt()`, `wordsOf()`, `snippet()`.
 - `pagesOf()` decides the pages; `paged()` says if
-  they are on: the ▤ Pages button, else a phone with
-  `navigator.deviceMemory` 2 or less. Kept in the
-  `nxgir-view` setting as `paged` (null = by memory).
+  they are on: always, unless the reader turned them
+  off with the ▤ button in the text settings (beside
+  the font list). Kept in the `nxgir-view` setting
+  as `paged` (null = on, the default).
 - The progress bar counts the whole part
   (`progress()`); a saved position is a word, so it
   opens on the right page.
