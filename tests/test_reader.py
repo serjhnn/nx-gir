@@ -1109,6 +1109,17 @@ def test_contents_of_years():
     assert got[1]["title"] == "Ի թուին 410 եղեւ շարժ։"
     # fewer than ten years: none
     assert contents(lines[:22]) == []
+    # the translation: "413 թվականին", "Իսկ Հայոց 410
+    # թվականին"
+    mod = [
+        x.replace("Իսկ ի թուականին Հայոց ", "Իսկ Հայոց ")
+        .replace("Ի թուին ", "")
+        .replace(" եղեւ", " թվականին եղավ")
+        for x in lines
+    ]
+    assert [(e["line"], e["n"]) for e in contents(mod)] == [
+        (e["line"], e["n"]) for e in got
+    ]
     # nor in [1], [2] sections (Հեթում's chronicle)
     assert contents(["[1]", ""] + lines) == contents(
         ["[1]"]

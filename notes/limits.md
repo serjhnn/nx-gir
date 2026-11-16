@@ -55,6 +55,12 @@ in two parts, typed from a scan): 211 book files,
 (2%, a fresh clone packs smaller); the build 37 s
 (6%). The largest file and part are unchanged.
 
+On 2026-11-16 (after the translation of the
+Taregirk, two parts, 0.2 MB): 213 book files, 38.4 MB
+of text; the site 157.6 MB (15%); git 22.2 MB (2%);
+the build 42 s (7%). The largest file and part are
+unchanged (30% at most).
+
 Since 29dc9cf (2026-11-14): the site fell from 116 MB
 to 104 MB because the zip of the site is no longer
 built (it was 18 MB; `build-site.py --zip` makes it),

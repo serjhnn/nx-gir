@@ -342,6 +342,31 @@ Arabic and Persian that no list of ours covers;
 the words that stay unclear, and the guesses, are
 in `notes/smbat-sparapet.md`.
 
+## ashkharhabar/smbat-sparapet/2-taregirk/
+
+`01.txt` and `02.txt`: a translation into modern
+Eastern Armenian of `grabar/smbat-sparapet/2-taregirk/`
+(Սմբատ Սպարապետ, Տարեգիրք: the chronicle of Armenia,
+Byzantium and Cilicia from the Armenian year 400
+(951) to 779 (1330), with the lists at the end of
+the edition: the sees of Antioch, the princes and
+kings of Cilicia, the Roman emperors, the patriarchs
+of Constantinople, the eras), made by Claude
+(Anthropic's AI model) on 2026-11-16 at the user's
+request, in chunks of 20–60 lines, each checked
+against the Grabar (section 6 of
+`TRANSLATION_GUIDE.md`). It is a machine translation,
+not a published or reviewed one: read it as a help to
+the Grabar, not in its place. The later entries,
+Smbat's own and those of his continuators, are in the
+Middle Armenian of Cilicia, with Arabic, Persian,
+Turkish and French words; the words that stay unclear,
+and the guesses, are in
+`notes/smbat-sparapet-taregirk.md`. Each year entry
+starts with its year (`413 թվականին`, `Իսկ Հայոց 410
+թվականին`), so the Contents list of the translation
+is the same as the Grabar's.
+
 ## All translations
 
 - License: CC BY-SA 4.0 (see `CONTRIBUTING.md`).
@@ -360,7 +385,8 @@ in `notes/smbat-sparapet.md`.
   `։`), it is cut at the same place, so some lines
   end in a comma or a `.`.
 - Quotations keep the parentheses (Ամառան հատոր)
-  or the «» (Ձմեռան հատոր) of the Grabar; the
+  or the «» (Ձմեռան հատոր, Smbat's Տարեգիրք, with
+  its one unopened `»` too) of the Grabar; the
   Datastanagirk has neither, and none are added.
   Slips and repeated passages in the Digilib text are
   translated as they stand, not corrected.

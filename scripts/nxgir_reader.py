@@ -708,11 +708,13 @@ def title_lines(lines):
 
 # a chronicle by years (Սմբատ Սպարապետ's Տարեգիրք):
 # paragraphs that start with the year, "Ի թուին 413",
-# "Իսկ ի թուականին Հայոց 410"
+# "Իսկ ի թուականին Հայոց 410"; in a translation
+# "413 թվականին", "Իսկ Հայոց 410 թվականին"
 YEAR_RE = re.compile(
-    r"(?:(?:Իսկ|Եւ|Դարձեալ՝)\s+)?[Իի]\s+"
-    r"թու(?:ին|ականին|ականութեանն)"
+    r"(?:(?:Իսկ|Եւ|Եվ|Դարձեալ՝|Դարձյալ՝)\s+)?"
+    r"(?:[Իի]\s+թու(?:ին|ականին|ականութեանն)"
     r"\s+(?:Հայոց\s+)?(\d{3})\b"
+    r"|(?:Հայոց\s+)?(\d{3})\s+թվականին)"
 )
 YEARS_MIN = 10
 
@@ -737,7 +739,7 @@ def year_entries(lines):
             out.append(
                 {
                     "line": i,
-                    "n": m.group(1),
+                    "n": m.group(1) or m.group(2),
                     "title": short(t),
                     "level": 2,
                 }
