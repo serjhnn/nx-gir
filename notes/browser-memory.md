@@ -219,3 +219,38 @@ The home page is 70 MB, so a page adds about 12 MB
 (against about 75 MB). All 15 pages one after
 another: no growth (heap 5.3 MB, 7,300 to 8,400
 elements). Ctrl-F finds the page only.
+
+## The home page, what the 70 MB is (2026-11-16)
+
+Phone screen, tab memory after a garbage collection,
+three runs each (the 47 MB floor is `about:blank`):
+
+| Case | Tab |
+|---|---|
+| Real home page | 70.7 MB |
+| `app.js` parsed but not run | 54.4 MB |
+| `app.js` empty | 54.4 MB |
+| `app.js` minified (esbuild) | 70.3 MB |
+| `app.js` and `style.css` minified | 69.6 MB |
+| No `style.css` | 59.7 MB |
+| Images resized to about 2x their size | 66.5 MB |
+| No images | 63.5 MB |
+
+- **The size of the script costs nothing**: parsing
+  all of `app.js` is the same as an empty script, and
+  minifying changes nothing. So minifying, or
+  splitting rarely used pages out of `app.js`, would
+  not lower the tab. (The first guess of 18 MB for
+  "scripts" was wrong: blocking JS also removes the
+  images, the shelf and the fonts it draws.)
+- What costs is what the page draws when it runs: the
+  two banners (1200x675 and 600x400, shown at about
+  358x120 and 222x120, decoded at full size) cost
+  about 7 MB, 4 MB of it saved by resizing them to
+  720 and 444 px wide (140 and 59 KB to 68 and 39 KB);
+  fonts about 2 MB; the rest is layout and painting of
+  the styled page.
+- Numbers are from headless Chromium on Linux; an
+  Android WebView will differ, but the order should
+  hold.
+

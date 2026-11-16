@@ -265,6 +265,17 @@ note on the ⇆ button; offer a Settings switch
 ("Light mode"). With A done this costs nothing to
 build. Measure with `why`, one column.
 
+### J. Home page: not the script (measured)
+
+Minifying or splitting `app.js` does not lower the tab
+(see `notes/browser-memory.md`, "the home page"): its
+size costs 0 MB. What is left to gain on the home page
+is the two banner images (about 4 MB by resizing
+`web/contribute.jpg` to 720 px and
+`web/smbat-sparapet-face.jpg` to 444 px wide; also
+the next announcement's `face`, `NEWS` in `app.js`),
+and nothing else worth a change.
+
 ### H. Fewer nodes per word (later, big)
 
 One text node per line, the tapped word found with
