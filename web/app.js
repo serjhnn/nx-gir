@@ -2155,7 +2155,7 @@ function newsPage(id) {
         one ? [" · ", h("a", { href: "#/news" },
           t.title)] : null),
       h("h1", { lang }, t.title),
-      pick,
+      one ? null : pick,
       one ? newsItem(one, lang)
         : h("div", { class: "news-list" },
           NEWS.map((a) => newsBanner(a, lang))));
