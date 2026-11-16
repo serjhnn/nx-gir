@@ -2154,7 +2154,7 @@ function newsPage(id) {
         h("a", { href: "#/" }, t.home),
         one ? [" · ", h("a", { href: "#/news" },
           t.title)] : null),
-      h("h1", { lang }, t.title),
+      one ? null : h("h1", { lang }, t.title),
       one ? null : pick,
       one ? newsItem(one, lang)
         : h("div", { class: "news-list" },
