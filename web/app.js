@@ -787,7 +787,7 @@ function joinBanner() {
 function newsBanner() {
   const a = NEWS[0];
   return h("a", { class: "join-banner news-banner",
-    href: "#/news", lang: "hy" },
+    href: "#/news/" + a.id, lang: "hy" },
   h("img", { src: a.face, alt: "",
     width: "600", height: "400" }),
   h("span", { class: "join-text" },
@@ -1831,6 +1831,7 @@ function contributePage() {
 const SMBAT = "#/b/grabar/smbat-sparapet/";
 
 const NEWS = [{
+  id: "smbat-sparapet",
   date: "2026-11-16",
   img: "smbat-sparapet.jpg",
   face: "smbat-sparapet-face.jpg",
@@ -1941,12 +1942,38 @@ const NEWS = [{
     + " rediscovered?",
 }];
 
+// the picture, a button: it opens the whole
+// picture over the page (a dialog; a click, Esc or
+// the close button shuts it)
+function zoomable(a) {
+  const img = h("img", { src: a.img, width: "1200",
+    height: "800", alt: a.alt });
+  const open = h("button", { type: "button",
+    class: "zoom", "aria-label": "Enlarge the picture" },
+  img);
+  open.addEventListener("click", () => {
+    const big = h("img", { src: a.img, alt: a.alt });
+    const shut = h("button", { type: "button",
+      class: "shut", "aria-label": "Close" }, "×");
+    const box = h("dialog", { class: "lightbox" },
+      shut, big);
+    const close = () => {
+      box.close();
+      box.remove();
+    };
+    box.addEventListener("click", close);
+    box.addEventListener("cancel", () => box.remove());
+    document.body.append(box);
+    box.showModal();
+  });
+  return h("figure", { class: "hero wide" }, open);
+}
+
+// one announcement, whole: #/news/<id>
 function newsItem(a) {
   const [main, ...more] = a.links;
   return h("article", { class: "news" },
-    h("figure", { class: "hero wide" },
-      h("img", { src: a.img, width: "1200",
-        height: "800", alt: a.alt })),
+    zoomable(a),
     h("p", { class: "sub" },
       h("time", { datetime: a.date },
         day(a.date, true))),
@@ -1965,13 +1992,40 @@ function newsItem(a) {
         h("a", { href: to }, label))));
 }
 
-function newsPage() {
-  document.title = "Announcements · " + NAME;
+// a panel in the list: the picture and the words
+// both lead to the announcement
+function newsPanel(a) {
+  const to = "#/news/" + a.id;
+  return h("li", { class: "ncard" },
+    h("a", { class: "ncard-img", href: to,
+      tabindex: "-1", "aria-hidden": "true" },
+    h("img", { src: a.img, alt: "", width: "600",
+      height: "400", loading: "lazy" })),
+    h("div", { class: "ncard-body" },
+      h("time", { datetime: a.date },
+        day(a.date, true)),
+      h("h2", {}, h("a", { href: to }, a.title)),
+      h("p", {}, named(a.lead)),
+      h("a", { class: "ncard-go", href: to },
+        "Read →")));
+}
+
+// #/news: the panels, newest first; #/news/<id>
+// one announcement
+function newsPage(id) {
+  const one = id ? NEWS.find((a) => a.id === id)
+    : null;
+  if (id && !one) throw new Error("No such announcement");
+  document.title = (one ? one.title + " · " : "")
+    + "Announcements · " + NAME;
   show(
     h("p", { class: "crumbs" },
-      h("a", { href: "#/" }, "Home")),
-    h("h1", {}, "Announcements"),
-    ...NEWS.map(newsItem));
+      h("a", { href: "#/" }, "Home"),
+      one ? [" · ", h("a", { href: "#/news" },
+        "Announcements")] : null),
+    one ? null : h("h1", {}, "Announcements"),
+    one ? newsItem(one)
+      : h("ul", { class: "news-cards" }, NEWS.map(newsPanel)));
 }
 
 // -- statistics --
@@ -2438,7 +2492,7 @@ function openPanel(title, titleLang, ...body) {
   R.panel.replaceChildren(
     h("div", { class: "panel-head" },
       h("h2", { lang: titleLang }, title), close),
-    h("div", { class: "panel-body" }, ...body));
+    h("div", { class: "ncard-body" }, ...body));
   R.panel.hidden = false;
   R.panel.dataset.kind = title;
   document.body.classList.add("panel-open");
@@ -3900,7 +3954,7 @@ async function book(name, line) {
     if (i === R.sel) closePanel();
     else choose(i);
   });
-  R.panel = h("aside", { class: "panel",
+  R.panel = h("aside", { class: "ncard",
     "aria-label": "Word", "aria-live": "polite" });
   R.panel.hidden = true;
   R.tools = h("div", { class: "tools" });
@@ -4194,8 +4248,9 @@ async function route() {
       await featuresPage(hash.slice(9));
     } else if (hash === "contribute") {
       contributePage();
-    } else if (hash === "news") {
-      newsPage();
+    } else if (hash === "news"
+      || hash.startsWith("news/")) {
+      newsPage(decodeURIComponent(hash.slice(5)));
     } else if (hash === "stats") {
       await statsPage();
     } else if (hash === "offline") {

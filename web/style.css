@@ -645,6 +645,109 @@ h1 {
   margin: 0 0 1.5rem;
 }
 
+/* #/news: panels, a picture over its words */
+.news-cards {
+  list-style: none;
+  margin: 1rem 0 2rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill,
+    minmax(min(100%, 20rem), 1fr));
+  gap: 1rem;
+}
+.ncard {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.ncard-img img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+.ncard-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+  padding: 0.9rem 1.1rem 1.1rem;
+}
+.ncard time {
+  color: var(--muted);
+  font: 0.85rem var(--sans);
+}
+.ncard h2 {
+  margin: 0;
+  font: 500 1.2rem/1.3 var(--serif);
+}
+.ncard h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+.ncard p {
+  margin: 0;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--text) 78%,
+    var(--bg));
+}
+.ncard-go {
+  margin-top: auto;
+  padding-top: 0.4rem;
+  color: var(--accent-ink);
+  font-weight: 500;
+  text-decoration: none;
+}
+.ncard:hover,
+.ncard:focus-within {
+  border-color: var(--accent-ink);
+}
+
+/* the picture of an announcement, a button that
+   opens it whole */
+.zoom {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+.lightbox {
+  max-width: 100vw;
+  max-height: 100vh;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: rgb(0 0 0 / 0.88);
+  cursor: zoom-out;
+}
+.lightbox[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox img {
+  max-width: 96vw;
+  max-height: 94vh;
+  object-fit: contain;
+}
+.lightbox .shut {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.8rem;
+  border: 0;
+  background: none;
+  color: #fff;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
 /* the top page: a narrow banner to #/contribute,
    its picture behind the words */
 .join-banner {
