@@ -25,7 +25,7 @@ likelihood:
 | A | Build the translation only while shown | **done** |
 | B | `content-visibility: auto` on paragraphs | **done** |
 | P | Read a part in pages (option 2) | **done** |
-| C | Lower the opening peak | to do, maybe not needed |
+| C | Lower the opening peak | done in part (see below) |
 | D | Smaller parts (150 KB) | to do, optional |
 | E | Old browsers: fallback page | to do, next |
 | F | Old browsers: transpile / fallbacks | to do |
@@ -109,6 +109,28 @@ Not checked: a real old phone; wide-screen use of
 pages beyond a look at a screenshot; the published
 site (`site/`, `NXGIR_STATIC`) is the same code but
 was not opened; try `scripts/build-site.py`.
+
+## Done: C (opening), in part (2026-11-16)
+
+- The other version is fetched only when shown
+  (`loadPar()`; `R.par` is `{ name }` until then; turning
+  Side by side on fetches it, then builds it; if it
+  cannot be read the part is read alone and the ⇆
+  button goes). Saves 535 KB of JSON (about 83 KB
+  compressed) to download and parse for a one-column
+  reader; the tab memory did not change (117 against
+  116 MB, `fresh 5`, one column).
+- Page size: 10,000, 6,000, 4,000 and 2,500
+  characters all gave 76-82 MB in the tab (the
+  browser's floor is 70 MB), so the size stays 10,000
+  (fewest "Next" taps). Not worth tuning.
+- Building a page in chunks: not done; the peak when
+  opening is 128 MB (249 before pages), and a page is
+  small. Look again only if a real phone still dies
+  on opening.
+- Left: the book files are about 500 KB of JSON for
+  300 KB of text (a compact format would halve the
+  download); not measured on the published site.
 
 ## Done: A and B
 

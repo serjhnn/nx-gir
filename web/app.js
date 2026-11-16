@@ -2969,6 +2969,11 @@ function applyView() {
 }
 
 function setView(change) {
+  // Side by side turned on: its lines first
+  if (change.parallel && R.par && !R.par.lines) {
+    loadPar().then(() => setView(change));
+    return;
+  }
   // keep the word at the top of the screen there
   const i = R.spans[R.lo] ? topWord() : -1;
   const before = i >= 0
@@ -3715,14 +3720,37 @@ function parLine(line) {
 const HELP = "https://github.com/serjhnn/nx-gir/"
   + "blob/main/CONTRIBUTING.md";
 
+// Fetch the other version (R.par is only its name
+// until then): a reader of one column never needs
+// it. If it cannot be read, the part is read alone.
+async function loadPar() {
+  const par = R.par;
+  if (!par || par.lines) return;
+  try {
+    const d = await api("book?name=" +
+      encodeURIComponent(par.name));
+    // the first word of each of its lines
+    let n = 0;
+    d.first = d.lines.map((parts) => {
+      const at = n;
+      n += (parts.length - 1) / 2;
+      return at;
+    });
+    d.starts = new Set(d.starts || []);
+    if (R.par === par) R.par = d;
+  } catch (e) {
+    if (R.par === par) R.par = null;
+  }
+}
+
 // The other version is built only while it is
 // shown (Side by side on): about 55,000 nodes and
 // 30 MB of layout for a long part. Turning it off
 // removes it again. Called by applyView() and once
 // the lines are in the page.
 function syncPar() {
-  const want = Boolean(R.par && view.parallel
-    && R.ready);
+  const want = Boolean(R.par && R.par.lines
+    && view.parallel && R.ready);
   if (want === R.parBuilt) return;
   R.parBuilt = want;
   if (!want) {
@@ -3828,18 +3856,9 @@ async function book(name, line) {
   // screen
   const other = (data.parallel || [])[0];
   if (other) {
-    try {
-      R.par = await api("book?name=" +
-        encodeURIComponent(other));
-      // the first word of each of its lines
-      let n = 0;
-      R.par.first = R.par.lines.map((parts) => {
-        const at = n;
-        n += (parts.length - 1) / 2;
-        return at;
-      });
-      R.par.starts = new Set(R.par.starts || []);
-    } catch (e) {} // read it alone
+    // its lines are fetched only when shown
+    R.par = { name: other };
+    if (view.parallel) await loadPar();
   }
   const text = h("div", { class: "text",
     lang: "hy" });
