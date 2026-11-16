@@ -1090,6 +1090,42 @@ def test_contents_of_titles_alone():
     )
 
 
+def test_contents_of_years():
+    # Սմբատ Սպարապետ's chronicle: a paragraph per year,
+    # "Ի թուին 413", "Իսկ ի թուականին Հայոց 410"
+    lines = ["Տարեգիրք · 1/1", "", "Սկիզբն։", ""]
+    for y in range(410, 420):
+        lead = (
+            "Իսկ ի թուականին Հայոց" if y % 2 else "Ի թուին"
+        )
+        lines += [f"{lead} {y} եղեւ շարժ։", "Տեքստ։", ""]
+    # a year inside a paragraph is no entry
+    lines[-1] = "Ի թուին 421 ոչ։"
+    got = contents(lines)
+    assert got[0]["start"]
+    assert [e["n"] for e in got[1:]] == [
+        str(y) for y in range(410, 420)
+    ]
+    assert got[1]["title"] == "Ի թուին 410 եղեւ շարժ։"
+    # fewer than ten years: none
+    assert contents(lines[:22]) == []
+    # the translation: "413 թվականին", "Իսկ Հայոց 410
+    # թվականին"
+    mod = [
+        x.replace("Իսկ ի թուականին Հայոց ", "Իսկ Հայոց ")
+        .replace("Ի թուին ", "")
+        .replace(" եղեւ", " թվականին եղավ")
+        for x in lines
+    ]
+    assert [(e["line"], e["n"]) for e in contents(mod)] == [
+        (e["line"], e["n"]) for e in got
+    ]
+    # nor in [1], [2] sections (Հեթում's chronicle)
+    assert contents(["[1]", ""] + lines) == contents(
+        ["[1]"]
+    )
+
+
 def test_contents_of_critical_edition_translation():
     # the translation has Ա (Ա Բ) for Ա (Ա II): the
     # same entries as the Grabar

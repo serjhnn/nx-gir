@@ -735,6 +735,20 @@ def test_forget(app):
         web.post(app, "/api/forget", {"name": "x"})
 
 
+def test_star(app):
+    name = "grabar/john.txt"
+    got = web.post(app, "/api/star", {"name": name})
+    assert got == {"starred": True, "stars": [name]}
+    lib = web.get(app, "/api/library", {})
+    assert lib["stars"] == [name]
+    # not in the site's library.json
+    assert "stars" not in web.library(app)
+    got = web.post(app, "/api/star", {"name": name})
+    assert got == {"starred": False, "stars": []}
+    with pytest.raises(web.ApiError):
+        web.post(app, "/api/star", {"name": "x"})
+
+
 def test_library(tmp_path):
     files = []
 
@@ -897,8 +911,9 @@ def test_volume(tmp_path):
         "Գրադարան",
         "Աննա",
     ]
-    # an author with part-books: no page of its own
-    assert got["up"][1]["to"] == "#/library"
+    # an author with part-books: no page of its own,
+    # the author on the Library page
+    assert got["up"][1]["to"] == "#/library/ann"
     # single files: groups, a short name as the title,
     # and the author has a page
     bib = web.volume(app, "grabar/bib")

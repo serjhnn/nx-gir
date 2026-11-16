@@ -623,6 +623,28 @@ h1 {
   font-weight: 500;
 }
 
+/* #/news: the whole picture, its words in it */
+.hero.wide img {
+  aspect-ratio: 3 / 2;
+}
+.news {
+  margin: 0 0 2.5rem;
+}
+.news .sub {
+  margin-bottom: 0.3rem;
+}
+.news-title {
+  margin: 0 0 0.6rem;
+  font: 500 1.5rem/1.25 var(--serif);
+}
+.news .lead {
+  margin: 0 0 1.5rem;
+  font: 1.1rem/1.55 var(--serif);
+}
+.news .mission {
+  margin: 0 0 1.5rem;
+}
+
 /* the top page: a narrow banner to #/contribute,
    its picture behind the words */
 .join-banner {
@@ -663,6 +685,21 @@ h1 {
   font-size: 0.85rem;
   line-height: 1.35;
 }
+/* the announcement: a crop of the picture (the
+   face, none of its words) on the right */
+.news-banner {
+  background: #1d140e;
+}
+.news-banner img {
+  left: auto;
+  width: 62%;
+  object-position: 50% 10%;
+}
+.news-banner .join-text {
+  background: linear-gradient(90deg,
+    #1d140e 38%, rgb(29 20 14 / 0.6) 62%,
+    rgb(0 0 0 / 0));
+}
 .join-banner .join-go {
   margin-top: 0.3rem;
   font-weight: 500;
@@ -684,6 +721,178 @@ h1 {
 .library .meta .done {
   display: block;
   color: var(--accent-ink);
+}
+/* ☆ beside a book; it stars the book */
+.library .shelf li {
+  display: flex;
+  align-items: center;
+}
+.library .shelf .row {
+  flex: 1;
+  min-width: 0;
+}
+/* a phone: how many parts and how much is
+   translated go under the name, which keeps the
+   whole width (no word broken in two) */
+@media (max-width: 480px) {
+  .library .shelf .row {
+    grid-template-columns: 1.25rem 1fr;
+    row-gap: 0.15rem;
+  }
+  .library .shelf .row .ico {
+    grid-row: span 2;
+  }
+  .library .shelf .row .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.6rem;
+    grid-column: 2;
+    text-align: left;
+    font-size: 0.8rem;
+  }
+  .library .shelf .row .meta:empty {
+    display: none;
+  }
+  .library .meta .done {
+    display: inline;
+  }
+}.library .star {
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--muted);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.library .star[aria-pressed="true"] {
+  color: var(--accent);
+}
+.library .star:hover,
+.library .star:focus-visible {
+  background: var(--hover);
+}
+/* the tabs: all the books, the starred ones, the
+   ones being read; lines above and below only, the
+   chosen tab's in the accent color (they slide) */
+.lib-tabs {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0 0 1.5rem;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  --i: 0;
+  /* kept at the top of the screen on scrolling */
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--bg);
+}
+/* an author the Library opens at: below the tabs */
+.library .author {
+  scroll-margin-top: 4.5rem;
+}
+.lib-tabs[data-tab="starred"] {
+  --i: 1;
+}
+.lib-tabs[data-tab="reading"] {
+  --i: 2;
+}
+.lib-tabs .thumb {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: calc(var(--i) * 100% / 3);
+  width: calc(100% / 3);
+  border-top: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transition: left 0.25s ease;
+}
+.lib-tabs button {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.55rem 0.4rem;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: 500 0.95rem/1.3 var(--serif);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.lib-tabs button:hover {
+  color: var(--text);
+}
+.lib-tabs button[aria-selected="true"] {
+  color: var(--accent-ink);
+}
+/* a thin, dim line between the tabs, short of
+   the lines above and below */
+.lib-tabs button + button::before {
+  content: "";
+  position: absolute;
+  top: 25%;
+  bottom: 25%;
+  left: 0;
+  width: 1px;
+  background: var(--rule);
+}
+.lib-tabs button:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: -4px;
+  border-radius: 8px;
+}
+.lib-tabs .count {
+  font: 500 0.8rem var(--sans);
+  opacity: 0.8;
+}
+/* a swipe to the next tab: the rows slide in
+   (slideIn() in app.js), never wider than the page */
+.lib-panes {
+  overflow-x: clip;
+}
+/* a phone: the count under the label */
+@media (max-width: 480px) {
+  .lib-tabs button {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 0.45rem 0.2rem;
+    font-size: 0.88rem;
+    white-space: normal;
+    text-align: center;
+  }
+}
+@media (max-width: 350px) {
+  .lib-tabs button {
+    font-size: 0.8rem;
+  }
+}
+/* being read: how far, as on the home page */
+.library .meta .progress {
+  display: inline-block;
+  width: 3rem;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lib-tabs .thumb {
+    transition: none;
+  }
+}
+.library .name .by {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
 }
 
 /* #/b/<folder>: a book's page, its parts */

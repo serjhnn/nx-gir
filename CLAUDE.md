@@ -264,6 +264,13 @@
   titled by the line after the ԳԼՈՒԽ line (Ուխտանէս).
   A chronicle in `[1]`, `[2]` sections with no other
   headings has no list (`NO_CONTENTS`).
+  A chronicle whose paragraphs start with their year
+  (`Ի թուին 413`, `Իսկ ի թուականին Հայոց 410`; at
+  least 10) takes those paragraphs as entries, "n"
+  the year (`year_entries()`; Սմբատ Սպարապետ's
+  Տարեգիրք); its translation starts them with the
+  year too (`413 թվականին`, `Իսկ Հայոց 410
+  թվականին`).
   A long part (150 lines or more, no `[1]` sections)
   whose sections start with a title alone between blank
   lines, three or more, is read as that (`title_lines()`,

@@ -60,7 +60,7 @@ A bar above the text shows how much of the part you have read.
 
 ## The Library
 
-The Library page lists the Grabar books by author, with how many parts each has and how much of it is translated.
+The Library page lists the Grabar books by author, with how many parts each has and how much of it is translated. Tap ☆ beside a book to star it: the Ընտրված (chosen) tab lists them, beside Բոլոր գրքերը (all books); Ընթերցվող (being read) lists the books you have started, each opening where you stopped. On a phone, swipe left or right to move between the tabs.
 
 ## Blog, Timeline and Statistics
 
@@ -73,3 +73,7 @@ The Blog tells what is new, in themes: about the site, about authors and about b
 ## Become a contributor
 
 Միանալ on the home page, and the banner with the reader under the tree below it, open a page on how to help: make first drafts of translations with AI, read them beside the Grabar to correct them, or bring texts and words.
+
+## Announcements
+
+Հայտարարություններ on the home page, and the banner with Smbat Sparapet below it, open a page on what is new on the shelf, with a picture, a story and links to the books; the first is on Smbat Sparapet and his two books, the Datastanagirk and the Taregirk.

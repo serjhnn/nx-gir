@@ -342,6 +342,31 @@ Arabic and Persian that no list of ours covers;
 the words that stay unclear, and the guesses, are
 in `notes/smbat-sparapet.md`.
 
+## ashkharhabar/smbat-sparapet/2-taregirk/
+
+`01.txt` and `02.txt`: a translation into modern
+Eastern Armenian of `grabar/smbat-sparapet/2-taregirk/`
+(Սմբատ Սպարապետ, Տարեգիրք: the chronicle of Armenia,
+Byzantium and Cilicia from the Armenian year 400
+(951) to 779 (1330), with the lists at the end of
+the edition: the sees of Antioch, the princes and
+kings of Cilicia, the Roman emperors, the patriarchs
+of Constantinople, the eras), made by Claude
+(Anthropic's AI model) on 2026-11-16 at the user's
+request, in chunks of 20–60 lines, each checked
+against the Grabar (section 6 of
+`TRANSLATION_GUIDE.md`). It is a machine translation,
+not a published or reviewed one: read it as a help to
+the Grabar, not in its place. The later entries,
+Smbat's own and those of his continuators, are in the
+Middle Armenian of Cilicia, with Arabic, Persian,
+Turkish and French words; the words that stay unclear,
+and the guesses, are in
+`notes/smbat-sparapet-taregirk.md`. Each year entry
+starts with its year (`413 թվականին`, `Իսկ Հայոց 410
+թվականին`), so the Contents list of the translation
+is the same as the Grabar's.
+
 ## All translations
 
 - License: CC BY-SA 4.0 (see `CONTRIBUTING.md`).
@@ -360,7 +385,8 @@ in `notes/smbat-sparapet.md`.
   `։`), it is cut at the same place, so some lines
   end in a comma or a `.`.
 - Quotations keep the parentheses (Ամառան հատոր)
-  or the «» (Ձմեռան հատոր) of the Grabar; the
+  or the «» (Ձմեռան հատոր, Smbat's Տարեգիրք, with
+  its one unopened `»` too) of the Grabar; the
   Datastanagirk has neither, and none are added.
   Slips and repeated passages in the Digilib text are
   translated as they stand, not corrected.
@@ -592,3 +618,42 @@ source paragraphs. One `։` had no space after it in
 the source; it is cut there like the others. Only
 line breaks and paragraph spacing were changed; the
 Grabar wording is unchanged.
+
+## grabar/smbat-sparapet/2-taregirk/
+
+*Տարեգիրք* (the Chronicle) of Smbat Sparapet, from
+the Paris 1859 edition: Տարեգիրք Սմբատայ
+Սպարապետի, edited by K. Shahnazareants (public
+domain), printed pages 21–141, from the scan Google
+made and Robert Bedrosian put on the Internet
+Archive
+(<https://archive.org/details/SmbatGrabarTaregirk1859>;
+PDF pages 26–156, where 51–60 scan 41–50 a second
+time). The Archive's own text of the scan is
+unreadable, so the text was typed by Claude (Anthropic's AI model) from the
+page images, with a Tesseract OCR (`hye`) as a
+first draft, page by page, each page read against
+its image. 50 words whose letters were hard to read
+in the scan are listed in
+`notes/smbat-sparapet-taregirk.md`.
+
+- Two parts, cut at the year 516 (`Ի թուին 516`),
+  each under the library's 150,000 letters.
+- One sentence per line, split at `։`; a blank line
+  between the edition's paragraphs; the words cut at
+  the line ends joined again.
+- The editor's note numbers `(1)`–`(92)` are left
+  out; his notes (pages 142–181) are not copied.
+  His own additions in brackets, `(զնա)`, stay.
+- Kept as printed: the misprints of the edition
+  (`Ի թուին 841` for 741, `620` for 720), its
+  spelling and its punctuation.
+- After the chronicle the edition prints lists that
+  belong to it (pages 133–141: the sees of Antioch,
+  the princes and kings of Cilicia, the Roman
+  emperors, the patriarchs of Constantinople, the
+  eras, two last entries); they are at the end of
+  part 2, their titles as lines of their own.
+- The edition differs from the Venice 1956 one that
+  Digilib has; when Digilib is back, its text can
+  be compared with this one.
