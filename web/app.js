@@ -2015,7 +2015,9 @@ function newsPanel(a) {
 function newsPage(id) {
   const one = id ? NEWS.find((a) => a.id === id)
     : null;
-  if (id && !one) throw new Error("No such announcement");
+  if (id && !one) {
+    throw new Error("No such announcement");
+  }
   document.title = (one ? one.title + " · " : "")
     + "Announcements · " + NAME;
   show(
@@ -2025,7 +2027,8 @@ function newsPage(id) {
         "Announcements")] : null),
     one ? null : h("h1", {}, "Announcements"),
     one ? newsItem(one)
-      : h("ul", { class: "news-cards" }, NEWS.map(newsPanel)));
+      : h("ul", { class: "news-cards" },
+        NEWS.map(newsPanel)));
 }
 
 // -- statistics --
