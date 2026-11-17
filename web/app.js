@@ -737,8 +737,10 @@ async function shelf(folder) {
     folder ? null : h("h1", { class: "sr-only" },
       "nxGir · ", h("span", { lang: "hy" },
         "Նախագիր")),
-    // at the top: the Library and the other
-    // pages, what was read last, then the welcome
+    // at the top: the picture, the Library and the
+    // other pages, what was read last, then the
+    // welcome
+    folder ? null : topBanner(),
     folder ? null : h("p", { class: "lib-btn",
       lang: "hy" },
     h("a", { class: "icon-btn",
@@ -778,6 +780,15 @@ async function shelf(folder) {
       "+ New text")) : null,
     folder ? shelfList(data) : null
   );
+}
+
+// the wide picture at the very top of the top
+// page: decoration only, so no alt text
+function topBanner() {
+  return h("div", { class: "top-banner" },
+    h("img", { src: "banner.jpg", alt: "",
+      width: "1200", height: "675",
+      fetchpriority: "high" }));
 }
 
 // a narrow banner on the top page, with the

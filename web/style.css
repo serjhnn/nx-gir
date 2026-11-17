@@ -696,6 +696,27 @@ h1 {
   cursor: pointer;
 }
 
+/* the top page: a wide picture above everything;
+   16:9 on a phone, wider on a screen */
+.top-banner {
+  margin: 0.5rem 0 1.25rem;
+  overflow: hidden;
+  border-radius: 14px;
+}
+.top-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: 50% 40%;
+}
+@media (min-width: 700px) {
+  .wide .top-banner img {
+    aspect-ratio: 21 / 9;
+  }
+}
+
 /* the top page: a narrow banner to #/contribute,
    its picture behind the words */
 .join-banner {
