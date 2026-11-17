@@ -184,37 +184,68 @@ before the model is trusted on them.
 ## Another book: Aristakes Lastivertsi, Yerevan 1963
 
 A book the model never saw: a Soviet critical edition
-(Karen Yuzbashyan), a different italic typeface, a skewed
-scan with dark edges, margin line numbers, and an apparatus
-of manuscript variants in small print under the text. Scan:
-<https://archive.org/details/LastiverttsiGrabar1963>
-(`Lastiverttsi_grabar_1963.pdf`, 157 pages; kept in
-`cache/other/`, not in git). Reference: our typed text
-`books/grabar/aristakes-lastivertsi/1-patmutiun/` (the same
-critical edition, from Digilib). 8 pages spread over PDF
-pages 22-140, top 8% and bottom 2% cut:
+(Karen Yuzbashyan), a different italic typeface, scanned
+in spreads (the facing page shows at one edge, behind a
+black binding line), margin line numbers, and an apparatus
+of manuscript variants in small print under the text.
+Scan: `sources/lastivertsi-1963/` (from
+<https://archive.org/details/LastiverttsiGrabar1963>).
+Reference: `books/grabar/aristakes-lastivertsi/1-patmutiun/`
+(the same edition, from Digilib).
 
-| Model and settings | CER | WER |
-|--------------------|----:|----:|
-| stock `hye`, binarize, layout | 38.6% | 67.5% |
-| `hye_grabar` as is | 43.2% | 57.6% |
-| `hye_grabar` + `--layout 0.85` | 25.8% | 41.0% |
-| `hye_grabar` + `--layout 0.85 --binarize` | 23.5% | 39.1% |
+Tuned like Smbat: `samples` (PDF pages 20-150, 2034 train
+and 615 held-out lines), `train` 3000 steps, scored on the
+30 held-out pages (`--heldout`, blocks of 5):
 
-- The Smbat model carries over only partly: on this
-  typeface it makes about 23% character errors, against
-  3.5% on the book it was tuned on (stock: 39%).
-- The big step is the layout filter (`layout.py`,
-  `--layout`): lines set smaller than 85% of the main text
-  are the apparatus, and it is not in the typed text.
-  Without it the apparatus counts as 17 points of error.
-  Deskew changed nothing here either.
-- So a new book needs its own tuning, as the Smbat model
-  needed one: the `samples` and `train` commands work on
-  any scan with typed pages; expect a few typed pages (tens,
-  not hundreds) to bring it down a long way, to be measured
-  on held-out pages as for Smbat.
+    python3 ocr/run.py eval PDF --ref DIR --pages 20-150 \
+        --heldout --lang aristakes_smbat --binarize --trim \
+        --top 0.02 --bottom 0 --layout 0.85 --tail 0.96
 
-Results: `results/aristakes-*.json`. Not done: tuning on this
-book, the word-list step here, and the other pages (the
-sample is 8 of about 120).
+| Model | CER | WER |
+|-------|----:|----:|
+| stock `hye` | 29.9% | 64.3% |
+| `hye_grabar` (tuned on Smbat only) | 14.6% | 33.9% |
+| `aristakes_stock` (tuned from stock) | 13.5% | 30.6% |
+| `aristakes_smbat` (from `hye_grabar`) | 12.2% | 28.6% |
+
+- The Smbat model alone already halves the stock error on a
+  typeface it never saw; tuning on this book's own lines
+  (2000 lines, a few minutes) adds only 2 points on top.
+  Starting from the Smbat model is better than from stock.
+- A typed-text reference is not enough: how a page is
+  prepared and compared decides the number more than the
+  model did. The numbers of an earlier run (21-23%, then 43%)
+  were mostly the scan and the reference, found one by one:
+  1. The apparatus (not in the typed text) was read as text:
+     `--layout` drops lines set smaller than a share of the
+     main text, and `--tail` cuts everything under two small
+     lines in a row in the lower part of the page, since the
+     notes are too close in size to tell by height alone.
+  2. The facing page's edge was read as text: `--trim`
+     (`prep.trim_edges`) cuts at the black binding line.
+     Page 59 went from 29% to 12%.
+  3. The reference held editors' notes, like `<Սաղմ. ՁԹ 5-6>`
+     (Bible references), that the page does not print:
+     `Reference` leaves out short `<...>` notes (a note
+     without its `>` must not swallow the text after it:
+     one in this book swallowed 700 characters and the
+     pages around it scored over 100%).
+  4. The comparison window was sized to the OCR text; it is
+     now 15% longer.
+- What is left: 12.2% = 6.4 points of missing text, 3.6 of
+  extra, 2.2 of wrong letters. The missing text is mostly
+  whole lines that Tesseract's layout analysis skips (page
+  139: a gap of two line spacings), and on some pages the
+  binding line is not found and the facing page's strip is
+  still read. Not tried: finding the text lines ourselves
+  (projection profile) and reading each with `--psm 7`;
+  cutting at the text column instead of the binding line.
+- Triage with `aristakes_smbat`: re-reading the words under
+  80% confidence is 50% of the words and reaches 83% of the
+  wrong ones, much more than on Smbat (15% / 65%); a book
+  this poorly read needs the LLM pass on half its words.
+
+Results: `results/aristakes-heldout-*.json`. Not done on
+this book: the word-list step, a count of how many typed
+pages are enough (try 500, 1000 and 2000 lines), a larger
+sample than 30 pages.
