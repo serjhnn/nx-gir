@@ -1,7 +1,8 @@
 // nx-gir web: the bookshelf and the theme button.
 // Pages are #/ (top), #/f/<folder>, #/b/<book>
 // (a book's parts), #/read/<book>,
-// #/library, #/timeline, #/blog, #/features,
+// #/library, #/timeline, #/blog, #/comics,
+// #/features,
 // #/contribute, #/news and #/stats; the
 // data
 // comes from
@@ -77,6 +78,12 @@ const ICONS = {
     "M9 11a3.5 3.5 0 1 0 0-7a3.5 3.5 0 0 0 0 7z",
     "M3 20a6 6 0 0 1 12 0",
     "M19 8v6M16 11h6",
+  ],
+  // two panels: the comics
+  panels: [
+    "M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4" +
+      "a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z",
+    "M3 12h18M12 4v8",
   ],
   // a horn: the announcements
   horn: [
@@ -312,6 +319,9 @@ async function staticApi(path) {
   if (route === "features") {
     return json("data/features.json");
   }
+  if (route === "comics") {
+    return json("data/comics.json");
+  }
   if (route === "recent") {
     return { items: await recentHere(
       Number(q.get("n")) || 0) };
@@ -398,7 +408,8 @@ const BY_SA = "https://creativecommons.org/"
 
 function siteFooter() {
   const pages = [["#/library", "Library"],
-    ["#/blog", "Blog"], ["#/features", "Features"],
+    ["#/blog", "Blog"], ["#/comics", "Comics"],
+    ["#/features", "Features"],
     ["#/timeline", "Timeline"],
     ["#/stats", "Statistics"],
     ["#/recent", "Readings"]];
@@ -736,6 +747,9 @@ async function shelf(folder) {
     h("a", { class: "icon-btn",
       href: "#/blog" },
     icon(ICONS.pen), "Բլոգ"),
+    h("a", { class: "icon-btn",
+      href: "#/comics" },
+    icon(ICONS.panels), "Կոմիքսներ"),
     h("a", { class: "icon-btn",
       href: "#/features" },
     icon(ICONS.tick), "Հնարավորություններ"),
@@ -1677,6 +1691,111 @@ async function blogPage(path) {
             ? posts.map((p) => postCard(p, lang))
             : h("p", { class: "empty", lang },
               t.none)));
+  };
+  draw();
+}
+
+// -- comics --
+
+// the words of the Comics page, by language
+const COMICS_UI = {
+  hy: { title: "Կոմիքսներ",
+    sub: "Գրադարանի գրքերի տեսարանները նկարներով",
+    none: "Շարքեր դեռ չկան։" },
+  en: { title: "Comics",
+    sub: "Scenes from the books of the Library",
+    none: "No series yet." },
+  ru: { title: "Комиксы",
+    sub: "Сцены из книг Библиотеки",
+    none: "Серий пока нет." },
+};
+
+// a series in the list: its first picture as the
+// cover, its date, title and intro, the whole card
+// a link to the series' own page
+function comicCard(s, lang) {
+  const v = version(s, lang);
+  const lead = v.blocks.find(([k]) => k === "p");
+  const cover = v.blocks.find(([k]) => k === "img");
+  return h("a", { class: "post-card comic-card",
+    href: "#/comics/" + s.slug, lang: v.lang },
+  cover ? h("img", { src: "img/" + cover[1],
+    alt: cover[2], loading: "lazy" }) : null,
+  h("span", { class: "pc-top" },
+    h("time", { datetime: s.date },
+      longDay(s.date, v.lang)),
+    h("span", { class: "pc-more" },
+      BLOG[v.lang].read)),
+  h("span", { class: "pc-title" }, named(v.title)),
+  lead ? h("span", { class: "pc-lead" },
+    named(lead[1])) : null);
+}
+
+// one series, whole: the pages (pictures with their
+// notes) one under the other, full width
+function comicItem(s, lang) {
+  const v = version(s, lang);
+  return h("article", { class: "post comic p-" + s.slug,
+    lang: v.lang },
+  h("time", { datetime: s.date },
+    longDay(s.date, v.lang)),
+  h("h2", {}, named(v.title)),
+  v.blocks.map(([kind, text, alt]) =>
+    kind === "img"
+      ? h("img", { src: "img/" + text, alt,
+        loading: "lazy" })
+      : h(kind === "h" ? "h3" : "p",
+        kind === "cap" ? { class: "cap" } : {},
+        named(text))));
+}
+
+// #/comics: the series, newest first; #/comics/<slug>
+// one series; #/comics/<slug>/<lang> in lang (the
+// language is the blog's choice)
+async function comicsPage(path) {
+  const [slug, want] = path.split("/");
+  if (want in BLOG) setBlogLang(want);
+  const data = await api("comics");
+  const one = slug
+    ? data.series.find((s) => s.slug === slug) : null;
+  if (slug && !one) throw new Error("No such series");
+  const draw = () => {
+    const have = new Set((one ? [one] : data.series)
+      .flatMap((s) => s.versions.map((v) => v.lang)));
+    const langs = Object.keys(BLOG)
+      .filter((l) => have.has(l));
+    const lang = have.has(blogLang()) || !langs.length
+      ? blogLang() : langs[0];
+    const t = COMICS_UI[lang];
+    const pick = h("div", { class: "filters outline",
+      role: "group", "aria-label": "Language" },
+    langs.map((l) => {
+      const b = h("button", { type: "button",
+        lang: l, "aria-pressed": String(l === lang) },
+      BLOG[l].name);
+      b.addEventListener("click", () => {
+        setBlogLang(l);
+        draw();
+      });
+      return b;
+    }));
+    document.title = (one ? version(one, lang).title
+      + " · " : "") + t.title + " · " + NAME;
+    show(
+      h("p", { class: "crumbs", lang },
+        h("a", { href: "#/" }, BLOG[lang].home),
+        one ? [" · ", h("a", { href: "#/comics" },
+          t.title)] : null),
+      one ? null : h("h1", { lang }, t.title),
+      one ? null : h("p", { class: "sub", lang },
+        t.sub),
+      langs.length > 1 ? pick : null,
+      one ? h("div", { class: "blog one comics" },
+        comicItem(one, lang))
+        : h("div", { class: "blog comics-list" },
+          data.series.length
+            ? data.series.map((s) => comicCard(s, lang))
+            : h("p", { class: "empty", lang }, t.none)));
   };
   draw();
 }
@@ -4384,6 +4503,10 @@ async function route() {
       || hash.startsWith("blog/")) {
       await blogPage(decodeURIComponent(
         hash.slice(5)));
+    } else if (hash === "comics"
+      || hash.startsWith("comics/")) {
+      await comicsPage(decodeURIComponent(
+        hash.slice(7)));
     } else if (hash === "features"
       || hash.startsWith("features/")) {
       await featuresPage(hash.slice(9));

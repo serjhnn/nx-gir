@@ -13,6 +13,7 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/timeline           the main steps
   GET  /api/blog               the blog posts
   GET  /api/features           what the site can do
+  GET  /api/comics             the comics series
   GET  /api/recent?n=          the books read last
   GET  /api/stats              how close to the limits
   GET  /api/library            the Grabar books
@@ -53,6 +54,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
 import nxgir_blog as blog_posts
+import nxgir_comics as comic_series
 import nxgir_features as feature_list
 import nxgir_grabar as grabar
 import nxgir_limits as lim
@@ -141,6 +143,7 @@ class App:
         library=LIBRARY,
         blog=blog_posts.BLOG,
         features=feature_list.FEATURES,
+        comics=comic_series.COMICS,
         translations=tr.TRANSLATIONS,
     ):
         self.files = list(files)
@@ -157,6 +160,8 @@ class App:
         self.blog = blog
         # features/, or None for an empty page
         self.features = features
+        # comics/, or None for no series
+        self.comics = comics
         # TRANSLATIONS.tsv, or None for no credits
         self.translations = translations
 
@@ -364,6 +369,14 @@ def blog(app):
     if not app.blog:
         return {"posts": []}
     return {"posts": blog_posts.read(app.blog)}
+
+
+def comics(app):
+    """The Comics page: the series, newest first
+    (nxgir_comics.py)."""
+    if not app.comics:
+        return {"series": []}
+    return {"series": comic_series.read(app.comics)}
 
 
 def features(app):
@@ -1055,6 +1068,8 @@ def get(app, route, query):
         return blog(app)
     if route == "/api/features":
         return features(app)
+    if route == "/api/comics":
+        return comics(app)
     if route == "/api/recent":
         n = arg("n", "0")
         if not n.isdigit():

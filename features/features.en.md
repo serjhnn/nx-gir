@@ -38,6 +38,10 @@ The site remembers where you stopped reading each book, in this browser. The hom
 
 Every long book has a page of its own: open it from the Library to see all its parts in order, each with the chapters it begins with, a ⇆ mark where a translation exists and how far you have read. A button there starts the book or goes on from where you stopped. While reading, the back button returns to the book's page with all its parts. At the end of each part, two cards lead to the part before and the part after it, with the chapters each one begins with, and a link to all the parts of the book. At the bottom of every page are the main pages of the site, the license of the translations and how to help.
 
+## Comics
+
+Կոմիքսներ on the home page opens a page of comic series made from the books of the Library: each page of a series is a picture with a note under it giving the line of the book it retells, and below are a short explanation of the story and where to read it. The first series, Vasak and the Seven Wolves, is from Smbat Sparapet's Taregirk.
+
 ## Report an error
 
 See a mistake in the Grabar text or in a translation? Tap the word, press Report an error, and write what the sentence should say. A new issue opens on GitHub, filled in with the book, the line and the sentence, for you to look over and send. No GitHub account? Send the same report by email.

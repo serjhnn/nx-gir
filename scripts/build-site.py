@@ -16,6 +16,7 @@ the same functions (nxgir_web.py):
     data/timeline.json              /api/timeline
     data/blog.json                  /api/blog
     data/features.json              /api/features
+    data/comics.json                /api/comics
     data/titles.json                each book's title,
         for /api/recent (the rest is in the browser)
     data/library.json               /api/library
@@ -152,6 +153,7 @@ NOT_OFFLINE = (
 # not saved by "Save for offline" either (sw.js)
 NOT_SAVED = NOT_OFFLINE + (
     "blog/",
+    "comics/",
     "features.",
     "og-image.png",
     "download.json",
@@ -244,6 +246,7 @@ def build(
     timeline=web.tl.TIMELINE,
     blog=web.blog_posts.BLOG,
     features=web.feature_list.FEATURES,
+    comics=web.comic_series.COMICS,
     zip_site=False,
 ):
     """Write the site for files [(name, size, path)],
@@ -274,6 +277,7 @@ def build(
             timeline=timeline,
             blog=blog,
             features=features,
+            comics=comics,
         )
         dirs = folders(files)
         write_json(
@@ -284,6 +288,7 @@ def build(
         write_json(
             data / "features.json", web.features(app)
         )
+        write_json(data / "comics.json", web.comics(app))
         # for the list of readings, which only has
         # the names (recentHere() in app.js)
         write_json(
@@ -499,9 +504,10 @@ def plain_page(out, path, text, alt="", **kw):
     dest.write_text(versioned(page, out), "utf-8")
 
 
-def post_page(slug, lang):
-    """Where a blog post's plain page is."""
-    return f"blog/{slug}.{lang}.html"
+def post_page(slug, lang, kind="blog"):
+    """Where a blog post's (or, with kind "comics",
+    a comics series') plain page is."""
+    return f"{kind}/{slug}.{lang}.html"
 
 
 def blog_block(block):
@@ -519,23 +525,34 @@ def blog_block(block):
     return f"<{tag}>{named(htm.escape(text))}</{tag}>"
 
 
-def post_pages(out, app):
+def post_pages(out, app, comics=False):
     """Each version of each blog post as a plain
     page, blog/<slug>.<lang>.html, which names the
-    others (hreflang). Returns [(path, title,
-    date)]."""
+    others (hreflang); with comics, each version of
+    each comics series, comics/<slug>.<lang>.html.
+    Returns [(path, title, date)]."""
     links = []
-    for p in web.blog(app)["posts"]:
+    kind = "comics" if comics else "blog"
+    posts = (
+        web.comics(app)["series"]
+        if comics
+        else web.blog(app)["posts"]
+    )
+    for p in posts:
         slug, vs = p["slug"], p["versions"]
+
+        def page_of(v, slug=slug):
+            return post_page(slug, v["lang"], kind)
+
         alt = "".join(
             '<link rel="alternate" hreflang='
             f'"{v["lang"]}" href="'
-            f"{htm.escape(url(post_page(slug, v['lang'])))}"
+            f"{htm.escape(url(page_of(v)))}"
             '">\n'
             for v in vs
         )
         for v in vs:
-            path = post_page(slug, v["lang"])
+            path = page_of(v)
             text = "\n".join(
                 blog_block(b) for b in v["blocks"]
             )
@@ -549,7 +566,7 @@ def post_pages(out, app):
                 open=OPEN_POST[v["lang"]],
                 title=v["title"],
                 desc=describe([""] + paras),
-                reader=f"./#/blog/{slug}/{v['lang']}",
+                reader=f"./#/{kind}/{slug}/{v['lang']}",
                 text=text,
                 alt=alt if len(vs) > 1 else "",
             )
@@ -655,6 +672,7 @@ def searchable(out, app, files):
         )
         links.append((path, title))
     posts = post_pages(out, app)
+    posts += post_pages(out, app, comics=True)
     links += feature_pages(out, app)
     urls = [(SITE + "/", "")]
     urls += [(url(p), "") for p, _ in links]
