@@ -55,12 +55,32 @@ The base is the float `tessdata_best` model (the apt
 about 5 minutes on 4 CPUs. `models/` is kept in git
 (6 MB).
 
-## Post-correction (`post.py`)
+## Post-correction (`post.py`): suggestions only
+
+The word list suggests; it does not rewrite. The tests
+below show why: even the best settings made 4-6 words
+wrong, silently, in a book. So by default the text stays
+as the engine read it and the suggestions go to a list
+for a person (or the LLM pass) to check:
+
+    python3 ocr/run.py page PDF N --lang hye_grabar \
+        --suggest --review page-N.tsv
+
+`--review FILE` writes one row per suggestion (page, line,
+word, confidence, old, new, edit cost, context gain, step;
+without it they go to stderr). `--apply` changes the text
+too. In code, `post.correct()` and `post.context()` return
+the Corrections and change nothing unless `apply=True`.
+`eval --post` scores what the suggestions would be worth if
+every one were applied (on a copy); that is a ceiling, not
+what the tool does.
+
+Evaluation:
 
     python3 ocr/run.py eval PDF --ref DIR --pages 26-156 \
         --half test --lang hye_grabar --post \
         --costs ocr/results/smbat-dev-tuned.json \
-        --skip-book smbat-sparapet
+        --skip-book smbat-sparapet/2-taregirk
 
 An unknown word that is close to exactly one known word
 is replaced by it. Known words: Wiktionary (`grabar/`)

@@ -54,6 +54,7 @@ class Correction:
     cost: float
     conf: float
     gain: float = 0.0  # context model's score (context())
+    step: str = "words"  # "words" or "context"
 
 
 class Lexicon:
@@ -228,8 +229,13 @@ def fragments(page, lex):
     return skip
 
 
-def correct(page, lex, costs, p=None):
-    """Correct a Page in place; returns the Corrections."""
+def correct(page, lex, costs, p=None, apply=False):
+    """Suggest corrections for a Page; returns them.
+
+    The text is not changed unless apply is set: a close
+    word is a guess, and 6% of the words are not in any
+    list. Review the suggestions (review()) or apply them.
+    """
     p = p or Params()
     skip = fragments(page, lex)
     out = []
@@ -262,7 +268,8 @@ def correct(page, lex, costs, p=None):
                     w.conf,
                 )
             )
-            w.text = pre + new + post
+            if apply:
+                w.text = pre + new + post
     return out
 
 
@@ -308,9 +315,9 @@ def core_key(text):
     return pre, core, post, word
 
 
-def context(page, lex, costs, p=None):
-    """Correct a Page in place, by context; returns the
-    Corrections.
+def context(page, lex, costs, p=None, apply=False):
+    """Suggest corrections for a Page by context; returns
+    them (changed in place only with apply).
 
     Every uncertain word is weighed against the words
     close to it (and itself): how well it fits its
@@ -368,19 +375,20 @@ def context(page, lex, costs, p=None):
         new = top
         if core[0].isupper():
             new = new[0].upper() + new[1:]
-        old = w.text
-        w.text = pre + new + post
         out.append(
             Correction(
                 n,
                 m,
-                old,
                 w.text,
+                pre + new + post,
                 top_cost,
                 w.conf,
                 top_gain,
+                "context",
             )
         )
+        if apply:
+            w.text = pre + new + post
     return out
 
 
@@ -388,3 +396,23 @@ def ends(page, at):
     """True if the word ends a sentence (`։` or `.`)."""
     text = page.lines[at[0]].words[at[1]].text
     return text.rstrip().endswith(("։", "."))
+
+
+REVIEW_HEAD = (
+    "page\tline\tword\tconf\told\tnew\tcost\tgain\tstep\n"
+)
+
+
+def review(corrections, page_no, head=False):
+    """The suggestions as TSV rows for a person to check.
+
+    One row per suggestion, line and word counted from 1.
+    """
+    rows = [REVIEW_HEAD] if head else []
+    for c in corrections:
+        rows.append(
+            f"{page_no}\t{c.line + 1}\t{c.word + 1}"
+            f"\t{c.conf:.0f}\t{c.old}\t{c.new}"
+            f"\t{c.cost:.2f}\t{c.gain:.1f}\t{c.step}\n"
+        )
+    return "".join(rows)

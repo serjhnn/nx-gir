@@ -30,6 +30,7 @@ from nxocr import (  # noqa: E402
     lines,
     locate,
     pages,
+    post,
     prep,
     textnorm,
     train,
@@ -138,7 +139,15 @@ def cached_page(pdf, n, a):
 
 
 def cmd_page(a):
+    """OCR one page. The text is the engine's own; word
+    list suggestions go to --review, and change the text
+    only with --apply."""
     page = ocr_page(a.pdf, a.page, a)
+    changes = []
+    if a.suggest or a.apply or a.review:
+        a.post = True
+        lex, costs = load_post(a)
+        changes = apply_post(a, page, lex, costs, a.apply)
     out = []
     for ln in page.lines:
         out.append(
@@ -152,6 +161,15 @@ def cmd_page(a):
         Path(a.out).write_text(text)
     else:
         sys.stdout.write(text)
+    if a.review:
+        Path(a.review).write_text(
+            post.review(changes, a.page, head=True)
+        )
+    elif changes:
+        sys.stderr.write(post.review(changes, a.page))
+    if changes:
+        done = "applied" if a.apply else "suggested"
+        print(f"{len(changes)} {done}", file=sys.stderr)
 
 
 def cmd_base(a):
@@ -284,8 +302,6 @@ def adapt_texts(a, ref):
 def load_post(a, ref=None):
     import json
 
-    from nxocr import post
-
     skip = tuple(a.skip_book)
     extra = ()
     if a.adapt:
@@ -294,9 +310,13 @@ def load_post(a, ref=None):
             for p in sorted(Path(a.adapt).glob("*.txt"))
         ]
         ref = locate.Reference(texts)
-        extra = [
-            (t, a.adapt_weight) for t in adapt_texts(a, ref)
-        ]
+        # no pages given (page): a new page, no masking
+        parts = (
+            adapt_texts(a, ref)
+            if getattr(a, "pages", None)
+            else texts
+        )
+        extra = [(t, a.adapt_weight) for t in parts]
     lex = post.Lexicon.from_repo(
         ROOT, skip=skip, extra=extra
     )
@@ -308,8 +328,6 @@ def load_post(a, ref=None):
 
 
 def post_params(a):
-    from nxocr import post
-
     return post.Params(
         max_conf=a.max_conf,
         max_cost=a.max_cost,
@@ -320,8 +338,6 @@ def post_params(a):
 
 
 def context_params(a):
-    from nxocr import post
-
     return post.ContextParams(
         max_conf=a.ctx_conf,
         max_cost=a.ctx_cost,
@@ -331,18 +347,20 @@ def context_params(a):
     )
 
 
-def apply_post(a, page, lex, costs):
-    """The steps asked for (--post, --context) on a page."""
-    from nxocr import post
+def apply_post(a, page, lex, costs, apply=True):
+    """The steps asked for (--post, --context) on a page.
 
+    With apply (what eval does, on a copy, to measure what
+    the suggestions are worth) the text is changed.
+    """
     changes = []
     if a.post:
         changes += post.correct(
-            page, lex, costs, post_params(a)
+            page, lex, costs, post_params(a), apply
         )
     if a.context:
         changes += post.context(
-            page, lex, costs, context_params(a)
+            page, lex, costs, context_params(a), apply
         )
     return changes
 
@@ -382,7 +400,7 @@ def cmd_eval(a):
     t = evaluate.summary(after)
     fixed, broke = evaluate.compare(results, after)
     print()
-    print("after post-correction:")
+    print("if every suggestion were applied (not done):")
     print(f"CER {t['cer']:.1%}   WER {t['wer']:.1%}")
     print(
         f"{len(changes)} words changed: {fixed} fixed,"
@@ -398,8 +416,6 @@ def cmd_eval(a):
 def tune_context(a, lex, costs, ocr, base, ref, nums):
     import copy
     import itertools
-
-    from nxocr import post
 
     print(
         "weight gain conf cost   CER     WER   chg fix brk"
@@ -439,8 +455,6 @@ def cmd_tune(a):
     """Grid of settings on the dev pages."""
     import copy
     import itertools
-
-    from nxocr import post
 
     texts = [
         p.read_text()
@@ -529,6 +543,10 @@ def main(argv=None):
     p.add_argument("page", type=int)
     p.add_argument("--out")
     p.add_argument("--mark", type=float, default=60)
+    p.add_argument("--suggest", action="store_true")
+    p.add_argument("--apply", action="store_true")
+    p.add_argument("--review")
+    add_post_args(p)
     add_prep_args(p)
     p.set_defaults(func=cmd_page)
     e = sub.add_parser("eval")

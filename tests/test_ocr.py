@@ -249,9 +249,11 @@ def test_correct_fixes_a_close_unknown_word():
     from nxocr import post
 
     page = one_line(("ղօրք,", 40), ("եկն", 95))
-    got = post.correct(
-        page, small_lexicon(), post.Costs([("ղ", "զ", 10)])
-    )
+    costs = post.Costs([("ղ", "զ", 10)])
+    got = post.correct(page, small_lexicon(), costs)
+    # a suggestion only: the text is the engine's own
+    assert page.lines[0].words[0].text == "ղօրք,"
+    post.correct(page, small_lexicon(), costs, apply=True)
     assert page.lines[0].words[0].text == "զօրք,"
     assert [(c.old, c.new) for c in got] == [
         ("ղօրք,", "զօրք,")
@@ -356,3 +358,36 @@ def test_context_picks_the_word_that_fits():
     # a sentence end breaks the context
     page = one_line(("եկն։", 95), ("մեղ", 70))
     assert post.context(page, lex, costs, easy) == []
+
+
+def test_review_rows_and_no_rewrite_by_default():
+    from nxocr import post
+
+    lex = post.Lexicon(
+        {"եկն": 50, "մեզ": 40, "մեղ": 40},
+        pairs=post.Counter({("եկն", "մեզ"): 40}),
+        long=9,
+    )
+    costs = post.Costs([("ղ", "զ", 10)])
+    easy = post.ContextParams(weight=2.0)
+    page = one_line(("եկն", 95), ("մեղ", 70))
+    got = post.context(page, lex, costs, easy)
+    assert page.lines[0].words[1].text == "մեղ"
+    assert got[0].step == "context"
+    rows = post.review(got, 7, head=True).split("\n")
+    assert rows[0].split("\t") == [
+        "page",
+        "line",
+        "word",
+        "conf",
+        "old",
+        "new",
+        "cost",
+        "gain",
+        "step",
+    ]
+    cols = rows[1].split("\t")
+    assert cols[:6] == ["7", "1", "2", "70", "մեղ", "մեզ"]
+    assert cols[-1] == "context"
+    post.context(page, lex, costs, easy, apply=True)
+    assert page.lines[0].words[1].text == "մեզ"
