@@ -85,21 +85,24 @@ def parse_tsv(tsv):
     return page
 
 
-def recognize(img, lang="hye", psm=6, extra=()):
+def recognize(
+    img, lang="hye", psm=6, tessdata=None, extra=()
+):
     """OCR a PIL image with the `tesseract` program."""
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / "page.png"
         img.save(path)
-        cmd = [
-            "tesseract",
-            str(path),
-            "stdout",
+        cmd = ["tesseract", str(path), "stdout"]
+        if tessdata:
+            cmd += ["--tessdata-dir", str(tessdata)]
+        cmd += [
             "-l",
             lang,
             "--psm",
             str(psm),
+            "-c",
+            "tessedit_create_tsv=1",
             *extra,
-            "tsv",
         ]
         out = subprocess.run(
             cmd, capture_output=True, text=True, check=True

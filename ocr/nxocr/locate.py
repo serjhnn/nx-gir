@@ -17,11 +17,32 @@ class Reference:
 
     def __init__(self, texts, k=6, common=20):
         self.k = k
-        self.text = key("\n".join(texts))
+        self.raw = "\n".join(texts)
+        # key string, and for each key char its place in raw
+        keys, self.orig = [], []
+        for i, ch in enumerate(self.raw):
+            part = key(ch)
+            keys.append(part)
+            self.orig.extend([i] * len(part))
+        self.text = "".join(keys)
         self.index = defaultdict(list)
         for i in range(len(self.text) - k + 1):
             self.index[self.text[i : i + k]].append(i)
         self.common = common
+
+    def original(self, start, end):
+        """The typed text for key positions start..end.
+
+        Runs from the first key char to just before the
+        key char at `end`: marks and spaces between the
+        lines go with the earlier line.
+        """
+        a = self.orig[start]
+        if end >= len(self.orig):
+            b = len(self.raw)
+        else:
+            b = self.orig[end]
+        return self.raw[a:b].strip()
 
     def locate(self, page_key, slack=150, min_votes=8):
         """(start, end) of the page stretch, or None."""
