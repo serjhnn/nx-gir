@@ -91,6 +91,15 @@
 - `sources/`: copies of the sources (page scans, entry
   texts) behind the `grabar/` data; add the copy and a
   note in `sources/README.md` with every new source
+- `ocr/`: OCR tooling for scanned books, apart from the
+  reader (README in the folder; Pillow, numpy and
+  `tesseract` needed only there): `ocr/run.py`
+  (`page`, `eval`), the package `ocr/nxocr/`,
+  `ocr/results/` (scores, kept); tested in
+  `tests/test_ocr.py`. Code in it follows the same
+  limits (`ruff format ocr/`). Page images are cached in
+  `ocr/cache/` (not in git). Score every step with
+  `eval` against the typed text before keeping it
 - `scripts/nxgir_logo.py`: logos and gradient colors
 - `scripts/fetch-bible.py`: downloads a book of the
   1895 Grabar Bible into `books/` (see
