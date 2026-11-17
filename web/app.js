@@ -790,7 +790,7 @@ function topBanner() {
       width: "1600", height: "550",
       fetchpriority: "high" }),
     h("p", { class: "top-text", lang: "hy" },
-      "Արևը ծագում է"));
+      "… ժամանակ ժողովելոյ քարինս"));
 }
 
 // a narrow banner on the top page, with the
