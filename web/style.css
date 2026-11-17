@@ -436,12 +436,34 @@ h1 {
   text-decoration: none;
 }
 
-/* the Library button, at the top of the top page */
+/* the Library button, at the top of the top page;
+   it stays at the top of the screen on scrolling:
+   one line to swipe on a phone, wrapped on a wide
+   screen */
 .lib-btn {
-  margin: 1rem 0 0.9rem;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  margin: 0.5rem 0 0.9rem;
+  padding: 0.5rem 0;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: var(--bg);
+}
+.lib-btn::-webkit-scrollbar {
+  display: none;
+}
+.lib-btn .icon-btn {
+  flex: none;
+}
+@media (min-width: 700px) {
+  .wide .lib-btn {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
 }
 .lib-btn .icon-btn {
   color: var(--accent-ink);
