@@ -743,7 +743,7 @@ h1 {
   font-size: clamp(0.4rem, 2.2cqw, 0.66rem);
 }
 .wide .top-banner img {
-  object-position: 50% 16%;
+  object-position: 50% 46%;
 }
 
 /* the top page: a narrow banner to #/contribute,
