@@ -28,15 +28,36 @@ def main_height(page, share=0.75):
     return hs[min(int(len(hs) * share), len(hs) - 1)]
 
 
-def main_text(page, ratio=0.8):
-    """A Page without the lines set smaller than
-    `ratio` of the main text height."""
+def top_of(line):
+    return min(w.box[1] for w in line.words)
+
+
+def main_text(page, ratio=0.8, tail=0.0, after=0.4):
+    """A Page without the apparatus.
+
+    Lines set smaller than `ratio` of the main text height
+    are dropped. With `tail`, a stricter rule follows: the
+    apparatus is always at the bottom, so once two lines in
+    a row, in the lower part of the page (below the share
+    `after` of it), are smaller than `tail` of the main
+    height, those and everything under them is dropped.
+    """
     from .engine import Page
 
     top = main_height(page)
+    lines = sorted(page.lines, key=top_of)
+    if tail and lines:
+        floor = after * top_of(lines[-1])
+        for i in range(len(lines) - 1):
+            pair = lines[i : i + 2]
+            if top_of(lines[i]) < floor:
+                continue
+            if all(
+                line_height(ln) < tail * top for ln in pair
+            ):
+                lines = lines[:i]
+                break
     keep = [
-        ln
-        for ln in page.lines
-        if line_height(ln) >= ratio * top
+        ln for ln in lines if line_height(ln) >= ratio * top
     ]
     return Page(keep)

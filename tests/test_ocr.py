@@ -413,3 +413,35 @@ def test_main_text_drops_smaller_print():
     # 0.5 keeps all; an empty page is fine
     assert len(layout.main_text(page, 0.5).lines) == 9
     assert layout.main_text(engine.Page(), 0.8).lines == []
+
+
+def test_main_text_tail_cuts_the_apparatus_below_the_text():
+    from nxocr import layout
+
+    def at(y, height, text):
+        ln = engine.Line(
+            [engine.Word(text, 90, (0, y, 50, height))]
+        )
+        return ln
+
+    main = [at(100 + 50 * i, 40, "աբ") for i in range(10)]
+    # similar size, but small twice in a row below the text
+    notes = [
+        at(700, 38, "ԱԲ"),
+        at(750, 36, "ԱԲ"),
+        at(800, 39, "ԱԲ"),
+    ]
+    page = engine.Page(main + notes)
+    # by height alone the notes stay
+    assert len(layout.main_text(page, 0.85).lines) == 13
+    got = layout.main_text(page, 0.85, tail=0.96)
+    assert len(got.lines) == 10
+    assert all(ln.words[0].text == "աբ" for ln in got.lines)
+    # a small line near the top is not a start of notes
+    page = engine.Page(
+        [at(10, 30, "Ա"), at(60, 30, "Ա")] + main
+    )
+    assert (
+        len(layout.main_text(page, 0.5, tail=0.96).lines)
+        == 12
+    )
