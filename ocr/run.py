@@ -80,6 +80,7 @@ def add_post_args(ap):
     ap.add_argument("--names", action="store_true")
     ap.add_argument("--context", action="store_true")
     ap.add_argument("--llm", metavar="MODEL")
+    ap.add_argument("--llm-files", metavar="DIR")
     ap.add_argument("--llm-conf", type=float, default=80)
     ap.add_argument("--llm-batch", type=int, default=8)
     ap.add_argument("--llm-hints", action="store_true")
@@ -169,7 +170,7 @@ def cmd_page(a):
         a.post = True
         lex, costs = load_post(a)
         changes = apply_post(a, page, lex, costs, a.apply)
-    if a.llm:
+    if a.llm or a.llm_files:
         lex = costs = None
         if a.llm_hints:
             lex, costs = load_post(a)
@@ -433,6 +434,8 @@ def apply_post(a, page, lex, costs, apply=True):
 
 
 def llm_backend(a):
+    if a.llm_files:
+        return llm.Files(a.llm_files)
     return llm.Anthropic(a.llm, cache=CACHE / "llm")
 
 
@@ -476,7 +479,7 @@ def cmd_eval(a):
         print(f"page {n:4d}  {state}", flush=True)
     s = evaluate.summary(results)
     report(s, a)
-    if a.llm:
+    if a.llm or a.llm_files:
         eval_llm(a, nums, ocr, ref, results)
     if not (a.post or a.context):
         return
@@ -616,6 +619,12 @@ def eval_llm(a, nums, ocr, ref, before):
         f"tokens in {u['input']}, out {u['output']},"
         f" calls {u['calls']} (cached {u['cached']})"
     )
+    if getattr(backend, "pending", None):
+        print(
+            f"{len(backend.pending)} requests have no"
+            f" answer yet, in {a.llm_files}:"
+            " those lines are as read"
+        )
     for c in changes[: a.show]:
         print(f"  {c.old} -> {c.new}  ({c.conf:.0f})")
 

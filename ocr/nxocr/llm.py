@@ -168,6 +168,69 @@ def accept(item, reply):
     }
 
 
+class Pending(Exception):
+    """A request waits for an answer (see Files)."""
+
+
+class Files:
+    """A backend for when no API key can be used.
+
+    Each request is written to a folder of its own (the
+    prompt and the line images); the answer is read from
+    `reply.txt` in it. Whoever answers (a person, an agent)
+    only needs that folder. A request with no answer yet
+    raises Pending, and `pending` lists the folders.
+    """
+
+    def __init__(self, folder):
+        self.folder = Path(folder)
+        self.pending = []
+        self.usage = {
+            "input": 0,
+            "output": 0,
+            "calls": 0,
+            "cached": 0,
+        }
+
+    def complete(self, system, blocks):
+        raw = json.dumps(
+            blocks, ensure_ascii=False
+        ).encode()
+        name = hashlib.sha256(
+            system.encode() + raw
+        ).hexdigest()[:16]
+        folder = self.folder / name
+        reply = folder / "reply.txt"
+        if reply.exists():
+            self.usage["cached"] += 1
+            return reply.read_text(encoding="utf8")
+        if not folder.exists():
+            folder.mkdir(parents=True)
+            self.write(folder, system, blocks)
+        self.pending.append(folder)
+        raise Pending(str(folder))
+
+    @staticmethod
+    def write(folder, system, blocks):
+        text, k = [system, "", "---", ""], 0
+        for b in blocks:
+            if b["type"] == "image":
+                k += 1
+                data = base64.b64decode(b["source"]["data"])
+                (folder / f"line-{k}.png").write_bytes(data)
+                text.append(f"[image: line-{k}.png]")
+            else:
+                text.append(b["text"])
+        text += [
+            "",
+            "---",
+            "Write your JSON answer to reply.txt.",
+        ]
+        (folder / "request.md").write_text(
+            "\n".join(text) + "\n", encoding="utf8"
+        )
+
+
 class Anthropic:
     """The Messages API, with the standard library.
 
@@ -258,7 +321,10 @@ def review(items, backend, batch=8):
     out = {}
     for i in range(0, len(items), batch):
         part = items[i : i + batch]
-        reply = backend.complete(SYSTEM, content(part))
+        try:
+            reply = backend.complete(SYSTEM, content(part))
+        except Pending:
+            continue
         lines = parse(reply, len(part))
         if lines is None:
             continue

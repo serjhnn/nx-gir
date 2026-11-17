@@ -646,3 +646,39 @@ def test_anthropic_caches_answers(tmp_path):
     }
     assert api.complete("s2", blocks) == "ok"
     assert Offline.calls == 2
+
+
+def test_files_backend_writes_requests_and_reads_answers(
+    tmp_path,
+):
+    from nxocr import llm
+
+    items = llm.select(llm_page(), 80)
+    items[0].image = b"\x89PNG-line"
+    fake = llm.Files(tmp_path)
+    got, sent = llm.suggest(
+        llm_page(), fake, 80, images={0: b"x"}
+    )
+    assert (got, sent) == ([], 2)
+    assert len(fake.pending) == 1
+    folder = fake.pending[0]
+    text = (folder / "request.md").read_text(
+        encoding="utf8"
+    )
+    assert "Line 1:" in text and "line-1.png" in text
+    assert (folder / "line-1.png").read_bytes() == b"x"
+    # the answer is read from reply.txt
+    (folder / "reply.txt").write_text(
+        '{"lines": ["եկն զօրք, ի", "քաղաքն Անի։"]}',
+        encoding="utf8",
+    )
+    again = llm.Files(tmp_path)
+    got, sent = llm.suggest(
+        llm_page(), again, 80, images={0: b"x"}
+    )
+    assert [(c.old, c.new) for c in got] == [
+        ("ղօրք,", "զօրք,")
+    ]
+    assert (
+        again.pending == [] and again.usage["cached"] == 1
+    )
