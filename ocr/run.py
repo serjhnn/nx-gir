@@ -27,6 +27,7 @@ sys.path.insert(0, str(HERE))
 from nxocr import (  # noqa: E402
     engine,
     evaluate,
+    layout,
     lines,
     locate,
     pages,
@@ -58,6 +59,7 @@ def add_prep_args(ap):
     ap.add_argument("--scale", type=float, default=1.0)
     ap.add_argument("--lang", default="hye")
     ap.add_argument("--psm", type=int, default=6)
+    ap.add_argument("--layout", type=float, default=0)
     ap.add_argument("--tessdata")
 
 
@@ -101,12 +103,15 @@ def prepared(pdf, n, a):
 
 def ocr_page(pdf, n, a, img=None):
     img = img or prepared(pdf, n, a)
-    return engine.recognize(
+    page = engine.recognize(
         img,
         a.lang,
         a.psm,
         a.tessdata or default_tessdata(a),
     )
+    if a.layout:
+        page = layout.main_text(page, a.layout)
+    return page
 
 
 def default_tessdata(a):
@@ -127,7 +132,8 @@ def cached_page(pdf, n, a):
     )
     name = (
         f"{Path(pdf).stem}-{a.lang}-{stamp}-{a.psm}-{a.dpi}"
-        f"-{a.top}-{a.bottom}-{a.scale}-{a.binarize}-{n}.pkl"
+        f"-{a.top}-{a.bottom}-{a.scale}-{a.binarize}"
+        f"-{a.deskew}-{a.layout}-{n}.pkl"
     )
     path = CACHE / "pages" / name
     if path.exists():

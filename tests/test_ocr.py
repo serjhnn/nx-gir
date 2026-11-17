@@ -391,3 +391,25 @@ def test_review_rows_and_no_rewrite_by_default():
     assert cols[-1] == "context"
     post.context(page, lex, costs, easy, apply=True)
     assert page.lines[0].words[1].text == "մեզ"
+
+
+def sized_line(height, text="աբգ"):
+    return engine.Line(
+        [engine.Word(text, 90, (0, 0, 50, height))]
+    )
+
+
+def test_main_text_drops_smaller_print():
+    from nxocr import layout
+
+    page = engine.Page(
+        [sized_line(40, "աբ") for _ in range(6)]
+        + [sized_line(28, "ABCDI") for _ in range(3)]
+    )
+    assert layout.main_height(page) == 40
+    got = layout.main_text(page, 0.8)
+    assert len(got.lines) == 6
+    assert all(ln.words[0].text == "աբ" for ln in got.lines)
+    # 0.5 keeps all; an empty page is fine
+    assert len(layout.main_text(page, 0.5).lines) == 9
+    assert layout.main_text(engine.Page(), 0.8).lines == []
