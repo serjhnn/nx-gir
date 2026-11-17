@@ -464,8 +464,7 @@ h1 {
   }
 }
 /* the ☰ button in the top bar and the list it opens
-   (headerMenu() in app.js): on a phone, and in the
-   phone view; the .wide rules below turn them off */
+   (headerMenu() in app.js) */
 .bar {
   position: relative;
 }
@@ -511,8 +510,8 @@ h1 {
   color: var(--accent-ink);
 }
 /* the top page: the top bar stays at the top on
-   scrolling, with only the logo, the name and ☰
-   (.scrolled is set on <html> by app.js) */
+   scrolling (.scrolled is set on <html> by app.js
+   and adds a line under it) */
 body.home .bar {
   position: sticky;
   top: 0;
@@ -521,22 +520,6 @@ body.home .bar {
 }
 .scrolled body.home .bar {
   box-shadow: 0 1px 0 var(--rule);
-}
-.scrolled body.home #theme {
-  display: none;
-}
-@media (min-width: 700px) {
-  .wide .menu-more,
-  .wide .menu-panel {
-    display: none;
-  }
-  .wide body.home .bar {
-    position: static;
-    box-shadow: none;
-  }
-  .wide body.home #theme {
-    display: inline-flex !important;
-  }
 }
 .menu-dots {
   display: flex;

@@ -811,9 +811,8 @@ function menuBar(...links) {
   return h("div", { class: "menu-bar" }, row, dots);
 }
 
-// the ☰ button in the top bar (a phone only, see
-// the CSS): it opens all the menu items in a list
-// under the bar
+// the ☰ button in the top bar: it opens all the
+// menu items in a list under the bar
 function headerMenu() {
   const bar = topBar.parentNode;
   const panel = h("nav", { class: "menu-panel",
@@ -848,8 +847,8 @@ function headerMenu() {
 }
 headerMenu();
 
-// on scrolling, the top bar of the top page keeps
-// only the logo, the name and ☰ (.scrolled)
+// on scrolling, the top bar of the top page stays
+// at the top, with a line under it (.scrolled)
 window.addEventListener("scroll", () => {
   document.documentElement.classList.toggle(
     "scrolled", window.scrollY > 40);
