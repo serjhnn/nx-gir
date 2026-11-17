@@ -180,3 +180,41 @@ Caveats: the typed text was itself typed from this scan
 training pages share one typeface, so these numbers are
 for this book. Other books must be measured the same way
 before the model is trusted on them.
+
+## Another book: Aristakes Lastivertsi, Yerevan 1963
+
+A book the model never saw: a Soviet critical edition
+(Karen Yuzbashyan), a different italic typeface, a skewed
+scan with dark edges, margin line numbers, and an apparatus
+of manuscript variants in small print under the text. Scan:
+<https://archive.org/details/LastiverttsiGrabar1963>
+(`Lastiverttsi_grabar_1963.pdf`, 157 pages; kept in
+`cache/other/`, not in git). Reference: our typed text
+`books/grabar/aristakes-lastivertsi/1-patmutiun/` (the same
+critical edition, from Digilib). 8 pages spread over PDF
+pages 22-140, top 8% and bottom 2% cut:
+
+| Model and settings | CER | WER |
+|--------------------|----:|----:|
+| stock `hye`, binarize, layout | 38.6% | 67.5% |
+| `hye_grabar` as is | 43.2% | 57.6% |
+| `hye_grabar` + `--layout 0.85` | 25.8% | 41.0% |
+| `hye_grabar` + `--layout 0.85 --binarize` | 23.5% | 39.1% |
+
+- The Smbat model carries over only partly: on this
+  typeface it makes about 23% character errors, against
+  3.5% on the book it was tuned on (stock: 39%).
+- The big step is the layout filter (`layout.py`,
+  `--layout`): lines set smaller than 85% of the main text
+  are the apparatus, and it is not in the typed text.
+  Without it the apparatus counts as 17 points of error.
+  Deskew changed nothing here either.
+- So a new book needs its own tuning, as the Smbat model
+  needed one: the `samples` and `train` commands work on
+  any scan with typed pages; expect a few typed pages (tens,
+  not hundreds) to bring it down a long way, to be measured
+  on held-out pages as for Smbat.
+
+Results: `results/aristakes-*.json`. Not done: tuning on this
+book, the word-list step here, and the other pages (the
+sample is 8 of about 120).
