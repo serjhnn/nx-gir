@@ -436,26 +436,13 @@ h1 {
   text-decoration: none;
 }
 
-/* the menu buttons, at the top of the top page;
-   they stay at the top of the screen on
-   scrolling: one line to swipe on a phone, with a
-   dot per button under it, wrapped on a wide
-   screen (menuBar() in app.js) */
+/* the menu buttons of the top page: one line to
+   swipe on a phone, with a dot per button under it,
+   wrapped on a wide screen (menuBar() in app.js) */
 .menu-bar {
-  position: sticky;
-  top: 0;
-  z-index: 5;
   margin: 0.5rem 0 0.9rem;
-  background: var(--bg);
-}
-.menu-main {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 .lib-btn {
-  flex: 1;
-  min-width: 0;
   margin: 0;
   padding: 0.5rem 0 0.35rem;
   display: flex;
@@ -476,14 +463,16 @@ h1 {
     overflow-x: visible;
   }
 }
+/* the ☰ button in the top bar and the list it opens
+   (headerMenu() in app.js): on a phone, and in the
+   phone view; the .wide rules below turn them off */
+.bar {
+  position: relative;
+}
 .menu-more {
-  flex: none;
   padding: 8px 10px;
   color: var(--accent-ink);
   border-color: var(--accent);
-}
-.menu-more[hidden] {
-  display: none;
 }
 .menu-more svg {
   width: 18px;
@@ -492,13 +481,11 @@ h1 {
 .menu-more[aria-expanded="true"] {
   background: var(--hover);
 }
-/* all the items, under the bar */
 .menu-panel {
   position: absolute;
   top: 100%;
-  left: 0;
-  right: 0;
-  margin-top: -0.2rem;
+  left: 16px;
+  right: 16px;
   padding: 0.4rem;
   border: 1px solid var(--rule);
   border-radius: 14px;
@@ -522,6 +509,34 @@ h1 {
   width: 20px;
   height: 20px;
   color: var(--accent-ink);
+}
+/* the top page: the top bar stays at the top on
+   scrolling, with only the logo, the name and ☰
+   (.scrolled is set on <html> by app.js) */
+body.home .bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg);
+}
+.scrolled body.home .bar {
+  box-shadow: 0 1px 0 var(--rule);
+}
+.scrolled body.home #theme {
+  display: none;
+}
+@media (min-width: 700px) {
+  .wide .menu-more,
+  .wide .menu-panel {
+    display: none;
+  }
+  .wide body.home .bar {
+    position: static;
+    box-shadow: none;
+  }
+  .wide body.home #theme {
+    display: inline-flex !important;
+  }
 }
 .menu-dots {
   display: flex;

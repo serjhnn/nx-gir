@@ -608,6 +608,22 @@ const START = "grabar/grigor-tatevatsi/" +
 // gathering addresses from the files do not find it
 const CONTACT = ["nxgir.lib", "gmail.com"];
 
+// the menu items: the row on the top page and the
+// list the ☰ button of the top bar opens
+const MENU = [
+  ["#/library", "book", "Գրադարան"],
+  ["#/blog", "pen", "Բլոգ"],
+  ["#/comics", "panels", "Կոմիքսներ"],
+  ["#/features", "tick", "Հնարավորություններ"],
+  ["#/contribute", "join", "Միանալ"],
+  ["#/news", "horn", "Հայտարարություններ"],
+];
+
+function menuLink([href, ic, label]) {
+  return h("a", { class: "icon-btn", href },
+    icon(ICONS[ic]), label);
+}
+
 // the welcome above the library, in Armenian:
 // questions a first-time visitor may ask
 function intro(status, news) {
@@ -725,6 +741,8 @@ async function shelf(folder) {
     api("shelf?folder=" + q),
     folder ? null : api("recent?n=" + RECENT)
       .catch(() => null)]);
+  // the top page: its top bar is pinned (CSS)
+  document.body.classList.toggle("home", !folder);
   const title = folder
     ? data.title || folder.split("/").pop()
     : "Library";
@@ -743,25 +761,7 @@ async function shelf(folder) {
     // other pages, what was read last, then the
     // welcome
     folder ? null : topBanner(),
-    folder ? null : menuBar(
-    h("a", { class: "icon-btn",
-      href: "#/library" },
-    icon(ICONS.book), "Գրադարան"),
-    h("a", { class: "icon-btn",
-      href: "#/blog" },
-    icon(ICONS.pen), "Բլոգ"),
-    h("a", { class: "icon-btn",
-      href: "#/comics" },
-    icon(ICONS.panels), "Կոմիքսներ"),
-    h("a", { class: "icon-btn",
-      href: "#/features" },
-    icon(ICONS.tick), "Հնարավորություններ"),
-    h("a", { class: "icon-btn",
-      href: "#/contribute" },
-    icon(ICONS.join), "Միանալ"),
-    h("a", { class: "icon-btn",
-      href: "#/news" },
-    icon(ICONS.horn), "Հայտարարություններ")),
+    folder ? null : menuBar(...MENU.map(menuLink)),
     folder ? null : newsBanner(),
     folder ? null : joinBanner(),
     last && last.items.length
@@ -783,58 +783,19 @@ async function shelf(folder) {
   );
 }
 
-// the menu buttons of the top page, pinned to the
-// top of the screen on scrolling. On a phone they
-// are one line to swipe, with a dot per button
-// under it (the one in view is filled) and a ☰
-// button that opens all of them in a list; the
-// dots and ☰ are hidden when all the buttons fit
+// the menu buttons of the top page. On a phone
+// they are one line to swipe, with a dot per button
+// under it (the one in view is filled); the dots
+// are hidden when all the buttons fit
 function menuBar(...links) {
   const row = h("p", { class: "lib-btn", lang: "hy" },
     ...links);
   const dots = h("div", { class: "menu-dots",
     "aria-hidden": "true" },
   ...links.map(() => h("span", {})));
-  const panel = h("nav", { class: "menu-panel",
-    id: "menu-panel", lang: "hy", hidden: "",
-    "aria-label": "Ցանկ" },
-  ...links.map((a) => a.cloneNode(true)));
-  const more = h("button", { class: "icon-btn menu-more",
-    type: "button", title: "Ցանկ",
-    "aria-label": "Ցանկ", "aria-expanded": "false",
-    "aria-controls": "menu-panel" },
-  icon(ICONS.menu));
-  const bar = h("div", { class: "menu-bar" },
-    h("div", { class: "menu-main" }, row, more),
-    dots, panel);
-  const open = (on) => {
-    panel.hidden = !on;
-    more.setAttribute("aria-expanded", String(on));
-  };
-  more.addEventListener("click", () => open(panel.hidden));
-  panel.addEventListener("click", (e) => {
-    if (e.target.closest("a")) open(false);
-  });
-  const away = (e) => {
-    if (!bar.isConnected) {
-      document.removeEventListener("pointerdown", away);
-      document.removeEventListener("keydown", esc);
-    } else if (!bar.contains(e.target)) open(false);
-  };
-  const esc = (e) => {
-    if (e.key === "Escape" && !panel.hidden) {
-      open(false);
-      more.focus();
-    }
-  };
-  document.addEventListener("pointerdown", away);
-  document.addEventListener("keydown", esc);
   const update = () => {
     const max = row.scrollWidth - row.clientWidth;
-    const fits = max <= 1;
-    dots.hidden = fits;
-    more.hidden = fits;
-    if (fits) open(false);
+    dots.hidden = max <= 1;
     const k = max > 0 ? Math.round(
       row.scrollLeft / max * (links.length - 1)) : 0;
     [...dots.children].forEach((d, i) =>
@@ -847,8 +808,52 @@ function menuBar(...links) {
   } else {
     window.addEventListener("resize", update);
   }
-  return bar;
+  return h("div", { class: "menu-bar" }, row, dots);
 }
+
+// the ☰ button in the top bar (a phone only, see
+// the CSS): it opens all the menu items in a list
+// under the bar
+function headerMenu() {
+  const bar = topBar.parentNode;
+  const panel = h("nav", { class: "menu-panel",
+    id: "menu-panel", lang: "hy", hidden: "",
+    "aria-label": "Ցանկ" }, ...MENU.map(menuLink));
+  const more = h("button", { class: "icon-btn menu-more",
+    type: "button", title: "Ցանկ",
+    "aria-label": "Ցանկ", "aria-expanded": "false",
+    "aria-controls": "menu-panel" },
+  icon(ICONS.menu));
+  const open = (on) => {
+    panel.hidden = !on;
+    more.setAttribute("aria-expanded", String(on));
+  };
+  more.addEventListener("click", () => open(panel.hidden));
+  panel.addEventListener("click", (e) => {
+    if (e.target.closest("a")) open(false);
+  });
+  document.addEventListener("pointerdown", (e) => {
+    if (!bar.contains(e.target)) open(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !panel.hidden) {
+      open(false);
+      more.focus();
+    }
+  });
+  window.addEventListener("hashchange",
+    () => open(false));
+  topBar.append(more);
+  bar.append(panel);
+}
+headerMenu();
+
+// on scrolling, the top bar of the top page keeps
+// only the logo, the name and ☰ (.scrolled)
+window.addEventListener("scroll", () => {
+  document.documentElement.classList.toggle(
+    "scrolled", window.scrollY > 40);
+}, { passive: true });
 
 // the picture at the very top of the top page,
 // with a short line in its corner
@@ -4562,6 +4567,7 @@ async function route() {
   // going to another part keeps the reading layout,
   // or the page would narrow and widen while it loads
   if (!hash.startsWith("read/")) clearReading();
+  document.body.classList.remove("home");
   // back to the top bar from the reading tools
   if (button.parentNode !== topBar) topBar.append(button);
   try {
