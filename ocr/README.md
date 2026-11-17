@@ -25,12 +25,13 @@ them, so each step is measured before it is kept.
 | `locate.py` | place a page in the typed text, by voting |
 | `evaluate.py` | CER, WER, confusions, triage |
 
+| `post.py` | correction with word lists, every change logged |
 | `lines.py` | cut a page into line images + typed text |
 | `train.py` | `.lstmf` files, `lstmtraining`, held-out blocks |
 
-Planned: `post.py` (correction with the `grabar/` word
-lists and the confusion table) and an LLM pass over the
-low-confidence words (see the triage below).
+Planned: a context step for real-word errors (see
+Post-correction) and an LLM pass over the low-confidence
+words (see the triage below).
 
 ## Fine-tuning (`models/hye_grabar.traineddata`)
 
@@ -53,6 +54,48 @@ The base is the float `tessdata_best` model (the apt
 `hye` is integer and cannot be tuned). Training takes
 about 5 minutes on 4 CPUs. `models/` is kept in git
 (6 MB).
+
+## Post-correction (`post.py`)
+
+    python3 ocr/run.py eval PDF --ref DIR --pages 26-156 \
+        --half test --lang hye_grabar --post \
+        --costs ocr/results/smbat-dev-tuned.json \
+        --skip-book smbat-sparapet
+
+An unknown word that is close to exactly one known word
+is replaced by it. Known words: Wiktionary (`grabar/`)
+and the typed books in `books/grabar/`, with the book
+being tested left out (`--skip-book`): 246 000 words,
+9 s and 700 MB to build (the distance-2 index covers only
+long words seen 3 times or more). Close is a weighted edit
+distance: a swap the engine is known to make costs less
+(`--costs`, the confusions of a `eval --json`). Left alone:
+words the engine is 80% sure of or more, capitalized words
+(names), words with no or two equal candidates, and the
+halves of a word split at a line end. Every change is a
+`Correction` (old, new, cost, confidence); `--show N`
+prints them, so each can be reviewed.
+
+Settings were chosen on the dev half of the held-out
+pages (`train.half()`: the first 3 held-out blocks, 15
+pages) and scored on the test half (the other 15), which
+was not looked at before. Test half, `hye_grabar`:
+
+| | CER | WER |
+|--|--:|--:|
+| OCR | 3.3% | 7.7% |
+| + post-correction | 3.3% | 7.4% |
+
+21 words changed: 11 fixed, 4 made wrong, 6 wrong either
+way. A small gain, and it has a ceiling. Of the 172 word
+errors on the dev pages (page 45 left out): 46% are real
+words (`քրիստոս` for `քրիստոսի`, `մեղ` for `մեզ`) that no
+word list can flag; 18% have the typed word as the closest
+candidate (the part this step reaches); 16% are words the
+lists lack (names, rare forms); 13% have no close word.
+Wrong forms of real words need context: a word-pair model
+from the corpus is the next step, with the LLM pass for
+the rest.
 
 ## Numbers (Smbat 1859, PDF pages 26-156)
 

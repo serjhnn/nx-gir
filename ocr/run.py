@@ -21,6 +21,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent
 sys.path.insert(0, str(HERE))
 
 from nxocr import (  # noqa: E402
@@ -58,6 +59,18 @@ def add_prep_args(ap):
     ap.add_argument("--tessdata")
 
 
+def add_post_args(ap):
+    ap.add_argument("--costs")
+    ap.add_argument(
+        "--skip-book", action="append", default=[]
+    )
+    ap.add_argument("--max-conf", type=float, default=80)
+    ap.add_argument("--max-cost", type=float, default=1.2)
+    ap.add_argument("--min-count", type=int, default=2)
+    ap.add_argument("--margin", type=float, default=0.3)
+    ap.add_argument("--names", action="store_true")
+
+
 def make_prep(a):
     return prep.Prep(
         top=a.top,
@@ -92,6 +105,28 @@ def default_tessdata(a):
     if (MODELS / f"{a.lang}.traineddata").exists():
         return MODELS
     return None
+
+
+def cached_page(pdf, n, a):
+    """OCR page, kept in cache/pages until the model
+    or the settings change."""
+    import pickle
+
+    model = MODELS / f"{a.lang}.traineddata"
+    stamp = (
+        model.stat().st_mtime_ns if model.exists() else 0
+    )
+    name = (
+        f"{Path(pdf).stem}-{a.lang}-{stamp}-{a.psm}-{a.dpi}"
+        f"-{a.top}-{a.bottom}-{a.scale}-{a.binarize}-{n}.pkl"
+    )
+    path = CACHE / "pages" / name
+    if path.exists():
+        return pickle.loads(path.read_bytes())
+    page = ocr_page(pdf, n, a)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(pickle.dumps(page))
+    return page
 
 
 def cmd_page(a):
@@ -200,21 +235,62 @@ def cmd_train(a):
     print(target, target.stat().st_size, "bytes")
 
 
+def eval_pages(a):
+    """Page numbers asked for, by --heldout and --half."""
+    nums = pages.parse_range(a.pages, pages.count(a.pdf))
+    first = nums[0]
+    if a.heldout or a.half:
+        nums = [n for n in nums if train.fold(n, first)]
+    if a.half:
+        nums = [
+            n
+            for n in nums
+            if train.half(n, first) == a.half
+        ]
+    return pages.spread(nums, a.sample)
+
+
+def load_post(a):
+    import json
+
+    from nxocr import post
+
+    skip = tuple(a.skip_book)
+    lex = post.Lexicon.from_repo(ROOT, skip=skip)
+    data = []
+    if a.costs:
+        data = json.loads(Path(a.costs).read_text())
+        data = data["confusions"]
+    return lex, post.Costs(data)
+
+
+def post_params(a):
+    from nxocr import post
+
+    return post.Params(
+        max_conf=a.max_conf,
+        max_cost=a.max_cost,
+        min_count=a.min_count,
+        margin=a.margin,
+        names=a.names,
+    )
+
+
 def cmd_eval(a):
+    import copy
+
+    from nxocr import post
+
     texts = [
         p.read_text()
         for p in sorted(Path(a.ref).glob("*.txt"))
     ]
     ref = locate.Reference(texts)
-    total = pages.count(a.pdf)
-    nums = pages.parse_range(a.pages, total)
-    if a.heldout:
-        nums = [n for n in nums if train.fold(n, nums[0])]
-    nums = pages.spread(nums, a.sample)
+    nums = eval_pages(a)
+    ocr = {n: cached_page(a.pdf, n, a) for n in nums}
     results = []
     for n in nums:
-        page = ocr_page(a.pdf, n, a)
-        res = evaluate.score_page(n, page.words(), ref)
+        res = evaluate.score_page(n, ocr[n].words(), ref)
         results.append(res)
         state = (
             f"CER {res.cer:6.1%}"
@@ -224,6 +300,85 @@ def cmd_eval(a):
         print(f"page {n:4d}  {state}", flush=True)
     s = evaluate.summary(results)
     report(s, a)
+    if not a.post:
+        return
+    lex, costs = load_post(a)
+    params = post_params(a)
+    after, changes = [], []
+    for n in nums:
+        page = copy.deepcopy(ocr[n])
+        changes += post.correct(page, lex, costs, params)
+        after.append(
+            evaluate.score_page(n, page.words(), ref)
+        )
+    t = evaluate.summary(after)
+    fixed, broke = evaluate.compare(results, after)
+    print()
+    print("after post-correction:")
+    print(f"CER {t['cer']:.1%}   WER {t['wer']:.1%}")
+    print(
+        f"{len(changes)} words changed: {fixed} fixed,"
+        f" {broke} broken"
+    )
+    for c in changes[: a.show]:
+        print(
+            f"  {c.old} -> {c.new}"
+            f"  ({c.cost:.1f}, {c.conf:.0f})"
+        )
+
+
+def cmd_tune(a):
+    """Grid of settings on the dev pages."""
+    import copy
+    import itertools
+
+    from nxocr import post
+
+    texts = [
+        p.read_text()
+        for p in sorted(Path(a.ref).glob("*.txt"))
+    ]
+    ref = locate.Reference(texts)
+    nums = eval_pages(a)
+    ocr = {n: cached_page(a.pdf, n, a) for n in nums}
+    base = [
+        evaluate.score_page(n, ocr[n].words(), ref)
+        for n in nums
+    ]
+    s0 = evaluate.summary(base)
+    print(
+        f"before: CER {s0['cer']:.2%} WER {s0['wer']:.2%}"
+    )
+    lex, costs = load_post(a)
+    grid = itertools.product(
+        (80, 90, 101),
+        (0.8, 1.2, 1.6),
+        (1, 2, 4),
+        (0.0, 0.3),
+        (False, True),
+    )
+    print(
+        "conf cost minn margin names"
+        "   CER     WER   chg fix brk"
+    )
+    for conf, cost, mn, margin, names in grid:
+        p = post.Params(conf, cost, mn, margin, names)
+        after, n_ch = [], 0
+        for n in nums:
+            page = copy.deepcopy(ocr[n])
+            n_ch += len(post.correct(page, lex, costs, p))
+            after.append(
+                evaluate.score_page(n, page.words(), ref)
+            )
+        t = evaluate.summary(after)
+        f, b = evaluate.compare(base, after)
+        print(
+            f"{conf:4d} {cost:4.1f} {mn:4d} {margin:6.1f}"
+            f" {int(names):5d}"
+            f" {t['cer']:6.2%} {t['wer']:6.2%}"
+            f" {n_ch:4d} {f:3d} {b:3d}",
+            flush=True,
+        )
 
 
 def report(s, a):
@@ -272,6 +427,10 @@ def main(argv=None):
     e.add_argument("--sample", type=int, default=0)
     e.add_argument("--json")
     e.add_argument("--heldout", action="store_true")
+    e.add_argument("--half", choices=("dev", "test"))
+    add_post_args(e)
+    e.add_argument("--post", action="store_true")
+    e.add_argument("--show", type=int, default=25)
     add_prep_args(e)
     e.set_defaults(func=cmd_eval)
     b = sub.add_parser("base")
@@ -290,6 +449,16 @@ def main(argv=None):
     t.add_argument("--steps", type=int, default=3000)
     t.add_argument("--rate", type=float, default=0.0002)
     t.set_defaults(func=cmd_train)
+    u = sub.add_parser("tune")
+    u.add_argument("pdf")
+    u.add_argument("--ref", required=True)
+    u.add_argument("--pages", required=True)
+    u.add_argument("--sample", type=int, default=0)
+    u.add_argument("--heldout", action="store_true")
+    u.add_argument("--half", default="dev")
+    add_post_args(u)
+    add_prep_args(u)
+    u.set_defaults(func=cmd_tune)
     a = ap.parse_args(argv)
     a.func(a)
 

@@ -210,3 +210,91 @@ def test_split_lines_labels_lines_from_typed_text():
     # characters the model does not know drop the line
     none = lines.split_lines(page, ref, chars={"ա"})[1]
     assert none == []
+
+
+def small_lexicon():
+    from nxocr import post
+
+    counts = {
+        "թագաւոր": 9,
+        "թագաւորն": 6,
+        "քաղաք": 8,
+        "քաջ": 7,
+        "քաղ": 3,
+        "զօրք": 5,
+        "զօրաց": 4,
+        "ժամանակ": 5,
+        "աշխարհ": 6,
+    }
+    return post.Lexicon(counts, long=7)
+
+
+def one_line(*words):
+    ln = engine.Line([engine.Word(w, c) for w, c in words])
+    return engine.Page([ln])
+
+
+def test_costs_make_known_swaps_cheaper():
+    from nxocr import post
+
+    plain = post.Costs()
+    known = post.Costs([("ղ", "զ", 10), ("", "ե", 10)])
+    assert plain.distance("ղօրք", "զօրք") == 1
+    assert known.distance("ղօրք", "զօրք") == 0.4
+    assert known.distance("թագաւոր", "թագաւեոր") == 0.4
+    assert known.distance("աբ", "աբ") == 0
+
+
+def test_correct_fixes_a_close_unknown_word():
+    from nxocr import post
+
+    page = one_line(("ղօրք,", 40), ("եկն", 95))
+    got = post.correct(
+        page, small_lexicon(), post.Costs([("ղ", "զ", 10)])
+    )
+    assert page.lines[0].words[0].text == "զօրք,"
+    assert [(c.old, c.new) for c in got] == [
+        ("ղօրք,", "զօրք,")
+    ]
+
+
+def test_correct_leaves_alone():
+    from nxocr import post
+
+    lex, costs = small_lexicon(), post.Costs()
+    # sure, a known word, a name, a word with no candidate
+    page = one_line(
+        ("ղօրք", 95),
+        ("զօրք", 40),
+        ("Ղօրք", 40),
+        ("ձձձձձ", 40),
+    )
+    assert post.correct(page, lex, costs) == []
+    # two equally close words: no guess
+    lex.index.clear()
+    two = post.Lexicon({"աբգդ": 5, "աբդդ": 5}, long=9)
+    page = one_line(("աբեդ", 40))
+    assert post.correct(page, two, costs) == []
+
+
+def test_correct_keeps_the_halves_of_a_split_word():
+    from nxocr import post
+
+    lex = small_lexicon()
+    page = engine.Page(
+        [
+            engine.Line([engine.Word("ժամ", 40)]),
+            engine.Line([engine.Word("անակ", 40)]),
+        ]
+    )
+    assert post.fragments(page, lex) == {(0, 0), (1, 0)}
+    assert post.correct(page, lex, post.Costs()) == []
+
+
+def test_half_splits_the_held_out_blocks():
+    held = [p for p in range(26, 157) if train.fold(p)]
+    halves = [train.half(p) for p in held]
+    assert halves.count("dev") == halves.count("test")
+    assert train.half(30) is None
+    assert train.half(45) == "dev"
+    assert train.half(145) == "test"

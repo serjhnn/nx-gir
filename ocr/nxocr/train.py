@@ -21,6 +21,20 @@ def fold(page, first=26, block=5, every=4):
     return ((page - first) // block) % every == every - 1
 
 
+def half(page, first=26, block=5, every=4):
+    """`dev` or `test` for a held-out page, else None.
+
+    The held-out blocks are split in two: the first half
+    is for choosing settings (post-correction), the second
+    for the numbers reported, so the settings are never
+    chosen on the pages they are scored on.
+    """
+    if not fold(page, first, block, every):
+        return None
+    n = (page - first) // block // every
+    return "dev" if n < 3 else "test"
+
+
 def write_sample(folder, name, img, text):
     folder = Path(folder)
     folder.mkdir(parents=True, exist_ok=True)

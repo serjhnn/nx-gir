@@ -105,6 +105,23 @@ def triage(results, thresholds=(50, 60, 70, 80, 90)):
     return rows
 
 
+def compare(before, after):
+    """(fixed, broke): words that became right or wrong.
+
+    Both are lists of PageResult for the same pages, the
+    after one made from corrected words (same words, same
+    order).
+    """
+    fixed = broke = 0
+    for b, a in zip(before, after):
+        if len(b.flags) != len(a.flags):
+            continue
+        for (_, ok1), (_, ok2) in zip(b.flags, a.flags):
+            fixed += (not ok1) and ok2
+            broke += ok1 and (not ok2)
+    return fixed, broke
+
+
 def summary(results):
     placed = [r for r in results if r.placed]
     chars = sum(r.chars for r in placed)
