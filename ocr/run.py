@@ -284,7 +284,7 @@ def cmd_train(a):
     )
     lstm = CACHE / f"start-{a.start or 'hye'}.lstm"
     train.extract_lstm(start, lstm)
-    work = Path(a.out) / "run"
+    work = Path(a.out) / f"run-{a.name}"
     prefix = train.fine_tune(
         base,
         lstm,
