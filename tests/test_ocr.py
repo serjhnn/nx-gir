@@ -513,3 +513,136 @@ def test_known_rate_counts_real_words_only():
     ]
     assert evaluate.known_rate(ws, lex) == (1, 2)
     assert evaluate.known_rate([], lex) == (0, 0)
+
+
+def llm_page():
+    line1 = engine.Line(
+        [
+            engine.Word("եկն", 95),
+            engine.Word("ղօրք,", 40),
+            engine.Word("ի", 90),
+        ]
+    )
+    line2 = engine.Line([engine.Word("առաւ", 92)])
+    line3 = engine.Line(
+        [engine.Word("քաղաքն", 70), engine.Word("Անի։", 30)]
+    )
+    return engine.Page([line1, line2, line3])
+
+
+class FakeBackend:
+    def __init__(self, reply):
+        self.reply = reply
+        self.asked = []
+
+    def complete(self, system, blocks):
+        self.asked.append(blocks)
+        return self.reply
+
+
+def test_llm_select_marks_uncertain_words_and_hints():
+    from nxocr import llm
+
+    page = llm_page()
+    items = llm.select(page, 80, {(0, 1): "զօրք,"})
+    assert [it.line for it in items] == [0, 2]
+    assert items[0].flags == [1]
+    assert items[0].text() == "եկն ⟦ղօրք,⟧ ի"
+    assert items[1].flags == [0, 1]
+    blocks = llm.content(items)
+    texts = [
+        b["text"] for b in blocks if b["type"] == "text"
+    ]
+    assert texts[0].startswith("Line 1: եկն ⟦ղօրք,⟧ ի")
+    assert "suggestion for ⟦ղօրք,⟧: զօրք," in texts[0]
+    assert not any(b["type"] == "image" for b in blocks)
+    items[0].image = b"png"
+    assert llm.content(items)[0]["type"] == "image"
+
+
+def test_llm_parse_and_accept():
+    from nxocr import llm
+
+    assert llm.parse('x {"lines": ["a", "b"]} y', 2) == [
+        "a",
+        "b",
+    ]
+    assert llm.parse('{"lines": ["a"]}', 2) is None
+    assert llm.parse("no json", 1) is None
+    assert llm.parse('{"lines": [1]}', 1) is None
+    item = llm.Item(0, ["եկն", "ղօրք,", "ի"], [1])
+    assert llm.accept(item, "եկն ⟦զօրք,⟧ ի") == {1: "զօրք,"}
+    # a word that was not marked is not changed
+    assert llm.accept(item, "ելն ղօրք, ի") == {}
+    assert llm.accept(item, "ելն զօրք, ի") == {1: "զօրք,"}
+    # a different number of words: thrown away
+    assert llm.accept(item, "եկն զօրք,") is None
+    assert llm.accept(item, "եկն զօ րք, ի") is None
+
+
+def test_llm_suggest_changes_nothing_and_logs_the_changes():
+    from nxocr import llm
+
+    page = llm_page()
+    reply = '{"lines": ["եկն զօրք, ի", "քաղաքն Անի։"]}'
+    fake = FakeBackend(reply)
+    got, sent = llm.suggest(page, fake, conf=80)
+    assert sent == 2
+    assert [
+        (c.line, c.word, c.old, c.new) for c in got
+    ] == [(0, 1, "ղօրք,", "զօրք,")]
+    assert got[0].step == "llm" and got[0].conf == 40
+    assert page.lines[0].words[1].text == "ղօրք,"
+    assert len(fake.asked) == 1
+    # a reply that cannot be read changes nothing
+    bad = FakeBackend("sorry")
+    assert llm.suggest(page, bad, conf=80) == ([], 2)
+
+
+def test_llm_batches_and_uses_word_list_hints():
+    from nxocr import llm, post
+
+    lex = post.Lexicon({"զօրք": 5, "եկն": 9}, long=9)
+    costs = post.Costs([("ղ", "զ", 10)])
+    fake = FakeBackend('{"lines": ["եկն զօրք, ի"]}')
+    page = llm_page()
+    llm.suggest(page, fake, 60, lex, costs, batch=1)
+    # conf 60: line 1 (40) and line 3 (30): two requests
+    assert len(fake.asked) == 2
+    first = [
+        b["text"]
+        for b in fake.asked[0]
+        if b["type"] == "text"
+    ]
+    assert "suggestion" in first[0]
+
+
+def test_anthropic_caches_answers(tmp_path):
+    from nxocr import llm
+
+    class Offline(llm.Anthropic):
+        calls = 0
+
+        def post(self, raw, tries=5):
+            Offline.calls += 1
+            return {
+                "content": [{"type": "text", "text": "ok"}],
+                "usage": {
+                    "input_tokens": 7,
+                    "output_tokens": 2,
+                },
+            }
+
+    api = Offline("m", cache=tmp_path)
+    blocks = [{"type": "text", "text": "x"}]
+    assert api.complete("s", blocks) == "ok"
+    assert api.complete("s", blocks) == "ok"
+    assert Offline.calls == 1
+    assert api.usage == {
+        "input": 7,
+        "output": 2,
+        "calls": 1,
+        "cached": 1,
+    }
+    assert api.complete("s2", blocks) == "ok"
+    assert Offline.calls == 2

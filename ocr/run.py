@@ -29,6 +29,7 @@ from nxocr import (  # noqa: E402
     evaluate,
     layout,
     lines,
+    llm,
     locate,
     pages,
     post,
@@ -78,6 +79,10 @@ def add_post_args(ap):
     ap.add_argument("--margin", type=float, default=0.3)
     ap.add_argument("--names", action="store_true")
     ap.add_argument("--context", action="store_true")
+    ap.add_argument("--llm", metavar="MODEL")
+    ap.add_argument("--llm-conf", type=float, default=80)
+    ap.add_argument("--llm-batch", type=int, default=8)
+    ap.add_argument("--llm-hints", action="store_true")
     ap.add_argument("--weight", type=float, default=4.0)
     ap.add_argument("--gain", type=float, default=1.0)
     ap.add_argument("--ctx-conf", type=float, default=101)
@@ -157,12 +162,26 @@ def cmd_page(a):
     """OCR one page. The text is the engine's own; word
     list suggestions go to --review, and change the text
     only with --apply."""
-    page = ocr_page(a.pdf, a.page, a)
+    img = prepared(a.pdf, a.page, a)
+    page = ocr_page(a.pdf, a.page, a, img)
     changes = []
     if a.suggest or a.apply or a.review:
         a.post = True
         lex, costs = load_post(a)
         changes = apply_post(a, page, lex, costs, a.apply)
+    if a.llm:
+        lex = costs = None
+        if a.llm_hints:
+            lex, costs = load_post(a)
+        got, _ = llm_page(
+            a, llm_backend(a), page, img, lex, costs
+        )
+        if a.apply:
+            for c in got:
+                page.lines[c.line].words[
+                    c.word
+                ].text = c.new
+        changes += got
     out = []
     for ln in page.lines:
         out.append(
@@ -413,6 +432,28 @@ def apply_post(a, page, lex, costs, apply=True):
     return changes
 
 
+def llm_backend(a):
+    return llm.Anthropic(a.llm, cache=CACHE / "llm")
+
+
+def llm_page(a, backend, page, img, lex=None, costs=None):
+    """(Corrections, lines sent) of the LLM pass."""
+    images = {}
+    for n, ln in enumerate(page.lines):
+        if any(w.conf < a.llm_conf for w in ln.words):
+            box = lines.line_box(ln, size=img.size)
+            images[n] = llm.png_bytes(img.crop(box))
+    return llm.suggest(
+        page,
+        backend,
+        a.llm_conf,
+        lex,
+        costs,
+        images,
+        a.llm_batch,
+    )
+
+
 def cmd_eval(a):
     import copy
 
@@ -435,6 +476,8 @@ def cmd_eval(a):
         print(f"page {n:4d}  {state}", flush=True)
     s = evaluate.summary(results)
     report(s, a)
+    if a.llm:
+        eval_llm(a, nums, ocr, ref, results)
     if not (a.post or a.context):
         return
     lex, costs = load_post(a)
@@ -518,6 +561,63 @@ def cmd_proxy(a):
     print(f"known {known / max(total, 1):.1%} of {total}")
     print(f"mean confidence {conf / max(words, 1):.1f}")
     print(f"under 80: {low / max(words, 1):.1%}")
+
+
+def eval_llm(a, nums, ocr, ref, before):
+    """What the LLM pass is worth if all is applied."""
+    import copy
+
+    backend = llm_backend(a)
+    lex = costs = None
+    if a.llm_hints:
+        lex, costs = load_post(a)
+    after, changes, sent, total, flagged, words = (
+        [],
+        [],
+        0,
+        0,
+        0,
+        0,
+    )
+    for n in nums:
+        page = copy.deepcopy(ocr[n])
+        img = prepared(a.pdf, n, a)
+        got, k = llm_page(a, backend, page, img, lex, costs)
+        for c in got:
+            page.lines[c.line].words[c.word].text = c.new
+        changes += got
+        sent += k
+        total += len(page.lines)
+        for ln in page.lines:
+            words += len(ln.words)
+            flagged += sum(
+                w.conf < a.llm_conf for w in ln.words
+            )
+        after.append(
+            evaluate.score_page(n, page.words(), ref)
+        )
+    s0 = evaluate.summary(before)
+    t = evaluate.summary(after)
+    fixed, broke = evaluate.compare(before, after)
+    print()
+    print(f"LLM pass ({a.llm}), if every change were made:")
+    print(
+        f"lines sent {sent} of {total}, words under"
+        f" {a.llm_conf:.0f}: {flagged / max(words, 1):.1%}"
+    )
+    print(f"CER {s0['cer']:.2%} -> {t['cer']:.2%}")
+    print(f"WER {s0['wer']:.2%} -> {t['wer']:.2%}")
+    print(
+        f"{len(changes)} words changed: {fixed} fixed,"
+        f" {broke} made wrong"
+    )
+    u = backend.usage
+    print(
+        f"tokens in {u['input']}, out {u['output']},"
+        f" calls {u['calls']} (cached {u['cached']})"
+    )
+    for c in changes[: a.show]:
+        print(f"  {c.old} -> {c.new}  ({c.conf:.0f})")
 
 
 def cmd_tune(a):
