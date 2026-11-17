@@ -25,27 +25,65 @@ them, so each step is measured before it is kept.
 | `locate.py` | place a page in the typed text, by voting |
 | `evaluate.py` | CER, WER, confusions, triage |
 
-Planned: `post.py` (correction with the `grabar/`
-word lists and the confusion table), a fine-tuned
-`hye_grabar` model, and an LLM pass over the
-low-confidence lines (see the triage below).
+| `lines.py` | cut a page into line images + typed text |
+| `train.py` | `.lstmf` files, `lstmtraining`, held-out blocks |
 
-## Numbers (Smbat 1859, PDF pages 26-156, 20 pages)
+Planned: `post.py` (correction with the `grabar/` word
+lists and the confusion table) and an LLM pass over the
+low-confidence words (see the triage below).
 
-Stock `hye`, `--psm 6`, top 10% and bottom 7% cut:
+## Fine-tuning (`models/hye_grabar.traineddata`)
 
-| Variant | CER | WER |
-|---------|----:|----:|
-| as is | 24.0% | 58.5% |
-| `--scale 1.5` | 23.7% | 57.7% |
+    python3 ocr/run.py base        # tessdata_best hye
+    python3 ocr/run.py samples PDF --ref DIR \
+        --pages 26-156 --out ocr/cache/smbat \
+        --tessdata ocr/cache/base
+    python3 ocr/run.py train --out ocr/cache/smbat \
+        --steps 4000
+    python3 ocr/run.py eval PDF --ref DIR \
+        --pages 26-156 --heldout --lang hye_grabar
 
-Binarizing and deskew change almost nothing (the scan
-is already straight); the stock model is the limit.
+`samples` OCRs the typed pages, aligns every line to
+the typed text, keeps lines under 50% error with only
+known characters, and writes line image, text and
+`.lstmf`. Whole 5-page blocks (`train.fold()`, a quarter
+of the pages) are held out for `eval`; a page scanned
+twice is kept out of training if its twin is held out.
+The base is the float `tessdata_best` model (the apt
+`hye` is integer and cannot be tuned). Training takes
+about 5 minutes on 4 CPUs. `models/` is kept in git
+(6 MB).
 
-Triage (stock): re-reading every word the engine is
-under 70% sure of is 67% of the text and catches 84% of
-the wrong words (74% precision). At under 50%: 49% of
-the text, 67% of the errors. So with the stock model an
-LLM pass over low-confidence words is too big to be
-cheap; the point of fine-tuning is to bring that share
-down. Results: `results/*.json`.
+## Numbers (Smbat 1859, PDF pages 26-156)
+
+Held-out pages only (30 pages, never used in training),
+`--psm 6`, top 10% and bottom 7% cut:
+
+| Model | CER | WER |
+|-------|----:|----:|
+| stock `hye` | 25.9% | 58.7% |
+| `hye_grabar` (4000 steps) | 3.5% | 9.1% |
+
+Preparation matters little: with the stock model scale
+1.5 gave 23.7% against 24.0% on 20 pages; binarize and
+deskew changed nothing (the scan is straight).
+
+Triage: re-read the words the engine is under N% sure of
+(share of all words, share of the wrong words caught):
+
+| N | stock | `hye_grabar` |
+|--:|-------|--------------|
+| 70 | 67% / 84% | 11% / 56% |
+| 80 | 77% / 91% | 15% / 65% |
+| 90 | 89% / 97% | 30% / 83% |
+
+With the tuned model an LLM pass over the words under
+80% is 15% of the text and reaches two thirds of the
+errors; under 90% is 30% and reaches 83%. Results:
+`results/*.json`.
+
+Caveats: the typed text was itself typed from this scan
+(its own errors count against the OCR), and test and
+training pages share one typeface, so these numbers are
+for this book. Other books must be measured the same way
+before the model is trusted on them.

@@ -17,6 +17,7 @@ from nxocr import (  # noqa: E402
     pages,
     prep,
     textnorm,
+    train,
 )
 
 TEXT = (
@@ -171,3 +172,41 @@ def test_skew_angle_finds_a_tilt():
         1.5, fillcolor=255, resample=Image.BILINEAR
     )
     assert abs(prep.skew_angle(tilted) + 1.5) < 0.5
+
+
+def test_fold_holds_out_whole_blocks():
+    held = [p for p in range(26, 66) if train.fold(p)]
+    assert held == [41, 42, 43, 44, 45, 61, 62, 63, 64, 65]
+
+
+def test_reference_original_keeps_marks():
+    ref = locate.Reference(["Եւ զկին, նորա։ Ի թուին"])
+    a = ref.text.index("զկին")
+    b = ref.text.index("նորա")
+    assert ref.original(a, b) == "զկին,"
+    assert ref.original(b, len(ref.text)).startswith(
+        "նորա։"
+    )
+
+
+def test_split_lines_labels_lines_from_typed_text():
+    from nxocr import lines
+
+    ref = locate.Reference([TEXT])
+    ws = TEXT[60:200].split()
+    rows = [ws[:6], ws[6:12], ws[12:]]
+    page = engine.Page()
+    for n, row in enumerate(rows):
+        ln = engine.Line()
+        for m, w in enumerate(row):
+            box = (m * 90, n * 60, 80, 40)
+            ln.words.append(engine.Word(w, 90, box))
+        page.lines.append(ln)
+    start, got = lines.split_lines(page, ref)
+    assert start is not None and len(got) == 3
+    assert got[0].text.startswith(ws[0])
+    assert got[0].cer == 0
+    assert got[0].box[0] < 0 + 1
+    # characters the model does not know drop the line
+    none = lines.split_lines(page, ref, chars={"ա"})[1]
+    assert none == []
