@@ -498,3 +498,18 @@ def test_trim_edges_cuts_at_the_binding():
     arr[100:300, 20:30] = 0
     page = Image.fromarray(arr)
     assert prep.trim_edges(page).size == (300, 400)
+
+
+def test_known_rate_counts_real_words_only():
+    from nxocr import post
+
+    lex = post.Lexicon({"թագաւոր": 5, "քաղաք": 4}, long=9)
+    ws = [
+        engine.Word("թագաւոր,", 90),  # known
+        engine.Word("քաղաքն", 90),  # not in the list
+        engine.Word("Թագաւոր", 90),  # a name: left out
+        engine.Word("ի", 90),  # short: left out
+        engine.Word("12", 90),  # no letters: left out
+    ]
+    assert evaluate.known_rate(ws, lex) == (1, 2)
+    assert evaluate.known_rate([], lex) == (0, 0)

@@ -245,7 +245,64 @@ and 615 held-out lines), `train` 3000 steps, scored on the
   wrong ones, much more than on Smbat (15% / 65%); a book
   this poorly read needs the LLM pass on half its words.
 
-Results: `results/aristakes-heldout-*.json`. Not done on
+The two Aristakes models are not kept in git (6 MB each, and
+the text of this book is already typed): `samples` and
+`train --start hye_grabar --name aristakes_smbat` make
+them again in about 20 minutes. The first commit that had
+them is in the history. Results:
+`results/aristakes-heldout-*.json`. Not done on
 this book: the word-list step, a count of how many typed
 pages are enough (try 500, 1000 and 2000 lines), a larger
 sample than 30 pages.
+
+## Other scans of Smbat Sparapet
+
+Searched on the Internet Archive for scans to test the Smbat
+model on. None has a typed text that matches it, so none can
+be scored with a true error rate:
+
+| Scan | What it is | Why not scored |
+|------|------------|----------------|
+| `SmbataySparapetiTaregirk1956` | Venice 1956, S. Akelean, 286 pages: the chronicle | another recension from the 1859 one: different wording and narrative (page 47 is at the year 500; the 1859 text there has other events), so 1859 as reference gives 100% |
+| `assisesdantioch00/01smbagoog` | Venice 1876, the law code, with a French translation | mostly French; the pages do not match our typed law code |
+| `Karst1905ArmenischesRechtsbuch` | Strassburg 1905, the law code with a German translation | Digilib's text is another version; no page matches |
+
+Digilib's copy of the 1956 text would be the reference for
+the first, but the site is not reachable from here (the notes
+say the same). Not added to `sources/`; the 1956 scan is
+kept in `cache/other/` for now.
+
+### A stand-in for accuracy: the known-word rate
+
+    python3 ocr/run.py proxy PDF --pages 25-270 --sample 20 \
+        --lang hye_grabar --skip-book smbat-sparapet/2-taregirk
+
+`proxy` OCRs pages and reports the share of the words (3
+letters or more, not capitalized) found in the word lists
+and typed books, with the book itself left out, and the
+engine's confidence. A misread word is rarely a real word.
+Checked where the true error is known (held-out pages):
+
+| Pages, model | True CER | Known words | Words under 80% |
+|--------------|---------:|------------:|----------------:|
+| 1859, stock `hye` | 25.9% | 48.2% | 76.6% |
+| 1859, `hye_grabar` | 3.5% | 87.9% | 16.0% |
+| Aristakes, stock `hye` | 29.9% | 46.9% | 66.2% |
+| Aristakes, `hye_grabar` | 14.6% | 75.7% | 49.7% |
+
+The 1956 scan (20 pages spread over 25-270; top 9%, bottom 2%,
+`--trim --layout 0.85 --tail 0.96`):
+
+| Model | Known words | Mean confidence | Under 80% |
+|-------|------------:|----------------:|----------:|
+| stock `hye` | 40.9% | 42.0 | 84.0% |
+| `hye_grabar` | 81.0% | 68.1 | 48.6% |
+
+So on a new Venice print of the same text the Smbat model
+reads about twice as many real words as the stock one. By
+the table the error is about 10% (known words, between the
+1859 and the Aristakes rows) to about 14% (confidence, equal
+to the Aristakes row): an estimate, not a measurement. To
+measure it, type 3-5 pages of the 1956 text (or get Digilib's
+copy), and `eval` against them. The stock model is as bad
+as on the other books (about 30%).

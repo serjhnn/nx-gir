@@ -499,6 +499,27 @@ def tune_context(a, lex, costs, ocr, base, ref, nums):
         )
 
 
+def cmd_proxy(a):
+    """Known-word rate and confidence, no typed text."""
+    nums = eval_pages(a)
+    lex, _ = load_post(a)
+    known = total = low = words = 0
+    conf = 0.0
+    for n in nums:
+        page = cached_page(a.pdf, n, a)
+        ws = page.words()
+        k, t = evaluate.known_rate(ws, lex)
+        known += k
+        total += t
+        words += len(ws)
+        conf += sum(w.conf for w in ws)
+        low += sum(w.conf < 80 for w in ws)
+    print(f"{len(nums)} pages, {words} words")
+    print(f"known {known / max(total, 1):.1%} of {total}")
+    print(f"mean confidence {conf / max(words, 1):.1f}")
+    print(f"under 80: {low / max(words, 1):.1%}")
+
+
 def cmd_tune(a):
     """Grid of settings on the dev pages."""
     import copy
@@ -628,6 +649,15 @@ def main(argv=None):
     t.add_argument("--rate", type=float, default=0.0002)
     t.add_argument("--start")
     t.set_defaults(func=cmd_train)
+    q = sub.add_parser("proxy")
+    q.add_argument("pdf")
+    q.add_argument("--pages", required=True)
+    q.add_argument("--sample", type=int, default=0)
+    q.add_argument("--heldout", action="store_true")
+    q.add_argument("--half")
+    add_post_args(q)
+    add_prep_args(q)
+    q.set_defaults(func=cmd_proxy)
     u = sub.add_parser("tune")
     u.add_argument("pdf")
     u.add_argument("--ref", required=True)

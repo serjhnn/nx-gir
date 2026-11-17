@@ -142,3 +142,27 @@ def summary(results):
         ],
         "confusions": conf,
     }
+
+
+def known_rate(words, lex, min_len=3):
+    """Share of the words found in the word lists.
+
+    A stand-in for accuracy when there is no typed text to
+    compare with: a misread word is rarely a real word.
+    Capitalized words (names) and short ones are left out.
+    Returns (known, total).
+    """
+    from .post import TOKEN
+
+    known = total = 0
+    for w in words:
+        tok = TOKEN.match(w.text)
+        if not tok:
+            continue
+        core = tok.group(2)
+        if len(core) < min_len or core[0].isupper():
+            continue
+        total += 1
+        word = core.casefold().replace("և", "եւ")
+        known += word in lex
+    return known, total
