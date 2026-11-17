@@ -782,13 +782,19 @@ async function shelf(folder) {
   );
 }
 
-// the wide picture at the very top of the top
-// page: decoration only, so no alt text
+// the picture at the very top of the top page,
+// its words on a dark panel on the right: the
+// name, and the first words Mashtots translated
 function topBanner() {
   return h("div", { class: "top-banner" },
     h("img", { src: "banner.jpg", alt: "",
-      width: "1200", height: "675",
-      fetchpriority: "high" }));
+      width: "1000", height: "1068",
+      fetchpriority: "high" }),
+    h("div", { class: "top-text" },
+      h("b", {}, named("nxGir"), " · ",
+        h("span", { lang: "hy" }, "Նախագիր")),
+      h("span", { lang: "hy" },
+        "… իմանալ զբանս հանճարոյ")));
 }
 
 // a narrow banner on the top page, with the
