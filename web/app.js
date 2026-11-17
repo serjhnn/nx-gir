@@ -782,13 +782,15 @@ async function shelf(folder) {
   );
 }
 
-// the picture at the very top of the top page:
-// decoration only, so no alt text
+// the picture at the very top of the top page,
+// with a short line in its corner
 function topBanner() {
   return h("div", { class: "top-banner" },
     h("img", { src: "banner.jpg", alt: "",
       width: "1600", height: "550",
-      fetchpriority: "high" }));
+      fetchpriority: "high" }),
+    h("p", { class: "top-text", lang: "hy" },
+      "Արևը ծագում է"));
 }
 
 // a narrow banner on the top page, with the
