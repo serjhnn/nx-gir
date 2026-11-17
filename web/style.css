@@ -696,8 +696,7 @@ h1 {
   cursor: pointer;
 }
 
-/* the top page: a wide strip with the picture,
-   a braid along its top and bottom edges */
+/* the top page: a wide strip with the picture */
 .top-banner {
   position: relative;
   height: 9.5rem;
@@ -712,16 +711,6 @@ h1 {
   height: 100%;
   object-fit: cover;
   object-position: 50% 50%;
-}
-.top-banner::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0.35;
-  background:
-    url(img/knot-band.svg) repeat-x center top 0.4rem,
-    url(img/knot-band.svg) repeat-x center bottom
-      0.4rem;
 }
 .wide .top-banner {
   height: 12rem;
