@@ -699,6 +699,7 @@ h1 {
 /* the top page: a wide strip with the picture */
 .top-banner {
   position: relative;
+  container-type: inline-size;
   height: 9.5rem;
   margin: 0.5rem 0 1.25rem;
   overflow: hidden;
@@ -716,18 +717,30 @@ h1 {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(0deg,
-    rgb(0 0 0 / 0.55), rgb(0 0 0 / 0) 35%);
+  background:
+    linear-gradient(270deg, rgb(12 7 3 / 0.9),
+      rgb(12 7 3 / 0.6) 18%, rgb(12 7 3 / 0) 40%),
+    linear-gradient(0deg, rgb(0 0 0 / 0.45),
+      rgb(0 0 0 / 0) 40%);
 }
+/* one line at every width: the letters shrink
+   with the banner (cqw), so a phone gets less */
 .top-text {
   position: absolute;
   z-index: 1;
   right: 0.9rem;
-  bottom: 0.6rem;
+  bottom: 0.7rem;
   margin: 0;
-  color: #fff;
-  font-size: 0.7rem;
-  line-height: 1.3;
+  padding-top: 0.5rem;
+  border-top: 1px solid #d4a23c;
+  white-space: nowrap;
+  text-align: right;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #f3dfae;
+  text-shadow: 0 1px 6px rgb(0 0 0 / 0.8);
+  font-weight: 500;
+  font-size: clamp(0.4rem, 2.2cqw, 0.66rem);
 }
 .wide .top-banner {
   height: 12rem;
