@@ -16,6 +16,7 @@ Page images are cached in ocr/cache/ (not in git).
 
 import argparse
 import json
+import shutil
 import sys
 from pathlib import Path
 
@@ -35,6 +36,9 @@ from nxocr import (  # noqa: E402
 CACHE = HERE / "cache"
 MODELS = HERE / "models"
 BASE = CACHE / "base"
+SYSTEM_TESSDATA = Path(
+    "/usr/share/tesseract-ocr/5/tessdata"
+)
 BASE_URL = (
     "https://raw.githubusercontent.com/tesseract-ocr/"
     "tessdata_best/main/hye.traineddata"
@@ -114,6 +118,11 @@ def cmd_base(a):
     out = BASE / "hye.traineddata"
     if not out.exists():
         urllib.request.urlretrieve(BASE_URL, out)
+    # the configs (lstm.train, ...) a tessdata folder needs
+    for name in ("configs", "tessconfigs"):
+        src = SYSTEM_TESSDATA / name
+        if src.exists() and not (BASE / name).exists():
+            shutil.copytree(src, BASE / name)
     print(out, out.stat().st_size, "bytes")
 
 
