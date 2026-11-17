@@ -782,17 +782,13 @@ async function shelf(folder) {
   );
 }
 
-// the picture at the very top of the top page,
-// with the first words Mashtots translated on a
-// dark panel on the right (the name is in the
-// header above)
+// the picture at the very top of the top page:
+// decoration only, so no alt text
 function topBanner() {
   return h("div", { class: "top-banner" },
     h("img", { src: "banner.jpg", alt: "",
-      width: "1000", height: "1068",
-      fetchpriority: "high" }),
-    h("p", { class: "top-text", lang: "hy" },
-      "… իմանալ զբանս հանճարոյ"));
+      width: "1600", height: "550",
+      fetchpriority: "high" }));
 }
 
 // a narrow banner on the top page, with the

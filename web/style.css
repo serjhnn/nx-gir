@@ -696,8 +696,8 @@ h1 {
   cursor: pointer;
 }
 
-/* the top page: a strip with the picture on the
-   left, fading into a dark panel with the words */
+/* the top page: a wide strip with the picture,
+   a braid along its top and bottom edges */
 .top-banner {
   position: relative;
   height: 9.5rem;
@@ -707,66 +707,27 @@ h1 {
   background: #1d140e;
 }
 .top-banner img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 72%;
+  display: block;
+  width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 25%;
+  object-position: 50% 50%;
 }
-.top-banner::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg,
-    rgb(29 20 14 / 0) 30%, #1d140e 72%);
-}
-/* a braid along the top and bottom of the dark
-   panel, fading out toward the picture */
 .top-banner::before {
   content: "";
   position: absolute;
-  z-index: 1;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 52%;
-  opacity: 0.4;
+  inset: 0;
+  opacity: 0.35;
   background:
-    url(img/knot-band.svg) repeat-x right top 0.5rem,
-    url(img/knot-band.svg) repeat-x right bottom
-      0.5rem;
-  -webkit-mask-image: linear-gradient(90deg,
-    transparent, #000 60%);
-  mask-image: linear-gradient(90deg,
-    transparent, #000 60%);
-}
-.top-text {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  right: 0.9rem;
-  bottom: 0;
-  width: 38%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: right;
-  color: #fff;
-  font-size: 0.45rem;
-  line-height: 1.3;
+    url(img/knot-band.svg) repeat-x center top 0.4rem,
+    url(img/knot-band.svg) repeat-x center bottom
+      0.4rem;
 }
 .wide .top-banner {
-  height: 11rem;
+  height: 12rem;
 }
 .wide .top-banner img {
-  object-position: 50% 23%;
-}
-.wide .top-text {
-  width: 34%;
-  font-size: 0.52rem;
+  object-position: 50% 75%;
 }
 
 /* the top page: a narrow banner to #/contribute,
