@@ -117,3 +117,21 @@ are in `notes/smbat-sparapet-taregirk.md`, by printed
 page; check them here. The rest of the book (the
 editor's preface and notes, and Vahram Rabuni's
 history of the Rubenians) is not in the library.
+
+## lastivertsi-1963/
+
+`lastivertsi-grabar-1963.pdf`: Պատմութիւն Արիստակիսի
+Լաստիվերցւոյ, Yerevan 1963, the critical edition by
+Karen Yuzbashyan, 157 PDF pages (12.5 MB, 300 ppi, black
+and white), on the Internet Archive (put there by Robert
+Bedrosian): <https://archive.org/details/LastiverttsiGrabar1963>
+(file `Lastiverttsi_grabar_1963.pdf`, copied unchanged on
+2026-11-17).
+
+Used to test and tune the OCR (`ocr/`): a second book with
+a different typeface from the Smbat scan, with the
+manuscript variants (the apparatus) in small print under
+the text. The text in `books/grabar/aristakes-lastivertsi/`
+(from Digilib) is the same critical edition, and is the
+reference the OCR is scored against. Pages are not typed
+from this scan.

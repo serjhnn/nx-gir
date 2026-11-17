@@ -47,10 +47,14 @@ def model_chars(traineddata):
 
 
 def line_box(line, pad=6, size=None):
-    xs = [w.box[0] for w in line.words]
-    ys = [w.box[1] for w in line.words]
-    xe = [w.box[0] + w.box[2] for w in line.words]
-    ye = [w.box[1] + w.box[3] for w in line.words]
+    # words without letters (the line numbers in the margin
+    # of a critical edition) are not part of the text
+    words = [w for w in line.words if key(w.text)]
+    words = words or line.words
+    xs = [w.box[0] for w in words]
+    ys = [w.box[1] for w in words]
+    xe = [w.box[0] + w.box[2] for w in words]
+    ye = [w.box[1] + w.box[3] for w in words]
     box = (
         min(xs) - pad,
         min(ys) - pad,

@@ -193,9 +193,35 @@ def cmd_base(a):
     print(out, out.stat().st_size, "bytes")
 
 
+_CTX = {}
+
+
+def _init_sampler(a, chars, ref):
+    import os
+
+    # one thread per Tesseract: the pages run in parallel
+    os.environ["OMP_THREAD_LIMIT"] = "1"
+    _CTX.update(a=a, chars=chars, ref=ref)
+
+
+def _sample_page(n):
+    """(page, start, [(Sample, image)]) for a page."""
+    a = _CTX["a"]
+    img = prepared(a.pdf, n, a)
+    page = ocr_page(a.pdf, n, a, img)
+    start, got = lines.split_lines(
+        page,
+        _CTX["ref"],
+        _CTX["chars"],
+        a.max_cer,
+        img.size,
+    )
+    return n, start, [(s, img.crop(s.box)) for s in got]
+
+
 def cmd_samples(a):
     """Line images + text, split into train and eval."""
-    from PIL import Image  # noqa: F401
+    from concurrent.futures import ProcessPoolExecutor
 
     base = BASE / "hye.traineddata"
     chars = lines.model_chars(base)
@@ -207,16 +233,17 @@ def cmd_samples(a):
     nums = pages.parse_range(a.pages, pages.count(a.pdf))
     out = Path(a.out)
     found = {}
-    for n in nums:
-        img = prepared(a.pdf, n, a)
-        page = ocr_page(a.pdf, n, a, img)
-        start, got = lines.split_lines(
-            page, ref, chars, a.max_cer, img.size
-        )
-        found[n] = (start, got, img)
-        print(
-            f"page {n:4d}  {len(got):3d} lines", flush=True
-        )
+    with ProcessPoolExecutor(
+        a.jobs,
+        initializer=_init_sampler,
+        initargs=(a, chars, ref),
+    ) as pool:
+        for n, start, got in pool.map(_sample_page, nums):
+            found[n] = (start, got)
+            print(
+                f"page {n:4d}  {len(got):3d} lines",
+                flush=True,
+            )
     # a page scanned twice must not be in both sets
     held = [
         v[0]
@@ -224,7 +251,7 @@ def cmd_samples(a):
         if v[0] is not None and train.fold(n, nums[0])
     ]
     total = {"train": 0, "eval": 0, "leak": 0}
-    for n, (start, got, img) in found.items():
+    for n, (start, got) in found.items():
         if start is None:
             continue
         test = train.fold(n, nums[0])
@@ -233,11 +260,11 @@ def cmd_samples(a):
             total["leak"] += len(got)
             continue
         part = "eval" if test else "train"
-        for k, smp in enumerate(got):
+        for k, (smp, crop) in enumerate(got):
             train.write_sample(
                 out / part,
                 f"p{n:04d}-{k:02d}",
-                img.crop(smp.box),
+                crop,
                 smp.text,
             )
             total[part] += 1
@@ -249,8 +276,14 @@ def cmd_samples(a):
 
 def cmd_train(a):
     base = BASE / "hye.traineddata"
-    lstm = BASE / "hye.lstm"
-    train.extract_lstm(base, lstm)
+    # start from the stock model, or from one of ours
+    start = (
+        MODELS / f"{a.start}.traineddata"
+        if a.start
+        else base
+    )
+    lstm = CACHE / f"start-{a.start or 'hye'}.lstm"
+    train.extract_lstm(start, lstm)
     work = Path(a.out) / "run"
     prefix = train.fine_tune(
         base,
@@ -576,6 +609,7 @@ def main(argv=None):
     m.add_argument("--pages", required=True)
     m.add_argument("--out", required=True)
     m.add_argument("--max-cer", type=float, default=0.5)
+    m.add_argument("--jobs", type=int, default=4)
     add_prep_args(m)
     m.set_defaults(func=cmd_samples)
     t = sub.add_parser("train")
@@ -583,6 +617,7 @@ def main(argv=None):
     t.add_argument("--name", default="hye_grabar")
     t.add_argument("--steps", type=int, default=3000)
     t.add_argument("--rate", type=float, default=0.0002)
+    t.add_argument("--start")
     t.set_defaults(func=cmd_train)
     u = sub.add_parser("tune")
     u.add_argument("pdf")
