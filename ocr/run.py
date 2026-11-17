@@ -55,6 +55,7 @@ def add_prep_args(ap):
     ap.add_argument("--side", type=float, default=0.0)
     ap.add_argument("--dpi", type=int, default=300)
     ap.add_argument("--deskew", action="store_true")
+    ap.add_argument("--trim", action="store_true")
     ap.add_argument("--binarize", action="store_true")
     ap.add_argument("--scale", type=float, default=1.0)
     ap.add_argument("--lang", default="hye")
@@ -90,6 +91,7 @@ def make_prep(a):
         left=a.side,
         right=a.side,
         deskew=a.deskew,
+        trim=a.trim,
         binarize=a.binarize,
         scale=a.scale,
     )
@@ -138,7 +140,7 @@ def cached_page(pdf, n, a):
     name = (
         f"{Path(pdf).stem}-{a.lang}-{stamp}-{a.psm}-{a.dpi}"
         f"-{a.top}-{a.bottom}-{a.scale}-{a.binarize}"
-        f"-{a.deskew}-{n}.pkl"
+        f"-{a.deskew}-{a.trim}-{n}.pkl"
     )
     path = CACHE / "pages" / name
     if path.exists():

@@ -21,6 +21,57 @@ class Prep:
     window: int = 31  # Sauvola window, in pixels
     k: float = 0.2
     scale: float = 1.0
+    trim: bool = False  # cut off the binding and what lies
+    # beyond it (see trim_edges)
+
+
+def dark_runs(share):
+    """(start, end) of the runs of True in a list."""
+    runs, start = [], None
+    for i, flag in enumerate(share):
+        if flag and start is None:
+            start = i
+        if not flag and start is not None:
+            runs.append((start, i))
+            start = None
+    if start is not None:
+        runs.append((start, len(share)))
+    return runs
+
+
+def trim_edges(img, dark=110, line=0.5, zone=0.4):
+    """Cut a page scanned in a spread at its binding.
+
+    A book pressed open shows a long black line (the edge
+    of the page or the binding), and beyond it a strip of
+    the facing page, whose text would be read as part of
+    this page. A column that is dark for `line` of the
+    height, in the outer `zone` of the page, is such a line:
+    the page is cut at the innermost one on each side. The
+    same for the rows at the top and bottom. A page with
+    no such line is returned as it is.
+    """
+    arr = np.asarray(img.convert("L")) < dark
+    h, w = arr.shape
+    cols = arr.mean(axis=0) > line
+    left, right = 0, w
+    for a, b in dark_runs(cols):
+        if b <= w * zone:
+            left = max(left, b)
+        if a >= w * (1 - zone):
+            right = min(right, a)
+    rows = arr.mean(axis=1) > line
+    top, bottom = 0, h
+    for a, b in dark_runs(rows):
+        if b <= h * 0.15:
+            top = max(top, b)
+        if a >= h * 0.85:
+            bottom = min(bottom, a)
+    if right - left < w * 0.3 or bottom - top < h * 0.3:
+        return img
+    if (left, top, right, bottom) == (0, 0, w, h):
+        return img
+    return img.crop((left, top, right, bottom))
 
 
 def crop(img, p):
@@ -84,6 +135,8 @@ def sauvola(arr, window=31, k=0.2, r=128.0):
 def prepare(img, p):
     """Apply the steps; returns a grey PIL image."""
     img = img.convert("L")
+    if p.trim:
+        img = trim_edges(img)
     img = crop(img, p)
     if p.deskew:
         angle = skew_angle(img)

@@ -445,3 +445,56 @@ def test_main_text_tail_cuts_the_apparatus_below_the_text():
         len(layout.main_text(page, 0.5, tail=0.96).lines)
         == 12
     )
+
+
+def test_reference_leaves_out_editors_notes():
+    text = "աբգդեզ <Սաղմ. ՁԹ 5-6> ւթժիլխ"
+    ref = locate.Reference([text])
+    assert "սաղմ" not in ref.text
+    assert ref.text == "աբգդեզւթժիլխ"
+    assert (
+        locate.Reference([text], notes=False).text
+        != ref.text
+    )
+    # the typed text still holds the note
+    a = ref.text.index("զ")
+    assert "<Սաղմ" in ref.original(a, a + 4)
+
+
+def test_locate_window_grows_with_the_page():
+    ref = locate.Reference([TEXT * 3])
+    page = textnorm.key(TEXT[:200])
+    start, end = ref.locate(page)
+    assert end - start >= int(len(page) * 1.15)
+
+
+def test_reference_note_without_end_does_not_swallow_text():
+    text = (
+        "աբգդեզ <Եսյ. ԺԹ 11. ւթժիլխ ծկհձղճ <Սաղմ. Ա 2> մնշ"
+    )
+    ref = locate.Reference([text])
+    assert "ւթժիլխծկհձղճ" in ref.text
+    assert "սաղմ" not in ref.text
+
+
+def test_trim_edges_cuts_at_the_binding():
+    arr = np.full((400, 300), 255, np.uint8)
+    arr[:, 60:64] = 0  # the binding, full height
+    arr[100:110, 10:50] = 0  # text of the facing page
+    arr[100:110, 100:250] = 0  # text of this page
+    arr[0:6, :] = 0  # black band at the top
+    img = Image.fromarray(arr)
+    got = prep.trim_edges(img)
+    assert got.size == (300 - 64, 400 - 6)
+    out = np.asarray(got)
+    assert out.min() == 0 and (out[:, :5] == 255).all()
+    # a page without such lines is returned as it is
+    plain = Image.fromarray(
+        np.full((200, 200), 255, np.uint8)
+    )
+    assert prep.trim_edges(plain) is plain
+    # a text column is not a line
+    arr = np.full((400, 300), 255, np.uint8)
+    arr[100:300, 20:30] = 0
+    page = Image.fromarray(arr)
+    assert prep.trim_edges(page).size == (300, 400)

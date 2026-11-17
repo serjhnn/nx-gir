@@ -7,21 +7,31 @@ Works for any book, however garbled the OCR is (a
 few intact sequences are enough).
 """
 
+import re
 from collections import Counter, defaultdict
 
 from .textnorm import key
+
+# an editor's note, like <Սաղմ. ՁԹ 5-6> (a Bible reference):
+# short, with no other < inside, so a note whose > is
+# missing does not swallow the text after it
+NOTE = re.compile(r"<[^<>\n]{1,40}>")
 
 
 class Reference:
     """The typed text of a book, as one key string."""
 
-    def __init__(self, texts, k=6, common=20):
+    def __init__(self, texts, k=6, common=20, notes=True):
         self.k = k
         self.raw = "\n".join(texts)
         # key string, and for each key char its place in raw
         keys, self.orig = [], []
+        hidden = set()
+        if notes:
+            for m in NOTE.finditer(self.raw):
+                hidden.update(range(m.start(), m.end()))
         for i, ch in enumerate(self.raw):
-            part = key(ch)
+            part = "" if i in hidden else key(ch)
             keys.append(part)
             self.orig.extend([i] * len(part))
         self.text = "".join(keys)
@@ -85,7 +95,9 @@ class Reference:
             return None
         off = best * 32 + 16
         start = max(0, off - slack)
+        # the typed text may hold more than the page does
         end = min(
-            len(self.text), off + len(page_key) + slack
+            len(self.text),
+            off + int(len(page_key) * 1.15) + slack,
         )
         return start, end
