@@ -44,6 +44,27 @@ class Reference:
             b = self.orig[end]
         return self.raw[a:b].strip()
 
+    def without(self, spans):
+        """The typed text with the key spans cut out.
+
+        spans are (start, end) pairs as locate() gives
+        them; returns the pieces that remain, as texts.
+        """
+        cut = sorted(
+            (
+                self.orig[a],
+                self.orig[min(b, len(self.orig)) - 1] + 1,
+            )
+            for a, b in spans
+        )
+        out, at = [], 0
+        for a, b in cut:
+            if a > at:
+                out.append(self.raw[at:a])
+            at = max(at, b)
+        out.append(self.raw[at:])
+        return out
+
     def locate(self, page_key, slack=150, min_votes=8):
         """(start, end) of the page stretch, or None."""
         k = self.k

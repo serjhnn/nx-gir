@@ -79,23 +79,48 @@ prints them, so each can be reviewed.
 Settings were chosen on the dev half of the held-out
 pages (`train.half()`: the first 3 held-out blocks, 15
 pages) and scored on the test half (the other 15), which
-was not looked at before. Test half, `hye_grabar`:
+was not looked at before.
 
-| | CER | WER |
-|--|--:|--:|
-| OCR | 3.3% | 7.7% |
-| + post-correction | 3.3% | 7.4% |
+### Adapting to the book, and context (`--adapt`, `--context`)
 
-21 words changed: 11 fixed, 4 made wrong, 6 wrong either
-way. A small gain, and it has a ceiling. Of the 172 word
-errors on the dev pages (page 45 left out): 46% are real
-words (`քրիստոս` for `քրիստոսի`, `մեղ` for `մեզ`) that no
-word list can flag; 18% have the typed word as the closest
-candidate (the part this step reaches); 16% are words the
-lists lack (names, rare forms); 13% have no close word.
-Wrong forms of real words need context: a word-pair model
-from the corpus is the next step, with the LLM pass for
-the rest.
+    ... --post --context --adapt DIR --adapt-weight 6 \
+        --weight 6 --gain 5 --ctx-conf 90
+
+`--adapt DIR` adds the typed book itself to the word
+lists and the word-pair counts, `--adapt-weight` times,
+so names and the author's own forms are known. The
+held-out pages (dev and test) are cut out of it first
+(`Reference.without()`), so no page is scored against its
+own text. `--context` (`post.context()`) weighs every
+uncertain word and the words close to it by how well each
+fits its neighbours (word-pair counts from the corpus and
+the adapted book), less the cost of the change.
+
+Test half, `hye_grabar`, same pages as above:
+
+| | CER | WER | words changed | fixed | made wrong |
+|--|--:|--:|--:|--:|--:|
+| OCR | 3.3% | 7.7% | | | |
+| word list | 3.3% | 7.4% | 23 | 12 | 4 |
+| + adapted to the book | 3.3% | 7.4% | 21 | 12 | 4 |
+| word list + context, adapted | 3.2% | 7.2% | 33 | 20 | 6 |
+
+Dev half, the same steps: 10.55% WER, 9.72% (word list),
+9.5% (adapted: 28 fixed, 1 made wrong), 9.5% (with
+context: 33 fixed, 4 made wrong).
+
+What did not work, so it is not tried again: context alone
+(every setting made more words wrong than it fixed, the
+best one about even); context only where the pair counts
+have seen the candidate beside its neighbours and never the
+original (126-206 changes, more made wrong than fixed).
+The pair counts come from other authors and other centuries,
+and a frequent word beats the right rare one. The gain of
+this whole step is small: about half a point of WER, with a
+log of every change to review. The real-word errors
+(`քրիստոս` for `քրիստոսի`) are mostly still there; they are
+a job for the LLM pass, or for a model of the book trained
+on more of its own text.
 
 ## Numbers (Smbat 1859, PDF pages 26-156)
 

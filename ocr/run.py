@@ -31,6 +31,7 @@ from nxocr import (  # noqa: E402
     locate,
     pages,
     prep,
+    textnorm,
     train,
 )
 
@@ -61,6 +62,8 @@ def add_prep_args(ap):
 
 def add_post_args(ap):
     ap.add_argument("--costs")
+    ap.add_argument("--adapt")
+    ap.add_argument("--adapt-weight", type=int, default=3)
     ap.add_argument(
         "--skip-book", action="append", default=[]
     )
@@ -69,6 +72,11 @@ def add_post_args(ap):
     ap.add_argument("--min-count", type=int, default=2)
     ap.add_argument("--margin", type=float, default=0.3)
     ap.add_argument("--names", action="store_true")
+    ap.add_argument("--context", action="store_true")
+    ap.add_argument("--weight", type=float, default=4.0)
+    ap.add_argument("--gain", type=float, default=1.0)
+    ap.add_argument("--ctx-conf", type=float, default=101)
+    ap.add_argument("--ctx-cost", type=float, default=1.6)
 
 
 def make_prep(a):
@@ -250,13 +258,48 @@ def eval_pages(a):
     return pages.spread(nums, a.sample)
 
 
-def load_post(a):
+def adapt_texts(a, ref):
+    """The typed book without the held-out pages.
+
+    Its words and word pairs teach the models the book's
+    own language. The held-out pages (dev and test) are cut
+    out, with some slack, so no page is scored against
+    text it was in.
+    """
+    nums = pages.parse_range(a.pages, pages.count(a.pdf))
+    spans = []
+    for n in nums:
+        if not train.fold(n, nums[0]):
+            continue
+        page = cached_page(a.pdf, n, a)
+        k = "".join(
+            textnorm.key(w.text) for w in page.words()
+        )
+        span = ref.locate(k)
+        if span:
+            spans.append(span)
+    return ref.without(spans)
+
+
+def load_post(a, ref=None):
     import json
 
     from nxocr import post
 
     skip = tuple(a.skip_book)
-    lex = post.Lexicon.from_repo(ROOT, skip=skip)
+    extra = ()
+    if a.adapt:
+        texts = [
+            p.read_text()
+            for p in sorted(Path(a.adapt).glob("*.txt"))
+        ]
+        ref = locate.Reference(texts)
+        extra = [
+            (t, a.adapt_weight) for t in adapt_texts(a, ref)
+        ]
+    lex = post.Lexicon.from_repo(
+        ROOT, skip=skip, extra=extra
+    )
     data = []
     if a.costs:
         data = json.loads(Path(a.costs).read_text())
@@ -276,10 +319,36 @@ def post_params(a):
     )
 
 
+def context_params(a):
+    from nxocr import post
+
+    return post.ContextParams(
+        max_conf=a.ctx_conf,
+        max_cost=a.ctx_cost,
+        weight=a.weight,
+        gain=a.gain,
+        names=a.names,
+    )
+
+
+def apply_post(a, page, lex, costs):
+    """The steps asked for (--post, --context) on a page."""
+    from nxocr import post
+
+    changes = []
+    if a.post:
+        changes += post.correct(
+            page, lex, costs, post_params(a)
+        )
+    if a.context:
+        changes += post.context(
+            page, lex, costs, context_params(a)
+        )
+    return changes
+
+
 def cmd_eval(a):
     import copy
-
-    from nxocr import post
 
     texts = [
         p.read_text()
@@ -300,14 +369,13 @@ def cmd_eval(a):
         print(f"page {n:4d}  {state}", flush=True)
     s = evaluate.summary(results)
     report(s, a)
-    if not a.post:
+    if not (a.post or a.context):
         return
     lex, costs = load_post(a)
-    params = post_params(a)
     after, changes = [], []
     for n in nums:
         page = copy.deepcopy(ocr[n])
-        changes += post.correct(page, lex, costs, params)
+        changes += apply_post(a, page, lex, costs)
         after.append(
             evaluate.score_page(n, page.words(), ref)
         )
@@ -324,6 +392,46 @@ def cmd_eval(a):
         print(
             f"  {c.old} -> {c.new}"
             f"  ({c.cost:.1f}, {c.conf:.0f})"
+        )
+
+
+def tune_context(a, lex, costs, ocr, base, ref, nums):
+    import copy
+    import itertools
+
+    from nxocr import post
+
+    print(
+        "weight gain conf cost   CER     WER   chg fix brk"
+    )
+    grid = itertools.product(
+        (2.0, 4.0, 6.0),
+        (0.5, 1.0, 2.0, 3.0),
+        (90, 101),
+        (1.2, 1.6),
+    )
+    for weight, gain, conf, cost in grid:
+        p = post.ContextParams(
+            max_conf=conf,
+            max_cost=cost,
+            weight=weight,
+            gain=gain,
+        )
+        after, n_ch = [], 0
+        for n in nums:
+            page = copy.deepcopy(ocr[n])
+            n_ch += len(post.context(page, lex, costs, p))
+            after.append(
+                evaluate.score_page(n, page.words(), ref)
+            )
+        t = evaluate.summary(after)
+        f, b = evaluate.compare(base, after)
+        print(
+            f"{weight:6.1f} {gain:4.1f} {conf:4d}"
+            f" {cost:4.1f}"
+            f" {t['cer']:6.2%} {t['wer']:6.2%}"
+            f" {n_ch:4d} {f:3d} {b:3d}",
+            flush=True,
         )
 
 
@@ -350,6 +458,9 @@ def cmd_tune(a):
         f"before: CER {s0['cer']:.2%} WER {s0['wer']:.2%}"
     )
     lex, costs = load_post(a)
+    if a.context:
+        tune_context(a, lex, costs, ocr, base, ref, nums)
+        return
     grid = itertools.product(
         (80, 90, 101),
         (0.8, 1.2, 1.6),

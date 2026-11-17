@@ -298,3 +298,61 @@ def test_half_splits_the_held_out_blocks():
     assert train.half(30) is None
     assert train.half(45) == "dev"
     assert train.half(145) == "test"
+
+
+def test_reference_without_cuts_spans():
+    ref = locate.Reference(["աբգդեզ ւթժ ինլխծկ"])
+    a = ref.text.index("ւթժ")
+    parts = ref.without([(a, a + 3)])
+    assert "ւթժ" not in "".join(parts)
+    assert "աբգդեզ" in "".join(parts)
+    assert "ինլխծկ" in "".join(parts)
+
+
+def test_lexicon_extra_counts_words_and_pairs():
+    from nxocr import post
+
+    counts = {"աբգ": 1}
+    lex = post.Lexicon(counts, long=9)
+    assert lex.pairs == {}
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmp:
+        root = Path(tmp)
+        (root / "books" / "grabar").mkdir(parents=True)
+        (root / "grabar").mkdir()
+        for name in ("vocabulary", "forms"):
+            (root / "grabar" / f"{name}.tsv").write_text(
+                "#\n"
+            )
+        lex = post.Lexicon.from_repo(
+            root, extra=[("աբգ դեզ աբգ", 3)]
+        )
+    assert lex.counts["աբգ"] == 6
+    assert lex.pairs[("աբգ", "դեզ")] == 3
+
+
+def test_context_picks_the_word_that_fits():
+    from nxocr import post
+
+    lex = post.Lexicon(
+        {"եկն": 50, "մեզ": 40, "մեղ": 40, "աբգ": 10},
+        pairs=post.Counter({("եկն", "մեզ"): 40}),
+        long=9,
+    )
+    costs = post.Costs([("ղ", "զ", 10)])
+    page = one_line(("եկն", 95), ("մեղ", 70))
+    easy = post.ContextParams(weight=2.0)
+    got = post.context(page, lex, costs, easy)
+    assert [(c.old, c.new) for c in got] == [("մեղ", "մեզ")]
+    assert got[0].gain > 1
+    # the default asks for more: this change is not made
+    page = one_line(("եկն", 95), ("մեղ", 70))
+    assert post.context(page, lex, costs) == []
+    # a word the engine is sure of is left alone
+    page = one_line(("եկն", 95), ("մեղ", 95))
+    p = post.ContextParams(max_conf=90, weight=2.0)
+    assert post.context(page, lex, costs, p) == []
+    # a sentence end breaks the context
+    page = one_line(("եկն։", 95), ("մեղ", 70))
+    assert post.context(page, lex, costs, easy) == []

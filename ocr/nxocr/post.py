@@ -53,15 +53,26 @@ class Correction:
     new: str
     cost: float
     conf: float
+    gain: float = 0.0  # context model's score (context())
 
 
 class Lexicon:
     """Word counts, and the close words of a word."""
 
     def __init__(
-        self, counts, max_dist=2, long=7, common=3
+        self,
+        counts,
+        max_dist=2,
+        long=7,
+        common=3,
+        pairs=None,
     ):
         self.counts = counts
+        # how often a word follows another
+        self.pairs = (
+            pairs if pairs is not None else Counter()
+        )
+        self.total = sum(counts.values()) or 1
         self.max_dist = max_dist
         self.long = long
         # words at distance 2 are only looked for among the
@@ -79,15 +90,23 @@ class Lexicon:
                     self.index[v].append(word)
 
     @classmethod
-    def from_repo(cls, root, skip=(), **kw):
+    def from_repo(cls, root, skip=(), extra=(), **kw):
         root = Path(root)
-        counts = Counter()
+        counts, pairs = Counter(), Counter()
         for path in (root / "books" / "grabar").rglob(
             "*.txt"
         ):
-            if any(s in path.parts for s in skip):
+            if any(s in path.as_posix() for s in skip):
                 continue
-            counts.update(textnorm.words(path.read_text()))
+            ws = textnorm.words(path.read_text())
+            counts.update(ws)
+            pairs.update(zip(ws, ws[1:]))
+        # texts of the book itself, counted `weight` times
+        for text, weight in extra:
+            ws = textnorm.words(text)
+            for _ in range(weight):
+                counts.update(ws)
+                pairs.update(zip(ws, ws[1:]))
         for name in ("vocabulary", "forms"):
             for line in open(
                 root / "grabar" / f"{name}.tsv"
@@ -98,7 +117,7 @@ class Lexicon:
                     line.split("\t")[0]
                 ):
                     counts[w] = max(counts[w], 1)
-        return cls(counts, **kw)
+        return cls(counts, pairs=pairs, **kw)
 
     def __contains__(self, word):
         return word in self.counts
@@ -245,3 +264,127 @@ def correct(page, lex, costs, p=None):
             )
             w.text = pre + new + post
     return out
+
+
+@dataclass
+class ContextParams:
+    max_conf: float = 101.0  # words under this
+    max_cost: float = 1.6  # edit cost allowed
+    min_count: int = 2  # candidate must be this common
+    weight: float = 4.0  # nats per unit of edit cost
+    gain: float = 1.0  # least score gain to change a word
+    mix: float = 0.7  # share of the pair counts
+    names: bool = False
+
+
+def logp(lex, prev, word, mix):
+    """log P(word | prev): the pair counts mixed with the
+    word's own frequency (prev None: frequency only)."""
+    n = lex.counts.get(word, 0)
+    uni = (n + 0.5) / (lex.total + 0.5 * len(lex.counts))
+    if prev is not None:
+        c = lex.counts.get(prev, 0)
+        if c:
+            pair = lex.pairs.get((prev, word), 0) / c
+            return math.log(mix * pair + (1 - mix) * uni)
+    return math.log(uni)
+
+
+def fit(lex, prev, word, nxt, mix):
+    """How well the word fits between its neighbours."""
+    score = logp(lex, prev, word, mix)
+    if nxt is not None:
+        score += logp(lex, word, nxt, mix)
+        score -= logp(lex, None, nxt, mix)  # same for all
+    return score
+
+
+def core_key(text):
+    tok = TOKEN.match(text)
+    if not tok:
+        return None, None, None, None
+    pre, core, post = tok.groups()
+    word = core.casefold().replace("և", "եւ")
+    return pre, core, post, word
+
+
+def context(page, lex, costs, p=None):
+    """Correct a Page in place, by context; returns the
+    Corrections.
+
+    Every uncertain word is weighed against the words
+    close to it (and itself): how well it fits its
+    neighbours, less the cost of the change. The change
+    is made when it gains at least `gain`.
+    """
+    p = p or ContextParams()
+    skip = fragments(page, lex)
+    flat = [
+        (n, m)
+        for n, ln in enumerate(page.lines)
+        for m in range(len(ln.words))
+    ]
+    out = []
+    for i, (n, m) in enumerate(flat):
+        w = page.lines[n].words[m]
+        if (n, m) in skip or w.conf >= p.max_conf:
+            continue
+        pre, core, post, word = core_key(w.text)
+        if word is None or len(word) < 3:
+            continue
+        if core[0].isupper() and not p.names:
+            continue
+        prev = nxt = None
+        if i > 0 and not ends(page, flat[i - 1]):
+            pw = page.lines[flat[i - 1][0]].words[
+                flat[i - 1][1]
+            ]
+            if flat[i - 1] not in skip:
+                prev = core_key(pw.text)[3]
+        if i + 1 < len(flat) and not ends(page, flat[i]):
+            if flat[i + 1] not in skip:
+                nw = page.lines[flat[i + 1][0]].words[
+                    flat[i + 1][1]
+                ]
+                nxt = core_key(nw.text)[3]
+        here = fit(lex, prev, word, nxt, p.mix)
+        top, top_gain = None, p.gain
+        top_cost = 0.0
+        for cand in lex.near(word, 2):
+            if lex.counts[cand] < p.min_count:
+                continue
+            cost = costs.distance(word, cand)
+            if cost > p.max_cost:
+                continue
+            gain = (
+                fit(lex, prev, cand, nxt, p.mix)
+                - here
+                - p.weight * cost
+            )
+            if gain > top_gain:
+                top, top_gain, top_cost = cand, gain, cost
+        if top is None:
+            continue
+        new = top
+        if core[0].isupper():
+            new = new[0].upper() + new[1:]
+        old = w.text
+        w.text = pre + new + post
+        out.append(
+            Correction(
+                n,
+                m,
+                old,
+                w.text,
+                top_cost,
+                w.conf,
+                top_gain,
+            )
+        )
+    return out
+
+
+def ends(page, at):
+    """True if the word ends a sentence (`։` or `.`)."""
+    text = page.lines[at[0]].words[at[1]].text
+    return text.rstrip().endswith(("։", "."))
