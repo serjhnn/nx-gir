@@ -700,7 +700,7 @@ h1 {
 .top-banner {
   position: relative;
   container-type: inline-size;
-  height: 9.5rem;
+  height: 7.5rem;
   margin: 0.5rem 0 1.25rem;
   overflow: hidden;
   border-radius: 14px;
@@ -742,11 +742,8 @@ h1 {
   font-weight: 500;
   font-size: clamp(0.4rem, 2.2cqw, 0.66rem);
 }
-.wide .top-banner {
-  height: 12rem;
-}
 .wide .top-banner img {
-  object-position: 50% 75%;
+  object-position: 50% 16%;
 }
 
 /* the top page: a narrow banner to #/contribute,
