@@ -741,8 +741,7 @@ async function shelf(folder) {
     // other pages, what was read last, then the
     // welcome
     folder ? null : topBanner(),
-    folder ? null : h("p", { class: "lib-btn",
-      lang: "hy" },
+    folder ? null : menuBar(
     h("a", { class: "icon-btn",
       href: "#/library" },
     icon(ICONS.book), "Գրադարան"),
@@ -780,6 +779,35 @@ async function shelf(folder) {
       "+ New text")) : null,
     folder ? shelfList(data) : null
   );
+}
+
+// the menu buttons of the top page, pinned to the
+// top of the screen on scrolling. On a phone they
+// are one line to swipe, with a dot per button
+// under it (the one in view is filled); the dots
+// are hidden when all the buttons fit
+function menuBar(...links) {
+  const row = h("p", { class: "lib-btn", lang: "hy" },
+    ...links);
+  const dots = h("div", { class: "menu-dots",
+    "aria-hidden": "true" },
+  ...links.map(() => h("span", {})));
+  const update = () => {
+    const max = row.scrollWidth - row.clientWidth;
+    dots.hidden = max <= 1;
+    const k = max > 0 ? Math.round(
+      row.scrollLeft / max * (links.length - 1)) : 0;
+    [...dots.children].forEach((d, i) =>
+      d.classList.toggle("on", i === k));
+  };
+  row.addEventListener("scroll", update,
+    { passive: true });
+  if (window.ResizeObserver) {
+    new ResizeObserver(update).observe(row);
+  } else {
+    window.addEventListener("resize", update);
+  }
+  return h("div", { class: "menu-bar" }, row, dots);
 }
 
 // the picture at the very top of the top page,

@@ -436,22 +436,26 @@ h1 {
   text-decoration: none;
 }
 
-/* the Library button, at the top of the top page;
-   it stays at the top of the screen on scrolling:
-   one line to swipe on a phone, wrapped on a wide
-   screen */
-.lib-btn {
+/* the menu buttons, at the top of the top page;
+   they stay at the top of the screen on
+   scrolling: one line to swipe on a phone, with a
+   dot per button under it, wrapped on a wide
+   screen (menuBar() in app.js) */
+.menu-bar {
   position: sticky;
   top: 0;
   z-index: 5;
   margin: 0.5rem 0 0.9rem;
-  padding: 0.5rem 0;
+  background: var(--bg);
+}
+.lib-btn {
+  margin: 0;
+  padding: 0.5rem 0 0.35rem;
   display: flex;
   flex-wrap: nowrap;
   gap: 0.5rem;
   overflow-x: auto;
   scrollbar-width: none;
-  background: var(--bg);
 }
 .lib-btn::-webkit-scrollbar {
   display: none;
@@ -464,6 +468,28 @@ h1 {
     flex-wrap: wrap;
     overflow-x: visible;
   }
+}
+.menu-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 12px;
+  padding-bottom: 0.3rem;
+}
+.menu-dots[hidden] {
+  display: none;
+}
+.menu-dots span {
+  width: 6px;
+  height: 6px;
+  margin: 0 4px;
+  border-radius: 50%;
+  background: var(--rule);
+  transition: background 0.2s, transform 0.2s;
+}
+.menu-dots span.on {
+  background: var(--accent);
+  transform: scale(1.25);
 }
 .lib-btn .icon-btn {
   color: var(--accent-ink);
