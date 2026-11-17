@@ -29,9 +29,8 @@ them, so each step is measured before it is kept.
 | `lines.py` | cut a page into line images + typed text |
 | `train.py` | `.lstmf` files, `lstmtraining`, held-out blocks |
 
-Planned: a context step for real-word errors (see
-Post-correction) and an LLM pass over the low-confidence
-words (see the triage below).
+Planned: nothing open; the LLM pass is in `llm.py` (see the
+section below).
 
 ## Fine-tuning (`models/hye_grabar.traineddata`)
 
@@ -306,3 +305,63 @@ to the Aristakes row): an estimate, not a measurement. To
 measure it, type 3-5 pages of the 1956 text (or get Digilib's
 copy), and `eval` against them. The stock model is as bad
 as on the other books (about 30%).
+
+## The LLM pass (`llm.py`)
+
+    ... eval ... --llm-files DIR --llm-hints     # no API key
+    ... eval ... --llm claude-sonnet-5-5         # API key
+    ... page PDF N --llm MODEL --review N.tsv    # suggestions
+
+Lines with a word the engine is under 80% sure of are sent to
+a model: the line image, the OCR text with the uncertain words
+marked ⟦ ⟧, and the word list's suggestion for each (`--llm-hints`).
+The prompt is `nxocr/llm_prompt.txt`. The model may change
+only the marked words (`accept()`): a reply with a different
+number of words is thrown away, a change to an unmarked word is
+ignored. Like the word list it only suggests (step `llm` in
+the review list); `--apply` rewrites. Answers are cached, so a
+line is paid for once, and tokens are counted.
+
+Two backends: `Anthropic` (the Messages API, standard library,
+key in `ANTHROPIC_API_KEY`) and `Files` (each request is a
+folder with the prompt and the line images, the answer is read
+from `reply.txt` in it). In this cloud session a script cannot
+use the session's own login for the API, so the runs below used
+`Files`, answered by Claude agents (Sonnet) that were told to
+open every image and to read nothing but their folder; their
+transcripts show no file outside the request folders was read,
+and one agent that had skipped images was redone.
+
+Smbat 1859, `hye_grabar`, word list hints on, threshold 80.
+Settings and prompt were fixed on 4 dev pages; the test is 8
+pages of the test half, not looked at before:
+
+| Pages | Lines sent | CER | WER | Words changed | Fixed | Made wrong |
+|-------|-----------:|----:|----:|--------------:|------:|-----------:|
+| 4 dev | 68 of 101 | 2.91 -> 2.31% | 8.86 -> 6.81% | 25 | 17 | 2 |
+| 8 test | 124 of 198 | 4.14 -> 3.72% | 7.54 -> 6.02% | 48 | 18 | 1 |
+
+(Scored as if every change were made.) Only 13.8% of the words
+are under 80, but they sit in 63% of the lines, and a line is
+the unit sent: 19 requests of up to 8 lines for the 8 pages.
+
+- The gain is the best of the post steps: 1.5 points of WER
+  with one word made wrong, against 0.3 for the word list and
+  four made wrong. It fixes what the word list cannot: real
+  words in a wrong form and letters the list has no word for.
+- Not all the changes are letters: of the 48, about 30 are
+  numerals (`74 -> 740`, `543 -> 549`), punctuation and
+  capitals, which the score ignores. Years in a chronicle
+  matter, and the score cannot say if these are right: review
+  the numerals by hand.
+- What is left (WER 6%) is mostly words the engine was sure of
+  (over 80%) and got wrong: about a third of the wrong words.
+  The pass does not look at them.
+- Cost, for the 8 test pages: 19 requests, 124 line images. The
+  agents used about 340 000 tokens in all, most of it the agent
+  overhead and the images; a direct API call would be much less.
+  Measure it with the real API (`--llm MODEL` prints the tokens)
+  before a whole book.
+- Not done: a threshold other than 80, a cheaper model (Haiku)
+  against Sonnet, the 1963 Aristakes book (where half the words
+  are under 80), and a check of the numerals against the page.
