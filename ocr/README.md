@@ -339,7 +339,8 @@ pages of the test half, not looked at before:
 | Pages | Lines sent | CER | WER | Words changed | Fixed | Made wrong |
 |-------|-----------:|----:|----:|--------------:|------:|-----------:|
 | 4 dev | 68 of 101 | 2.91 -> 2.31% | 8.86 -> 6.81% | 25 | 17 | 2 |
-| 8 test | 124 of 198 | 4.14 -> 3.72% | 7.54 -> 6.02% | 48 | 18 | 1 |
+| 8 test, Sonnet | 124 of 198 | 4.14 -> 3.72% | 7.54 -> 6.02% | 48 | 18 | 1 |
+| 8 test, Haiku | 124 of 198 | 4.14 -> 3.90% | 7.54 -> 6.75% | 27 | 9 | 1 |
 
 (Scored as if every change were made.) Only 13.8% of the words
 are under 80, but they sit in 63% of the lines, and a line is
@@ -349,6 +350,18 @@ the unit sent: 19 requests of up to 8 lines for the 8 pages.
   with one word made wrong, against 0.3 for the word list and
   four made wrong. It fixes what the word list cannot: real
   words in a wrong form and letters the list has no word for.
+- A cheaper model (Haiku, the same 19 requests, same prompt
+  and instructions; its transcripts also show no file outside
+  the request folders) does about half the work: 9 words fixed
+  against 18, one made wrong in both. It is more cautious
+  (27 changes against 48) rather than worse: it keeps the OCR
+  reading when the image is unclear, and misses what Sonnet
+  gets. So Haiku is a safe but weak first pass; for a book
+  where each point of WER matters, Sonnet. The agents' token
+  counts are not API prices (Haiku's four agents used about
+  380 000 tokens, Sonnet's about 340 000, most of it the
+  agent overhead), so the real cost of each has to be
+  measured with the API (`--llm MODEL` prints the tokens).
 - Not all the changes are letters: of the 48, about 30 are
   numerals (`74 -> 740`, `543 -> 549`), punctuation and
   capitals, which the score ignores. Years in a chronicle
