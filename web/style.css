@@ -448,7 +448,14 @@ h1 {
   margin: 0.5rem 0 0.9rem;
   background: var(--bg);
 }
+.menu-main {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 .lib-btn {
+  flex: 1;
+  min-width: 0;
   margin: 0;
   padding: 0.5rem 0 0.35rem;
   display: flex;
@@ -468,6 +475,53 @@ h1 {
     flex-wrap: wrap;
     overflow-x: visible;
   }
+}
+.menu-more {
+  flex: none;
+  padding: 8px 10px;
+  color: var(--accent-ink);
+  border-color: var(--accent);
+}
+.menu-more[hidden] {
+  display: none;
+}
+.menu-more svg {
+  width: 18px;
+  height: 18px;
+}
+.menu-more[aria-expanded="true"] {
+  background: var(--hover);
+}
+/* all the items, under the bar */
+.menu-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: -0.2rem;
+  padding: 0.4rem;
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.18);
+}
+.menu-panel[hidden] {
+  display: none;
+}
+.menu-panel .icon-btn {
+  display: flex;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 0;
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 1rem;
+}
+.menu-panel .icon-btn svg {
+  width: 20px;
+  height: 20px;
+  color: var(--accent-ink);
 }
 .menu-dots {
   display: flex;

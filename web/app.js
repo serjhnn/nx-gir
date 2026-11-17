@@ -68,6 +68,8 @@ const ICONS = {
     "M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z",
     "M5 18a2 2 0 0 1 2-2h11",
   ],
+  // three lines: the menu
+  menu: ["M4 7h16", "M4 12h16", "M4 17h16"],
   // a pen: the blog
   pen: [
     "M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z",
@@ -784,17 +786,55 @@ async function shelf(folder) {
 // the menu buttons of the top page, pinned to the
 // top of the screen on scrolling. On a phone they
 // are one line to swipe, with a dot per button
-// under it (the one in view is filled); the dots
-// are hidden when all the buttons fit
+// under it (the one in view is filled) and a ☰
+// button that opens all of them in a list; the
+// dots and ☰ are hidden when all the buttons fit
 function menuBar(...links) {
   const row = h("p", { class: "lib-btn", lang: "hy" },
     ...links);
   const dots = h("div", { class: "menu-dots",
     "aria-hidden": "true" },
   ...links.map(() => h("span", {})));
+  const panel = h("nav", { class: "menu-panel",
+    id: "menu-panel", lang: "hy", hidden: "",
+    "aria-label": "Ցանկ" },
+  ...links.map((a) => a.cloneNode(true)));
+  const more = h("button", { class: "icon-btn menu-more",
+    type: "button", title: "Ցանկ",
+    "aria-label": "Ցանկ", "aria-expanded": "false",
+    "aria-controls": "menu-panel" },
+  icon(ICONS.menu));
+  const bar = h("div", { class: "menu-bar" },
+    h("div", { class: "menu-main" }, row, more),
+    dots, panel);
+  const open = (on) => {
+    panel.hidden = !on;
+    more.setAttribute("aria-expanded", String(on));
+  };
+  more.addEventListener("click", () => open(panel.hidden));
+  panel.addEventListener("click", (e) => {
+    if (e.target.closest("a")) open(false);
+  });
+  const away = (e) => {
+    if (!bar.isConnected) {
+      document.removeEventListener("pointerdown", away);
+      document.removeEventListener("keydown", esc);
+    } else if (!bar.contains(e.target)) open(false);
+  };
+  const esc = (e) => {
+    if (e.key === "Escape" && !panel.hidden) {
+      open(false);
+      more.focus();
+    }
+  };
+  document.addEventListener("pointerdown", away);
+  document.addEventListener("keydown", esc);
   const update = () => {
     const max = row.scrollWidth - row.clientWidth;
-    dots.hidden = max <= 1;
+    const fits = max <= 1;
+    dots.hidden = fits;
+    more.hidden = fits;
+    if (fits) open(false);
     const k = max > 0 ? Math.round(
       row.scrollLeft / max * (links.length - 1)) : 0;
     [...dots.children].forEach((d, i) =>
@@ -807,7 +847,7 @@ function menuBar(...links) {
   } else {
     window.addEventListener("resize", update);
   }
-  return h("div", { class: "menu-bar" }, row, dots);
+  return bar;
 }
 
 // the picture at the very top of the top page,
