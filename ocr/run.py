@@ -239,6 +239,10 @@ def report(s, a):
     print("top confusions (OCR -> typed):")
     for (x, y), c in s["confusions"].most_common(15):
         print(f"  {x or '∅'} -> {y or '∅'}  {c}")
+    worst = sorted(
+        s["per_page"], key=lambda r: -r[2] / max(r[1], 1)
+    )[:3]
+    print("worst pages:", [r[0] for r in worst])
     if a.json:
         data = dict(s)
         data["confusions"] = [

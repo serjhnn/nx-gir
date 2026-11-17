@@ -64,6 +64,11 @@ Held-out pages only (30 pages, never used in training),
 | stock `hye` | 25.9% | 58.7% |
 | `hye_grabar` (4000 steps) | 3.5% | 9.1% |
 
+Per page: median 2.8%, 3.1% without page 45 (a scan
+smear hides half the text), 2.7% without page 124 too
+(stray marks in the margin and signature). The rest are
+1-5%. The `eval` report lists the worst pages.
+
 Preparation matters little: with the stock model scale
 1.5 gave 23.7% against 24.0% on 20 pages; binarize and
 deskew changed nothing (the scan is straight).

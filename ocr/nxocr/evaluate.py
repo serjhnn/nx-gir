@@ -120,5 +120,8 @@ def summary(results):
         "cer": metrics.rate(errs, chars),
         "wer": metrics.rate(wer, words),
         "triage": triage(placed),
+        "per_page": [
+            [r.page, r.chars, r.errors] for r in placed
+        ],
         "confusions": conf,
     }
