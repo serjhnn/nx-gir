@@ -375,6 +375,7 @@ the unit sent: 19 requests of up to 8 lines for the 8 pages.
   overhead and the images; a direct API call would be much less.
   Measure it with the real API (`--llm MODEL` prints the tokens)
   before a whole book.
-- Not done: a threshold other than 80, a cheaper model (Haiku)
-  against Sonnet, the 1963 Aristakes book (where half the words
-  are under 80), and a check of the numerals against the page.
+- Not done: a threshold other than 80, Sonnet only on the lines
+  where Haiku is unsure, the 1963 Aristakes book (where half the
+  words are under 80), and a check of the numerals against the
+  page.
