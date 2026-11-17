@@ -379,3 +379,59 @@ the unit sent: 19 requests of up to 8 lines for the 8 pages.
   where Haiku is unsure, the 1963 Aristakes book (where half the
   words are under 80), and a check of the numerals against the
   page.
+
+## Picking this up again
+
+State (2026-11-17): everything above is on `main`; the tuned
+Smbat model `models/hye_grabar.traineddata` is the only model
+kept. The raw model answers of the LLM runs are in
+`results/llm/{sonnet-dev,sonnet-test,haiku-test}/` (request.md
+and reply.txt per request; no images). They reproduce the
+numbers: add `--llm-files results/llm/sonnet-test --llm-hints`
+to the 8-page test run (`--half test --sample 8`, costs from
+`results/smbat-dev-tuned.json`, `--skip-book
+smbat-sparapet/2-taregirk`): WER 7.54% -> 6.02% (Haiku:
+6.75%). The folder names are hashes of the request, so they
+match only if the page, the model and the prep are the same.
+
+Not in git, and how to get it back:
+
+- A fresh container has no Tesseract: `apt-get update &&
+  apt-get install -y tesseract-ocr tesseract-ocr-hye`
+  (`lstmtraining` comes with it), and `pip install numpy
+  pillow pytest` if they are missing.
+- The base model for tuning: `python3 ocr/run.py base` (the
+  float `tessdata_best` hye, from raw.githubusercontent.com).
+- The scans in `cache/other/` (git-ignored): 1956 Venice
+  chronicle `SmbataySparapetiTaregirk1956`
+  (`Smbatay_Sparapeti_Taregirk_1956.pdf`), `Karst1905Armenisches
+  rechtsbuch`, `assisesdantioch00smbagoog` and `01`, all at
+  `https://archive.org/download/<id>/<file>.pdf`. The 1859 and
+  1963 scans are in `sources/`.
+- The line samples, page cache and tuned Aristakes models:
+  `samples` and `train` (see above); about 20 minutes.
+- No script can call the Anthropic API from the cloud session
+  (the session's own login is not usable, and a key cannot be
+  saved for the API host). On a machine with a key:
+  `ANTHROPIC_API_KEY=... python3 ocr/run.py eval ... --llm
+  claude-sonnet-5-5`; in the cloud, use `--llm-files` and have
+  agents answer the request folders.
+
+Open, in the order I would do them: type 3-5 pages of the 1956
+edition (or get Digilib's copy) to measure the model there for
+real; the LLM pass on the 1963 Aristakes pages and a check of
+the numerals it changes; Haiku first, Sonnet only where Haiku
+is unsure; the text lines found by projection profile (and
+`--psm 7`) where Tesseract skips lines; how many typed lines a
+new book needs (500, 1000, 2000); the word-pair counts from a
+larger corpus of the same period.
+
+Things that bit, so they are not repeated: two `lstmtraining`
+runs at once stall each other (run them one after the other,
+and `OMP_THREAD_LIMIT=1` when running evals in parallel);
+two processes rendering the same page image at once leave a
+truncated PNG (`pages.render`); `ruff format` reformats code
+that an earlier `replace` expected, so check an edit applied;
+a typed reference with editors' notes or another recension
+makes the numbers meaningless (check a bad page by eye before
+trusting a number).

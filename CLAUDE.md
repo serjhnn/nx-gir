@@ -92,14 +92,20 @@
   texts) behind the `grabar/` data; add the copy and a
   note in `sources/README.md` with every new source
 - `ocr/`: OCR tooling for scanned books, apart from the
-  reader (README in the folder; Pillow, numpy and
-  `tesseract` needed only there): `ocr/run.py`
-  (`page`, `eval`), the package `ocr/nxocr/`,
-  `ocr/results/` (scores, kept); tested in
-  `tests/test_ocr.py`. Code in it follows the same
-  limits (`ruff format ocr/`). Page images are cached in
-  `ocr/cache/` (not in git). Score every step with
-  `eval` against the typed text before keeping it
+  reader. **Read `ocr/README.md` first**: the commands,
+  the results, how to pick it up again. Pillow, numpy and
+  `tesseract` (+ `hye`) needed only there. `ocr/run.py`
+  (`page`, `eval`, `samples`, `train`, `proxy`, `tune`), the
+  package `ocr/nxocr/`, `ocr/results/` (scores and the LLM
+  answers, kept), `ocr/models/` (only `hye_grabar`; others
+  are made again, not committed); tested in
+  `tests/test_ocr.py`. Code in it follows the same limits
+  (`ruff format ocr/`); `ocr/cache/` is not in git.
+  Rules: score every step with `eval` on held-out pages
+  against typed text before keeping it; the word list and
+  the LLM pass only suggest (a review list), never rewrite
+  unless `--apply`; look at a bad page by eye before
+  trusting a number
 - `scripts/nxgir_logo.py`: logos and gradient colors
 - `scripts/fetch-bible.py`: downloads a book of the
   1895 Grabar Bible into `books/` (see
