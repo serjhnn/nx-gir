@@ -189,7 +189,8 @@
   `map/<id>.<lang>.html` (`map_pages()`; the kind
   names are `KIND_NAMES` in `nxgir_map.py`). The
   README picture `docs/web-map.jpg` is made by
-  `scripts/render-web.py`
+  `scripts/render-web.py`. How it works, the pitfalls
+  and the to-do list: `notes/map.md` (read it first)
 - `blog/`: the Blog page (`#/blog`, `#/blog/<slug>`,
   `/api/blog`): one `YYYY-MM-DD-slug.LANG.md` per
   post and language (hy, en, ru; Armenian first),
