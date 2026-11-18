@@ -607,10 +607,6 @@ function folderRow(item) {
     plural(item.size, item.unit || "book")));
 }
 
-// where a first-time visitor starts: Grabar and
-// its modern Armenian translation side by side
-const START = "grabar/grigor-tatevatsi/" +
-  "3-amaran-hator/01.txt";
 // where visitors can write: kept in parts and put
 // together only in the page, so that programs
 // gathering addresses from the files do not find it
@@ -635,8 +631,7 @@ function menuLink([href, ic, label]) {
 
 // the welcome above the library, in Armenian:
 // questions a first-time visitor may ask
-function intro(status, news) {
-  status = status || [];
+function intro(news) {
   const qa = (q, ...a) => [h("h3", {}, q),
     h("p", {}, ...a)];
   return h("section", { class: "intro", lang: "hy" },
@@ -648,19 +643,6 @@ function intro(status, news) {
       "Սեղմեք բառի վրա, և կտեսնեք դրա իմաստը, "
       + "բառարանային ձևը և այն մյուս տեղերը, "
       + "որտեղ բառը հանդիպում է գրքում։"),
-    qa("Որտեղի՞ց սկսել։",
-      "Բացեք Գրիգոր Տաթևացու «Ամառան հատորի» "
-      + "առաջին մասը. գրաբար բնագիրն այնտեղ "
-      + "ժամանակակից հայերեն թարգմանության հետ "
-      + "կողք կողքի է, ամեն նախադասությունը՝ "
-      + "առանձին տողում։"),
-    h("p", { class: "intro-btn" },
-      h("a", { class: "icon-btn primary",
-        href: "#/read/" + enc(START) },
-      "Կարդալ «Ամառան հատոր», մաս 1 →")),
-    status.length ? [
-      h("h3", {}, "Ի՞նչ է արդեն թարգմանված։"),
-      statusList(status)] : null,
     news && news.length ? [
       h("h3", {},
         "Ի՞նչ փոփոխություններ կան կայքում։"),
@@ -674,26 +656,6 @@ function intro(status, news) {
     qa("Ինչպե՞ս կապվել։",
       "Հարցերի, առաջարկների կամ սխալների մասին "
       + "գրեք նախագծի հեղինակին՝ ", mail(), "։"));
-}
-
-// the long books with a part translated, as
-// "author • book", and how many of their parts
-// (status() in nxgir_web.py)
-function statusList(status) {
-  const list = h("ul", { class: "status" });
-  for (const b of status) {
-    const pct = Math.round(100 * b.done / b.parts);
-    const fill = h("span");
-    fill.style.width = pct + "%";
-    const to = folderHref(b.folder);
-    list.append(h("li", {},
-      h("a", { href: to }, b.name || b.title),
-      h("span", { class: "meta" },
-        b.done + " / " + b.parts + " մաս"),
-      h("span", { class: "progress", role: "img",
-        "aria-label": pct + "%" }, fill)));
-  }
-  return list;
 }
 
 // the newest steps of the timeline, in English
@@ -775,7 +737,7 @@ async function shelf(folder) {
     folder ? null : joinBanner(),
     last && last.items.length
       ? recentCard(last.items) : null,
-    folder ? null : intro(data.status, data.news),
+    folder ? null : intro(data.news),
     // the top page has no list of folders: it is
     // at the bottom of #/stats
     folder ? h("h1", { lang: data.title
