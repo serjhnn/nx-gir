@@ -29,7 +29,7 @@ def test_build(tmp_path, files):
     out = tmp_path / "site"
     tsv = tmp_path / "timeline.tsv"
     tsv.write_text(
-        "2026-10-18\tBooks\t*\tJohn\t\tgrabar/john.txt\n",
+        "2026-10-18\tSite\t*\tJohn\t\tgrabar/john.txt\n",
         encoding="utf-8",
     )
     books, dirs, words = bs.build(out, files, tsv)

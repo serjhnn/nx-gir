@@ -1,6 +1,7 @@
 # The timeline of nx-gir: the main steps, shown on
-# the Timeline page and, the newest three, on the
-# home page (nxgir_timeline.py). One line per event,
+# the Timeline page and, the newest three about the
+# site (kind Site), on the home page
+# (nxgir_timeline.py). One line per event,
 # oldest first, fields split by tabs:
 #
 #   date   YYYY-MM-DD, or "next" for a plan (at the end)
