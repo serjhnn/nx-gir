@@ -9,6 +9,11 @@ title: "theme: site", "theme: authors" or "theme:
 books" (THEMES; one version is enough). The Blog
 page has a sub page for each theme.
 
+A post can also name the places it is about, on a
+line "place: ani, duin" after the title: ids of
+map/places.tsv (nxgir_map.py), which the map page
+shows. The line is not shown.
+
 A post is a "# Title" line, then paragraphs split
 by empty lines; "## " starts a subheading; a line
 ![alt](name.jpg) alone is a picture, a file of
@@ -32,6 +37,9 @@ LANGS = ("hy", "en", "ru")
 # offers them: app.js has their names (BLOG_THEMES)
 THEMES = ("site", "authors", "books")
 THEME_RE = re.compile(r"theme: *([a-z]+)")
+# "place: ani, duin": ids of map/places.tsv
+PLACE_RE = re.compile(r"place: *(.+)")
+ID_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 NAME_RE = re.compile(
     r"(\d{4}-\d{2}-\d{2})-([a-z0-9]+(?:-[a-z0-9]+)*)"
     r"\.([a-z]{2})\.md"
@@ -47,21 +55,41 @@ class BlogError(ValueError):
     pass
 
 
-def split_theme(text, name):
-    """The theme named after the title line, or
-    None, and the text without that line."""
+def split_meta(text, name):
+    """The theme and the places named on the lines
+    after the title ("theme: authors", "place: ani,
+    duin"), in any order, and the text without those
+    lines: (theme or None, [place ids], text)."""
     lines = text.splitlines(keepends=True)
+    theme, places, cut = None, [], []
     i = 1
-    while i < len(lines) and not lines[i].strip():
+    while i < len(lines):
+        line = lines[i].strip()
+        m = THEME_RE.fullmatch(line)
+        n = PLACE_RE.fullmatch(line)
+        if m:
+            if m.group(1) not in THEMES:
+                raise BlogError(
+                    f"{name}: theme not in {THEMES}"
+                )
+            theme = m.group(1)
+        elif n:
+            for pid in re.split(r" *, *", n.group(1)):
+                if not ID_RE.fullmatch(pid):
+                    raise BlogError(
+                        f"{name}: bad place {pid!r}"
+                    )
+                if pid not in places:
+                    places.append(pid)
+        elif line:
+            break
+        else:
+            i += 1
+            continue
+        cut.append(i)
         i += 1
-    if i >= len(lines):
-        return None, text
-    m = THEME_RE.fullmatch(lines[i].strip())
-    if not m:
-        return None, text
-    if m.group(1) not in THEMES:
-        raise BlogError(f"{name}: theme not in {THEMES}")
-    return m.group(1), "".join(lines[:i] + lines[i + 1 :])
+    kept = [x for k, x in enumerate(lines) if k not in cut]
+    return theme, places, "".join(kept)
 
 
 def parse(text, name):
@@ -109,9 +137,10 @@ def parse(text, name):
 
 def read(folder=BLOG):
     """The posts in folder, newest first, as {slug,
-    date, theme, versions}: theme is one of THEMES
-    or None; versions [{lang, title,
-    blocks}] in the order of LANGS. Files other
+    date, theme, places, versions}: theme is one of
+    THEMES or None, places a list of place ids;
+    versions [{lang, title, blocks}] in the order of
+    LANGS. Files other
     than *.md (and README.md) are left alone."""
     folder = Path(folder)
     if not folder.is_dir():
@@ -144,11 +173,17 @@ def read(folder=BLOG):
                 f"{p.name}: two dates for {slug!r}"
             )
         text = p.read_text(encoding="utf-8")
-        theme, text = split_theme(text, p.name)
+        theme, places, text = split_meta(text, p.name)
         if theme:
             if post.setdefault("theme", theme) != theme:
                 raise BlogError(
                     f"{p.name}: two themes for {slug!r}"
+                )
+        if places:
+            if post.setdefault("places", places) != places:
+                raise BlogError(
+                    f"{p.name}: two place lists for"
+                    f" {slug!r}"
                 )
         title, blocks = parse(text, p.name)
         post.setdefault("versions", []).append(
@@ -161,6 +196,7 @@ def read(folder=BLOG):
     )
     for post in out:
         post.setdefault("theme", None)
+        post.setdefault("places", [])
         post["versions"].sort(
             key=lambda v: LANGS.index(v["lang"])
         )

@@ -1,5 +1,7 @@
 # Vasak and the Seven Wolves
 
+place: bjni
+
 Comics are a new part of nxGir: scenes from the books of the Library, one series at a time. The first one comes from the Taregirk of Smbat Sparapet, and the picture words are a retelling in modern Armenian, not a quotation. Each page has its place in the original under it.
 
 ## The comic

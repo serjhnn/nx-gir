@@ -159,6 +159,20 @@
   site's book pages show it with the license, CC
   BY-SA 4.0 (`CONTRIBUTING.md`, README). Add a line
   with every new translated part, as `machine`
+- `map/places.tsv`: the places of the map (the ancient
+  Armenian names only, in the spelling of the books;
+  en and ru are the same names transliterated, the
+  modern name only in the note), read by
+  `scripts/nxgir_map.py` (tested in
+  `tests/test_map.py`). The map is the painted picture
+  `web/img/map/base.webp` (Armenian Highland, 36.5-42.5
+  N, 38-49.5 E, not to scale), so every place gives its
+  own `x`, `y` (percent of the picture) on a painted
+  tower or peak; lat and lon are the true place, and
+  `project()` only gives a rough fallback. A post or a
+  comic names its places on a `place:` line after the
+  title (`blog/README.md`). Page, `/api/map` and site
+  build: not yet
 - `blog/`: the Blog page (`#/blog`, `#/blog/<slug>`,
   `/api/blog`): one `YYYY-MM-DD-slug.LANG.md` per
   post and language (hy, en, ru; Armenian first),

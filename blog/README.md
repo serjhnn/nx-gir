@@ -21,6 +21,13 @@ read by `scripts/nxgir_blog.py`. Content, not code.
   without a theme is on no page. `THEMES` in `scripts/nxgir_blog.py` must
   match `BLOG_THEMES` in `web/app.js` (a test
   checks it); a new theme is added to both.
+- Places: a line `place: ani, duin` right after the
+  title (and the theme) names the places the post is
+  about, ids of `map/places.tsv`; the map page shows
+  the post on them. The line is not shown. One
+  version is enough (the others must not differ). A
+  test checks every id exists. Comics (`comics/`)
+  take the same line.
 - A line `![alt](name.jpg)` on its own is a
   picture: the file is in `web/img/` (jpg, png or
   webp, about 1000 px wide, under 300 KB).
