@@ -898,6 +898,10 @@ body.home .bar {
   font-size: 0.85rem;
   line-height: 1.35;
 }
+/* the map: a crop of the painted picture */
+.map-banner img {
+  object-position: 50% 50%;
+}
 /* the announcement: a crop of the picture (the
    face, none of its words) on the right */
 .news-banner {

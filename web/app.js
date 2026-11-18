@@ -735,6 +735,7 @@ async function shelf(folder) {
     folder ? null : menuBar(...MENU.map(menuLink)),
     folder ? null : newsBanner(),
     folder ? null : joinBanner(),
+    folder ? null : mapBanner(),
     last && last.items.length
       ? recentCard(last.items) : null,
     folder ? null : intro(data.news),
@@ -849,6 +850,22 @@ function joinBanner() {
       + " առկա թարգմանությունները"),
     h("span", { class: "join-go" },
       "Ինչպես միանալ →")));
+}
+
+// a narrow banner on the top page, with the
+// painted map, leading to #/map
+function mapBanner() {
+  return h("a", { class: "join-banner map-banner",
+    href: "#/map", lang: "hy" },
+  h("img", { src: "img/map/base.webp", alt: "",
+    width: "1536", height: "1024",
+    loading: "lazy" }),
+  h("span", { class: "join-text" },
+    h("b", {}, "Քարտեզ"),
+    h("span", {}, "Գրքերի վայրերը Հայկական"
+      + " բարձրավանդակում"),
+    h("span", { class: "join-go" },
+      "Բացել քարտեզը →")));
 }
 
 // a narrow banner on the top page, with the
