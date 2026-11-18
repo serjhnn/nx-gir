@@ -902,6 +902,11 @@ body.home .bar {
 .map-banner img {
   object-position: 50% 50%;
 }
+.map-banner .join-text {
+  background: linear-gradient(90deg,
+    rgb(0 0 0 / 0.88), rgb(0 0 0 / 0.65) 55%,
+    rgb(0 0 0 / 0.15));
+}
 /* the announcement: a crop of the picture (the
    face, none of its words) on the right */
 .news-banner {
