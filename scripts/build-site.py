@@ -38,6 +38,9 @@ not see the #/ pages of app.js:
         each of its languages, the same way
     features.<lang>.html   the Features page, the
         same way
+    map.<lang>.html, map/<place>.<lang>.html   the Map
+        page, and each place that a post or comic
+        names, with those stories (map_pages())
     sitemap.xml, robots.txt   where they are
 
 and, only with --zip (not built now, kept for later),
@@ -80,6 +83,7 @@ ROOT = HERE.parent
 sys.path.insert(0, str(HERE))
 
 import nxgir_limits as lim  # noqa: E402
+import nxgir_map as nm  # noqa: E402
 import nxgir_web as web  # noqa: E402
 
 # files the words are spread over, per language;
@@ -618,6 +622,131 @@ def feature_pages(out, app):
     return links
 
 
+# the title and the first words of the Map page, in
+# each language (MAP_UI in app.js)
+MAP_PAGE = {
+    "hy": (
+        "Քարտեզ",
+        "Հայկական լեռնաշխարհի վայրերը, որոնց մասին"
+        " գրառումներ և կոմիքսներ կան։",
+    ),
+    "en": (
+        "Map",
+        "The places of the Armenian Highland that"
+        " posts and comics are about.",
+    ),
+    "ru": (
+        "Карта",
+        "Места Армянского нагорья, о которых есть"
+        " записи и комиксы.",
+    ),
+}
+
+
+def map_pages(out, app):
+    """The Map as plain pages for search engines: for
+    each language map.<lang>.html, the places with a
+    link to their page, and for each place that a post
+    or comic names, map/<id>.<lang>.html with those
+    stories, linked to their own plain pages. All
+    name each other (hreflang). Returns (links,
+    dated): [(path, title)] and [(path, title, date)]
+    with the date of the newest story."""
+    places = web.map_data(app)["places"]
+    if not places:
+        return [], []
+    named_ = [p for p in places if p["stories"]]
+    esc = htm.escape
+
+    def alt(paths):
+        return "".join(
+            '<link rel="alternate" hreflang='
+            f'"{lang}" href="{esc(url(path))}">\n'
+            for lang, path in paths
+        )
+
+    links, dated = [], []
+    langs = list(MAP_PAGE)
+    for lang in langs:
+        title, intro = MAP_PAGE[lang]
+        kinds = nm.KIND_NAMES[lang]
+        items = []
+        for p in places:
+            name = esc(p["names"][lang])
+            if p["stories"]:
+                href = esc(f"map/{p['id']}.{lang}.html")
+                name = f'<a href="{href}">{name}</a>'
+            items.append(
+                f"<li>{name} · {esc(kinds[p['kind']])}</li>"
+            )
+        path = f"map.{lang}.html"
+        plain_page(
+            out,
+            path,
+            lang=lang,
+            open=OPEN_POST[lang],
+            title=title,
+            desc=intro,
+            reader="./#/map",
+            text=f"<p>{esc(intro)}</p>\n<ul>\n"
+            + "\n".join(items)
+            + "\n</ul>",
+            alt=alt([(x, f"map.{x}.html") for x in langs]),
+        )
+        links.append((path, title))
+    for p in named_:
+        sibs = alt(
+            [(x, f"map/{p['id']}.{x}.html") for x in langs]
+        )
+        newest = max(s["date"] for s in p["stories"])
+        for lang in langs:
+            body = [f"<p>{esc(kinds_of(p, lang))}</p>"]
+            leads = []
+            for s in p["stories"]:
+                v = next(
+                    (
+                        x
+                        for x in s["versions"]
+                        if x["lang"] == lang
+                    ),
+                    s["versions"][0],
+                )
+                href = esc(
+                    post_page(
+                        s["slug"], v["lang"], s["type"]
+                    )
+                )
+                body.append(
+                    f'<h2><a href="{href}">'
+                    f"{named(esc(v['title']))}</a></h2>"
+                )
+                if v["lead"]:
+                    leads.append(v["lead"])
+                    body.append(
+                        f"<p>{named(esc(v['lead']))}</p>"
+                    )
+            path = f"map/{p['id']}.{lang}.html"
+            plain_page(
+                out,
+                path,
+                lang=lang,
+                open=OPEN_POST[lang],
+                title=p["names"][lang],
+                desc=describe([""] + leads)
+                or p["names"][lang],
+                reader=f"./#/map/{p['id']}",
+                text="\n".join(body),
+                alt=sibs,
+            )
+            dated.append((path, p["names"][lang], newest))
+    return links, dated
+
+
+def kinds_of(place, lang):
+    """The kind of a place in lang, as a word."""
+    return nm.KIND_NAMES[lang][place["kind"]]
+
+
 def licensed(credit, text):
     """For one of our translations (credit, from
     nxgir_web.credit()): the license link for the
@@ -678,6 +807,9 @@ def searchable(out, app, files):
     posts = post_pages(out, app)
     posts += post_pages(out, app, comics=True)
     links += feature_pages(out, app)
+    more, dated = map_pages(out, app)
+    links += more
+    posts += dated
     urls = [(SITE + "/", "")]
     urls += [(url(p), "") for p, _ in links]
     urls += [(url(p), d) for p, _, d in posts]

@@ -76,6 +76,18 @@ const url = "http://localhost:" + port +
   await p.waitForSelector(".tl .ev");
   await p.screenshot({
     path: docs + "/web-timeline.png" });
+  // phone, light: the map, a place opened
+  p = await b.newPage({
+    viewport: { width: 390, height: 760 },
+    deviceScaleFactor: 2,
+    colorScheme: "light",
+  });
+  await p.goto("http://localhost:" + port +
+    "/#/map/bjni");
+  await p.waitForSelector(".map-card .map-story");
+  await p.waitForTimeout(500);
+  await p.screenshot({ path: docs + "/web-map.jpg",
+    type: "jpeg", quality: 80 });
   await b.close();
 })().catch((e) => {
   console.error(e);
@@ -151,6 +163,7 @@ def main():
         "web-light.png",
         "web-dark.png",
         "web-timeline.png",
+        "web-map.jpg",
     ):
         size = (DOCS / name).stat().st_size
         print(f"docs/{name}: {size // 1024} KB")

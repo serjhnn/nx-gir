@@ -3040,3 +3040,22 @@ body.reading.full .bar {
       0 0 18px 7px rgba(255, 200, 60, 0.35);
   }
 }
+
+/* the places a post is about: links to the map */
+.post-places {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0.2rem 0 0.8rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.post-places svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--accent-ink);
+}
+.post-places a {
+  color: var(--accent-ink);
+}

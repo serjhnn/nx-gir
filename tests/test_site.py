@@ -254,6 +254,27 @@ def test_searchable(tmp_path, files):
     assert "<h1>Features</h1>" in feat
     assert f"{bs.SITE}/features.en.html" in sm
     assert '<a href="features.en.html">' in index
+    # the Map: a page of the places, and a page for
+    # each place that a post or comic names
+    mp = (out / "map.en.html").read_text("utf-8")
+    assert "<h1>Map</h1>" in mp
+    assert '<a href="map/bjni.en.html">Bjni</a>' in mp
+    assert "<li>Ani · City</li>" in mp
+    assert 'href="./#/map"' in mp
+    bj = (out / "map/bjni.en.html").read_text("utf-8")
+    assert "<h1>Bjni</h1>" in bj
+    assert "<p>Fortress</p>" in bj
+    assert 'href="./#/map/bjni"' in bj
+    assert 'href="comics/vasak-seven-wolves.en.html"' in bj
+    assert 'hreflang="ru"' in bj
+    ru = (out / "map/bjni.ru.html").read_text("utf-8")
+    assert "<h1>Бджни</h1>" in ru
+    assert "<p>Крепость</p>" in ru
+    # no page for a place nobody wrote about
+    assert not (out / "map/ani.en.html").exists()
+    assert f"{bs.SITE}/map/bjni.en.html" in sm
+    assert f"{bs.SITE}/map.hy.html" in sm
+    assert '<a href="map.en.html">' in index
 
 
 def test_licensed():

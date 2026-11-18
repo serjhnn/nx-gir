@@ -1666,6 +1666,32 @@ function version(p, lang) {
     || p.versions[0];
 }
 
+// the places a post or series names, as links to the
+// map: the names (by id) come from the map's data;
+// null when it names none or the data is missing
+async function placeNames(item) {
+  if (!item || !item.places || !item.places.length) {
+    return null;
+  }
+  try {
+    const m = await api("map");
+    return new Map(m.places.map((x) => [x.id, x.names]));
+  } catch (e) {
+    return null;
+  }
+}
+
+function placeChips(item, names, lang) {
+  const ids = names
+    ? item.places.filter((id) => names.has(id)) : [];
+  if (!ids.length) return null;
+  return h("p", { class: "post-places", lang },
+    icon(ICONS.map),
+    h("span", {}, ids.flatMap((id, i) => [i ? ", " : "",
+      h("a", { href: "#/map/" + id },
+        names.get(id)[lang])])));
+}
+
 // one post: its date, title and text (parse()
 // in nxgir_blog.py: ["p", text], ["h", text] or
 // ["img", file, alt])
@@ -1727,6 +1753,7 @@ async function blogPage(path) {
   const one = slug
     ? data.posts.find((p) => p.slug === slug) : null;
   if (slug && !one) throw new Error("No such post");
+  const names = await placeNames(one);
   const posts = theme
     ? data.posts.filter((p) => p.theme === theme)
     : data.posts;
@@ -1778,6 +1805,7 @@ async function blogPage(path) {
         named(t.sub)),
       one ? null : tabs,
       langs.length > 1 ? pick : null,
+      one ? placeChips(one, names, lang) : null,
       h("div", {
         class: "blog" + (one ? " one p-" + one.slug : "") },
         one ? postItem(one, lang)
@@ -1853,6 +1881,7 @@ async function comicsPage(path) {
   const one = slug
     ? data.series.find((s) => s.slug === slug) : null;
   if (slug && !one) throw new Error("No such series");
+  const names = await placeNames(one);
   const draw = () => {
     const have = new Set((one ? [one] : data.series)
       .flatMap((s) => s.versions.map((v) => v.lang)));
@@ -1884,6 +1913,7 @@ async function comicsPage(path) {
       one ? null : h("p", { class: "sub", lang },
         t.sub),
       langs.length > 1 ? pick : null,
+      one ? placeChips(one, names, lang) : null,
       one ? h("div", { class: "blog one comics" },
         comicItem(one, lang))
         : h("div", { class: "blog comics-list" },
@@ -2029,7 +2059,7 @@ async function mapPage(want) {
       stage.style.transform = "translate(" + st.x
         + "px," + st.y + "px) scale(" + st.s + ")";
       stage.style.setProperty("--inv", 1 / st.s);
-      stage.classList.toggle("zoomed", st.s >= 2);
+      stage.classList.toggle("zoomed", st.s >= 2.4);
       view.classList.toggle("in", st.s > 1);
     };
     const zoomAt = (cx, cy, s2) => {

@@ -180,8 +180,14 @@
   `x`, `y` (look at the picture); `MAP_UI` kinds in
   `app.js` must match `KINDS` (a test checks it). The
   pins' position is set with `el.style`, never a style
-  attribute (the CSP forbids it). Not yet: pages of
-  places for search engines
+  attribute (the CSP forbids it). A post page links
+  its places (`placeChips()`). For search engines
+  `build-site.py` writes `map.<lang>.html` and a page
+  for each place that a post names,
+  `map/<id>.<lang>.html` (`map_pages()`; the kind
+  names are `KIND_NAMES` in `nxgir_map.py`). The
+  README picture `docs/web-map.jpg` is made by
+  `scripts/render-web.py`
 - `blog/`: the Blog page (`#/blog`, `#/blog/<slug>`,
   `/api/blog`): one `YYYY-MM-DD-slug.LANG.md` per
   post and language (hy, en, ru; Armenian first),

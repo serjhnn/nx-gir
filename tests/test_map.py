@@ -210,4 +210,8 @@ def test_kinds_match_app():
         block = ui.split(f"  {lang}: {{")[1]
         block = block.split("kinds: {")[1].split("}")[0]
         for k in nm.KINDS:
-            assert f"{k}:" in block, (lang, k)
+            name = nm.KIND_NAMES[lang][k]
+            assert f'{k}: "{name}"' in block, (lang, k)
+    assert set(nm.KIND_NAMES) == {"hy", "en", "ru"}
+    for names in nm.KIND_NAMES.values():
+        assert set(names) == set(nm.KINDS)

@@ -29,6 +29,34 @@ KINDS = (
     "lake",
     "mountain",
 )
+# what each kind is called, in the languages of the
+# site (app.js has the same, MAP_UI: a test checks it)
+KIND_NAMES = {
+    "hy": {
+        "city": "Քաղաք",
+        "fortress": "Բերդ",
+        "monastery": "Վանք",
+        "region": "Գավառ",
+        "lake": "Լիճ",
+        "mountain": "Լեռ",
+    },
+    "en": {
+        "city": "City",
+        "fortress": "Fortress",
+        "monastery": "Monastery",
+        "region": "Region",
+        "lake": "Lake",
+        "mountain": "Mountain",
+    },
+    "ru": {
+        "city": "Город",
+        "fortress": "Крепость",
+        "monastery": "Монастырь",
+        "region": "Область",
+        "lake": "Озеро",
+        "mountain": "Гора",
+    },
+}
 FIELDS = (
     "id",
     "kind",
