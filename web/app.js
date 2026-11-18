@@ -87,6 +87,11 @@ const ICONS = {
       "a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z",
     "M3 12h18M12 4v8",
   ],
+  // a folded map: the map
+  map: [
+    "M9 4L3 6v14l6-2l6 2l6-2V4l-6 2z",
+    "M9 4v14M15 6v14",
+  ],
   // a horn: the announcements
   horn: [
     "M4 10v4h3l7 4V6L7 10z",
@@ -324,6 +329,9 @@ async function staticApi(path) {
   if (route === "comics") {
     return json("data/comics.json");
   }
+  if (route === "map") {
+    return json("data/map.json");
+  }
   if (route === "recent") {
     return { items: await recentHere(
       Number(q.get("n")) || 0) };
@@ -411,7 +419,7 @@ const BY_SA = "https://creativecommons.org/"
 function siteFooter() {
   const pages = [["#/library", "Library"],
     ["#/blog", "Blog"], ["#/comics", "Comics"],
-    ["#/features", "Features"],
+    ["#/map", "Map"], ["#/features", "Features"],
     ["#/timeline", "Timeline"],
     ["#/stats", "Statistics"],
     ["#/recent", "Readings"]];
@@ -614,6 +622,7 @@ const MENU = [
   ["#/library", "book", "Գրադարան"],
   ["#/blog", "pen", "Բլոգ"],
   ["#/comics", "panels", "Կոմիքսներ"],
+  ["#/map", "map", "Քարտեզ"],
   ["#/features", "tick", "Հնարավորություններ"],
   ["#/contribute", "join", "Միանալ"],
   ["#/news", "horn", "Հայտարարություններ"],
@@ -1881,6 +1890,354 @@ async function comicsPage(path) {
           data.series.length
             ? data.series.map((s) => comicCard(s, lang))
             : h("p", { class: "empty", lang }, t.none)));
+  };
+  draw();
+}
+
+// -- map --
+
+// #/map: the painted map of the Armenian Highland
+// (map/places.tsv, nxgir_map.py): a pin on each
+// place, a card with the posts and comics that name
+// it; #/map/<place> opens that place
+const MAP_UI = {
+  hy: { title: "Քարտեզ",
+    sub: "Գրառումներն ու կոմիքսները՝ իրենց վայրերում",
+    all: "Բոլորը", blog: "Բլոգ", comics: "Կոմիքս",
+    places: "Վայրեր",
+    none: "Այս վայրի մասին գրառումներ դեռ չկան։",
+    zin: "Մոտեցնել", zout: "Հեռացնել",
+    reset: "Ամբողջ քարտեզը", close: "Փակել",
+    list: "Բոլոր վայրերը",
+    map: "Հայկական լեռնաշխարհի քարտեզ",
+    kinds: { city: "Քաղաք", fortress: "Բերդ",
+      monastery: "Վանք", region: "Գավառ",
+      lake: "Լիճ", mountain: "Լեռ" } },
+  en: { title: "Map",
+    sub: "Posts and comics, each at its place",
+    all: "All", blog: "Blog", comics: "Comics",
+    places: "Places",
+    none: "No posts about this place yet.",
+    zin: "Zoom in", zout: "Zoom out",
+    reset: "Whole map", close: "Close",
+    list: "All places",
+    map: "Map of the Armenian Highland",
+    kinds: { city: "City", fortress: "Fortress",
+      monastery: "Monastery", region: "Region",
+      lake: "Lake", mountain: "Mountain" } },
+  ru: { title: "Карта",
+    sub: "Записи и комиксы на своих местах",
+    all: "Все", blog: "Блог", comics: "Комиксы",
+    places: "Места",
+    none: "О этом месте записей пока нет.",
+    zin: "Приблизить", zout: "Отдалить",
+    reset: "Вся карта", close: "Закрыть",
+    list: "Все места",
+    map: "Карта Армянского нагорья",
+    kinds: { city: "Город", fortress: "Крепость",
+      monastery: "Монастырь", region: "Область",
+      lake: "Озеро", mountain: "Гора" } },
+};
+const MAP_MAX = 3;
+const MAP_FRESH = 14 * 24 * 3600 * 1000;
+
+// where a story is read
+function storyHref(s) {
+  return "#/" + (s.type === "comics" ? "comics/" : "blog/")
+    + s.slug;
+}
+
+// a place's pin: its stories decide the look
+function pinKind(p) {
+  if (p.stories.some((s) => s.type === "blog")) {
+    return "blog";
+  }
+  return p.stories.length ? "comics" : "place";
+}
+
+function mapStory(s, lang) {
+  const v = version(s, lang);
+  const t = MAP_UI[lang];
+  return h("a", { class: "post-card map-story",
+    href: storyHref(s), lang: v.lang },
+  v.cover ? h("img", { src: "img/" + v.cover,
+    alt: v.alt, loading: "lazy" }) : null,
+  h("span", { class: "pc-top" },
+    h("span", {}, t[s.type] + " · ",
+      h("time", { datetime: s.date },
+        longDay(s.date, v.lang))),
+    h("span", { class: "pc-more" },
+      BLOG[v.lang].read)),
+  h("span", { class: "pc-title" }, named(v.title)),
+  v.lead ? h("span", { class: "pc-lead" },
+    named(v.lead)) : null);
+}
+
+async function mapPage(want) {
+  const data = await api("map");
+  const places = data.places;
+  const by = new Map(places.map((p) => [p.id, p]));
+  const st = { lang: blogLang(), filter: "all",
+    sel: by.has(want) ? want : "",
+    s: 1, x: 0, y: 0 };
+  const shown = (p) => st.filter === "all"
+    || (st.filter === "places" ? !p.stories.length
+      : p.stories.some((s) => s.type === st.filter));
+  const draw = () => {
+    const lang = st.lang;
+    const t = MAP_UI[lang];
+    const nm = (p) => p.names[lang];
+    const view = h("div", { class: "map-view",
+      tabindex: "0", role: "application",
+      "aria-label": t.map });
+    const stage = h("div", { class: "map-stage" },
+      h("img", { src: data.image, alt: "",
+        draggable: "false" }));
+    view.append(stage);
+    const pins = new Map();
+    for (const p of places) {
+      const kind = pinKind(p);
+      const fresh = p.stories.some((s) =>
+        Date.now() - isoDate(s.date) < MAP_FRESH);
+      const b = h("button", { type: "button",
+        class: "pin pin-" + kind + (fresh ? " fresh" : "")
+          + (p.x > 88 ? " pin-r" : ""),
+        "aria-label": nm(p) },
+      h("span", { class: "pin-dot" },
+        kind === "place" ? null
+          : icon(ICONS[kind === "blog" ? "book"
+            : "panels"])),
+      h("span", { class: "pin-label", lang },
+        nm(p)));
+      // not a style attribute: the CSP forbids it
+      b.style.left = p.x + "%";
+      b.style.top = p.y + "%";
+      b.addEventListener("click", () => {
+        if (!moved) pick(p.id, false);
+      });
+      pins.set(p.id, b);
+      stage.append(b);
+    }
+    const card = h("div", { class: "map-card-wrap" });
+    // the view: zoom and pan, clamped to the picture
+    const apply = () => {
+      const w = view.clientWidth;
+      const hh = view.clientHeight;
+      st.s = Math.min(MAP_MAX, Math.max(1, st.s));
+      st.x = Math.min(0, Math.max(w - w * st.s, st.x));
+      st.y = Math.min(0, Math.max(hh - hh * st.s, st.y));
+      stage.style.transform = "translate(" + st.x
+        + "px," + st.y + "px) scale(" + st.s + ")";
+      stage.style.setProperty("--inv", 1 / st.s);
+      stage.classList.toggle("zoomed", st.s >= 2);
+      view.classList.toggle("in", st.s > 1);
+    };
+    const zoomAt = (cx, cy, s2) => {
+      s2 = Math.min(MAP_MAX, Math.max(1, s2));
+      st.x = cx - (cx - st.x) * s2 / st.s;
+      st.y = cy - (cy - st.y) * s2 / st.s;
+      st.s = s2;
+      apply();
+    };
+    const center = (zoomIn) => {
+      const p = by.get(st.sel);
+      if (!p) return;
+      const w = view.clientWidth;
+      const hh = view.clientHeight;
+      if (zoomIn) st.s = Math.max(st.s, 2);
+      st.x = w / 2 - p.x / 100 * w * st.s;
+      st.y = hh / 2 - p.y / 100 * hh * st.s;
+      apply();
+    };
+    const drawCard = () => {
+      const p = by.get(st.sel);
+      for (const [id, b] of pins) {
+        b.classList.toggle("on", id === st.sel);
+        b.setAttribute("aria-pressed",
+          String(id === st.sel));
+      }
+      if (!p) {
+        card.replaceChildren();
+        return;
+      }
+      const close = h("button", { type: "button",
+        class: "map-close", "aria-label": t.close },
+      "×");
+      close.addEventListener("click", () => {
+        st.sel = "";
+        history.replaceState(history.state, "",
+          "#/map");
+        drawCard();
+      });
+      card.replaceChildren(h("section", {
+        class: "map-card", lang,
+        "aria-live": "polite" },
+      close,
+      h("p", { class: "map-kind" }, t.kinds[p.kind]),
+      h("h2", {}, nm(p)),
+      p.stories.length
+        ? p.stories.map((s) => mapStory(s, lang))
+        : h("p", { class: "empty" }, t.none)));
+    };
+    function pick(id, zoomIn) {
+      st.sel = id;
+      history.replaceState(history.state, "",
+        "#/map/" + id);
+      drawCard();
+      center(zoomIn);
+    }
+    // drag, pinch; a drag is not a click on a pin
+    let moved = false;
+    const ptrs = new Map();
+    let start = null;
+    let pinch = 0;
+    const gap = () => {
+      const [a, b] = [...ptrs.values()];
+      return Math.hypot(a.clientX - b.clientX,
+        a.clientY - b.clientY);
+    };
+    view.addEventListener("pointerdown", (e) => {
+      ptrs.set(e.pointerId, e);
+      moved = false;
+      start = { x: e.clientX, y: e.clientY };
+      pinch = ptrs.size === 2 ? gap() : 0;
+    });
+    view.addEventListener("pointermove", (e) => {
+      const prev = ptrs.get(e.pointerId);
+      if (!prev) return;
+      ptrs.set(e.pointerId, e);
+      if (ptrs.size === 2) {
+        const [a, b] = [...ptrs.values()];
+        const r = view.getBoundingClientRect();
+        const d = gap();
+        if (pinch) {
+          zoomAt((a.clientX + b.clientX) / 2 - r.left,
+            (a.clientY + b.clientY) / 2 - r.top,
+            st.s * d / pinch);
+        }
+        pinch = d;
+        moved = true;
+        return;
+      }
+      if (!moved && Math.hypot(e.clientX - start.x,
+        e.clientY - start.y) < 6) return;
+      if (!moved) view.setPointerCapture(e.pointerId);
+      moved = true;
+      st.x += e.clientX - prev.clientX;
+      st.y += e.clientY - prev.clientY;
+      apply();
+    });
+    const lift = (e) => {
+      ptrs.delete(e.pointerId);
+      pinch = 0;
+    };
+    view.addEventListener("pointerup", lift);
+    view.addEventListener("pointercancel", lift);
+    // ctrl + wheel (a trackpad pinch) zooms; the plain
+    // wheel still scrolls the page
+    view.addEventListener("wheel", (e) => {
+      if (!e.ctrlKey && !e.metaKey) return;
+      e.preventDefault();
+      const r = view.getBoundingClientRect();
+      zoomAt(e.clientX - r.left, e.clientY - r.top,
+        st.s * Math.exp(-e.deltaY / 200));
+    }, { passive: false });
+    view.addEventListener("keydown", (e) => {
+      const w = view.clientWidth;
+      const hh = view.clientHeight;
+      const step = { ArrowLeft: [40, 0],
+        ArrowRight: [-40, 0], ArrowUp: [0, 40],
+        ArrowDown: [0, -40] }[e.key];
+      if (e.key === "+" || e.key === "=") {
+        zoomAt(w / 2, hh / 2, st.s * 1.4);
+      } else if (e.key === "-") {
+        zoomAt(w / 2, hh / 2, st.s / 1.4);
+      } else if (step && st.s > 1) {
+        st.x += step[0];
+        st.y += step[1];
+        apply();
+      } else {
+        return;
+      }
+      e.preventDefault();
+    });
+    const ctl = (label, text, fn) => {
+      const b = h("button", { type: "button",
+        "aria-label": label, title: label }, text);
+      b.addEventListener("click", fn);
+      return b;
+    };
+    const mid = (k) => zoomAt(view.clientWidth / 2,
+      view.clientHeight / 2, st.s * k);
+    view.append(h("div", { class: "map-ctl" },
+      ctl(t.zin, "+", () => mid(1.5)),
+      ctl(t.zout, "−", () => mid(1 / 1.5)),
+      ctl(t.reset, "⌂", () => {
+        st.s = 1;
+        st.x = 0;
+        st.y = 0;
+        apply();
+      })));
+    const hasLang = (l) => places.some((p) =>
+      p.stories.some((s) =>
+        s.versions.some((v) => v.lang === l)));
+    const langs = Object.keys(BLOG).filter(hasLang);
+    const group = (items, now, set) => h("div", {
+      class: "filters outline", role: "group" },
+    items.map(([k, label, lg]) => {
+      const b = h("button", { type: "button", lang: lg,
+        "aria-pressed": String(k === now) }, label);
+      b.addEventListener("click", () => set(k));
+      return b;
+    }));
+    const pickLang = group(
+      langs.map((l) => [l, BLOG[l].name, l]), lang,
+      (l) => {
+        st.lang = l;
+        setBlogLang(l);
+        draw();
+      });
+    const pickShow = group(
+      ["all", "blog", "comics", "places"].map((k) =>
+        [k, t[k], lang]), st.filter,
+      (k) => {
+        st.filter = k;
+        draw();
+      });
+    for (const p of places) {
+      pins.get(p.id).hidden = !shown(p);
+    }
+    // the same places as a list: for a keyboard, a
+    // screen reader, and a map that has not loaded
+    const list = h("ul", { class: "map-list", lang },
+      [...places].sort((a, b) =>
+        b.stories.length - a.stories.length)
+        .filter(shown).map((p) => {
+          const b = h("button", { type: "button" },
+            nm(p));
+          b.addEventListener("click", () => {
+            pick(p.id, true);
+            view.scrollIntoView({ block: "nearest" });
+          });
+          return h("li", {}, b,
+            h("span", {}, " · " + t.kinds[p.kind]
+              + (p.stories.length
+                ? " · " + p.stories.length : "")));
+        }));
+    document.title = t.title + " · " + NAME;
+    show(
+      h("p", { class: "crumbs", lang },
+        h("a", { href: "#/" }, BLOG[lang].home)),
+      h("h1", { lang }, t.title),
+      h("p", { class: "sub", lang }, t.sub),
+      langs.length > 1 ? pickLang : null,
+      pickShow,
+      h("div", { class: "map-wrap" }, view, card),
+      h("h2", { class: "map-list-h", lang }, t.list),
+      list);
+    apply();
+    drawCard();
+    if (st.sel) center(true);
   };
   draw();
 }
@@ -4593,6 +4950,9 @@ async function route() {
       || hash.startsWith("comics/")) {
       await comicsPage(decodeURIComponent(
         hash.slice(7)));
+    } else if (hash === "map"
+      || hash.startsWith("map/")) {
+      await mapPage(decodeURIComponent(hash.slice(4)));
     } else if (hash === "features"
       || hash.startsWith("features/")) {
       await featuresPage(hash.slice(9));

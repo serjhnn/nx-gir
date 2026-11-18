@@ -171,8 +171,17 @@
   tower or peak; lat and lon are the true place, and
   `project()` only gives a rough fallback. A post or a
   comic names its places on a `place:` line after the
-  title (`blog/README.md`). Page, `/api/map` and site
-  build: not yet
+  title (`blog/README.md`). The Map page (`#/map`,
+  `#/map/<place>`, `mapPage()` in `app.js`; `/api/map`,
+  `map_data()` in `nxgir_web.py`; on the site
+  `data/map.json`): pins on the picture, zoom and
+  drag, a card with the stories, filters, and the list
+  below it. A new place goes in `places.tsv` with its
+  `x`, `y` (look at the picture); `MAP_UI` kinds in
+  `app.js` must match `KINDS` (a test checks it). The
+  pins' position is set with `el.style`, never a style
+  attribute (the CSP forbids it). Not yet: pages of
+  places for search engines
 - `blog/`: the Blog page (`#/blog`, `#/blog/<slug>`,
   `/api/blog`): one `YYYY-MM-DD-slug.LANG.md` per
   post and language (hy, en, ru; Armenian first),

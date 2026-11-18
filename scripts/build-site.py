@@ -17,6 +17,7 @@ the same functions (nxgir_web.py):
     data/blog.json                  /api/blog
     data/features.json              /api/features
     data/comics.json                /api/comics
+    data/map.json                   /api/map
     data/titles.json                each book's title,
         for /api/recent (the rest is in the browser)
     data/library.json               /api/library
@@ -247,6 +248,7 @@ def build(
     blog=web.blog_posts.BLOG,
     features=web.feature_list.FEATURES,
     comics=web.comic_series.COMICS,
+    places=web.place_map.PLACES,
     zip_site=False,
 ):
     """Write the site for files [(name, size, path)],
@@ -278,6 +280,7 @@ def build(
             blog=blog,
             features=features,
             comics=comics,
+            places=places,
         )
         dirs = folders(files)
         write_json(
@@ -289,6 +292,7 @@ def build(
             data / "features.json", web.features(app)
         )
         write_json(data / "comics.json", web.comics(app))
+        write_json(data / "map.json", web.map_data(app))
         # for the list of readings, which only has
         # the names (recentHere() in app.js)
         write_json(

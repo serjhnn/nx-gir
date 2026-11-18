@@ -132,3 +132,82 @@ def test_two_place_lists(tmp_path):
     )
     with pytest.raises(bl.BlogError, match="two place"):
         bl.read(d)
+
+
+def post(slug, date, places, title="T", blocks=None):
+    blocks = blocks or [
+        ["img", "a.jpg", "alt"],
+        ["p", "Lead text."],
+    ]
+    return {
+        "slug": slug,
+        "date": date,
+        "places": places,
+        "versions": [
+            {"lang": "en", "title": title, "blocks": blocks}
+        ],
+    }
+
+
+def test_build(path):
+    places = nm.read(path)
+    out = nm.build(
+        places,
+        [post("old", "2026-11-01", ["ani"])],
+        [post("new", "2026-11-05", ["ani", "duin"])],
+    )
+    ani, duin = out["places"]
+    assert out["image"] == "img/map/base.webp"
+    assert ani["names"]["hy"] == "Անի"
+    # newest first, the type kept
+    assert [s["slug"] for s in ani["stories"]] == [
+        "new",
+        "old",
+    ]
+    assert [s["type"] for s in ani["stories"]] == [
+        "comics",
+        "blog",
+    ]
+    v = ani["stories"][0]["versions"][0]
+    assert (v["cover"], v["lead"]) == (
+        "a.jpg",
+        "Lead text.",
+    )
+    assert [s["slug"] for s in duin["stories"]] == ["new"]
+
+
+def test_build_unknown_place(path):
+    with pytest.raises(nm.MapError, match="nowhere"):
+        nm.build(
+            nm.read(path),
+            [post("p", "2026-11-01", ["nowhere"])],
+        )
+
+
+def test_lead():
+    assert nm.lead([["h", "H"]]) == ""
+    long = " ".join(["word"] * 100)
+    cut = nm.lead([["p", long]])
+    assert cut.endswith("…") and len(cut) <= nm.LEAD + 1
+    assert not cut.endswith(" …")
+
+
+def test_api(tmp_path):
+    from nxgir_web import App, get
+
+    app = App([], tmp_path / "state.json")
+    data = get(app, "/api/map", {})
+    ids = {p["id"] for p in data["places"]}
+    assert "bjni" in ids and data["kinds"] == list(nm.KINDS)
+    off = App([], tmp_path / "state.json", places=None)
+    assert get(off, "/api/map", {})["places"] == []
+
+
+def test_kinds_match_app():
+    js = (nm.ROOT / "web/app.js").read_text("utf-8")
+    ui = js.split("const MAP_UI = {")[1].split("};")[0]
+    for lang in ("hy", "en", "ru"):
+        block = ui.split(f"  {lang}: {{")[1]
+        block = block.split("kinds: {")[1].split("}")[0]
+        for k in nm.KINDS:
+            assert f"{k}:" in block, (lang, k)

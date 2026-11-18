@@ -181,3 +181,88 @@ def read(path=PLACES):
             )
         places.append(p)
     return places
+
+
+# the longest lead on a card, in characters
+LEAD = 220
+
+
+def lead(blocks):
+    """The first paragraph of a post, cut at a word
+    when it is longer than LEAD."""
+    for kind, text, *_ in blocks:
+        if kind != "p":
+            continue
+        if len(text) <= LEAD:
+            return text
+        cut = text[:LEAD].rsplit(" ", 1)[0]
+        return cut.rstrip(",;:։՝ ") + "…"
+    return ""
+
+
+def story(item, kind):
+    """A post or a comics series as the map shows it:
+    {type, slug, date, versions: [{lang, title, lead,
+    cover, alt}]}; cover is the file of its first
+    picture, in web/img/, or empty."""
+    versions = []
+    for v in item["versions"]:
+        pic = next(
+            (b for b in v["blocks"] if b[0] == "img"), None
+        )
+        versions.append(
+            {
+                "lang": v["lang"],
+                "title": v["title"],
+                "lead": lead(v["blocks"]),
+                "cover": pic[1] if pic else "",
+                "alt": pic[2] if pic else "",
+            }
+        )
+    return {
+        "type": kind,
+        "slug": item["slug"],
+        "date": item["date"],
+        "versions": versions,
+    }
+
+
+def build(places, blog=(), comics=()):
+    """The answer of /api/map: the picture, and each
+    place with its names and the stories (posts and
+    comics series, newest first) that name it. A post
+    naming a place not in places raises MapError."""
+    known = {p["id"] for p in places}
+    found = {p["id"]: [] for p in places}
+    for kind, items in (("blog", blog), ("comics", comics)):
+        for item in items:
+            for pid in item.get("places", []):
+                if pid not in known:
+                    raise MapError(
+                        f"{item['slug']}: no place {pid!r}"
+                    )
+                found[pid].append(story(item, kind))
+    out = []
+    for p in places:
+        found[p["id"]].sort(
+            key=lambda s: s["date"], reverse=True
+        )
+        out.append(
+            {
+                "id": p["id"],
+                "kind": p["kind"],
+                "x": p["x"],
+                "y": p["y"],
+                "lat": p["lat"],
+                "lon": p["lon"],
+                "names": {
+                    k: p[k] for k in ("hy", "en", "ru")
+                },
+                "stories": found[p["id"]],
+            }
+        )
+    return {
+        "image": "img/map/" + IMAGE.name,
+        "kinds": list(KINDS),
+        "places": out,
+    }

@@ -42,6 +42,10 @@ Every long book has a page of its own: open it from the Library to see all its p
 
 Կոմիքսներ on the home page opens a page of comic series made from the books of the Library: each page of a series is a picture with a note under it giving the line of the book it retells, and below are a short explanation of the story and where to read it. The first series, Vasak and the Seven Wolves, is from Smbat Sparapet's Taregirk.
 
+## Map
+
+The Map page shows the Armenian Highland on a painted map, with a pin on each place a post or a comic is about. Tap a pin to see them in a card and open one; the pins of new posts glow. Zoom with + and −, drag to move, pinch on a phone; the filters show only the blog, only the comics or only places with nothing written yet. The places carry their ancient Armenian names, and the list under the map has the same places for a keyboard.
+
 ## Report an error
 
 See a mistake in the Grabar text or in a translation? Tap the word, press Report an error, and write what the sentence should say. A new issue opens on GitHub, filled in with the book, the line and the sentence, for you to look over and send. No GitHub account? Send the same report by email.
