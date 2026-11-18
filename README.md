@@ -366,8 +366,8 @@ phone's browser.
 - **Map** (the link under the library, or `#/map`): a
   painted map of the Armenian Highland with a pin on
   each place a blog post or a comic is about, under
-  its ancient Armenian name. Tap a pin for a card with
-  the stories, and open one; zoom and drag, pinch on a
+  its ancient Armenian name. Tap a pin for a small panel
+  with links to its stories; zoom and drag, pinch on a
   phone. A post names its places on a `place:` line
   after the title, ids from `map/places.tsv`; the post
   page then links to them.

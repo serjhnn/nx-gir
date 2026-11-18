@@ -44,7 +44,7 @@ Every long book has a page of its own: open it from the Library to see all its p
 
 ## Map
 
-The Map page shows the Armenian Highland on a painted map, with a pin on each place a post or a comic is about. Tap a pin to see them in a card and open one; the pins of new posts glow. Zoom with + and −, drag to move, pinch on a phone; the filters show only the blog, only the comics or only places with nothing written yet. The places carry their ancient Armenian names, and the list under the map has the same places for a keyboard.
+The Map page shows the Armenian Highland on a painted map, with a pin on each place a post or a comic is about. Tap a pin and a small panel opens with links to them, comics and posts; the pins of new posts glow. Zoom with + and −, drag to move, pinch on a phone; the filters show only the blog, only the comics or only places with nothing written yet. The places carry their ancient Armenian names, and the list under the map has the same places for a keyboard.
 
 ## Report an error
 

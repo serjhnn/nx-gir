@@ -84,7 +84,7 @@ const url = "http://localhost:" + port +
   });
   await p.goto("http://localhost:" + port +
     "/#/map/bjni");
-  await p.waitForSelector(".map-card .map-story");
+  await p.waitForSelector(".map-pop .map-link");
   await p.waitForTimeout(500);
   await p.screenshot({ path: docs + "/web-map.jpg",
     type: "jpeg", quality: 80 });

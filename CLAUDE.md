@@ -175,7 +175,9 @@
   `#/map/<place>`, `mapPage()` in `app.js`; `/api/map`,
   `map_data()` in `nxgir_web.py`; on the site
   `data/map.json`): pins on the picture, zoom and
-  drag, a card with the stories, filters, and the list
+  drag, a small panel over the map (`map-pop`, beside
+  its pin, docked at the bottom on a narrow map) with
+  links to the stories, filters, and the list
   below it. A new place goes in `places.tsv` with its
   `x`, `y` (look at the picture); `MAP_UI` kinds in
   `app.js` must match `KINDS` (a test checks it). The

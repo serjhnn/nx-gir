@@ -1985,22 +1985,23 @@ function pinKind(p) {
   return p.stories.length ? "comics" : "place";
 }
 
-function mapStory(s, lang) {
+// a story in the popup: a link, with its cover small,
+// its type and date, and its title
+function mapLink(s, lang) {
   const v = version(s, lang);
   const t = MAP_UI[lang];
-  return h("a", { class: "post-card map-story",
+  return h("a", { class: "map-link",
     href: storyHref(s), lang: v.lang },
   v.cover ? h("img", { src: "img/" + v.cover,
-    alt: v.alt, loading: "lazy" }) : null,
-  h("span", { class: "pc-top" },
-    h("span", {}, t[s.type] + " · ",
-      h("time", { datetime: s.date },
-        longDay(s.date, v.lang))),
-    h("span", { class: "pc-more" },
-      BLOG[v.lang].read)),
-  h("span", { class: "pc-title" }, named(v.title)),
-  v.lead ? h("span", { class: "pc-lead" },
-    named(v.lead)) : null);
+    alt: "", loading: "lazy" }) : null,
+  h("span", { class: "ml-text" },
+    h("span", { class: "ml-meta" },
+      icon(ICONS[s.type === "comics" ? "panels"
+        : "book"]),
+      h("span", {}, t[s.type] + " · ",
+        h("time", { datetime: s.date },
+          longDay(s.date, v.lang)))),
+    h("span", { class: "ml-title" }, named(v.title))));
 }
 
 async function mapPage(want) {
@@ -2043,12 +2044,45 @@ async function mapPage(want) {
       b.style.left = p.x + "%";
       b.style.top = p.y + "%";
       b.addEventListener("click", () => {
-        if (!moved) pick(p.id, false);
+        if (!moved) pick(p.id, false, false);
       });
       pins.set(p.id, b);
       stage.append(b);
     }
-    const card = h("div", { class: "map-card-wrap" });
+    // the small panel of the place opened, over the map
+    const pop = h("section", { class: "map-pop",
+      role: "dialog", hidden: "" });
+    // not under the finger that drags the map
+    pop.addEventListener("pointerdown", (e) =>
+      e.stopPropagation());
+    view.append(pop);
+    // beside its pin (it follows the pin as the map
+    // moves); on a narrow map, docked at the bottom
+    const placePop = () => {
+      const p = by.get(st.sel);
+      if (!p || pop.hidden) return;
+      const w = view.clientWidth;
+      const hh = view.clientHeight;
+      const dock = w < 520;
+      pop.classList.toggle("dock", dock);
+      view.classList.toggle("popped", dock);
+      if (dock) {
+        pop.style.left = "";
+        pop.style.top = "";
+        return;
+      }
+      const px = st.x + p.x / 100 * w * st.s;
+      const py = st.y + p.y / 100 * hh * st.s;
+      const pw = pop.offsetWidth;
+      const ph = pop.offsetHeight;
+      let x = px + 22;
+      if (x + pw > w - 8) x = px - 22 - pw;
+      x = Math.max(8, Math.min(w - pw - 8, x));
+      const y = Math.max(8,
+        Math.min(hh - ph - 8, py - ph / 2));
+      pop.style.left = x + "px";
+      pop.style.top = y + "px";
+    };
     // the view: zoom and pan, clamped to the picture
     const apply = () => {
       const w = view.clientWidth;
@@ -2061,6 +2095,7 @@ async function mapPage(want) {
       stage.style.setProperty("--inv", 1 / st.s);
       stage.classList.toggle("zoomed", st.s >= 2.4);
       view.classList.toggle("in", st.s > 1);
+      if (st.sel) placePop();
     };
     const zoomAt = (cx, cy, s2) => {
       s2 = Math.min(MAP_MAX, Math.max(1, s2));
@@ -2079,7 +2114,7 @@ async function mapPage(want) {
       st.y = hh / 2 - p.y / 100 * hh * st.s;
       apply();
     };
-    const drawCard = () => {
+    const drawPop = () => {
       const p = by.get(st.sel);
       for (const [id, b] of pins) {
         b.classList.toggle("on", id === st.sel);
@@ -2087,34 +2122,39 @@ async function mapPage(want) {
           String(id === st.sel));
       }
       if (!p) {
-        card.replaceChildren();
+        pop.hidden = true;
+        pop.replaceChildren();
+        view.classList.remove("popped");
         return;
       }
       const close = h("button", { type: "button",
         class: "map-close", "aria-label": t.close },
       "×");
-      close.addEventListener("click", () => {
-        st.sel = "";
-        history.replaceState(history.state, "",
-          "#/map");
-        drawCard();
-      });
-      card.replaceChildren(h("section", {
-        class: "map-card", lang,
-        "aria-live": "polite" },
-      close,
-      h("p", { class: "map-kind" }, t.kinds[p.kind]),
-      h("h2", {}, nm(p)),
-      p.stories.length
-        ? p.stories.map((s) => mapStory(s, lang))
-        : h("p", { class: "empty" }, t.none)));
+      close.addEventListener("click", closePop);
+      pop.lang = lang;
+      pop.setAttribute("aria-label", nm(p));
+      pop.replaceChildren(close,
+        h("p", { class: "map-kind" }, t.kinds[p.kind]),
+        h("h2", {}, nm(p)),
+        p.stories.length
+          ? h("div", { class: "map-links" },
+            p.stories.map((s) => mapLink(s, lang)))
+          : h("p", { class: "empty" }, t.none));
+      pop.hidden = false;
+      placePop();
     };
-    function pick(id, zoomIn) {
+    function closePop() {
+      st.sel = "";
+      history.replaceState(history.state, "", "#/map");
+      drawPop();
+    }
+    // move: bring the place to the middle of the view
+    function pick(id, zoomIn, move) {
       st.sel = id;
       history.replaceState(history.state, "",
         "#/map/" + id);
-      drawCard();
-      center(zoomIn);
+      drawPop();
+      if (move) center(zoomIn);
     }
     // drag, pinch; a drag is not a click on a pin
     let moved = false;
@@ -2163,6 +2203,14 @@ async function mapPage(want) {
     };
     view.addEventListener("pointerup", lift);
     view.addEventListener("pointercancel", lift);
+    // a tap on the map itself closes the panel
+    view.addEventListener("click", (e) => {
+      if (moved || !st.sel) return;
+      if (e.target.closest(".pin, .map-pop, .map-ctl")) {
+        return;
+      }
+      closePop();
+    });
     // ctrl + wheel (a trackpad pinch) zooms; the plain
     // wheel still scrolls the page
     view.addEventListener("wheel", (e) => {
@@ -2173,6 +2221,11 @@ async function mapPage(want) {
         st.s * Math.exp(-e.deltaY / 200));
     }, { passive: false });
     view.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && st.sel) {
+        e.preventDefault();
+        closePop();
+        return;
+      }
       const w = view.clientWidth;
       const hh = view.clientHeight;
       const step = { ArrowLeft: [40, 0],
@@ -2246,7 +2299,7 @@ async function mapPage(want) {
           const b = h("button", { type: "button" },
             nm(p));
           b.addEventListener("click", () => {
-            pick(p.id, true);
+            pick(p.id, true, true);
             view.scrollIntoView({ block: "nearest" });
           });
           return h("li", {}, b,
@@ -2262,11 +2315,11 @@ async function mapPage(want) {
       h("p", { class: "sub", lang }, t.sub),
       langs.length > 1 ? pickLang : null,
       pickShow,
-      h("div", { class: "map-wrap" }, view, card),
+      h("div", { class: "map-wrap" }, view),
       h("h2", { class: "map-list-h", lang }, t.list),
       list);
     apply();
-    drawCard();
+    drawPop();
     if (st.sel) center(true);
   };
   draw();
