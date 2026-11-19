@@ -97,5 +97,6 @@
 2026-11-17	Site		Comics	A page of comic series from the books of the Library; the first is Vasak and the Seven Wolves, from Smbat Sparapet's Taregirk.	
 2026-11-17	Texts	*	OCR for scanned books	A tool and a tuned model that read Grabar scans (3.5% of the letters wrong on the 1859 Smbat chronicle, a first model of its own), with a review list of suggested corrections and a model pass over the uncertain words.	
 2026-11-18	Site	*	The Map	A painted map of the Armenian Highland with a pin on each place that a post or a comic is about, under its ancient Armenian name; a small panel opens beside a pin with links to its stories.	
+2026-11-19	Books		Zhoghovatsoy arakats of Vardan Aygektsi	The 13th-century collection of fables with their moral explanations, from Digilib, 389 sections in three parts, each fable a chapter of its contents list.	grabar/vardan-aygektsi/1-zhoghovatsoy-arakats
 next	Translation		All of Amaran hator in modern Armenian	Then the other works of Grigor Tatevatsi.	
 next	Site		A contents page for each book	What each part of a book is about.	
