@@ -778,6 +778,44 @@ def dash_year_entries(lines):
     return out if len(out) >= YEARS_MIN else []
 
 
+# homilies headed in capitals: "ՃԱՌ ՀԻՆԳԵՐՈՐԴ" and the
+# next line the subject (Սեբերիանոս Եմեսացի, Ճառք)
+HOMILY_RE = re.compile(r"ՃԱՌ\s+[Ա-Ֆ]+|ՅԱՌԱՋԱԲԱՆ")
+HOMILIES_MIN = 3
+
+
+def homily_entries(lines):
+    """Entries for a part of homilies headed `ՃԱՌ ...`
+    (and a ՅԱՌԱՋԱԲԱՆ), at least HOMILIES_MIN of them;
+    the title is the heading and the subject line below
+    it."""
+    out = []
+    for i, line in enumerate(lines):
+        t = line.strip()
+        if not HOMILY_RE.fullmatch(t):
+            continue
+        title = t
+        nxt = next(
+            (
+                x.strip()
+                for x in lines[i + 1 :]
+                if x.strip()
+            ),
+            "",
+        )
+        if t.startswith("ՃԱՌ") and nxt:
+            title = f"{t} · {nxt}"
+        out.append(
+            {
+                "line": i,
+                "n": "",
+                "title": short(title),
+                "level": 2,
+            }
+        )
+    return out if len(out) >= HOMILIES_MIN else []
+
+
 def contents(lines):
     """The parts of a book, in order: [{"line": the
     line to go to, "n": its number or "", "title":
@@ -914,6 +952,8 @@ def contents(lines):
         out = year_entries(lines)
     if not out:
         out = dash_year_entries(lines)
+    if not out:
+        out = homily_entries(lines)
     if not out:
         out = title_lines(lines)
     # the text before the first heading is reachable

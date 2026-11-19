@@ -1090,6 +1090,22 @@ def test_contents_of_titles_alone():
     )
 
 
+def test_contents_of_homilies():
+    # Սեբերիանոս Եմեսացի: ՃԱՌ headings, the subject below
+    lines = ["Ճառք · 2/3", ""]
+    for n in ["ՀԻՆԳԵՐՈՐԴ", "ՎԵՑԵՐՈՐԴ", "ԵՒԹՆԵՐՈՐԴ"]:
+        lines += [f"ՃԱՌ {n}", "", f"Խօսք {n}։", "Տեքստ։"]
+    got = contents(lines)
+    assert got[0]["start"]
+    assert [e["title"] for e in got[1:]] == [
+        "ՃԱՌ ՀԻՆԳԵՐՈՐԴ · Խօսք ՀԻՆԳԵՐՈՐԴ։",
+        "ՃԱՌ ՎԵՑԵՐՈՐԴ · Խօսք ՎԵՑԵՐՈՐԴ։",
+        "ՃԱՌ ԵՒԹՆԵՐՈՐԴ · Խօսք ԵՒԹՆԵՐՈՐԴ։",
+    ]
+    # fewer than three: none
+    assert contents(lines[:10]) == []
+
+
 def test_contents_of_dash_years():
     # Մատթէոս Ուռհայեցի: the year in the line, in letters
     # after a hyphen, the thousand left out
