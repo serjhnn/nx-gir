@@ -1090,6 +1090,25 @@ def test_contents_of_titles_alone():
     )
 
 
+def test_contents_of_florilegium():
+    # Կոմիտաս Աղցեցի: the number starts again at 1 with
+    # each author
+    lines = ["Կնիք հաւատոյ · 2/4", ""]
+    for k in range(8):
+        lines += [
+            f"1 * Երանելւոյն Հեղինակ {k}։",
+            "2 Խօսք։",
+            "3 Այլ խօսք։",
+        ]
+    got = contents(lines)
+    assert got[0]["start"]
+    assert len(got) == 9
+    assert got[1]["title"] == "Երանելւոյն Հեղինակ 0։"
+    assert contents(lines[:20]) == []
+    # a plain "1 text" line is no heading when rare
+    assert contents(["1 Մի բան։", "2 Այլ։"] * 3) == []
+
+
 def test_contents_of_homilies():
     # Սեբերիանոս Եմեսացի: ՃԱՌ headings, the subject below
     lines = ["Ճառք · 2/3", ""]

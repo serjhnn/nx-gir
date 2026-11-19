@@ -328,6 +328,11 @@
   more in a part; Սեբերիանոս Եմեսացի) are entries,
   titled with the subject line below
   (`homily_entries()`).
+  A florilegium whose quotations are numbered afresh
+  with each author (`1 * Երանելւոյն Երանոսի՝ ...`;
+  Կոմիտաս Աղցեցի, Կնիք հաւատոյ) has an entry for
+  each line that starts with `1`, titled by the
+  line (`one_entries()`, at least 8).
   A long part (150 lines or more, no `[1]` sections)
   whose sections start with a title alone between blank
   lines, three or more, is read as that (`title_lines()`,

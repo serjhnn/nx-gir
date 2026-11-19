@@ -816,6 +816,33 @@ def homily_entries(lines):
     return out if len(out) >= HOMILIES_MIN else []
 
 
+# a florilegium whose quotations are numbered, the number
+# starting again at 1 with each author: "1 * Երանելւոյն
+# Երանոսի՝ ..." (Կոմիտաս Աղցեցի, Կնիք հաւատոյ)
+ONE_RE = re.compile(r"1\s+(?:\*\s*)?(\S.*)")
+ONES_MIN = 8
+
+
+def one_entries(lines):
+    """Entries for a florilegium: the lines that start
+    with the number 1 and say whose words follow, at
+    least ONES_MIN of them; the title is the line
+    without the number."""
+    out = []
+    for i, line in enumerate(lines):
+        m = ONE_RE.fullmatch(line.strip())
+        if m:
+            out.append(
+                {
+                    "line": i,
+                    "n": "",
+                    "title": short(m.group(1)),
+                    "level": 2,
+                }
+            )
+    return out if len(out) >= ONES_MIN else []
+
+
 def contents(lines):
     """The parts of a book, in order: [{"line": the
     line to go to, "n": its number or "", "title":
@@ -956,6 +983,8 @@ def contents(lines):
         out = homily_entries(lines)
     if not out:
         out = title_lines(lines)
+    if not out:
+        out = one_entries(lines)
     # the text before the first heading is reachable
     # too: an entry for the start of the text
     first = next(

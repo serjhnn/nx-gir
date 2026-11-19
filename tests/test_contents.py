@@ -25,15 +25,6 @@ NO_CONTENTS = {
     "grabar/nerses-shnorhali/2-voghb-edesioy/01.txt": (
         "a poem in stanzas, marked [1], [2]"
     ),
-    "grabar/komitas-aghtsetsi/1-knik-havatoy/01.txt": (
-        "quotations of the Fathers, numbered; no headings"
-    ),
-    "grabar/komitas-aghtsetsi/1-knik-havatoy/02.txt": (
-        "quotations of the Fathers, numbered; no headings"
-    ),
-    "grabar/komitas-aghtsetsi/1-knik-havatoy/04.txt": (
-        "quotations of the Fathers, numbered; no headings"
-    ),
     "grabar/hetum-patmich/2-zhamanakagrutyun/01.txt": (
         "a chronicle by years, in four sections marked [1]"
     ),
@@ -52,7 +43,7 @@ NUMBERED_ONLY = {
 for _folder, _parts in NUMBERED_ONLY.items():
     for _n in _parts.split():
         NO_CONTENTS[f"{_folder}/{_n}.txt"] = (
-            "a chronicle in sections marked [1], [2]"
+            "sections marked [1], [2], no titles"
         )
 
 
