@@ -140,6 +140,15 @@ Patmutiun (321, 52 sections in two parts; not on
 the lists above, `mixed` but Grabar throughout) are in
 `books/`. Shahamirian (194, 195) is not Grabar (1773):
 skip. Sukias (342) is to check first.
+Later the same day: Seberianos (3450), Mandakuni
+(207), Yeghishe's Kanonk (1396), Abraham Aghbatanetsi
+(1594, 1595), Anastas (1151), Anania Targmanich (1393),
+Khosrovik (2200), Ozhnetsi (222), Tgha (180), Samuel
+Anetsi (315), Nerses Paliants (293, 294), Yakob
+Hrimetsi (188) and Komitas Aghtsetsi (1586). Not
+kept: 83, the Paris and Vienna romance, a rhymed
+poem in Middle Armenian. Nerses Shnorhali 295, 296
+and 298 were ours already.
 
 - Սմբատ Սպարապետ, Դատաստանագիրք (211, 169 parts):
   joins Gosh's law book
