@@ -15,6 +15,16 @@ Check them against another copy of the edition or
 against Digilib's (Venice 1956) text when it is
 back.
 
+Digilib's text is now in
+`books/grabar/smbat-sparapet/3-taregirk-digilib/`
+(2026-11-19). It is a different, longer recension, so
+only 4 of the readings below appear in it as words;
+a few near misses may be reading errors of the scan
+(`զբահն` for `զրահն`, `եղարկ` for `եզարկ`,
+`ըմբռովն` for `ըռմբովն`, `սրաիւ` for `սրտիւ`). They
+are hints for a review of the page image, not
+corrections.
+
 | Page | Place | Reading |
 |-----:|------|---------|
 | 30 | 1:78 | `ըմբռովն` |

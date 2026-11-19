@@ -657,3 +657,22 @@ in the scan are listed in
 - The edition differs from the Venice 1956 one that
   Digilib has; when Digilib is back, its text can
   be compared with this one.
+
+## grabar/smbat-sparapet/3-taregirk-digilib/
+
+*Տարեգիրք* of Smbat Sparapet as typed on Digilib
+(digilib.am, book 333,
+<https://www.digilib.am/book/333/>), fetched with
+`scripts/fetch-digilib.py --by-id 333` on 2026-11-19:
+169 sections (the years) in two parts. Digilib's page
+does not name the edition; our note on the 1859 text
+(`notes/smbat-sparapet-taregirk.md`) says it is the
+Venice 1956 one. It is a longer text than the 1859
+edition in `2-taregirk/` (about 290,000 letters
+against 120,000; 164 year headings against 114) and
+ends with the colophon of Catholicos Grigor, 1007.
+Kept as Digilib has it: each year is a heading line
+of its own, the paragraphs follow, one per line.
+The two are separate texts, not translations of each
+other: the lines do not correspond.
+
