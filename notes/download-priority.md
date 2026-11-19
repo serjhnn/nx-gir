@@ -134,6 +134,13 @@ Aygektsi is 352 (Zhoghovatsoy arakats; Armat havatoy
 second Orogayt), Sukias 342. 352, 195 and 342 failed
 when Digilib went down (404 on every page): to do.
 
+Status (2026-11-19): Vardan Aygektsi, Zhoghovatsoy
+arakats (352, 389 sections in three parts) and Sebeos,
+Patmutiun (321, 52 sections in two parts; not on
+the lists above, `mixed` but Grabar throughout) are in
+`books/`. Shahamirian (194, 195) is not Grabar (1773):
+skip. Sukias (342) is to check first.
+
 - Սմբատ Սպարապետ, Դատաստանագիրք (211, 169 parts):
   joins Gosh's law book
 - Վարդան Այգեկցի, Ժողովածոյ առակաց (389)
