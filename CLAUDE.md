@@ -318,6 +318,12 @@
   Տարեգիրք); its translation starts them with the
   year too (`413 թվականին`, `Իսկ Հայոց 410
   թվականին`).
+  A chronicle that names the year inside the line, in
+  letters after a hyphen, the thousand left out
+  (`ի -ՆԱ թուականին Հայոց`, 401; Մատթէոս
+  Ուռհայեցի), has an entry for each such line, "n"
+  the letters as printed (`dash_year_entries()`, at
+  least 10).
   A long part (150 lines or more, no `[1]` sections)
   whose sections start with a title alone between blank
   lines, three or more, is read as that (`title_lines()`,

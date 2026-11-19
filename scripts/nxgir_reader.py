@@ -747,6 +747,37 @@ def year_entries(lines):
     return out if len(out) >= YEARS_MIN else []
 
 
+# a chronicle that dates its paragraphs inside the line
+# with the year in Armenian letters after a hyphen, the
+# thousand left out: "ի -ՆԱ թուականին Հայոց" (401),
+# "յամին -ՆԻԱ" (Մատթէոս Ուռհայեցի)
+DASH_YEAR_RE = re.compile(
+    r"(?<![\w-])-([ՌՃՄՅՆՇՈՉՊՋԺԻԼԽԾԿՀՁՂԱԲԳԴԵԶԷԸԹ]{1,4})"
+    r"(?![\w])",
+    re.IGNORECASE,
+)
+
+
+def dash_year_entries(lines):
+    """Entries for a chronicle whose paragraphs name
+    their year as -ՆԱ (DASH_YEAR_RE), at least
+    YEARS_MIN of them; "n" the year as printed, the
+    title the start of the paragraph."""
+    out = []
+    for i, line in enumerate(lines):
+        m = DASH_YEAR_RE.search(line)
+        if m:
+            out.append(
+                {
+                    "line": i,
+                    "n": m.group(1).upper(),
+                    "title": short(line.strip()),
+                    "level": 2,
+                }
+            )
+    return out if len(out) >= YEARS_MIN else []
+
+
 def contents(lines):
     """The parts of a book, in order: [{"line": the
     line to go to, "n": its number or "", "title":
@@ -881,6 +912,8 @@ def contents(lines):
         out = titled_numbers(lines)
     if not out:
         out = year_entries(lines)
+    if not out:
+        out = dash_year_entries(lines)
     if not out:
         out = title_lines(lines)
     # the text before the first heading is reachable
