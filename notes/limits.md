@@ -61,6 +61,13 @@ of text; the site 157.6 MB (15%); git 22.2 MB (2%);
 the build 42 s (7%). The largest file and part are
 unchanged (30% at most).
 
+On 2026-11-20 (after the translation of the Digilib
+Taregirk of Smbat Sparapet, two parts, 0.5 MB): 251 book
+files, 44.9 MB of text; the site 180.6 MB (18%); git
+54.0 MB (5%); the build 46 s (8%). The closest limit is
+the largest book part, 359 KB (35%, Komitas Aghtsetsi,
+Knik havatoy 02); the new parts are far from it.
+
 Since 29dc9cf (2026-11-14): the site fell from 116 MB
 to 104 MB because the zip of the site is no longer
 built (it was 18 MB; `build-site.py --zip` makes it),

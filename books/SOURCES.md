@@ -676,3 +676,12 @@ of its own, the paragraphs follow, one per line.
 The two are separate texts, not translations of each
 other: the lines do not correspond.
 
+Cut one sentence to a line on 2026-11-20 (only line
+breaks changed; 1,041 and 1,056 lines; one `։` with no
+space after it in part 1, none in part 2), for the
+translation at the same path under `ashkharhabar/`.
+Digilib's page marks (`/12ա/`, 354 in the text) and
+its brackets `[ ]` are in the Grabar as they were; the
+translation leaves out the page marks. The source has
+an unclosed `«` here and there (the `»` typed as `ե`).
+
