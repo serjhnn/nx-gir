@@ -26,12 +26,32 @@ and most important first. Dates from memory, the
 | 3  | Մամբրէ Վերծանող, Ճառք | 1520 | 5 | 5th c. |
 | 4  | Վրթանէս Քերթող, Յաղագս պատկերամարտից, Թղթեր | 1153, 1154 | 1+7 | 6th-7th c. |
 | 5  | Գրիգորիս Արշարունի, Մեկնութիւն ընթերցուածոց | 2051 | 36 | about 7th c. |
-| 6  | Անանուն, 684 թուականի պատմութիւն (check the era) | 1597 | 35 | early |
+| 6  | Անանուն, 684 թուականի պատմութիւն | 1597 | 35 | 7th-8th c. |
 | 7  | Յովհան Մամիկոնեան, Պատմութիւն Տարաւնոյ | 1533 | 11 | tradition: 7th c. |
-| 8  | Սահակ Վարդապետ (Մռուտ), 3 short texts | 2202-2204 | 1 each | early medieval |
+| 8  | Սահակ Վարդապետ (Մռուտ), Բացայայտութիւն (long) and 2 replies | 2202-2204 | 1 each | early medieval |
 | 9  | Գրիգոր Մագիստրոս, Թղթեր (unclear: look first) | 177 | 88 | 11th c. |
 | 10 | Վարդան Արեւելցի, Պատմութիւն; then 354, 355 | 356 | 101 | 13th c. |
 | 11 | Մխիթար Անեցի, Աշխարհավէպ; Մխիթար Հերացի, Ջերմանց մխիթարութիւն | 276, 280 | 22, 49 | 12th c. |
+
+Looked at on 2026-11-21 (first and middle section of
+each; all plain Grabar, none needs a cut): 1153 is
+one section of 15,000 letters; 1154 is seven letters;
+2051 (36; the first, the title, is empty; headings
+`Ա. Title`); 1597 (35; the first, Առաջաբան, is empty;
+headings in `[ ]`; it tells of Jevanshir, so it is
+7th century, up to 684 AD, not the Armenian era);
+1533 (11; opens with the letters of Gregory and Zenob,
+chapters `[Ա]`; the Zenob Glak tradition); 2202 is
+one long section (136,000 letters), so it will be
+cut into parts; 177 (88 letters, `[Ա]`, hard
+Hellenizing Grabar); 356 (101; a 20,000-letter
+preface first, in the style of the 1862 edition: look
+at it, maybe keep). 2203 and 2204 not yet looked at.
+Digilib's page numbers and `[ ]` stay as they are.
+
+Next batch: 4 to 8 (1153, 1154, 2051, 1597, 1533,
+2202 to 2204): about 100 sections, 4 to 5 minutes at
+3 seconds a request. Then 9 and 10.
 
 After these: the 1500s to 1800s chronicles and about
 300 one-section songs (Տաղեր), minor.
@@ -43,7 +63,10 @@ text on Digilib (scans only), or not Grabar.
 
 Status (2026-11-21): 1 to 3 are in `books/`
 (`davit-anyaght/`, `giwt-arahezatsi/`,
-`mambre-vertsanogh/`).
+`mambre-vertsanogh/`)); 4 to 8 too (`vrtanes-kertogh/`,
+`grigoris-arsharuni/`, `anonymous-684/`,
+`hovhan-mamikonean/`, `sahak-vardapet-mrut/`).
+Next: 9 (177), 10 (356, 354, 355), 11.
 
 ## 1. The 5th-century core (plain Grabar, the model
    of the language)

@@ -28,6 +28,9 @@ NO_CONTENTS = {
     "grabar/hetum-patmich/2-zhamanakagrutyun/01.txt": (
         "a chronicle by years, in four sections marked [1]"
     ),
+    "grabar/sahak-vardapet-mrut/1-bacayaytutiun/01.txt": (
+        "one treatise in running paragraphs, no headings"
+    ),
 }
 # chronicles in sections marked [1], [2], ... with no
 # headings of their own (Digilib's numbers only)
