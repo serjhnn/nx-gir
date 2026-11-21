@@ -3308,6 +3308,16 @@ body.home .search-wrap {
   font-size: 1.02rem;
   line-height: 1.5;
 }
+/* the translation of a Grabar line found, under
+   it (Բոլորը) */
+.s-hits .snip.tr {
+  display: block;
+  margin-top: 0.3rem;
+  padding-left: 0.7rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  border-left: 2px solid var(--rule);
+}
 .s-hits mark {
   padding: 0 1px;
   color: inherit;

@@ -5226,15 +5226,16 @@ async function findLines(q) {
 // the lines of a search, by author and book, in the
 // Library's order; in a book the Grabar lines first
 function grouped(parts, ids, where) {
-  const hits = [];
+  let hits = [];
   for (const id of ids) {
     const [p, line] = id.split(":").map(Number);
     const [name, b, n] = parts.parts[p];
     const top = name.split("/")[0];
     if (where !== "all" && top !== where) continue;
-    hits.push({ id, name, top, b, n, line,
+    hits.push({ id, ids: [id], name, top, b, n, line,
       a: parts.books[b][2] });
   }
+  if (where === "all") hits = paired(hits, parts);
   const tops = { grabar: 0, ashkharhabar: 1 };
   hits.sort((x, y) => x.a - y.a || x.b - y.b
     || tops[x.top] - tops[y.top] || x.n - y.n
@@ -5257,8 +5258,36 @@ function grouped(parts, ids, where) {
   return { hits, authors };
 }
 
+// A Grabar line and its translation (the same line
+// of the same part in ashkharhabar/) as one result:
+// the Grabar line, and under it its translation,
+// whichever of the two has the word
+function paired(hits, parts) {
+  if (!parts.names) {
+    parts.names = new Set(parts.parts.map((x) => x[0]));
+  }
+  const by = new Map();
+  for (const x of hits) {
+    const rest = x.name.slice(x.name.indexOf("/") + 1);
+    const k = rest + ":" + x.line;
+    const g = "grabar/" + rest;
+    const t = "ashkharhabar/" + rest;
+    const y = by.get(k);
+    if (y) {
+      y.ids.push(x.id);
+      continue;
+    }
+    const main = parts.names.has(g) ? g : x.name;
+    by.set(k, { ...x, id: k, name: main,
+      top: main.split("/")[0],
+      pair: main !== t && parts.names.has(t) ? t
+        : null });
+  }
+  return [...by.values()];
+}
+
 // the line, the words searched marked, cut around
-// the first of them
+// the first of them (a line without them: its start)
 function hitSnippet(text, keys) {
   const marks = [];
   for (const m of text.matchAll(SEARCH_WORD)) {
@@ -5276,6 +5305,9 @@ function hitSnippet(text, keys) {
       b = text.lastIndexOf(" ", b);
       if (b <= marks[0][1]) b = marks[0][1];
     }
+  } else if (b > 140) {
+    b = text.lastIndexOf(" ", 140);
+    if (b < 1) b = 140;
   }
   const out = [a > 0 ? "… " : ""];
   let at = a;
@@ -5315,18 +5347,26 @@ function hitItem(x, i, ctx) {
   const parts = ctx.parts.books[x.b][3] > 1;
   const where = (parts ? "մաս " + x.n + " · " : "")
     + "տող " + x.line;
-  const snip = h("span", { class: "snip",
-    lang: "hy" }, "…");
-  snip.dataset.name = x.name;
-  snip.dataset.line = x.line;
-  snip.keys = ctx.keys;
-  snippetsSeen.observe(snip);
+  const line = (name, cls) => {
+    const snip = h("span", { class: cls,
+      lang: "hy" }, "…");
+    snip.dataset.name = name;
+    snip.dataset.line = x.line;
+    snip.keys = ctx.keys;
+    snippetsSeen.observe(snip);
+    return snip;
+  };
+  // under Բոլորը a Grabar line with its translation
+  // is one result; a line alone says which it is
+  const tag = ctx.where === "all" && !x.pair
+    && x.top !== "grabar";
   return h("li", {}, h("a", {
     href: hitHref(ctx.q, x.name, x.line, i) },
   h("span", { class: "where" },
-    ctx.where === "all" ? h("span", { class: "chip" },
+    tag ? h("span", { class: "chip" },
       SEARCH_IN_NAMES[x.top]) : null, where),
-  snip));
+  line(x.name, "snip"),
+  x.pair ? line(x.pair, "snip tr") : null));
 }
 
 function bookHref(key) {
@@ -5439,7 +5479,9 @@ async function searchPage(query) {
   for (const [, , got] of f.spelled) {
     const one = new Map();
     for (const x of g.hits) {
-      for (const s of got.get(x.id) || []) {
+      const here = new Set(x.ids.flatMap((id) =>
+        got.get(id) || []));
+      for (const s of here) {
         one.set(s, (one.get(s) || 0) + 1);
       }
     }

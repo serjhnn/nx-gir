@@ -29,6 +29,12 @@ Decided (2026-11-21):
   its words.
 - A book in two editions (the Taregirk and the
   Taregirk (Digilib)) shows in both.
+- Under Բոլորը a Grabar line and its translation
+  (the same line of the same part) are one result:
+  the Grabar line, its translation under it, counted
+  once, whichever of the two has the word
+  (`paired()` in `app.js`). թագավոր: 1,014 places,
+  not 932 + 192 lines.
 
 ## What it finds
 
@@ -186,5 +192,4 @@ Run `check-limits.py --site --record` after it.
 
 ## Open questions
 
-- Should a Grabar line and its translation show as
-  one result (the pair), or as two?
+None now.
