@@ -11,6 +11,40 @@ Already ours: Tatevatsi, Gosh, Shnorhali, Anania
 (partly), Narekatsi (ids 178, 3052; the list is older
 than the import).
 
+## 0. Still to do, oldest first (2026-11-21)
+
+Checked `notes/digilib.tsv` against `books/grabar/`:
+the 5th to 7th century core (groups 1 to 3) is in
+`books/`; these are what Digilib still has, oldest
+and most important first. Dates from memory, the
+`kind` is a guess: look before fetching.
+
+| #  | work | id | parts | date |
+|----|------|----|-------|------|
+| 1  | Դաւիթ Անյաղթ, 4 works (philosophy, Aristotle, Porphyry) | 2600-2603 | 113 | 5th-6th c. |
+| 2  | Գիւտ Արահեզացի, Թուղթ առ Վաչէ | 1519 | 1 | 5th c. |
+| 3  | Մամբրէ Վերծանող, Ճառք | 1520 | 5 | 5th c. |
+| 4  | Վրթանէս Քերթող, Յաղագս պատկերամարտից, Թղթեր | 1153, 1154 | 1+7 | 6th-7th c. |
+| 5  | Գրիգորիս Արշարունի, Մեկնութիւն ընթերցուածոց | 2051 | 36 | about 7th c. |
+| 6  | Անանուն, 684 թուականի պատմութիւն (check the era) | 1597 | 35 | early |
+| 7  | Յովհան Մամիկոնեան, Պատմութիւն Տարաւնոյ | 1533 | 11 | tradition: 7th c. |
+| 8  | Սահակ Վարդապետ (Մռուտ), 3 short texts | 2202-2204 | 1 each | early medieval |
+| 9  | Գրիգոր Մագիստրոս, Թղթեր (unclear: look first) | 177 | 88 | 11th c. |
+| 10 | Վարդան Արեւելցի, Պատմութիւն; then 354, 355 | 356 | 101 | 13th c. |
+| 11 | Մխիթար Անեցի, Աշխարհավէպ; Մխիթար Հերացի, Ջերմանց մխիթարութիւն | 276, 280 | 22, 49 | 12th c. |
+
+After these: the 1500s to 1800s chronicles and about
+300 one-section songs (Տաղեր), minor.
+
+Not possible: Փիլոն Տիրակացի (1152), Սահակ
+Ձորոփորեցի (1159, 1160), Կորիւն's Life of Mesrop
+(1561) and Յովհան Մամիկոնեան (1175, 1565): no typed
+text on Digilib (scans only), or not Grabar.
+
+Status (2026-11-21): 1 to 3 are in `books/`
+(`davit-anyaght/`, `giwt-arahezatsi/`,
+`mambre-vertsanogh/`).
+
 ## 1. The 5th-century core (plain Grabar, the model
    of the language)
 

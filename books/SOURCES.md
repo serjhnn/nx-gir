@@ -685,3 +685,25 @@ its brackets `[ ]` are in the Grabar as they were; the
 translation leaves out the page marks. The source has
 an unclosed `«` here and there (the `»` typed as `ե`).
 
+
+## grabar/davit-anyaght/, giwt-arahezatsi/, mambre-vertsanogh/
+
+Six works from Digilib (digilib.am), fetched with
+`scripts/fetch-digilib.py --by-id` on 2026-11-21, kept
+as Digilib has them (a section is a heading line, its
+paragraphs follow, one per line):
+
+| Folder | Work | Digilib | Sections |
+|--------|------|---------|----------|
+| `davit-anyaght/1-sahmanq` | Սահմանք եւ տրամատութիւնք իմաստասիրութեան | [2600](https://www.digilib.am/book/2600/) | 34 |
+| `davit-anyaght/2-verlutsakan` | Ի վերլուծականն Արիստոտէլի | [2601](https://www.digilib.am/book/2601/) | 14 |
+| `davit-anyaght/3-nerazutyun` | Վերլուծութիւն Ներածութեան Պորփիւրի | [2602](https://www.digilib.am/book/2602/) | 29 |
+| `davit-anyaght/4-storogutyun` | Մեկնութիւն Ստորոգութեանցն Արիստոտէլի | [2603](https://www.digilib.am/book/2603/) | 36 |
+| `giwt-arahezatsi/1-tught-vache` | Թուղթ Գիւտայ առ սուրբն Վաչէ | [1519](https://www.digilib.am/book/1519/) | 1 |
+| `mambre-vertsanogh/1-charq` | Մամբրէի վերծանողի ճառք | [1520](https://www.digilib.am/book/1520/) | 5 |
+
+Digilib marks 2600 to 2602 and 1519, 1520 as "mixed"
+(a modern foreword or notes with the Grabar): look
+before using them as a model of the language. Three
+sections are empty on Digilib (two in 2600, one in
+2602): headings with no text.
