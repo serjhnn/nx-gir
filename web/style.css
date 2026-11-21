@@ -3182,6 +3182,36 @@ body.home .search-wrap {
   display: none;
 }
 
+/* the Library's find box, the site's mark (home)
+   on its left */
+.lib-find-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.lib-find-wrap .lib-find {
+  flex: 1;
+  min-width: 0;
+}
+.lf-home {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: var(--surface);
+}
+.lf-home:hover,
+.lf-home:focus-visible {
+  border-color: var(--accent);
+}
+.lf-home svg {
+  width: 20px;
+  height: 22px;
+}
+
 /* the Library's find box: the count of found
    authors and books and the steps between them,
    in one chip tinted like the found rows */

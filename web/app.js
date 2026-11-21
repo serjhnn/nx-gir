@@ -1637,7 +1637,14 @@ function libraryFind(items, show, all) {
     e.preventDefault();
     go(1);
   });
-  const wrap = h("div", { class: "search-wrap" }, form);
+  // the site's mark on its left: home (as in the
+  // reader's tools)
+  const home = h("a", { class: "lf-home", href: "#/",
+    "aria-label": "Գլխավոր", title: "Գլխավոր" },
+  document.querySelector(".brand-mark")
+    .cloneNode(true));
+  const wrap = h("div", { class: "search-wrap"
+    + " lib-find-wrap" }, home, form);
   stickBelow(wrap);
   return wrap;
 }
