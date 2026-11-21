@@ -5396,7 +5396,9 @@ function authorBooks(a, ctx) {
     box.append(h("a", { class: "s-book",
       href: bookHref(key) }, title,
     h("span", { class: "meta" },
-      nf(bk.hits.length) + " տող")), list, all);
+      nf(bk.hits.length) + " տող")), list);
+    // append() would show a null as "null"
+    if (all) box.append(all);
   }
   return box;
 }
