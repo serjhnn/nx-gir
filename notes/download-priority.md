@@ -63,7 +63,10 @@ text on Digilib (scans only), or not Grabar.
 
 Status (2026-11-21): 1 to 3 are in `books/`
 (`davit-anyaght/`, `giwt-arahezatsi/`,
-`mambre-vertsanogh/`).
+`mambre-vertsanogh/`)); 4 to 8 too (`vrtanes-kertogh/`,
+`grigoris-arsharuni/`, `anonymous-684/`,
+`hovhan-mamikonean/`, `sahak-vardapet-mrut/`).
+Next: 9 (177), 10 (356, 354, 355), 11.
 
 ## 1. The 5th-century core (plain Grabar, the model
    of the language)

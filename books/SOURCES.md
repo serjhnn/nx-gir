@@ -707,3 +707,23 @@ Digilib marks 2600 to 2602 and 1519, 1520 as "mixed"
 before using them as a model of the language. Three
 sections are empty on Digilib (two in 2600, one in
 2602): headings with no text.
+
+## grabar/vrtanes-kertogh/, grigoris-arsharuni/, anonymous-684/, hovhan-mamikonean/, sahak-vardapet-mrut/
+
+Eight works from Digilib (digilib.am), fetched with
+`scripts/fetch-digilib.py --by-id` on 2026-11-21, kept
+as Digilib has them (page numbers and `[ ]` stay):
+
+| Folder | Work | Digilib | Sections |
+|--------|------|---------|----------|
+| `vrtanes-kertogh/1-patkeramartits` | Յաղագս պատկերամարտից | [1153](https://www.digilib.am/book/1153/) | 1 |
+| `vrtanes-kertogh/2-tghter` | Թղթեր | [1154](https://www.digilib.am/book/1154/) | 7 |
+| `grigoris-arsharuni/1-meknutiun` | Մեկնութիւն ընթերցուածոց | [2051](https://www.digilib.am/book/2051/) | 36 |
+| `anonymous-684/1-patmutiun` | 684 թուականի պատմութիւն | [1597](https://www.digilib.am/book/1597/) | 35 |
+| `hovhan-mamikonean/1-patmutiun-taronoy` | Պատմութիւն Տարաւնոյ | [1533](https://www.digilib.am/book/1533/) | 11 |
+| `sahak-vardapet-mrut/1-bacayaytutiun` | Բացայայտութիւն | [2202](https://www.digilib.am/book/2202/) | 1 |
+| `sahak-vardapet-mrut/2-patasxani-photay` | Պատասխանի թղթոյն Փոտայ | [2203](https://www.digilib.am/book/2203/) | 1 |
+| `sahak-vardapet-mrut/3-patasxani-ashotoy` | Պատասխանի թղթոյն Աշոտոյ թագաւորի | [2204](https://www.digilib.am/book/2204/) | 1 |
+
+One section of 2051 and two of 1597 are empty on
+Digilib (their titles and prefaces).
