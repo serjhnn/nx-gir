@@ -764,3 +764,21 @@ Digilib's list marked both "unclear"; the samples are
 Grabar throughout. The first section of 280 (`- ԳԼՈՒԽ`,
 a title) is empty; its last section, ՆՈՒՍԽԱՅՔ, is a
 list of remedies.
+
+## Grigor Aknertsi and Sargis Pitsak (2026-11-21)
+
+From Digilib, as it has them:
+
+| Folder | Work | Digilib | Sections |
+|--------|------|---------|----------|
+| `grigor-aknertsi/1-patmutiun-tatarats` | Պատմութիւն թաթարաց | [1534](https://www.digilib.am/book/1534/) | 17 |
+| `sargis-pitsak/1-zhamanakagrutyun` | Ժամանակագրութիւն | [317](https://www.digilib.am/book/317/) | 1 |
+
+Aknertsi (13th c.) wrote the history of the
+Mongols; chapters `ԳԼՈՒԽ Ա.`, 17 sections in one
+part. Sargis Pitsak's chronicle is a short list of
+years (1187 on) in Middle Armenian, with the year
+twice (in digits, then in letters), one line each.
+Not taken: 202 (Hetum II's annals, a long modern
+foreword), 336 (Orbelian, modern text).
+
