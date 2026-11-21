@@ -60,6 +60,12 @@ function icon(paths, cls) {
 }
 
 const ICONS = {
+  // a bin: take off the list
+  bin: [
+    "M4 7h16M10 11v6M14 11v6",
+    "M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12",
+    "M9 7V4h6v3",
+  ],
   folder: [
     "M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8" +
       "a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
@@ -987,7 +993,8 @@ function readingList(items) {
     const x = h("button", { type: "button",
       class: "forget",
       "aria-label": "Հեռացնել ցանկից",
-      title: "Հեռացնել ցանկից" }, "×");
+      title: "Հեռացնել ցանկից" },
+    icon(ICONS.bin));
     x.addEventListener("click", async () => {
       x.disabled = true;
       try {

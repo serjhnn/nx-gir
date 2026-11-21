@@ -389,8 +389,10 @@ h1 {
   padding: 0.55rem 0;
   border-top: 1px solid var(--rule);
 }
-/* × at the right: off the list */
+/* a bin at the right: off the list */
 .readings .forget {
+  display: grid;
+  place-items: center;
   float: right;
   width: 2rem;
   height: 2rem;
@@ -400,9 +402,12 @@ h1 {
   border-radius: 50%;
   background: none;
   color: var(--muted);
-  font-size: 1.2rem;
   line-height: 1;
   cursor: pointer;
+}
+.readings .forget svg {
+  width: 1.1rem;
+  height: 1.1rem;
 }
 .readings .forget:hover,
 .readings .forget:focus-visible {
