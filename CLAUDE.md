@@ -91,6 +91,21 @@
 - `sources/`: copies of the sources (page scans, entry
   texts) behind the `grabar/` data; add the copy and a
   note in `sources/README.md` with every new source
+- `ocr/`: OCR tooling for scanned books, apart from the
+  reader. **Read `ocr/README.md` first**: the commands,
+  the results, how to pick it up again. Pillow, numpy and
+  `tesseract` (+ `hye`) needed only there. `ocr/run.py`
+  (`page`, `eval`, `samples`, `train`, `proxy`, `tune`), the
+  package `ocr/nxocr/`, `ocr/results/` (scores and the LLM
+  answers, kept), `ocr/models/` (only `hye_grabar`; others
+  are made again, not committed); tested in
+  `tests/test_ocr.py`. Code in it follows the same limits
+  (`ruff format ocr/`); `ocr/cache/` is not in git.
+  Rules: score every step with `eval` on held-out pages
+  against typed text before keeping it; the word list and
+  the LLM pass only suggest (a review list), never rewrite
+  unless `--apply`; look at a bad page by eye before
+  trusting a number
 - `scripts/nxgir_logo.py`: logos and gradient colors
 - `scripts/fetch-bible.py`: downloads a book of the
   1895 Grabar Bible into `books/` (see
@@ -127,8 +142,8 @@
   their first heading, a ⇆ mark and progress; a
   folder of single files (the Bible) is grouped by
   sub-folder, named in `LIBRARY.tsv`. The Library,
-  the reader's back button, its ‹ n/N › part tools
-  and `folderHref()` in `app.js` lead there; `up`
+  the reader's back button and `folderHref()` in
+  `app.js` lead there; `up`
   gives the links above it; the shelf's and the
   reader's breadcrumbs use the same names
   (`shelf_crumbs()`), and an old `#/f/` link to a
@@ -144,6 +159,38 @@
   site's book pages show it with the license, CC
   BY-SA 4.0 (`CONTRIBUTING.md`, README). Add a line
   with every new translated part, as `machine`
+- `map/places.tsv`: the places of the map (the ancient
+  Armenian names only, in the spelling of the books;
+  en and ru are the same names transliterated, the
+  modern name only in the note), read by
+  `scripts/nxgir_map.py` (tested in
+  `tests/test_map.py`). The map is the painted picture
+  `web/img/map/base.webp` (Armenian Highland, 36.5-42.5
+  N, 38-49.5 E, not to scale), so every place gives its
+  own `x`, `y` (percent of the picture) on a painted
+  tower or peak; lat and lon are the true place, and
+  `project()` only gives a rough fallback. A post or a
+  comic names its places on a `place:` line after the
+  title (`blog/README.md`). The Map page (`#/map`,
+  `#/map/<place>`, `mapPage()` in `app.js`; `/api/map`,
+  `map_data()` in `nxgir_web.py`; on the site
+  `data/map.json`): pins on the picture, zoom and
+  drag, a small panel over the map (`map-pop`, beside
+  its pin, docked at the bottom on a narrow map) with
+  links to the stories, filters, and the list
+  below it. A new place goes in `places.tsv` with its
+  `x`, `y` (look at the picture); `MAP_UI` kinds in
+  `app.js` must match `KINDS` (a test checks it). The
+  pins' position is set with `el.style`, never a style
+  attribute (the CSP forbids it). A post page links
+  its places (`placeChips()`). For search engines
+  `build-site.py` writes `map.<lang>.html` and a page
+  for each place that a post names,
+  `map/<id>.<lang>.html` (`map_pages()`; the kind
+  names are `KIND_NAMES` in `nxgir_map.py`). The
+  README picture `docs/web-map.jpg` is made by
+  `scripts/render-web.py`. How it works, the pitfalls
+  and the to-do list: `notes/map.md` (read it first)
 - `blog/`: the Blog page (`#/blog`, `#/blog/<slug>`,
   `/api/blog`): one `YYYY-MM-DD-slug.LANG.md` per
   post and language (hy, en, ru; Armenian first),
@@ -271,6 +318,21 @@
   Տարեգիրք); its translation starts them with the
   year too (`413 թվականին`, `Իսկ Հայոց 410
   թվականին`).
+  A chronicle that names the year inside the line, in
+  letters after a hyphen, the thousand left out
+  (`ի -ՆԱ թուականին Հայոց`, 401; Մատթէոս
+  Ուռհայեցի), has an entry for each such line, "n"
+  the letters as printed (`dash_year_entries()`, at
+  least 10).
+  Homilies headed `ՃԱՌ ՀԻՆԳԵՐՈՐԴ` (three or
+  more in a part; Սեբերիանոս Եմեսացի) are entries,
+  titled with the subject line below
+  (`homily_entries()`).
+  A florilegium whose quotations are numbered afresh
+  with each author (`1 * Երանելւոյն Երանոսի՝ ...`;
+  Կոմիտաս Աղցեցի, Կնիք հաւատոյ) has an entry for
+  each line that starts with `1`, titled by the
+  line (`one_entries()`, at least 8).
   A long part (150 lines or more, no `[1]` sections)
   whose sections start with a title alone between blank
   lines, three or more, is read as that (`title_lines()`,

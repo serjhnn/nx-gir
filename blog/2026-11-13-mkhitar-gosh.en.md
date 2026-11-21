@@ -1,6 +1,7 @@
 # Mkhitar Gosh and the number six
 
 theme: authors
+place: gandzak, nor-getik
 
 ![Mkhitar Gosh: six, the first perfect number, with a medieval book, a castle in the mountains and a quill](mkhitar-gosh.jpg)
 

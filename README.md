@@ -363,6 +363,20 @@ phone's browser.
        alt="The Timeline page on a phone">
 </p>
 
+- **Map** (the link under the library, or `#/map`): a
+  painted map of the Armenian Highland with a pin on
+  each place a blog post or a comic is about, under
+  its ancient Armenian name. Tap a pin for a small panel
+  with links to its stories; zoom and drag, pinch on a
+  phone. A post names its places on a `place:` line
+  after the title, ids from `map/places.tsv`; the post
+  page then links to them.
+
+<p align="center">
+  <img src="docs/web-map.jpg" width="300"
+       alt="The Map page on a phone, a place opened">
+</p>
+
 Positions, bookmarks and notes are the same ones the
 terminal reader keeps, so a book can be started in one
 and finished in the other.

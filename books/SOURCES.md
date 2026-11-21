@@ -657,3 +657,53 @@ in the scan are listed in
 - The edition differs from the Venice 1956 one that
   Digilib has; when Digilib is back, its text can
   be compared with this one.
+
+## grabar/smbat-sparapet/3-taregirk-digilib/
+
+*Տարեգիրք* of Smbat Sparapet as typed on Digilib
+(digilib.am, book 333,
+<https://www.digilib.am/book/333/>), fetched with
+`scripts/fetch-digilib.py --by-id 333` on 2026-11-19:
+169 sections (the years) in two parts. Digilib's page
+does not name the edition; our note on the 1859 text
+(`notes/smbat-sparapet-taregirk.md`) says it is the
+Venice 1956 one. It is a longer text than the 1859
+edition in `2-taregirk/` (about 290,000 letters
+against 120,000; 164 year headings against 114) and
+ends with the colophon of Catholicos Grigor, 1007.
+Kept as Digilib has it: each year is a heading line
+of its own, the paragraphs follow, one per line.
+The two are separate texts, not translations of each
+other: the lines do not correspond.
+
+Cut one sentence to a line on 2026-11-20 (only line
+breaks changed; 1,041 and 1,056 lines; one `։` with no
+space after it in part 1, none in part 2), for the
+translation at the same path under `ashkharhabar/`.
+Digilib's page marks (`/12ա/`, 354 in the text) and
+its brackets `[ ]` are in the Grabar as they were; the
+translation leaves out the page marks. The source has
+an unclosed `«` here and there (the `»` typed as `ե`).
+
+
+## grabar/davit-anyaght/, giwt-arahezatsi/, mambre-vertsanogh/
+
+Six works from Digilib (digilib.am), fetched with
+`scripts/fetch-digilib.py --by-id` on 2026-11-21, kept
+as Digilib has them (a section is a heading line, its
+paragraphs follow, one per line):
+
+| Folder | Work | Digilib | Sections |
+|--------|------|---------|----------|
+| `davit-anyaght/1-sahmanq` | Սահմանք եւ տրամատութիւնք իմաստասիրութեան | [2600](https://www.digilib.am/book/2600/) | 34 |
+| `davit-anyaght/2-verlutsakan` | Ի վերլուծականն Արիստոտէլի | [2601](https://www.digilib.am/book/2601/) | 14 |
+| `davit-anyaght/3-nerazutyun` | Վերլուծութիւն Ներածութեան Պորփիւրի | [2602](https://www.digilib.am/book/2602/) | 29 |
+| `davit-anyaght/4-storogutyun` | Մեկնութիւն Ստորոգութեանցն Արիստոտէլի | [2603](https://www.digilib.am/book/2603/) | 36 |
+| `giwt-arahezatsi/1-tught-vache` | Թուղթ Գիւտայ առ սուրբն Վաչէ | [1519](https://www.digilib.am/book/1519/) | 1 |
+| `mambre-vertsanogh/1-charq` | Մամբրէի վերծանողի ճառք | [1520](https://www.digilib.am/book/1520/) | 5 |
+
+Digilib marks 2600 to 2602 and 1519, 1520 as "mixed"
+(a modern foreword or notes with the Grabar): look
+before using them as a model of the language. Three
+sections are empty on Digilib (two in 2600, one in
+2602): headings with no text.

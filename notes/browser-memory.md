@@ -177,3 +177,80 @@ The phone readers today (Chrome on Android with
 first sign of trouble would be Android reloading
 the tab in the background (the position is saved,
 so nothing is lost). Start with 1 and 2 then.
+
+## After steps 1 and 2 (2026-11-16)
+
+Both are done (plan: `notes/ram-plan.md`): the other
+version is built only while Side by side is on
+(`syncPar()` in `app.js`), and `.text > p` has
+`content-visibility: auto` with a height guess from
+the line's length (`--rows`, `style.css`).
+
+Datastanagirk A 01, phone screen, after a garbage
+collection (`why`):
+
+| Case | Before | After |
+|---|---|---|
+| Side by side | 184 MB | 140 MB |
+| Side by side, scrolled to the end | 190 MB | 160 MB |
+| One column | 154 MB | 117 MB |
+| One column, elements | 125,525 | 73,668 |
+
+The page height stays within 0.1% of what it was, and
+line links, the saved position and Side by side off
+and on land where they did.
+
+## In pages (2026-11-16)
+
+A part is read a page at a time (the default; the ▤
+button in the text settings turns it off): about 10,000
+characters of Grabar are in the page, the rest is
+only data (`showPage()` in `app.js`; plan:
+`notes/ram-plan.md`). Same part, phone screen:
+
+| Case | One long text | In pages |
+|---|---|---|
+| Side by side | 144 MB | 82 MB |
+| One column | 118 MB | 78 MB |
+| Elements, side by side | 125,533 | 7,313 |
+| Peak when opening (5 largest, `fresh 5`) | 249 MB | 128 MB |
+
+The home page is 70 MB, so a page adds about 12 MB
+(against about 75 MB). All 15 pages one after
+another: no growth (heap 5.3 MB, 7,300 to 8,400
+elements). Ctrl-F finds the page only.
+
+## The home page, what the 70 MB is (2026-11-16)
+
+Phone screen, tab memory after a garbage collection,
+three runs each (the 47 MB floor is `about:blank`):
+
+| Case | Tab |
+|---|---|
+| Real home page | 70.7 MB |
+| `app.js` parsed but not run | 54.4 MB |
+| `app.js` empty | 54.4 MB |
+| `app.js` minified (esbuild) | 70.3 MB |
+| `app.js` and `style.css` minified | 69.6 MB |
+| No `style.css` | 59.7 MB |
+| Images resized to about 2x their size | 66.5 MB |
+| No images | 63.5 MB |
+
+- **The size of the script costs nothing**: parsing
+  all of `app.js` is the same as an empty script, and
+  minifying changes nothing. So minifying, or
+  splitting rarely used pages out of `app.js`, would
+  not lower the tab. (The first guess of 18 MB for
+  "scripts" was wrong: blocking JS also removes the
+  images, the shelf and the fonts it draws.)
+- What costs is what the page draws when it runs: the
+  two banners (1200x675 and 600x400, shown at about
+  358x120 and 222x120, decoded at full size) cost
+  about 7 MB, 4 MB of it saved by resizing them to
+  720 and 444 px wide (140 and 59 KB to 68 and 39 KB);
+  fonts about 2 MB; the rest is layout and painting of
+  the styled page.
+- Numbers are from headless Chromium on Linux; an
+  Android WebView will differ, but the order should
+  hold.
+

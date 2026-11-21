@@ -1090,6 +1090,60 @@ def test_contents_of_titles_alone():
     )
 
 
+def test_contents_of_florilegium():
+    # Կոմիտաս Աղցեցի: the number starts again at 1 with
+    # each author
+    lines = ["Կնիք հաւատոյ · 2/4", ""]
+    for k in range(8):
+        lines += [
+            f"1 * Երանելւոյն Հեղինակ {k}։",
+            "2 Խօսք։",
+            "3 Այլ խօսք։",
+        ]
+    got = contents(lines)
+    assert got[0]["start"]
+    assert len(got) == 9
+    assert got[1]["title"] == "Երանելւոյն Հեղինակ 0։"
+    assert contents(lines[:20]) == []
+    # a plain "1 text" line is no heading when rare
+    assert contents(["1 Մի բան։", "2 Այլ։"] * 3) == []
+
+
+def test_contents_of_homilies():
+    # Սեբերիանոս Եմեսացի: ՃԱՌ headings, the subject below
+    lines = ["Ճառք · 2/3", ""]
+    for n in ["ՀԻՆԳԵՐՈՐԴ", "ՎԵՑԵՐՈՐԴ", "ԵՒԹՆԵՐՈՐԴ"]:
+        lines += [f"ՃԱՌ {n}", "", f"Խօսք {n}։", "Տեքստ։"]
+    got = contents(lines)
+    assert got[0]["start"]
+    assert [e["title"] for e in got[1:]] == [
+        "ՃԱՌ ՀԻՆԳԵՐՈՐԴ · Խօսք ՀԻՆԳԵՐՈՐԴ։",
+        "ՃԱՌ ՎԵՑԵՐՈՐԴ · Խօսք ՎԵՑԵՐՈՐԴ։",
+        "ՃԱՌ ԵՒԹՆԵՐՈՐԴ · Խօսք ԵՒԹՆԵՐՈՐԴ։",
+    ]
+    # fewer than three: none
+    assert contents(lines[:10]) == []
+
+
+def test_contents_of_dash_years():
+    # Մատթէոս Ուռհայեցի: the year in the line, in letters
+    # after a hyphen, the thousand left out
+    lines = ["Պատմութիւն · 1/4", "", "[Մասն առաջին]", ""]
+    for y in ["ՆԱ", "ՆԷ", "ՆԸ", "Նժ", "ՆժԸ"] * 2:
+        lines.append(f"Եւ ի -{y} թուականին եղեւ սով։")
+        lines.append("Յայնժամ գնաց զօրավարն։")
+    got = contents(lines)
+    assert got[0]["start"]
+    assert [e["n"] for e in got[1:3]] == ["ՆԱ", "ՆԷ"]
+    assert got[1]["title"] == "Եւ ի -ՆԱ թուականին եղեւ սով։"
+    assert got[5]["n"] == "ՆԺԸ"
+    assert len(got) == 11
+    # fewer than ten years: none
+    assert contents(lines[:22]) == []
+    # a hyphen in a word is no year
+    assert contents(["Ա -բան", "Բ-ՆԱ ձեռք"] * 8) == []
+
+
 def test_contents_of_years():
     # Սմբատ Սպարապետ's chronicle: a paragraph per year,
     # "Ի թուին 413", "Իսկ ի թուականին Հայոց 410"

@@ -36,7 +36,15 @@ The site remembers where you stopped reading each book, in this browser. The hom
 
 ## From one part to the next
 
-Every long book has a page of its own: open it from the Library to see all its parts in order, each with the chapters it begins with, a ⇆ mark where a translation exists and how far you have read. A button there starts the book or goes on from where you stopped. While reading, ‹ 7/24 › in the tools moves to the part before or after, and the middle button lists all the parts. At the end of each part, two cards lead to the part before and the part after it, with the chapters each one begins with, and a link to all the parts of the book. At the bottom of every page are the main pages of the site, the license of the translations and how to help.
+Every long book has a page of its own: open it from the Library to see all its parts in order, each with the chapters it begins with, a ⇆ mark where a translation exists and how far you have read. A button there starts the book or goes on from where you stopped. While reading, the back button returns to the book's page with all its parts. At the end of each part, two cards lead to the part before and the part after it, with the chapters each one begins with, and a link to all the parts of the book. At the bottom of every page are the main pages of the site, the license of the translations and how to help.
+
+## Comics
+
+Կոմիքսներ on the home page opens a page of comic series made from the books of the Library: each page of a series is a picture with a note under it giving the line of the book it retells, and below are a short explanation of the story and where to read it. The first series, Vasak and the Seven Wolves, is from Smbat Sparapet's Taregirk.
+
+## Map
+
+The Map page shows the Armenian Highland on a painted map, with a pin on each place a post or a comic is about. Tap a pin and a small panel opens with links to them, comics and posts; the pins of new posts glow. Zoom with + and −, drag to move, pinch on a phone; the filters show only the blog, only the comics or only places with nothing written yet. The places carry their ancient Armenian names, and the list under the map has the same places for a keyboard.
 
 ## Report an error
 
@@ -44,7 +52,11 @@ See a mistake in the Grabar text or in a translation? Tap the word, press Report
 
 ## Text settings
 
-Make the text bigger or smaller, set it on the left or in the center, change the line spacing, put each sentence on its own line, read in a column or across the whole width, and choose the font. On a phone these are behind the settings button. The site remembers your choice.
+Make the text bigger or smaller, set it on the left or in the center, change the line spacing, put each sentence on its own line, read in a column or across the whole width, and choose the font. When the buttons do not fit in one row, on a phone or a tablet, these are behind the settings button and open in a column. The site remembers your choice.
+
+## Pages for a long part
+
+A long part can be read a page at a time: the text is cut into pages of a few minutes each, with ‹ Previous and Next › above and below, and ‹ 3/15 › in the tools. The reader then holds only one page, so it works on an old phone with little memory; the progress bar still shows how far you are in the whole part. This is how every long part opens; the ▤ button in the text settings turns it off, to read one long text.
 
 ## Light, dark and black
 

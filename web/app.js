@@ -1,7 +1,8 @@
 // nx-gir web: the bookshelf and the theme button.
 // Pages are #/ (top), #/f/<folder>, #/b/<book>
 // (a book's parts), #/read/<book>,
-// #/library, #/timeline, #/blog, #/features,
+// #/library, #/timeline, #/blog, #/comics,
+// #/features,
 // #/contribute, #/news and #/stats; the
 // data
 // comes from
@@ -67,6 +68,8 @@ const ICONS = {
     "M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z",
     "M5 18a2 2 0 0 1 2-2h11",
   ],
+  // three lines: the menu
+  menu: ["M4 7h16", "M4 12h16", "M4 17h16"],
   // a pen: the blog
   pen: [
     "M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z",
@@ -77,6 +80,17 @@ const ICONS = {
     "M9 11a3.5 3.5 0 1 0 0-7a3.5 3.5 0 0 0 0 7z",
     "M3 20a6 6 0 0 1 12 0",
     "M19 8v6M16 11h6",
+  ],
+  // two panels: the comics
+  panels: [
+    "M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4" +
+      "a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z",
+    "M3 12h18M12 4v8",
+  ],
+  // a folded map: the map
+  map: [
+    "M9 4L3 6v14l6-2l6 2l6-2V4l-6 2z",
+    "M9 4v14M15 6v14",
   ],
   // a horn: the announcements
   horn: [
@@ -312,6 +326,12 @@ async function staticApi(path) {
   if (route === "features") {
     return json("data/features.json");
   }
+  if (route === "comics") {
+    return json("data/comics.json");
+  }
+  if (route === "map") {
+    return json("data/map.json");
+  }
   if (route === "recent") {
     return { items: await recentHere(
       Number(q.get("n")) || 0) };
@@ -398,7 +418,8 @@ const BY_SA = "https://creativecommons.org/"
 
 function siteFooter() {
   const pages = [["#/library", "Library"],
-    ["#/blog", "Blog"], ["#/features", "Features"],
+    ["#/blog", "Blog"], ["#/comics", "Comics"],
+    ["#/map", "Map"], ["#/features", "Features"],
     ["#/timeline", "Timeline"],
     ["#/stats", "Statistics"],
     ["#/recent", "Readings"]];
@@ -586,19 +607,31 @@ function folderRow(item) {
     plural(item.size, item.unit || "book")));
 }
 
-// where a first-time visitor starts: Grabar and
-// its modern Armenian translation side by side
-const START = "grabar/grigor-tatevatsi/" +
-  "3-amaran-hator/01.txt";
 // where visitors can write: kept in parts and put
 // together only in the page, so that programs
 // gathering addresses from the files do not find it
 const CONTACT = ["nxgir.lib", "gmail.com"];
 
+// the menu items: the row on the top page and the
+// list the ☰ button of the top bar opens
+const MENU = [
+  ["#/library", "book", "Գրադարան"],
+  ["#/blog", "pen", "Բլոգ"],
+  ["#/comics", "panels", "Կոմիքսներ"],
+  ["#/map", "map", "Քարտեզ"],
+  ["#/features", "tick", "Հնարավորություններ"],
+  ["#/contribute", "join", "Միանալ"],
+  ["#/news", "horn", "Հայտարարություններ"],
+];
+
+function menuLink([href, ic, label]) {
+  return h("a", { class: "icon-btn", href },
+    icon(ICONS[ic]), label);
+}
+
 // the welcome above the library, in Armenian:
 // questions a first-time visitor may ask
-function intro(status, news) {
-  status = status || [];
+function intro(news) {
   const qa = (q, ...a) => [h("h3", {}, q),
     h("p", {}, ...a)];
   return h("section", { class: "intro", lang: "hy" },
@@ -610,19 +643,6 @@ function intro(status, news) {
       "Սեղմեք բառի վրա, և կտեսնեք դրա իմաստը, "
       + "բառարանային ձևը և այն մյուս տեղերը, "
       + "որտեղ բառը հանդիպում է գրքում։"),
-    qa("Որտեղի՞ց սկսել։",
-      "Բացեք Գրիգոր Տաթևացու «Ամառան հատորի» "
-      + "առաջին մասը. գրաբար բնագիրն այնտեղ "
-      + "ժամանակակից հայերեն թարգմանության հետ "
-      + "կողք կողքի է, ամեն նախադասությունը՝ "
-      + "առանձին տողում։"),
-    h("p", { class: "intro-btn" },
-      h("a", { class: "icon-btn primary",
-        href: "#/read/" + enc(START) },
-      "Կարդալ «Ամառան հատոր», մաս 1 →")),
-    status.length ? [
-      h("h3", {}, "Ի՞նչ է արդեն թարգմանված։"),
-      statusList(status)] : null,
     news && news.length ? [
       h("h3", {},
         "Ի՞նչ փոփոխություններ կան կայքում։"),
@@ -636,26 +656,6 @@ function intro(status, news) {
     qa("Ինչպե՞ս կապվել։",
       "Հարցերի, առաջարկների կամ սխալների մասին "
       + "գրեք նախագծի հեղինակին՝ ", mail(), "։"));
-}
-
-// the long books with a part translated, as
-// "author • book", and how many of their parts
-// (status() in nxgir_web.py)
-function statusList(status) {
-  const list = h("ul", { class: "status" });
-  for (const b of status) {
-    const pct = Math.round(100 * b.done / b.parts);
-    const fill = h("span");
-    fill.style.width = pct + "%";
-    const to = folderHref(b.folder);
-    list.append(h("li", {},
-      h("a", { href: to }, b.name || b.title),
-      h("span", { class: "meta" },
-        b.done + " / " + b.parts + " մաս"),
-      h("span", { class: "progress", role: "img",
-        "aria-label": pct + "%" }, fill)));
-  }
-  return list;
 }
 
 // the newest steps of the timeline, in English
@@ -712,6 +712,8 @@ async function shelf(folder) {
     api("shelf?folder=" + q),
     folder ? null : api("recent?n=" + RECENT)
       .catch(() => null)]);
+  // the top page: its top bar is pinned (CSS)
+  document.body.classList.toggle("home", !folder);
   const title = folder
     ? data.title || folder.split("/").pop()
     : "Library";
@@ -726,30 +728,17 @@ async function shelf(folder) {
     folder ? null : h("h1", { class: "sr-only" },
       "nxGir · ", h("span", { lang: "hy" },
         "Նախագիր")),
-    // at the top: the Library and the other
-    // pages, what was read last, then the welcome
-    folder ? null : h("p", { class: "lib-btn",
-      lang: "hy" },
-    h("a", { class: "icon-btn",
-      href: "#/library" },
-    icon(ICONS.book), "Գրադարան"),
-    h("a", { class: "icon-btn",
-      href: "#/blog" },
-    icon(ICONS.pen), "Բլոգ"),
-    h("a", { class: "icon-btn",
-      href: "#/features" },
-    icon(ICONS.tick), "Հնարավորություններ"),
-    h("a", { class: "icon-btn",
-      href: "#/contribute" },
-    icon(ICONS.join), "Միանալ"),
-    h("a", { class: "icon-btn",
-      href: "#/news" },
-    icon(ICONS.horn), "Հայտարարություններ")),
+    // at the top: the picture, the Library and the
+    // other pages, what was read last, then the
+    // welcome
+    folder ? null : topBanner(),
+    folder ? null : menuBar(...MENU.map(menuLink)),
     folder ? null : newsBanner(),
     folder ? null : joinBanner(),
+    folder ? null : mapBanner(),
     last && last.items.length
       ? recentCard(last.items) : null,
-    folder ? null : intro(data.status, data.news),
+    folder ? null : intro(data.news),
     // the top page has no list of folders: it is
     // at the bottom of #/stats
     folder ? h("h1", { lang: data.title
@@ -764,6 +753,88 @@ async function shelf(folder) {
       "+ New text")) : null,
     folder ? shelfList(data) : null
   );
+}
+
+// the menu buttons of the top page. On a phone
+// they are one line to swipe, with a dot per button
+// under it (the one in view is filled); the dots
+// are hidden when all the buttons fit
+function menuBar(...links) {
+  const row = h("p", { class: "lib-btn", lang: "hy" },
+    ...links);
+  const dots = h("div", { class: "menu-dots",
+    "aria-hidden": "true" },
+  ...links.map(() => h("span", {})));
+  const update = () => {
+    const max = row.scrollWidth - row.clientWidth;
+    dots.hidden = max <= 1;
+    const k = max > 0 ? Math.round(
+      row.scrollLeft / max * (links.length - 1)) : 0;
+    [...dots.children].forEach((d, i) =>
+      d.classList.toggle("on", i === k));
+  };
+  row.addEventListener("scroll", update,
+    { passive: true });
+  if (window.ResizeObserver) {
+    new ResizeObserver(update).observe(row);
+  } else {
+    window.addEventListener("resize", update);
+  }
+  return h("div", { class: "menu-bar" }, row, dots);
+}
+
+// the ☰ button in the top bar: it opens all the
+// menu items in a list under the bar
+function headerMenu() {
+  const bar = topBar.parentNode;
+  const panel = h("nav", { class: "menu-panel",
+    id: "menu-panel", lang: "hy", hidden: "",
+    "aria-label": "Ցանկ" }, ...MENU.map(menuLink));
+  const more = h("button", { class: "icon-btn menu-more",
+    type: "button", title: "Ցանկ",
+    "aria-label": "Ցանկ", "aria-expanded": "false",
+    "aria-controls": "menu-panel" },
+  icon(ICONS.menu));
+  const open = (on) => {
+    panel.hidden = !on;
+    more.setAttribute("aria-expanded", String(on));
+  };
+  more.addEventListener("click", () => open(panel.hidden));
+  panel.addEventListener("click", (e) => {
+    if (e.target.closest("a")) open(false);
+  });
+  document.addEventListener("pointerdown", (e) => {
+    if (!bar.contains(e.target)) open(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !panel.hidden) {
+      open(false);
+      more.focus();
+    }
+  });
+  window.addEventListener("hashchange",
+    () => open(false));
+  topBar.append(more);
+  bar.append(panel);
+}
+headerMenu();
+
+// on scrolling, the top bar of the top page stays
+// at the top, with a line under it (.scrolled)
+window.addEventListener("scroll", () => {
+  document.documentElement.classList.toggle(
+    "scrolled", window.scrollY > 40);
+}, { passive: true });
+
+// the picture at the very top of the top page,
+// with a short line in its corner
+function topBanner() {
+  return h("div", { class: "top-banner" },
+    h("img", { src: "banner.jpg", alt: "",
+      width: "1600", height: "550",
+      fetchpriority: "high" }),
+    h("p", { class: "top-text", lang: "hy" },
+      "… ժամանակ ժողովելոյ քարինս"));
 }
 
 // a narrow banner on the top page, with the
@@ -782,19 +853,35 @@ function joinBanner() {
 }
 
 // a narrow banner on the top page, with the
+// painted map, leading to #/map
+function mapBanner() {
+  return h("a", { class: "join-banner map-banner",
+    href: "#/map", lang: "hy" },
+  h("img", { src: "img/map/base.webp", alt: "",
+    width: "1536", height: "1024",
+    loading: "lazy" }),
+  h("span", { class: "join-text" },
+    h("b", {}, "Քարտեզ"),
+    h("span", {}, "Պատմական դեպքերի վայրերը"
+      + " քարտեզի վրա"),
+    h("span", { class: "join-go" },
+      "Բացել քարտեզը →")));
+}
+
+// a narrow banner on the top page, with the
 // picture of the newest announcement, leading to
 // #/news
-function newsBanner() {
-  const a = NEWS[0];
+function newsBanner(a = NEWS[0], lang = "hy") {
+  const en = lang === "en" && a.banner_en;
   return h("a", { class: "join-banner news-banner",
-    href: "#/news", lang: "hy" },
+    href: "#/news/" + a.id, lang },
   h("img", { src: a.face, alt: "",
     width: "600", height: "400" }),
   h("span", { class: "join-text" },
-    h("b", {}, a.banner[0]),
-    h("span", {}, a.banner[1]),
+    h("b", {}, (en || a.banner)[0]),
+    h("span", {}, (en || a.banner)[1]),
     h("span", { class: "join-go" },
-      "Կարդալ →")));
+      NEWS_UI[lang].read)));
 }
 
 // -- readings --
@@ -1558,6 +1645,32 @@ function version(p, lang) {
     || p.versions[0];
 }
 
+// the places a post or series names, as links to the
+// map: the names (by id) come from the map's data;
+// null when it names none or the data is missing
+async function placeNames(item) {
+  if (!item || !item.places || !item.places.length) {
+    return null;
+  }
+  try {
+    const m = await api("map");
+    return new Map(m.places.map((x) => [x.id, x.names]));
+  } catch (e) {
+    return null;
+  }
+}
+
+function placeChips(item, names, lang) {
+  const ids = names
+    ? item.places.filter((id) => names.has(id)) : [];
+  if (!ids.length) return null;
+  return h("p", { class: "post-places", lang },
+    icon(ICONS.map),
+    h("span", {}, ids.flatMap((id, i) => [i ? ", " : "",
+      h("a", { href: "#/map/" + id },
+        names.get(id)[lang])])));
+}
+
 // one post: its date, title and text (parse()
 // in nxgir_blog.py: ["p", text], ["h", text] or
 // ["img", file, alt])
@@ -1619,6 +1732,7 @@ async function blogPage(path) {
   const one = slug
     ? data.posts.find((p) => p.slug === slug) : null;
   if (slug && !one) throw new Error("No such post");
+  const names = await placeNames(one);
   const posts = theme
     ? data.posts.filter((p) => p.theme === theme)
     : data.posts;
@@ -1670,6 +1784,7 @@ async function blogPage(path) {
         named(t.sub)),
       one ? null : tabs,
       langs.length > 1 ? pick : null,
+      one ? placeChips(one, names, lang) : null,
       h("div", {
         class: "blog" + (one ? " one p-" + one.slug : "") },
         one ? postItem(one, lang)
@@ -1677,6 +1792,514 @@ async function blogPage(path) {
             ? posts.map((p) => postCard(p, lang))
             : h("p", { class: "empty", lang },
               t.none)));
+  };
+  draw();
+}
+
+// -- comics --
+
+// the words of the Comics page, by language
+const COMICS_UI = {
+  hy: { title: "Կոմիքսներ",
+    sub: "Գրադարանի գրքերի տեսարանները նկարներով",
+    none: "Շարքեր դեռ չկան։" },
+  en: { title: "Comics",
+    sub: "Scenes from the books of the Library",
+    none: "No series yet." },
+  ru: { title: "Комиксы",
+    sub: "Сцены из книг Библиотеки",
+    none: "Серий пока нет." },
+};
+
+// a series in the list: its first picture as the
+// cover, its date, title and intro, the whole card
+// a link to the series' own page
+function comicCard(s, lang) {
+  const v = version(s, lang);
+  const lead = v.blocks.find(([k]) => k === "p");
+  const cover = v.blocks.find(([k]) => k === "img");
+  return h("a", { class: "post-card comic-card",
+    href: "#/comics/" + s.slug, lang: v.lang },
+  cover ? h("img", { src: "img/" + cover[1],
+    alt: cover[2], loading: "lazy" }) : null,
+  h("span", { class: "pc-top" },
+    h("time", { datetime: s.date },
+      longDay(s.date, v.lang)),
+    h("span", { class: "pc-more" },
+      BLOG[v.lang].read)),
+  h("span", { class: "pc-title" }, named(v.title)),
+  lead ? h("span", { class: "pc-lead" },
+    named(lead[1])) : null);
+}
+
+// one series, whole: the pages (pictures with their
+// notes) one under the other, full width
+function comicItem(s, lang) {
+  const v = version(s, lang);
+  return h("article", { class: "post comic p-" + s.slug,
+    lang: v.lang },
+  h("time", { datetime: s.date },
+    longDay(s.date, v.lang)),
+  h("h2", {}, named(v.title)),
+  v.blocks.map(([kind, text, alt]) =>
+    kind === "img"
+      ? h("img", { src: "img/" + text, alt,
+        loading: "lazy" })
+      : h(kind === "h" ? "h3" : "p",
+        kind === "cap" ? { class: "cap" } : {},
+        named(text))));
+}
+
+// #/comics: the series, newest first; #/comics/<slug>
+// one series; #/comics/<slug>/<lang> in lang (the
+// language is the blog's choice)
+async function comicsPage(path) {
+  const [slug, want] = path.split("/");
+  if (want in BLOG) setBlogLang(want);
+  const data = await api("comics");
+  const one = slug
+    ? data.series.find((s) => s.slug === slug) : null;
+  if (slug && !one) throw new Error("No such series");
+  const names = await placeNames(one);
+  const draw = () => {
+    const have = new Set((one ? [one] : data.series)
+      .flatMap((s) => s.versions.map((v) => v.lang)));
+    const langs = Object.keys(BLOG)
+      .filter((l) => have.has(l));
+    const lang = have.has(blogLang()) || !langs.length
+      ? blogLang() : langs[0];
+    const t = COMICS_UI[lang];
+    const pick = h("div", { class: "filters outline",
+      role: "group", "aria-label": "Language" },
+    langs.map((l) => {
+      const b = h("button", { type: "button",
+        lang: l, "aria-pressed": String(l === lang) },
+      BLOG[l].name);
+      b.addEventListener("click", () => {
+        setBlogLang(l);
+        draw();
+      });
+      return b;
+    }));
+    document.title = (one ? version(one, lang).title
+      + " · " : "") + t.title + " · " + NAME;
+    show(
+      h("p", { class: "crumbs", lang },
+        h("a", { href: "#/" }, BLOG[lang].home),
+        one ? [" · ", h("a", { href: "#/comics" },
+          t.title)] : null),
+      one ? null : h("h1", { lang }, t.title),
+      one ? null : h("p", { class: "sub", lang },
+        t.sub),
+      langs.length > 1 ? pick : null,
+      one ? placeChips(one, names, lang) : null,
+      one ? h("div", { class: "blog one comics" },
+        comicItem(one, lang))
+        : h("div", { class: "blog comics-list" },
+          data.series.length
+            ? data.series.map((s) => comicCard(s, lang))
+            : h("p", { class: "empty", lang }, t.none)));
+  };
+  draw();
+}
+
+// -- map --
+
+// #/map: the painted map of the Armenian Highland
+// (map/places.tsv, nxgir_map.py): a pin on each
+// place, a card with the posts and comics that name
+// it; #/map/<place> opens that place
+const MAP_UI = {
+  hy: { title: "Քարտեզ",
+    sub: "Գրառումներն ու կոմիքսները՝ իրենց վայրերում",
+    all: "Բոլորը", blog: "Բլոգ", comics: "Կոմիքս",
+    places: "Վայրեր",
+    none: "Այս վայրի մասին գրառումներ դեռ չկան։",
+    zin: "Մոտեցնել", zout: "Հեռացնել",
+    reset: "Ամբողջ քարտեզը", close: "Փակել",
+    list: "Բոլոր վայրերը",
+    map: "Հայկական լեռնաշխարհի քարտեզ",
+    kinds: { city: "Քաղաք", fortress: "Բերդ",
+      monastery: "Վանք", region: "Գավառ",
+      lake: "Լիճ", mountain: "Լեռ" } },
+  en: { title: "Map",
+    sub: "Posts and comics, each at its place",
+    all: "All", blog: "Blog", comics: "Comics",
+    places: "Places",
+    none: "No posts about this place yet.",
+    zin: "Zoom in", zout: "Zoom out",
+    reset: "Whole map", close: "Close",
+    list: "All places",
+    map: "Map of the Armenian Highland",
+    kinds: { city: "City", fortress: "Fortress",
+      monastery: "Monastery", region: "Region",
+      lake: "Lake", mountain: "Mountain" } },
+  ru: { title: "Карта",
+    sub: "Записи и комиксы на своих местах",
+    all: "Все", blog: "Блог", comics: "Комиксы",
+    places: "Места",
+    none: "О этом месте записей пока нет.",
+    zin: "Приблизить", zout: "Отдалить",
+    reset: "Вся карта", close: "Закрыть",
+    list: "Все места",
+    map: "Карта Армянского нагорья",
+    kinds: { city: "Город", fortress: "Крепость",
+      monastery: "Монастырь", region: "Область",
+      lake: "Озеро", mountain: "Гора" } },
+};
+const MAP_MAX = 3;
+const MAP_FRESH = 14 * 24 * 3600 * 1000;
+
+// where a story is read
+function storyHref(s) {
+  return "#/" + (s.type === "comics" ? "comics/" : "blog/")
+    + s.slug;
+}
+
+// a place's pin: its stories decide the look
+function pinKind(p) {
+  if (p.stories.some((s) => s.type === "blog")) {
+    return "blog";
+  }
+  return p.stories.length ? "comics" : "place";
+}
+
+// a story in the popup: a link, with its cover small,
+// its type and date, and its title
+function mapLink(s, lang) {
+  const v = version(s, lang);
+  const t = MAP_UI[lang];
+  return h("a", { class: "map-link",
+    href: storyHref(s), lang: v.lang },
+  v.cover ? h("img", { src: "img/" + v.cover,
+    alt: "", loading: "lazy" }) : null,
+  h("span", { class: "ml-text" },
+    h("span", { class: "ml-meta" },
+      icon(ICONS[s.type === "comics" ? "panels"
+        : "book"]),
+      h("span", {}, t[s.type] + " · ",
+        h("time", { datetime: s.date },
+          longDay(s.date, v.lang)))),
+    h("span", { class: "ml-title" }, named(v.title))));
+}
+
+async function mapPage(want) {
+  const data = await api("map");
+  const places = data.places;
+  const by = new Map(places.map((p) => [p.id, p]));
+  const st = { lang: blogLang(), filter: "all",
+    sel: by.has(want) ? want : "",
+    s: 1, x: 0, y: 0 };
+  const shown = (p) => st.filter === "all"
+    || (st.filter === "places" ? !p.stories.length
+      : p.stories.some((s) => s.type === st.filter));
+  const draw = () => {
+    const lang = st.lang;
+    const t = MAP_UI[lang];
+    const nm = (p) => p.names[lang];
+    const view = h("div", { class: "map-view",
+      tabindex: "0", role: "application",
+      "aria-label": t.map });
+    const stage = h("div", { class: "map-stage" },
+      h("img", { src: data.image, alt: "",
+        draggable: "false" }));
+    view.append(stage);
+    const pins = new Map();
+    for (const p of places) {
+      const kind = pinKind(p);
+      const fresh = p.stories.some((s) =>
+        Date.now() - isoDate(s.date) < MAP_FRESH);
+      const b = h("button", { type: "button",
+        class: "pin pin-" + kind + (fresh ? " fresh" : "")
+          + (p.x > 88 ? " pin-r" : ""),
+        "aria-label": nm(p) },
+      h("span", { class: "pin-dot" },
+        kind === "place" ? null
+          : icon(ICONS[kind === "blog" ? "book"
+            : "panels"])),
+      h("span", { class: "pin-label", lang },
+        nm(p)));
+      // not a style attribute: the CSP forbids it
+      b.style.left = p.x + "%";
+      b.style.top = p.y + "%";
+      b.addEventListener("click", () => {
+        if (!moved) pick(p.id, false, false);
+      });
+      pins.set(p.id, b);
+      stage.append(b);
+    }
+    // the small panel of the place opened, over the map
+    const pop = h("section", { class: "map-pop",
+      role: "dialog", hidden: "" });
+    // not under the finger that drags the map
+    pop.addEventListener("pointerdown", (e) =>
+      e.stopPropagation());
+    view.append(pop);
+    // beside its pin (it follows the pin as the map
+    // moves); on a narrow map, docked at the bottom
+    const placePop = () => {
+      const p = by.get(st.sel);
+      if (!p || pop.hidden) return;
+      const w = view.clientWidth;
+      const hh = view.clientHeight;
+      const dock = w < 520;
+      pop.classList.toggle("dock", dock);
+      view.classList.toggle("popped", dock);
+      if (dock) {
+        pop.style.left = "";
+        pop.style.top = "";
+        return;
+      }
+      const px = st.x + p.x / 100 * w * st.s;
+      const py = st.y + p.y / 100 * hh * st.s;
+      const pw = pop.offsetWidth;
+      const ph = pop.offsetHeight;
+      let x = px + 22;
+      if (x + pw > w - 8) x = px - 22 - pw;
+      x = Math.max(8, Math.min(w - pw - 8, x));
+      const y = Math.max(8,
+        Math.min(hh - ph - 8, py - ph / 2));
+      pop.style.left = x + "px";
+      pop.style.top = y + "px";
+    };
+    // the view: zoom and pan, clamped to the picture
+    const apply = () => {
+      const w = view.clientWidth;
+      const hh = view.clientHeight;
+      st.s = Math.min(MAP_MAX, Math.max(1, st.s));
+      st.x = Math.min(0, Math.max(w - w * st.s, st.x));
+      st.y = Math.min(0, Math.max(hh - hh * st.s, st.y));
+      stage.style.transform = "translate(" + st.x
+        + "px," + st.y + "px) scale(" + st.s + ")";
+      stage.style.setProperty("--inv", 1 / st.s);
+      stage.classList.toggle("zoomed", st.s >= 2.4);
+      view.classList.toggle("in", st.s > 1);
+      if (st.sel) placePop();
+    };
+    const zoomAt = (cx, cy, s2) => {
+      s2 = Math.min(MAP_MAX, Math.max(1, s2));
+      st.x = cx - (cx - st.x) * s2 / st.s;
+      st.y = cy - (cy - st.y) * s2 / st.s;
+      st.s = s2;
+      apply();
+    };
+    const center = (zoomIn) => {
+      const p = by.get(st.sel);
+      if (!p) return;
+      const w = view.clientWidth;
+      const hh = view.clientHeight;
+      if (zoomIn) st.s = Math.max(st.s, 2);
+      st.x = w / 2 - p.x / 100 * w * st.s;
+      st.y = hh / 2 - p.y / 100 * hh * st.s;
+      apply();
+    };
+    const drawPop = () => {
+      const p = by.get(st.sel);
+      for (const [id, b] of pins) {
+        b.classList.toggle("on", id === st.sel);
+        b.setAttribute("aria-pressed",
+          String(id === st.sel));
+      }
+      if (!p) {
+        pop.hidden = true;
+        pop.replaceChildren();
+        view.classList.remove("popped");
+        return;
+      }
+      const close = h("button", { type: "button",
+        class: "map-close", "aria-label": t.close },
+      "×");
+      close.addEventListener("click", closePop);
+      pop.lang = lang;
+      pop.setAttribute("aria-label", nm(p));
+      pop.replaceChildren(close,
+        h("p", { class: "map-kind" }, t.kinds[p.kind]),
+        h("h2", {}, nm(p)),
+        p.stories.length
+          ? h("div", { class: "map-links" },
+            p.stories.map((s) => mapLink(s, lang)))
+          : h("p", { class: "empty" }, t.none));
+      pop.hidden = false;
+      placePop();
+    };
+    function closePop() {
+      st.sel = "";
+      history.replaceState(history.state, "", "#/map");
+      drawPop();
+    }
+    // move: bring the place to the middle of the view
+    function pick(id, zoomIn, move) {
+      st.sel = id;
+      history.replaceState(history.state, "",
+        "#/map/" + id);
+      drawPop();
+      if (move) center(zoomIn);
+    }
+    // drag, pinch; a drag is not a click on a pin
+    let moved = false;
+    const ptrs = new Map();
+    let start = null;
+    let pinch = 0;
+    const gap = () => {
+      const [a, b] = [...ptrs.values()];
+      return Math.hypot(a.clientX - b.clientX,
+        a.clientY - b.clientY);
+    };
+    view.addEventListener("pointerdown", (e) => {
+      ptrs.set(e.pointerId, e);
+      moved = false;
+      start = { x: e.clientX, y: e.clientY };
+      pinch = ptrs.size === 2 ? gap() : 0;
+    });
+    view.addEventListener("pointermove", (e) => {
+      const prev = ptrs.get(e.pointerId);
+      if (!prev) return;
+      ptrs.set(e.pointerId, e);
+      if (ptrs.size === 2) {
+        const [a, b] = [...ptrs.values()];
+        const r = view.getBoundingClientRect();
+        const d = gap();
+        if (pinch) {
+          zoomAt((a.clientX + b.clientX) / 2 - r.left,
+            (a.clientY + b.clientY) / 2 - r.top,
+            st.s * d / pinch);
+        }
+        pinch = d;
+        moved = true;
+        return;
+      }
+      if (!moved && Math.hypot(e.clientX - start.x,
+        e.clientY - start.y) < 6) return;
+      if (!moved) view.setPointerCapture(e.pointerId);
+      moved = true;
+      st.x += e.clientX - prev.clientX;
+      st.y += e.clientY - prev.clientY;
+      apply();
+    });
+    const lift = (e) => {
+      ptrs.delete(e.pointerId);
+      pinch = 0;
+    };
+    view.addEventListener("pointerup", lift);
+    view.addEventListener("pointercancel", lift);
+    // a tap on the map itself closes the panel
+    view.addEventListener("click", (e) => {
+      if (moved || !st.sel) return;
+      if (e.target.closest(".pin, .map-pop, .map-ctl")) {
+        return;
+      }
+      closePop();
+    });
+    // ctrl + wheel (a trackpad pinch) zooms; the plain
+    // wheel still scrolls the page
+    view.addEventListener("wheel", (e) => {
+      if (!e.ctrlKey && !e.metaKey) return;
+      e.preventDefault();
+      const r = view.getBoundingClientRect();
+      zoomAt(e.clientX - r.left, e.clientY - r.top,
+        st.s * Math.exp(-e.deltaY / 200));
+    }, { passive: false });
+    view.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && st.sel) {
+        e.preventDefault();
+        closePop();
+        return;
+      }
+      const w = view.clientWidth;
+      const hh = view.clientHeight;
+      const step = { ArrowLeft: [40, 0],
+        ArrowRight: [-40, 0], ArrowUp: [0, 40],
+        ArrowDown: [0, -40] }[e.key];
+      if (e.key === "+" || e.key === "=") {
+        zoomAt(w / 2, hh / 2, st.s * 1.4);
+      } else if (e.key === "-") {
+        zoomAt(w / 2, hh / 2, st.s / 1.4);
+      } else if (step && st.s > 1) {
+        st.x += step[0];
+        st.y += step[1];
+        apply();
+      } else {
+        return;
+      }
+      e.preventDefault();
+    });
+    const ctl = (label, text, fn) => {
+      const b = h("button", { type: "button",
+        "aria-label": label, title: label }, text);
+      b.addEventListener("click", fn);
+      return b;
+    };
+    const mid = (k) => zoomAt(view.clientWidth / 2,
+      view.clientHeight / 2, st.s * k);
+    view.append(h("div", { class: "map-ctl" },
+      ctl(t.zin, "+", () => mid(1.5)),
+      ctl(t.zout, "−", () => mid(1 / 1.5)),
+      ctl(t.reset, "⌂", () => {
+        st.s = 1;
+        st.x = 0;
+        st.y = 0;
+        apply();
+      })));
+    const hasLang = (l) => places.some((p) =>
+      p.stories.some((s) =>
+        s.versions.some((v) => v.lang === l)));
+    const langs = Object.keys(BLOG).filter(hasLang);
+    const group = (items, now, set) => h("div", {
+      class: "filters outline", role: "group" },
+    items.map(([k, label, lg]) => {
+      const b = h("button", { type: "button", lang: lg,
+        "aria-pressed": String(k === now) }, label);
+      b.addEventListener("click", () => set(k));
+      return b;
+    }));
+    const pickLang = group(
+      langs.map((l) => [l, BLOG[l].name, l]), lang,
+      (l) => {
+        st.lang = l;
+        setBlogLang(l);
+        draw();
+      });
+    const pickShow = group(
+      ["all", "blog", "comics", "places"].map((k) =>
+        [k, t[k], lang]), st.filter,
+      (k) => {
+        st.filter = k;
+        draw();
+      });
+    for (const p of places) {
+      pins.get(p.id).hidden = !shown(p);
+    }
+    // the same places as a list: for a keyboard, a
+    // screen reader, and a map that has not loaded
+    const list = h("ul", { class: "map-list", lang },
+      [...places].sort((a, b) =>
+        b.stories.length - a.stories.length)
+        .filter(shown).map((p) => {
+          const b = h("button", { type: "button" },
+            nm(p));
+          b.addEventListener("click", () => {
+            pick(p.id, true, true);
+            view.scrollIntoView({ block: "nearest" });
+          });
+          return h("li", {}, b,
+            h("span", {}, " · " + t.kinds[p.kind]
+              + (p.stories.length
+                ? " · " + p.stories.length : "")));
+        }));
+    document.title = t.title + " · " + NAME;
+    show(
+      h("p", { class: "crumbs", lang },
+        h("a", { href: "#/" }, BLOG[lang].home)),
+      h("h1", { lang }, t.title),
+      h("p", { class: "sub", lang }, t.sub),
+      langs.length > 1 ? pickLang : null,
+      pickShow,
+      h("div", { class: "map-wrap" }, view),
+      h("h2", { class: "map-list-h", lang }, t.list),
+      list);
+    apply();
+    drawPop();
+    if (st.sel) center(true);
   };
   draw();
 }
@@ -1830,7 +2453,16 @@ function contributePage() {
 // face, a crop of the picture
 const SMBAT = "#/b/grabar/smbat-sparapet/";
 
+// the words of the page itself, by language
+const NEWS_UI = {
+  hy: { home: "Գլխավոր", title: "Հայտարարություններ",
+    read: "Կարդալ →" },
+  en: { home: "Home", title: "Announcements",
+    read: "Read →" },
+};
+
 const NEWS = [{
+  id: "smbat-sparapet",
   date: "2026-11-16",
   img: "smbat-sparapet.jpg",
   face: "smbat-sparapet-face.jpg",
@@ -1848,6 +2480,9 @@ const NEWS = [{
   banner: ["Սմբատ Սպարապետ",
     "Զորավար, դիվանագետ և պատմիչ. նրա"
     + " գրքերը գրադարանում են"],
+  banner_en: ["Smbat Sparapet",
+    "Commander, diplomat and historian: his"
+    + " books are in the Library"],
   sections: [
     ["Who he was",
       "Smbat was born in 1208 in the Armenian"
@@ -1939,23 +2574,170 @@ const NEWS = [{
   ask: "How many remarkable stories from"
     + " Armenian history are still waiting to be"
     + " rediscovered?",
+  hy: {
+    alt:
+      "Սմբատ Սպարապետը կարմիր թիկնոցով, ձեռքին գրիչ և "
+      + "գիրք. նրա հետևում ամրոց է ձյունածածկ լեռան տակ, "
+      + "իսկ մոնղոլ խանն ընդունում է դեսպանին",
+    title: "Սմբատ Սպարապետը՝ գրադարանում",
+    lead:
+      "Սմբատ Սպարապետը (Սմբատ Սպարապետ, 1208–1276) "
+      + "պարզապես զորական չէր․ նա դիվանագետ էր, օրենսդիր "
+      + "և պատմիչ։ Նրա երկու գրքերն էլ այժմ հասանելի են "
+      + "nxGir գրադարանում՝ կողք կողքի, գրաբարով և "
+      + "աշխարհաբարով։",
+    sections: [
+      ["Ո՞վ էր նա",
+        "Սմբատը ծնվել է 1208 թվականին Կիլիկիայի "
+        + "հայկական թագավորությունում՝ Միջերկրական ծովի "
+        + "ափին։ Նա թագավորության խնամակալ Կոստանդին "
+        + "Պապեռոնի որդին էր։ Երբ 1226 թվականին նրա "
+        + "կրտսեր եղբայր Հեթում Ա-ն թագադրվեց, Սմբատը "
+        + "դարձավ սպարապետ՝ զորքի գլխավոր հրամանատարը։",
+        "Նա այդ պաշտոնը զբաղեցրեց շուրջ կես դար։ Սմբատը "
+        + "գլխավորել է հայկական զորքերը Ռումի սելջուկ "
+        + "սուլթանների և Եգիպտոսի մամլուքների դեմ մղված "
+        + "պատերազմներում։ 1276 թվականին նա զոհվեց "
+        + "Սարվանդիքարի ճակատամարտում՝ արդեն տարեց "
+        + "հասակում, բայց դեռևս մարտական նժույգի վրա։"],
+      ["Ճանապարհորդություն դեպի Մեծ խանի արքունիք",
+        "1247 թվականին, երբ մոնղոլները դարձել էին "
+        + "Ասիայի ամենահզոր ուժը, Հեթումը Սմբատին "
+        + "ուղարկեց նրանց արքունիք՝ Կարակորում։ Նա անցավ "
+        + "Պարսկաստանով և Կենտրոնական Ասիայով, հանդիպեց "
+        + "Գույուկ խանին և 1250 թվականին վերադարձավ մի "
+        + "համաձայնությամբ, որը տարիներ շարունակ ապահովեց "
+        + "Կիլիկիայի անվտանգությունը՝ որպես դաշնակցի, այլ "
+        + "ոչ թե նվաճված երկրի։",
+        "Ճանապարհին՝ Սամարղանդից, նա նամակ գրեց իր "
+        + "փեսային՝ Կիպրոսի թագավորին՝ պատմելով իր տեսած "
+        + "երկրների ու ժողովուրդների մասին։ Նամակը "
+        + "թարգմանվեց լատիներեն և տարածվեց Եվրոպայում՝ "
+        + "դառնալով մոնղոլական կայսրության մասին այնտեղ "
+        + "հասած առաջին ականատեսի վկայություններից մեկը։"],
+      ["Օրենքների թարգմանիչը",
+        "Կիլիկիան հարևան էր խաչակիրների "
+        + "պետություններին, և Սմբատը տիրապետում էր նրանց "
+        + "լեզվին՝ ֆրանսերենին։ Նա հայերեն թարգմանեց "
+        + "Անտիոքի ասիզները՝ ֆրանկյան իշխանապետության "
+        + "օրենքները։ Ֆրանսերեն բնագիրը կորել է․ այդ "
+        + "օրենքները մեզ են հասել միայն Սմբատի "
+        + "թարգմանությամբ։"],
+      ["«Դատաստանագիրք»-ը՝ նրա օրենսգիրքը",
+        "1265 թվականին նա թագավորության համար կազմեց "
+        + "օրենսգիրք՝ վերամշակելով շուրջ մեկ դար առաջ "
+        + "Մխիթար Գոշի ստեղծած «Դատաստանագիրքը»։ Ինքը՝ "
+        + "Սմբատը, նշում է, որ օրենքները հին ու "
+        + "դժվարամատչելի գրքերից տեղափոխել է մարդկանց "
+        + "առօրյա խոսքին ավելի մոտ լեզվի։ Այդ պատճառով "
+        + "աշխատությունը գրված է Կիլիկիայի միջին "
+        + "հայերենով՝ ֆրանսերեն, հունարեն և արաբերեն "
+        + "բառերի գործածությամբ։",
+        "Գրքի 211 հոդվածներն ընդգրկում են թագավորության "
+        + "կյանքի գրեթե բոլոր ոլորտները՝ թագավորի "
+        + "իրավունքները, դրամը և ամրոցները, պատերազմն ու "
+        + "ավարը, եկեղեցին և նրա պաշտոնները, "
+        + "ամուսնությունն ու ամուսնալուծությունը, "
+        + "ժառանգությունը, առևտուրը, ջրաղացներն ու "
+        + "այգիները, ստրկությունն ու վարձու աշխատանքը, "
+        + "փոխառություններն ու վաշխառությունը, հրդեհների, "
+        + "ջրհեղեղների և կենդանիների պատճառած վնասները, "
+        + "սպանությունն ու մարմնական վնասվածքները՝ "
+        + "դիտավորյալ և ոչ դիտավորյալ։"],
+      ["«Տարեգիրք»-ը՝ նրա ժամանակագրությունը",
+        "Սմբատի ժամանակագրությունը պատմում է Հայաստանի "
+        + "պատմությունը տարեցտարի՝ 951 թվականից մինչև իր "
+        + "ապրած ժամանակները։ Այնտեղ հիշատակվում են Անիի "
+        + "Բագրատունի թագավորներն ու Բյուզանդիայի "
+        + "կայսրերը, 1064 թվականին Ալփ Արսլանի կողմից "
+        + "Անիի գրավումը, վերջին թագավոր Գագիկ Բ-ի մահը, "
+        + "Կիլիկիայի Ռուբինյան իշխանները և 1198 թվականին "
+        + "Լևոնի՝ Կիլիկիայի առաջին թագավորի "
+        + "թագադրությունը։",
+        "Այնուհետև պատմությունը հասնում է այն "
+        + "իրադարձություններին, որոնց ականատեսն էր ինքը՝ "
+        + "Սմբատը, այդ թվում՝ Տարսոնի պաշարումներին, "
+        + "որոնց մասին նա պատմում է անձամբ։ Հետագա "
+        + "հեղինակները շարունակել են ժամանակագրությունը "
+        + "մինչև 1331 թվականը՝ ավելացնելով Կիլիկիայի "
+        + "իշխանների ու թագավորների, սպարապետների, ինչպես "
+        + "նաև Հռոմի և Բյուզանդիայի կայսրերի ցանկերը։ "
+        + "Յուրաքանչյուր հատված սկսվում է ըստ տարիների "
+        + "կազմված բովանդակության ցանկով։"],
+      ["Կարդացե՛ք դրանք",
+        "Երկու գրքերն էլ հասանելի են nxGir գրադարանում․ "
+        + "գրաբարի յուրաքանչյուր տողի կողքին տեղադրված է "
+        + "դրա աշխարհաբար թարգմանությունը, և "
+        + "յուրաքանչյուր բառ կարելի է առանձին որոնել ու "
+        + "ուսումնասիրել։",
+        "Թարգմանությունները դեռ նախնական տարբերակներ "
+        + "են՝ պատրաստված արհեստական բանականության "
+        + "օգնությամբ։ Դրանք սպասում են գրաբարին "
+        + "տիրապետող ընթերցողներին, որոնք կկարողանան "
+        + "ստուգել և ճշգրտել դրանք՝ տող առ տող։"],
+    ],
+    links: ["Կարդալ Տարեգիրքը",
+      "Կարդալ Դատաստանագիրքը",
+      "Օգնել թարգմանությունների ստուգմանը"],
+    ask:
+      "Հայոց պատմության դեռ քանի՞ ուշագրավ պատմություն "
+      + "է սպասում իր վերահայտնագործողներին։",
+  },
 }];
 
-function newsItem(a) {
+// the picture, a button: it opens the whole
+// picture over the page (a dialog; a click, Esc or
+// the close button shuts it)
+function zoomable(a) {
+  const img = h("img", { src: a.img, width: "1200",
+    height: "800", alt: a.alt });
+  const open = h("button", { type: "button",
+    class: "zoom", "aria-label": "Enlarge the picture" },
+  img);
+  open.addEventListener("click", () => {
+    const big = h("img", { src: a.img, alt: a.alt });
+    const shut = h("button", { type: "button",
+      class: "shut", "aria-label": "Close" }, "×");
+    const box = h("dialog", { class: "lightbox" },
+      shut, big);
+    const close = () => {
+      box.close();
+      box.remove();
+    };
+    box.addEventListener("click", close);
+    box.addEventListener("cancel", () => box.remove());
+    document.body.append(box);
+    box.showModal();
+  });
+  return h("figure", { class: "hero wide" }, open);
+}
+
+// the languages an announcement has: English, and
+// Armenian in its hy (the same fields; links are
+// the labels only)
+function newsText(a, lang) {
+  if (lang !== "hy" || !a.hy) return a;
+  return { ...a, ...a.hy,
+    links: a.links.map(([, to], i) =>
+      [a.hy.links[i], to]) };
+}
+
+// one announcement, whole: #/news/<id>
+function newsItem(a0, lang) {
+  const a = newsText(a0, lang);
   const [main, ...more] = a.links;
-  return h("article", { class: "news" },
-    h("figure", { class: "hero wide" },
-      h("img", { src: a.img, width: "1200",
-        height: "800", alt: a.alt })),
+  return h("article", { class: "news", lang },
+    zoomable(a),
     h("p", { class: "sub" },
       h("time", { datetime: a.date },
-        day(a.date, true))),
+        lang === "hy" ? longDay(a.date, "hy")
+          : day(a.date, true))),
     h("h2", { class: "news-title" }, a.title),
     h("p", { class: "lead" }, named(a.lead)),
     h("ul", { class: "features" },
       a.sections.map(([title, ...text]) =>
         h("li", {}, h("h2", {}, title),
-          text.map((t) => h("p", {}, t))))),
+          text.map((t) => h("p", {}, named(t)))))),
     h("figure", { class: "mission" },
       h("p", {}, a.ask)),
     h("p", { class: "cta" },
@@ -1965,13 +2747,49 @@ function newsItem(a) {
         h("a", { href: to }, label))));
 }
 
-function newsPage() {
-  document.title = "Announcements · " + NAME;
-  show(
-    h("p", { class: "crumbs" },
-      h("a", { href: "#/" }, "Home")),
-    h("h1", {}, "Announcements"),
-    ...NEWS.map(newsItem));
+// #/news: narrow banners, newest first; #/news/<id>
+// one announcement
+// the language of the announcements: Armenian on
+// every visit, English only when picked here (not
+// the blog's choice; it is kept until the page is
+// closed, for the post a banner opens)
+let newsLang = "hy";
+
+function newsPage(id) {
+  const one = id ? NEWS.find((a) => a.id === id)
+    : null;
+  if (id && !one) {
+    throw new Error("No such announcement");
+  }
+  const draw = () => {
+    const lang = newsLang;
+    const t = NEWS_UI[lang];
+    const pick = h("div", { class: "filters outline news-lang",
+      role: "group", "aria-label": "Language" },
+    ["hy", "en"].map((l) => {
+      const b = h("button", { type: "button",
+        lang: l, "aria-pressed": String(l === lang) },
+      BLOG[l].name);
+      b.addEventListener("click", () => {
+        newsLang = l;
+        draw();
+      });
+      return b;
+    }));
+    document.title = (one ? newsText(one, lang).title
+      + " · " : "") + t.title + " · " + NAME;
+    show(
+      h("p", { class: "crumbs", lang },
+        h("a", { href: "#/" }, t.home),
+        one ? [" · ", h("a", { href: "#/news" },
+          t.title)] : null),
+      one ? null : h("h1", { lang }, t.title),
+      one ? null : pick,
+      one ? newsItem(one, lang)
+        : h("div", { class: "news-list" },
+          NEWS.map((a) => newsBanner(a, lang))));
+  };
+  draw();
 }
 
 // -- statistics --
@@ -2341,6 +3159,17 @@ const R = {
   saved: "", // the position last saved
   timer: 0,
   par: null, // the other version: book() data
+  lineEls: [], // the <p> of each line (not .par)
+  ready: false, // the lines are in the page
+  parBuilt: false, // the other version is in the page
+  end: null, // the cards to the next part (partEnd)
+  src: [], // the lines of the part: [text, word, ...]
+  first: [], // the first word of each line (+ the end)
+  pages: [], // [first line, last line + 1] of each page
+  page: 0, // the page in the page now
+  lo: 0, // words of that page: [lo, hi)
+  hi: 0,
+  credited: false, // the part has its own credit
   contents: [], // its chapters: [{line, n, title,
   // level}]
 };
@@ -2602,8 +3431,7 @@ function reportError() {
   mark(false);
   sentence(true, at);
   const [lo, hi] = lit;
-  const quote = R.spans.slice(lo, hi)
-    .map((s) => s.textContent).join(" ");
+  const quote = wordsOf(lo, hi);
   const fix = h("textarea", { rows: "4",
     "aria-label": "The correct text" });
   const note = h("textarea", { rows: "3",
@@ -2663,9 +3491,9 @@ function wordActions() {
 
 // draw the panel for the chosen word
 async function drawWord() {
-  const span = R.spans[R.sel];
-  if (!R.panel || !span) return;
-  const w = span.textContent;
+  const at = R.sel;
+  if (!R.panel || at < 0) return;
+  const w = wordAt(at);
   openPanel(w, "hy",
     h("p", { class: "loading" }, "Looking up…"));
   let data;
@@ -2675,7 +3503,7 @@ async function drawWord() {
     data = { error: e.message };
   }
   // a later word may have been chosen meanwhile
-  if (R.spans[R.sel] !== span) return;
+  if (R.sel !== at) return;
   const parts = [STATIC
     ? h("div", { class: "actions" }, linkButton(),
       reportButton())
@@ -2699,11 +3527,12 @@ async function drawWord() {
 }
 
 function mark(on) {
+  // only the words of the page in the page
   for (const i of R.refs) {
-    R.spans[i].classList.toggle("ref", on);
+    R.spans[i]?.classList.toggle("ref", on);
   }
   if (R.sel >= 0) {
-    R.spans[R.sel].classList.toggle("sel", on);
+    R.spans[R.sel]?.classList.toggle("sel", on);
   }
 }
 
@@ -2721,14 +3550,14 @@ let lit = null; // the sentence shown for a note
 function sentence(on, i) {
   if (lit) {
     for (let j = lit[0]; j < lit[1]; j++) {
-      R.spans[j].classList.remove("sent");
+      R.spans[j]?.classList.remove("sent");
     }
     lit = null;
   }
   if (!on) return;
   lit = sentenceOf(i);
   for (let j = lit[0]; j < lit[1]; j++) {
-    R.spans[j].classList.add("sent");
+    R.spans[j]?.classList.add("sent");
   }
 }
 
@@ -2740,6 +3569,7 @@ function bar() {
 // keep a word in view between the toolbar and the
 // bottom sheet
 function reveal(span) {
+  if (!span) return;
   const r = span.getBoundingClientRect();
   const cover = sheet()
     ? R.panel.getBoundingClientRect().height : 0;
@@ -2761,6 +3591,7 @@ function choose(i) {
       if (k === key) R.refs.push(j);
     });
   }
+  ensure(i);
   R.sel = i;
   mark(true);
   drawWord().then(() => reveal(R.spans[i]));
@@ -2775,6 +3606,7 @@ function step(d) {
 
 // scroll to word i and make it blink once
 function go(i) {
+  ensure(i);
   const s = R.spans[i];
   if (!s) return;
   if (sheet()) closePanel();
@@ -2820,7 +3652,7 @@ function decorate() {
       "aria-label": "Back to the folder",
       title: "Back to " + (dir || "the library") },
     icon(ICONS.back)),
-    R.parts ? partsBtn() : null,
+    pagesBtn(),
     // a second click hides the list again
     R.contents.length ? btn(["☰ ", h("span",
       { class: "long" }, "Contents")],
@@ -2875,7 +3707,44 @@ function decorate() {
     viewTools(),
   ].filter(Boolean));
   const more = R.tools.querySelector(".more");
+  fit();
 }
+
+// Do all the buttons fit in one row? If not, the text
+// settings hide behind the settings button (class
+// collapsed); if they still do not, the names of the
+// buttons go and only their icons stay (compact; both
+// in style.css). Measured with everything shown, so it
+// follows the width of the window, the names and the
+// counts, not a fixed breakpoint.
+function fit() {
+  const t = R.tools;
+  if (!t || !t.isConnected) return;
+  const one = () => {
+    const kids = [...t.children].filter((e) =>
+      e.offsetParent
+      && !e.classList.contains("readbar"));
+    const edge = t.getBoundingClientRect().right;
+    return !kids.some((e) =>
+      e.offsetTop !== kids[0].offsetTop
+      || e.getBoundingClientRect().right > edge + 1);
+  };
+  // the widest case: the home button shown too
+  const stuck = t.classList.contains("stuck");
+  t.classList.add("stuck");
+  t.classList.remove("collapsed", "compact");
+  if (!one()) {
+    t.classList.add("collapsed");
+    if (!one()) t.classList.add("compact");
+  }
+  t.classList.toggle("stuck", stuck);
+}
+
+let fitting = 0;
+window.addEventListener("resize", () => {
+  cancelAnimationFrame(fitting);
+  fitting = requestAnimationFrame(fit);
+}, { passive: true });
 
 // -- how the text looks: size and alignment, kept
 // in this browser (a phone and a computer may want
@@ -2903,7 +3772,9 @@ const FONT_NAMES = { grqi: "Arian Grqi",
   oldstandard: "Old Standard" };
 const view = { size: SIZE, center: false, line: 0,
   font: 0, parallel: true, sentences: false,
-  full: false, stacked: false };
+  full: false, stacked: false,
+  // read in pages: null = yes (the default)
+  paged: null };
 try {
   const v = JSON.parse(
     localStorage.getItem("nxgir-view") || "{}");
@@ -2919,6 +3790,8 @@ try {
   view.sentences = v.sentences === true;
   view.full = v.full === true;
   view.stacked = v.stacked === true;
+  view.paged = typeof v.paged === "boolean"
+    ? v.paged : null;
 } catch (e) {}
 
 function applyView() {
@@ -2941,6 +3814,7 @@ function applyView() {
   // the whole width of the screen, not a column
   R.text.classList.toggle("full", view.full);
   document.body.classList.toggle("full", view.full);
+  syncPar();
   const par = Boolean(R.par && view.parallel);
   R.text.classList.toggle("parallel", par);
   R.text.classList.toggle("stacked",
@@ -2951,8 +3825,13 @@ function applyView() {
 }
 
 function setView(change) {
+  // Side by side turned on: its lines first
+  if (change.parallel && R.par && !R.par.lines) {
+    loadPar().then(() => setView(change));
+    return;
+  }
   // keep the word at the top of the screen there
-  const i = R.spans.length ? topWord() : -1;
+  const i = R.spans[R.lo] ? topWord() : -1;
   const before = i >= 0
     ? R.spans[i].getBoundingClientRect().top : 0;
   Object.assign(view, change);
@@ -2965,9 +3844,14 @@ function setView(change) {
         parallel: view.parallel,
         sentences: view.sentences,
         full: view.full,
-        stacked: view.stacked }));
+        stacked: view.stacked,
+        paged: view.paged }));
   } catch (e) {}
   applyView();
+  if ("paged" in change) {
+    R.pages = pagesOf();
+    showPage(pageOfWord(Math.max(i, 0)), false);
+  }
   if (i >= 0) {
     const after = R.spans[i].getBoundingClientRect().top;
     window.scrollBy(0, after - before);
@@ -3016,6 +3900,15 @@ function viewTools() {
         ? "Whole width (click for a column)"
         : "Text in a column (click for whole"
           + " width)" }),
+  // a long part in pages: a page at a time is in
+  // the browser, a few MB instead of hundreds
+  btn("▤", () => setView({ paged: !paged() }), {
+    "aria-label": "Read a long part in pages",
+    "aria-pressed": String(paged()),
+    title: paged()
+      ? "In pages (click for one long text)"
+      : "One long text (click for pages: lighter"
+        + " on a phone)" }),
   fontPick(),
   // the theme button joins the row while reading
   button);
@@ -3052,10 +3945,9 @@ async function toggleMark() {
 
 // the text of a line from word i on, cut to n
 function snippet(i, n = 70) {
-  const s = R.spans[i];
-  const nodes = [...s.parentElement.childNodes];
-  const t = nodes.slice(nodes.indexOf(s))
-    .map((x) => x.textContent).join("").trim();
+  const [line, k] = R.wpos[i];
+  const t = R.src[line].slice(2 * k + 1).join("")
+    .trim();
   return t.length > n
     ? t.slice(0, n - 1).trimEnd() + "…" : t;
 }
@@ -3064,50 +3956,27 @@ function lineOf(i) {
   return "line " + (R.wpos[i][0] + 1);
 }
 
-// -- the parts of a long book --
+// -- pages of a part --
 
-// ‹ n/N › in the tools: the part before, the part
-// after, and (the middle) the list of all parts
-function partsBtn() {
-  const p = R.parts;
-  const arrow = (q, sign, label) => q
-    ? h("a", { class: "icon-btn part-step",
-      href: "#/read/" + enc(q.name),
-      "aria-label": label, title: label }, sign)
-    : h("span", { class: "icon-btn part-step off",
-      "aria-hidden": "true" }, sign);
+// ‹ n/N › in the tools: the page before and the page
+// after, and the number of this one. Only when the
+// part is in pages. (The other parts of the book are
+// one step back: the back button.)
+function pagesBtn() {
+  const n = R.pages.length;
+  if (n < 2) return null;
+  const k = R.page;
+  const arrow = (to, sign, label, off) => btn(sign,
+    () => turnPage(to), {
+      class: "icon-btn part-step" + (off ? " off" : ""),
+      "aria-label": label, title: label });
   return h("span", { class: "part-tools" },
-    arrow(p.prev, "‹", "Part " + (p.n - 1)),
-    btn(p.n + "/" + p.total, toggleParts, {
-      class: "icon-btn",
-      "aria-label": "All parts",
-      title: "All " + p.total + " parts of " + p.book }),
-    arrow(p.next, "›", "Part " + (p.n + 1)));
-}
-
-async function toggleParts() {
-  if (R.panel && !R.panel.hidden &&
-      R.panel.dataset.kind === "Parts") {
-    return closePanel();
-  }
-  closePanel();
-  let data;
-  try {
-    data = await api("volume?folder=" +
-      encodeURIComponent(R.parts.folder));
-  } catch (e) {
-    return alert("Could not load: " + e.message);
-  }
-  const list = h("ul", { class: "items toc" });
-  for (const g of data.groups) {
-    for (const p of g.parts) {
-      list.append(h("li", {}, partRow(p,
-        p.n === R.parts.n)));
-    }
-  }
-  openPanel("Parts", "en", list);
-  list.querySelector("[aria-current]")
-    ?.scrollIntoView({ block: "center" });
+    arrow(k - 1, "‹", "Previous page", k === 0),
+    h("span", { class: "icon-btn",
+      "aria-label": "Page " + (k + 1) + " of " + n,
+      title: "Page " + (k + 1) + " of " + n },
+    (k + 1) + "/" + n),
+    arrow(k + 1, "›", "Next page", k === n - 1));
 }
 
 // -- the contents: the chapters and sermons --
@@ -3252,8 +4121,7 @@ function editNote(i) {
   mark(false);
   sentence(true, at);
   const [lo, hi] = lit;
-  const words = R.spans.slice(lo, hi)
-    .map((s) => s.textContent).join(" ");
+  const words = wordsOf(lo, hi);
   const box = h("textarea", { rows: "5",
     "aria-label": "Note" });
   box.value = old ? old.text : "";
@@ -3289,8 +4157,8 @@ function editNote(i) {
 // hidden under the toolbar
 function topWord() {
   const edge = R.tools.getBoundingClientRect().bottom;
-  let lo = 0;
-  let hi = R.spans.length - 1;
+  let lo = Math.min(R.lo, R.spans.length - 1);
+  let hi = Math.max(lo, R.hi - 1);
   while (lo < hi) {
     const mid = (lo + hi) >> 1;
     const r = R.spans[mid].getBoundingClientRect();
@@ -3350,8 +4218,8 @@ if (STATIC && window.NXGIR_COUNT) {
 // the last word on the screen
 function lastWord() {
   const edge = window.innerHeight;
-  let lo = 0;
-  let hi = R.spans.length - 1;
+  let lo = Math.min(R.lo, R.spans.length - 1);
+  let hi = Math.max(lo, R.hi - 1);
   while (lo < hi) {
     const mid = (lo + hi + 1) >> 1;
     const r = R.spans[mid].getBoundingClientRect();
@@ -3406,7 +4274,11 @@ function progress() {
   const seen = window.innerHeight - r.top;
   const f = r.height > 0
     ? Math.min(1, Math.max(0, seen / r.height)) : 1;
-  const pct = Math.round(f * 100);
+  // of the page, then of the whole part
+  const [a, b] = R.pages[R.page] || [0, R.lines];
+  const all = R.lines > 0
+    ? (a + f * (b - a)) / R.lines : f;
+  const pct = Math.round(all * 100);
   R.prog.firstChild.firstChild.style.width =
     pct + "%";
   R.prog.lastChild.textContent = pct + "%";
@@ -3494,9 +4366,182 @@ function parHead(name, other) {
   ];
 }
 
+// -- pages: a long part is read a page at a time --
+//
+// Only the lines of one page are in the page (the
+// DOM), so a phone with little memory holds a few
+// MB for a part instead of hundreds. Everything else
+// (R.keys, R.wpos, R.src) is data, for all the words
+// of the part: R.spans has the word elements of the
+// page only, at the index of the word in the part.
+
+// the characters of a page
+const PAGE_CHARS = 10000;
+
+// Read in pages? Yes, unless the reader turned it
+// off in the text settings (the ▤ button).
+function paged() {
+  return view.paged !== false;
+}
+
+// [first line, last line + 1] of each page; the whole
+// part is one page when it is short or not in pages
+function pagesOf() {
+  const n = R.src.length;
+  const size = R.src.map((parts) =>
+    parts.join("").length);
+  const total = size.reduce((x, y) => x + y, 0);
+  if (!paged() || total < PAGE_CHARS * 1.5) {
+    return [[0, n]];
+  }
+  const out = [];
+  let from = 0;
+  let sum = 0;
+  size.forEach((c, line) => {
+    sum += c;
+    if (sum >= PAGE_CHARS && line + 1 < n) {
+      out.push([from, line + 1]);
+      from = line + 1;
+      sum = 0;
+    }
+  });
+  // not a last page of a few lines
+  if (sum < PAGE_CHARS / 3 && out.length) {
+    out[out.length - 1][1] = n;
+  } else {
+    out.push([from, n]);
+  }
+  return out;
+}
+
+// the page with word i
+function pageOfWord(i) {
+  let k = 0;
+  while (k + 1 < R.pages.length
+    && R.first[R.pages[k][1]] <= i) k++;
+  return k;
+}
+
+// show the page with word i (before using its
+// element)
+function ensure(i) {
+  if (i < R.lo || i >= R.hi) {
+    showPage(pageOfWord(i), false);
+  }
+}
+
+// the text of word i, from the data (its element may
+// not be in the page)
+function wordAt(i) {
+  const [line, n] = R.wpos[i];
+  return R.src[line][2 * n + 1];
+}
+
+function wordsOf(lo, hi) {
+  const out = [];
+  for (let j = lo; j < hi; j++) out.push(wordAt(j));
+  return out.join(" ");
+}
+
+// ‹ 2 / 11 › above and under the text
+function pager(where) {
+  const n = R.pages.length;
+  if (n < 2) return null;
+  const k = R.page;
+  const to = (d) => () => turnPage(k + d);
+  return h("div", { class: "pager " + where,
+    role: "navigation", "aria-label": "Pages" },
+  btn("‹ Previous", to(-1), {
+    disabled: k === 0 ? "" : null }),
+  h("span", {}, (k + 1) + " / " + n),
+  btn("Next ›", to(1), {
+    disabled: k === n - 1 ? "" : null }));
+}
+
+// to the top of another page
+function turnPage(k) {
+  showPage(k, false);
+  const top = R.text.getBoundingClientRect().top
+    + window.scrollY;
+  window.scrollTo(0, top - bar() - 16);
+  stick();
+  progress();
+}
+
+// Build page k in .text. fresh: the book is being
+// opened, its toolbar is not there yet.
+function showPage(k, fresh) {
+  mark(false);
+  sentence(false);
+  R.spans.fill(undefined, R.lo, R.hi);
+  const [a, b] = R.pages[k];
+  Object.assign(R, { page: k, lo: R.first[a],
+    hi: R.first[b], lineEls: [], parBuilt: false });
+  const frag = document.createDocumentFragment();
+  if (k === 0 && R.credit) {
+    frag.append(trCredit(R.credit, false));
+  }
+  frag.append(pager("top") || "");
+  let at = R.lo;
+  for (let line = a; line < b; line++) {
+    const parts = R.src[line];
+    const p = document.createElement("p");
+    const f = R.format[line];
+    if (f && f.h) p.className = "md-h md-h" + f.h;
+    if (f && f.q) p.classList.add("md-q");
+    p.style.setProperty("--rows",
+      rows(parts.join("").length));
+    const spans = f ? f.spans : [];
+    let chars = 0; // characters before this part
+    parts.forEach((t, j) => {
+      const nodes = styled(t, chars, spans);
+      chars += Array.from(t).length;
+      if (j % 2 === 0) {
+        if (t) p.append(...nodes);
+        return;
+      }
+      if (j > 1 && R.startSet.has(at)) {
+        p.append(cut());
+      }
+      const s = document.createElement("span");
+      s.className = "w";
+      s.dataset.i = at;
+      s.append(...nodes);
+      R.spans[at++] = s;
+      p.append(s);
+    });
+    frag.append(p);
+    R.lineEls[line] = p;
+  }
+  frag.append(pager("end") || "");
+  R.text.replaceChildren(frag);
+  // the cards to the parts before and after: at the
+  // end of the last page only
+  if (R.end) {
+    R.end.style.display = k < R.pages.length - 1
+      ? "none" : "";
+  }
+  R.ready = true;
+  syncPar();
+  if (fresh) return;
+  decorate();
+  mark(true);
+}
+
+// Rows a paragraph of n characters takes, for the
+// height the browser guesses before it is drawn
+// (--rows, see content-visibility in style.css)
+const ROW = 36;
+
+function rows(n) {
+  return String(Math.max(1, Math.ceil(n / ROW)));
+}
+
 function parLine(line) {
   const parts = R.par.lines[line] || [""];
   const p = h("p", { class: "par" });
+  p.style.setProperty("--rows",
+    rows(parts.join("").length));
   let i = R.par.first[line] || 0;
   parts.forEach((t, k) => {
     if (k % 2 && k > 1 && R.par.starts.has(i)) {
@@ -3513,6 +4558,66 @@ function parLine(line) {
 // of the other version (of), it hides with it
 const HELP = "https://github.com/serjhnn/nx-gir/"
   + "blob/main/CONTRIBUTING.md";
+
+// Fetch the other version (R.par is only its name
+// until then): a reader of one column never needs
+// it. If it cannot be read, the part is read alone.
+async function loadPar() {
+  const par = R.par;
+  if (!par || par.lines) return;
+  try {
+    const d = await api("book?name=" +
+      encodeURIComponent(par.name));
+    // the first word of each of its lines
+    let n = 0;
+    d.first = d.lines.map((parts) => {
+      const at = n;
+      n += (parts.length - 1) / 2;
+      return at;
+    });
+    d.starts = new Set(d.starts || []);
+    if (R.par === par) R.par = d;
+  } catch (e) {
+    if (R.par === par) R.par = null;
+  }
+}
+
+// The other version is built only while it is
+// shown (Side by side on): about 55,000 nodes and
+// 30 MB of layout for a long part. Turning it off
+// removes it again. Called by applyView() and once
+// the lines are in the page.
+function syncPar() {
+  const want = Boolean(R.par && R.par.lines
+    && view.parallel && R.ready);
+  if (want === R.parBuilt) return;
+  R.parBuilt = want;
+  if (!want) {
+    for (const e of R.text.querySelectorAll(
+      ".par, .of-par")) e.remove();
+    return;
+  }
+  // (R.lineEls has the lines of this page only)
+  R.lineEls.forEach((p, line) => {
+    p.after(parLine(line));
+  });
+  // lines the other version has more of: at the end
+  // of the last page
+  if (R.page === R.pages.length - 1) {
+    const end = R.text.querySelector(".pager.end");
+    for (let line = R.lines;
+      line < R.par.lines.length; line++) {
+      const more = [h("p", { class: "par" }),
+        parLine(line)];
+      if (end) end.before(...more);
+      else R.text.append(...more);
+    }
+  }
+  const of = R.page === 0 && !R.credited
+    && R.par.credit;
+  R.text.prepend(...parHead(R.opening, R.par.name),
+    ...(of ? [trCredit(R.par.credit, true)] : []));
+}
 
 function trCredit(c, of) {
   return h("p", { class: "tr-credit"
@@ -3561,79 +4666,51 @@ async function book(name, line) {
   document.title = title + " · " + NAME;
   Object.assign(R, {
     name: "", lines: data.lines.length,
-    spans: [], keys: [], wpos: [],
+    spans: [], keys: [], wpos: [], lo: 0, hi: 0,
     starts: data.starts, marks: data.marks,
     notes: data.notes, sel: -1, refs: [],
     contents: data.contents || [],
     saved: "", editable: data.editable,
     opening: name, par: null, parts: data.parts,
+    lineEls: [], ready: false, parBuilt: false,
+    end: null,
+    credited: Boolean(data.credit),
+    credit: data.credit, src: data.lines,
+    format: data.format || {},
+    startSet: new Set(data.starts || []),
   });
+  // every word as data; the elements are made a
+  // page at a time (showPage)
+  R.first = [];
+  data.lines.forEach((parts, line) => {
+    R.first.push(R.keys.length);
+    for (let j = 1; j < parts.length; j += 2) {
+      R.keys.push(wordKey(parts[j]));
+      R.wpos.push([line, (j - 1) / 2]);
+    }
+  });
+  R.first.push(R.keys.length);
+  R.spans = new Array(R.keys.length);
+  R.pages = pagesOf();
   // the other version, read beside it on a wide
   // screen
   const other = (data.parallel || [])[0];
   if (other) {
-    try {
-      R.par = await api("book?name=" +
-        encodeURIComponent(other));
-      // the first word of each of its lines
-      let n = 0;
-      R.par.first = R.par.lines.map((parts) => {
-        const at = n;
-        n += (parts.length - 1) / 2;
-        return at;
-      });
-      R.par.starts = new Set(R.par.starts || []);
-    } catch (e) {} // read it alone
+    // its lines are fetched only when shown
+    R.par = { name: other };
+    if (view.parallel) await loadPar();
   }
   const text = h("div", { class: "text",
     lang: "hy" });
   R.text = text;
   applyView();
-  const frag = document.createDocumentFragment();
-  const format = data.format || {};
-  const starts = new Set(data.starts || []);
-  if (R.par) {
-    frag.append(...parHead(name, R.par.name));
-  }
-  const of = !data.credit && R.par && R.par.credit;
-  const credit = data.credit || of;
-  if (credit) frag.append(trCredit(credit, of));
-  data.lines.forEach((parts, line) => {
-    const p = document.createElement("p");
-    const f = format[line];
-    if (f && f.h) p.className = "md-h md-h" + f.h;
-    if (f && f.q) p.classList.add("md-q");
-    const spans = f ? f.spans : [];
-    let at = 0; // characters before this part
-    parts.forEach((t, k) => {
-      const nodes = styled(t, at, spans);
-      at += Array.from(t).length;
-      if (k % 2 === 0) {
-        if (t) p.append(...nodes);
-        return;
-      }
-      if (k > 1 && starts.has(R.spans.length)) {
-        p.append(cut());
-      }
-      const s = document.createElement("span");
-      s.className = "w";
-      s.dataset.i = R.spans.length;
-      s.append(...nodes);
-      R.spans.push(s);
-      R.keys.push(wordKey(t));
-      R.wpos.push([line, (k - 1) / 2]);
-      p.append(s);
-    });
-    frag.append(p);
-    if (R.par) frag.append(parLine(line));
-  });
-  // lines the other version has more of
-  for (let line = data.lines.length;
-    R.par && line < R.par.lines.length; line++) {
-    frag.append(h("p", { class: "par" }),
-      parLine(line));
-  }
-  text.append(frag);
+  // the page with the line asked for, the saved
+  // place, or the start
+  const want = line >= 1 && R.keys.length
+    ? Math.min(line, data.lines.length) - 1 : -1;
+  const first = want >= 0 ? wordOfLine(want)
+    : Math.max(0, data.at || 0);
+  showPage(pageOfWord(first), true);
   text.addEventListener("click", (e) => {
     const s = e.target.closest(".w");
     if (!s) return;
@@ -3658,6 +4735,10 @@ async function book(name, line) {
   h("span", { class: "pct" }, "0%"));
   document.body.classList.add("reading");
   const pt = data.parts;
+  R.end = partEnd(pt);
+  if (R.end && R.page < R.pages.length - 1) {
+    R.end.style.display = "none";
+  }
   show(pt ? upLinks(pt.up.concat([{ label: pt.book,
     to: folderHref(pt.folder) }]))
     : crumbs(name, false, data.crumbs),
@@ -3670,11 +4751,9 @@ async function book(name, line) {
       " · tap a word to look it up"),
     R.tools,
     h("div", { class: "reader" }, text, R.panel,
-      partEnd(data.parts)));
+      R.end));
   decorate();
   // a link to a line: open exactly there
-  const want = line >= 1 && R.spans.length
-    ? Math.min(line, data.lines.length) - 1 : -1;
   if (want >= 0) {
     go(wordOfLine(want));
   } else if (data.at > 0 && R.spans[data.at]) {
@@ -3906,6 +4985,7 @@ async function route() {
   // going to another part keeps the reading layout,
   // or the page would narrow and widen while it loads
   if (!hash.startsWith("read/")) clearReading();
+  document.body.classList.remove("home");
   // back to the top bar from the reading tools
   if (button.parentNode !== topBar) topBar.append(button);
   try {
@@ -3928,13 +5008,21 @@ async function route() {
       || hash.startsWith("blog/")) {
       await blogPage(decodeURIComponent(
         hash.slice(5)));
+    } else if (hash === "comics"
+      || hash.startsWith("comics/")) {
+      await comicsPage(decodeURIComponent(
+        hash.slice(7)));
+    } else if (hash === "map"
+      || hash.startsWith("map/")) {
+      await mapPage(decodeURIComponent(hash.slice(4)));
     } else if (hash === "features"
       || hash.startsWith("features/")) {
       await featuresPage(hash.slice(9));
     } else if (hash === "contribute") {
       contributePage();
-    } else if (hash === "news") {
-      newsPage();
+    } else if (hash === "news"
+      || hash.startsWith("news/")) {
+      newsPage(decodeURIComponent(hash.slice(5)));
     } else if (hash === "stats") {
       await statsPage();
     } else if (hash === "offline") {

@@ -89,5 +89,8 @@ def done(events):
 
 
 def news(events, n=NEWS):
-    """The newest n events, newest first."""
-    return done(events)[::-1][:n]
+    """The newest n events about the site or a new
+    translation, newest first."""
+    kinds = ("Site", "Translation")
+    site = [e for e in done(events) if e["kind"] in kinds]
+    return site[::-1][:n]

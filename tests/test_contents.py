@@ -38,11 +38,12 @@ NUMBERED_ONLY = {
     "grabar/hovhannes-drasxanakertsi/1-patmutiun-hayots": (
         "01 02"
     ),
+    "grabar/yakob-hrimetsi/1-tomaragitakan": "01 02",
 }
 for _folder, _parts in NUMBERED_ONLY.items():
     for _n in _parts.split():
         NO_CONTENTS[f"{_folder}/{_n}.txt"] = (
-            "a chronicle in sections marked [1], [2]"
+            "sections marked [1], [2], no titles"
         )
 
 

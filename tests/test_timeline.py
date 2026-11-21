@@ -16,7 +16,8 @@ LINES = [
     "grabar/john.txt",
     "2026-10-20\tBooks\t\tFolder\t\tgrabar",
     "2026-10-21\tSite\t*\tOnline\t\thttps://nxgir.am",
-    "2026-10-22\tBooks\t\tGone\t\tgrabar/mark.txt",
+    "2026-10-22\tSite\t\tGone\t\tgrabar/mark.txt",
+    "2026-10-23\tBooks\t\tBook\t\tgrabar",
     "next\tSite\t\tLater\tA plan.\t",
 ]
 
@@ -46,14 +47,15 @@ def test_read(path):
         "Folder",
         "Online",
         "Gone",
+        "Book",
         "Later",
     ]
     assert events[0]["big"] and not events[1]["big"]
     assert events[2]["text"] == ""
+    # only the events about the site
     assert [e["title"] for e in tl.news(events)] == [
         "Gone",
         "Online",
-        "Folder",
     ]
 
 
@@ -92,11 +94,12 @@ def test_web_timeline(app):
         "Begins": "",
         "John": "read",
         "Folder": "folder",
+        "Book": "folder",
         "Online": "url",
         # a book not on this shelf: no link
         "Gone": "",
     }
-    gone = t["events"][0]
+    gone = t["events"][1]
     assert gone["title"] == "Gone" and not gone["link"]
     assert [e["title"] for e in t["next"]] == ["Later"]
     # the newest three on the home page only
@@ -104,7 +107,6 @@ def test_web_timeline(app):
     assert [e["title"] for e in top["news"]] == [
         "Gone",
         "Online",
-        "Folder",
     ]
     assert web.shelf(app, "grabar")["news"] == []
     assert web.get(app, "/api/timeline", {}) == t

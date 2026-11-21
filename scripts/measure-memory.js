@@ -16,6 +16,9 @@
 //     where the memory of one part goes
 //
 // PHONE=1: a phone screen (390x844, touch).
+// VIEW='{"paged":false}': the saved text settings
+// (localStorage nxgir-view) for parts/fresh: pages
+// are the default, {"paged":false} is one long text.
 
 const { chromium } = require("playwright");
 const fs = require("fs");
@@ -74,6 +77,9 @@ function pss() {
 }
 
 async function open(view) {
+  if (!view && process.env.VIEW) {
+    view = JSON.parse(process.env.VIEW);
+  }
   const browser = await chromium.launch();
   const ctx = await browser.newContext(
     process.env.PHONE
@@ -179,13 +185,17 @@ async function fresh(books) {
 async function why(book) {
   const ways = [
     ["home page", null, "home"],
-    ["side by side", { parallel: true }, ""],
+    ["side by side", { parallel: true, paged: false }, ""],
     ["side by side, scrolled to the end",
-      { parallel: true }, "scroll"],
+      { parallel: true, paged: false }, "scroll"],
     ["translation hidden (one column)",
-      { parallel: false }, ""],
+      { parallel: false, paged: false }, ""],
     ["text not laid out (display: none)",
-      { parallel: true }, "hide"],
+      { parallel: true, paged: false }, "hide"],
+    ["in pages, side by side",
+      { parallel: true, paged: true }, ""],
+    ["in pages, one column",
+      { parallel: false, paged: true }, ""],
   ];
   console.log("case\telements\theap\ttab");
   for (const [label, view, how] of ways) {

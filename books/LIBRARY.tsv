@@ -9,6 +9,10 @@
 # - the last authors, always, in this order:
 #   Շնորհալի, Շիրակացի, Աստվածաշունչ; a new
 #   author goes above them (a test checks it)
+smbat-sparapet	Սմբատ Սպարապետ
+smbat-sparapet/1-datastanagirk	Դատաստանագիրք
+smbat-sparapet/2-taregirk	Տարեգիրք
+smbat-sparapet/3-taregirk-digilib	Տարեգիրք (Digilib)
 grigor-tatevatsi	Գրիգոր Տաթևացի
 grigor-tatevatsi/1-girk-harcmanc	Գիրք հարցմանց
 grigor-tatevatsi/2-dzmeran-hator	Ձմեռան հատոր
@@ -28,6 +32,15 @@ pavstos-buzand	Փաւստոս Բուզանդ
 pavstos-buzand/1-patmutiun-hayots	Պատմութիւն Հայոց
 koriun	Կորիւն
 koriun/1-vark-mashtotsi	Վարք Մաշտոցի
+giwt-arahezatsi	Գիւտ Արահեզացի
+giwt-arahezatsi/1-tught-vache	Թուղթ առ Վաչէ
+mambre-vertsanogh	Մամբրէ Վերծանող
+mambre-vertsanogh/1-charq	Ճառք
+davit-anyaght	Դաւիթ Անյաղթ
+davit-anyaght/1-sahmanq	Սահմանք եւ տրամատութիւնք իմաստասիրութեան
+davit-anyaght/2-verlutsakan	Ի վերլուծականն Արիստոտէլի
+davit-anyaght/3-nerazutyun	Վերլուծութիւն Ներածութեան Պորփիւրի
+davit-anyaght/4-storogutyun	Մեկնութիւն Ստորոգութեանցն Արիստոտէլի
 movses-khorenatsi	Մովսէս Խորենացի
 movses-khorenatsi/1-patmutiun-hayots	Պատմութիւն Հայոց
 ghazar-parpetsi	Ղազար Փարպեցի
@@ -37,6 +50,7 @@ yeghishe	Եղիշէ
 yeghishe/1-vasn-vardanay	Վասն Վարդանայ
 yeghishe/2-meknutiun-ararodzots	Մեկնութիւն Արարածոց
 yeghishe/3-khratk	Խրատք
+yeghishe/4-kanonk	Կանոնք
 grigor-lusavorich	Գրիգոր Լուսաւորիչ
 grigor-lusavorich/1-yachakhapatum-charq	Յաճախապատում ճառք
 grigor-lusavorich/2-kanonk-parthevi	Կանոնք Գրիգորի Պարթեւի
@@ -68,11 +82,40 @@ arakel-davrizhetsi	Առաքել Դաւրիժեցի
 arakel-davrizhetsi/1-girk-patmutyants	Գիրք պատմութեանց
 zakaria-kanakertsi	Զաքարիա Քանաքեռցի
 zakaria-kanakertsi/1-patmagrutiun	Պատմագրութիւն
-smbat-sparapet	Սմբատ Սպարապետ
-smbat-sparapet/1-datastanagirk	Դատաստանագիրք
-smbat-sparapet/2-taregirk	Տարեգիրք
 nerses-lambronatsi	Ներսէս Լամբրոնացի
 nerses-lambronatsi/1-khorhrdatsutiunk	Խորհրդածութիւնք ի կարգս եկեղեցւոյ
+anastas-vardapet	Անաստաս Վարդապետ
+anastas-vardapet/1-vasn-vanoreits	Վասն վանորէից ի Երուսաղէմ
+anania-targmanich	Անանիա Թարգմանիչ
+anania-targmanich/1-khorhurd-katarman	Ի խորհուրդ կատարմանն առաքելոյն Պետրոսի
+khosrovik-targmanich	Խոսրովիկ Թարգմանիչ
+khosrovik-targmanich/1-erkasiutiunk	Երկասիրութիւնք
+hovhan-ozhnetsi	Յովհան Իմաստասէր Օձնեցի
+hovhan-ozhnetsi/1-matenagrutiunk	Մատենագրութիւնք
+grigor-tgha	Գրիգոր Տղա
+grigor-tgha/1-namakani	Նամականի
+samuel-anetsi	Սամուէլ Անեցի
+samuel-anetsi/1-havaqmunk	Հաւաքմունք
+nerses-paliants	Ներսէս Պալիենց
+nerses-paliants/1-kargy	Հայոց թագաւորների եւ իշխանների կարգը
+nerses-paliants/2-zhamanakagrakan	Ժամանակագրական հատուածներ
+yakob-hrimetsi	Յակոբ Ղրիմեցի
+yakob-hrimetsi/1-tomaragitakan	Տոմարագիտական աշխատութիւններ
+komitas-aghtsetsi	Կոմիտաս Աղցեցի
+komitas-aghtsetsi/1-knik-havatoy	Կնիք հաւատոյ
+seberianos-yemesatsi	Սեբերիանոս Եմեսացի
+seberianos-yemesatsi/1-charq	Ճառք
+hovhan-mandakuni	Յովհան Մանդակունի
+hovhan-mandakuni/1-kanonk	Կանոնք
+abraham-aghbatanetsi	Աբրահամ Աղբաթանեցի
+abraham-aghbatanetsi/1-kanon	Կանոն
+abraham-aghbatanetsi/2-khostovanutiun	Խոստովանութիւն
+matthew-urhayetsi	Մատթէոս Ուռհայեցի
+matthew-urhayetsi/1-patmutiun	Պատմութիւն
+sebeos	Սեբէոս
+sebeos/1-patmutiun	Պատմութիւն
+vardan-aygektsi	Վարդան Այգեկցի
+vardan-aygektsi/1-zhoghovatsoy-arakats	Ժողովածոյ առակաց
 nerses-shnorhali	Ներսես Շնորհալի
 nerses-shnorhali/1-tught-yndhanrakan	Թուղթ ընդհանրական
 nerses-shnorhali/2-voghb-edesioy	Ողբ Եդեսիոյ

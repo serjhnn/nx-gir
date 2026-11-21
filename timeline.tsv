@@ -1,6 +1,7 @@
 # The timeline of nx-gir: the main steps, shown on
-# the Timeline page and, the newest three, on the
-# home page (nxgir_timeline.py). One line per event,
+# the Timeline page and, the newest three about the
+# site (kind Site), on the home page
+# (nxgir_timeline.py). One line per event,
 # oldest first, fields split by tabs:
 #
 #   date   YYYY-MM-DD, or "next" for a plan (at the end)
@@ -93,5 +94,16 @@
 2026-11-15	Books		Taregirk of Smbat Sparapet	The 13th-century chronicle of Armenia and Cilicia (951–1331), typed from a scan of the Paris 1859 edition, proofread page by page against it; two parts, with a contents list by year.	grabar/smbat-sparapet/2-taregirk
 2026-11-16	Translation	*	The Taregirk of Smbat Sparapet in modern Armenian	Both parts of the chronicle, 1,382 lines (the Grabar one sentence to a line), translated line for line, with the contents list by year in both; the draft is open for human review.	grabar/smbat-sparapet/2-taregirk
 2026-11-16	Site		Announcements	A page of news from the shelf, with a banner on the home page; the first is on Smbat Sparapet, who he was and what his two books tell.	
+2026-11-17	Site		Comics	A page of comic series from the books of the Library; the first is Vasak and the Seven Wolves, from Smbat Sparapet's Taregirk.	
+2026-11-17	Texts	*	OCR for scanned books	A tool and a tuned model that read Grabar scans (3.5% of the letters wrong on the 1859 Smbat chronicle, a first model of its own), with a review list of suggested corrections and a model pass over the uncertain words.	
+2026-11-18	Site	*	The Map	A painted map of the Armenian Highland with a pin on each place that a post or a comic is about, under its ancient Armenian name; a small panel opens beside a pin with links to its stories.	
+2026-11-19	Books		Zhoghovatsoy arakats of Vardan Aygektsi	The 13th-century collection of fables with their moral explanations, from Digilib, 389 sections in three parts, each fable a chapter of its contents list.	grabar/vardan-aygektsi/1-zhoghovatsoy-arakats
+2026-11-19	Books		Patmutiun of Sebeos	The history of the Armenian wars with Persia and the first Arab conquests, from Digilib, 52 sections in two parts.	grabar/sebeos/1-patmutiun
+2026-11-19	Books		Patmutiun of Matthew of Edessa	The chronicle of the Bagratids, Byzantium, the Crusaders and the Turks, with the continuation of Gregory the Priest, from Digilib, in four parts.	grabar/matthew-urhayetsi/1-patmutiun
+2026-11-19	Books		Early homilies and canons	The homilies of Seberianos of Emesa in the old Armenian translation, the canons of Hovhan Mandakuni and of Yeghishe, and the canon and confession of Abraham of Aghbatan, from Digilib.	grabar/seberianos-yemesatsi/1-charq
+2026-11-19	Books		Eleven more works from Digilib	Anastas Vardapet, Anania and Khosrovik Targmanich, Hovhan Imastaser Ozhnetsi, Grigor Tgha, Samuel Anetsi, Nerses Paliants, Yakob Hrimetsi and Komitas Aghtsetsi: letters, chronicles, commentaries and the Seal of Faith.	grabar/komitas-aghtsetsi/1-knik-havatoy
+2026-11-19	Books		Taregirk of Smbat Sparapet from Digilib	A second, longer text of the chronicle, typed on Digilib: 169 years in two parts, beside the 1859 edition we typed from the scan.	grabar/smbat-sparapet/3-taregirk-digilib
+2026-11-20	Translation	*	The Digilib Taregirk of Smbat Sparapet in modern Armenian	Both parts of the longer text of the chronicle, 2,097 lines (the Grabar one sentence to a line), translated line for line, with the 256 year entries of the contents list the same in both; the draft is open for human review.	grabar/smbat-sparapet/3-taregirk-digilib
+2026-11-21	Books		Davit Anyaght, Giwt and Mambre	The 5th-century philosopher Davit Anyaght (four works on Aristotle and Porphyry), the letter of Giwt Arahezatsi to Vache and the homilies of Mambre Vertsanogh, from Digilib: 119 sections.	grabar/davit-anyaght
 next	Translation		All of Amaran hator in modern Armenian	Then the other works of Grigor Tatevatsi.	
 next	Site		A contents page for each book	What each part of a book is about.	

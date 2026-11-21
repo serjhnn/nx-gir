@@ -15,6 +15,16 @@ Check them against another copy of the edition or
 against Digilib's (Venice 1956) text when it is
 back.
 
+Digilib's text is now in
+`books/grabar/smbat-sparapet/3-taregirk-digilib/`
+(2026-11-19). It is a different, longer recension, so
+only 4 of the readings below appear in it as words;
+a few near misses may be reading errors of the scan
+(`զբահն` for `զրահն`, `եղարկ` for `եզարկ`,
+`ըմբռովն` for `ըռմբովն`, `սրաիւ` for `սրտիւ`). They
+are hints for a review of the page image, not
+corrections.
+
 | Page | Place | Reading |
 |-----:|------|---------|
 | 30 | 1:78 | `ըմբռովն` |
@@ -227,3 +237,130 @@ these first. Many are also hard readings of the scan
 - 2:615 `կնքեռն`: kept.
 - 2:621 `ափխոսկ`: kept.
 - 2:818 `չիչ`, `դեղղիր`: kept.
+
+## The translation of the Digilib text
+
+Both parts of `3-taregirk-digilib/` were translated into
+modern Eastern Armenian on 2026-11-20, by
+`TRANSLATION_GUIDE.md`, in chunks of 80–110 lines, each
+checked against the Grabar (section 6 of the guide), and
+the whole checked at the end: 1,041 and 1,056 lines, all
+blank lines the same, no locked line changed, 83 and 173
+Contents entries the same as the Grabar's. Files:
+`books/ashkharhabar/smbat-sparapet/3-taregirk-digilib/`,
+line numbers the same as the Grabar's. Status `machine`
+in `books/TRANSLATIONS.tsv`.
+
+The Grabar was first cut one sentence to a line with the
+script of `notes/3-amaran-hator.md` (only line breaks
+changed; one place in part 1 had `։` with no space after
+it, none in part 2). Digilib's paragraphs became 1,041 and
+1,056 lines.
+
+### What each part covers
+
+- Part 1, lines 1–141: Gagik I (400–420), the coronation
+  at Ani, Nikephoros Phokas and his murder by Tzimiskes
+  (39–46), the quarrel of Hovhannes and Ashot (52–75),
+  Vasak Pahlavuni at Bjni (77–89), Tzimiskes' campaign
+  and his letter to Ashot (101–141).
+- 143–260: Abulgharib and the fall of King Gurgen's army
+  (145–155), Catholicos Stepanos, David curopalates
+  (166–173), Basil II and the Bulgarians, the Easter
+  dispute and vardapet Samuel (207–218), Senekerim gives
+  Vaspurakan to Basil (231–243), Basil at Trebizond and
+  the miracle of the water (251–259).
+- 261–412: Romanos III and Maniakes at Edessa
+  (301–306), Catholicos Petros and Dioskoros (326–335),
+  Abusuar's defeat at Gandzak (346–354), the death of
+  King Hovhannes (363), Gagik II crowned (369), his
+  summons to Constantinople and the end of the Bagratid
+  kingdom (395–412).
+- 414–520: the earthquake of 494, Arts'n taken (428–434),
+  Petros at Constantinople, Liparit, Tughril at Manzikert
+  and the Frank who burns the catapult (479–496).
+- 521–640: famine and the Seljuk raids, Ani sacked by
+  Alp Arslan (555–564), Gagik and Mark's dog Armen
+  (606–618), the colophon-like entry on Catholicos
+  Grigor Vkayasēr (579–582).
+- 641–760: Romanos Diogenes and Manzikert (642–697),
+  Philaretos and Tornik of Sasun (707–725), Grigor
+  Vkayasēr in Egypt (729–731), the murder of Gagik II
+  (759–764), Vasak killed at Antioch (739–740).
+- 761–945: Suleiman and Antioch (782–788), Malik-Shah
+  (806–817), the First Crusade and the Holy Lance
+  (867–914), Jerusalem taken (916–921), Edessa and the
+  Counts.
+- 946–1041: Baldwin and Joscelin at Edessa, the Holy
+  Fire that did not light (950–952), Sanjil and Alexios'
+  betrayal (956–962), Bohemond's captivity and ransom
+  (979), Gogh Vasil of Kesun (981–982, 1010), the Armenian
+  bishops and Catholicoi.
+- Part 2, lines 1–200: Joscelin and Baldwin, the siege of
+  Edessa by Mawdud, Toros takes the fortress of the
+  Mantaleh brothers and avenges Gagik II (22–34), Roger
+  of Antioch, Baldwin II's captivities (133–142).
+- 201–400: Levon I the Rubenid, Toros II and Mleh, the
+  Armenian princes and the Crusaders; Nerses Shnorhali's
+  lament for Edessa (252), the Armenian kings and
+  Catholicoi.
+- 401–700: Ruben III and Levon II, Saladin and Hattin
+  (468–495), the coronation of Levon (569–572), the lists
+  of archbishops, bishops and lords (574–692).
+- 701–1056: the coup against Philip, Hetum I, the sieges
+  of Tarsus (Smbat's own account, 836–863 in the plain
+  language of his day), the Mongols, Hetum's journey to
+  Mangu, Baybars at Antioch (1016), the death of Hetum
+  (1032), Levon III; the colophons of Simeon of Aparan
+  (829–834) and Catholicos Grigor, 1558 (1054–1056).
+
+### Decisions
+
+- The year headings (a bare number, `ՈԿԸ [668=1219]` at
+  the start of an entry) are kept as they are; the
+  Contents are the same as the Grabar's.
+- Digilib's page marks inside the text (`/12ա/`: 354 of
+  them) are not part of the sentences and are left out
+  of the translation. The editor's brackets are kept
+  where the Grabar has them, the words translated
+  (`[Աշոտոյ]` → `[Աշոտը]`; `[30. 000]` → `[30 000]`).
+- The `«` of the Grabar (9, all in part 1) have no
+  closing mark in the source (`»` was read as `ե`: `քոե։`);
+  most speech has none at all. The translation adds no
+  marks: a speech follows a colon and runs to the end of
+  the sentence. Where the Grabar has a `«`, the translation
+  has it too.
+- Names are in the reformed forms of the text, not
+  corrected: Չմշկիկ (Tzimiskes), Դուկիծ (Doukas),
+  Տիոժեն → Դիոգենես (Romanos Diogenes), Սալահատին, Ֆռանգ →
+  ֆրանկ, Տաճիկ and Թուրք as in the text, Հոռոմ kept in
+  `Հոռոմկլա`; titles: պարոն, պայլ, գունդստաբլ, սեբաստոս,
+  կուրապաղատ, մարաջախտ, մայստոր, ֆրեր, ջամբռլայն, բրինձ
+  (prince), կոմս, դուքս, ամիրա, սուլթան, խան; `բաբան` (a
+  siege engine) and `խանդակ` (a ditch) as in the first
+  text. `դահեկան` is kept.
+- `ՅԻՇԱՏԱԿԱՐԱՆ` (the colophon headings, 1:447, 2:829,
+  2:1054) is `ՀԻՇԱՏԱԿԱՐԱՆ`, in capitals as in the Grabar.
+- The lists of the bishops and lords (2:574–692) were
+  `Իշխ. Լամբրունին Հեթում։`; in the translation each is
+  `Լամբրոնի իշխան՝ Հեթումը։`, the abbreviations
+  `եպ.`, `Իշխ.`, `պր.` written in full.
+
+### Unclear words (part:line)
+
+Guessed from the sense, or kept in Armenian letters when
+nothing could be found; the reviewer is to check these first.
+
+- 1:236 `թիմաբերդս`: «ամրոց», a guess.
+- 1:720 `հանապ ետ շինել` (Philaretos and the head of
+  Tornik): read as a cup, «գավաթ շինել տվեց».
+- 1:786 `Պելետիկք`: kept as a name of the Antiochenes.
+- 2:314 `.....`: the lacuna of the Grabar, kept.
+- 2:781 `Իտ[ ]եմ[ ]ն`: kept with its gaps.
+- 2:780 `սրսլայիւ`: kept («սրսլայով»).
+- 2:855 `ջրմտին դեհն ու ի ջրելին աղէկ նետընկէց մի`:
+  a guess.
+- 2:857 `քովս քովս`: «կողքս-կողքս», a guess.
+- 2:869 `ֆսուս`: kept; the sense of the game is unclear.
+- 2:1056 `տառայպանք`, `բարիշան`, `Հոտքար`, `Դայմազ`,
+  `Ոստան`: kept as in the colophon.

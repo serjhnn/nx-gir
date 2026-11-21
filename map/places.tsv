@@ -1,0 +1,45 @@
+# The places of the map of nx-gir (nxgir_map.py): the
+# ancient Armenian names only, in the spelling of the
+# books. One line per place, fields split by tabs:
+#
+#   id    Latin letters and dashes; a post names it
+#         on a "place:" line (blog/README.md)
+#   kind  city, fortress, monastery, region, lake or
+#         mountain
+#   lat   degrees north, as on a modern map
+#   lon   degrees east
+#   x, y  where its pin stands on the painted map, in
+#         percent of its width and height; empty: the
+#         place is projected from lat and lon
+#         (CONTROL in nxgir_map.py). The map is art,
+#         so a pin may stand on the painted tower or
+#         peak it means
+#   hy    the name in Armenian
+#   en    the same name, transliterated
+#   ru    the same name, transliterated
+#   note  the modern name and what we are unsure of;
+#         not shown on the map
+#
+# The area of the map: 36.5-42.5 N, 38.0-49.5 E (the
+# Armenian Highland). Cilicia is outside it.
+# Coordinates are given to about 0.1 degree.
+bjni	fortress	40.33	44.62	47.2	19.5	Բջնի	Bjni	Бджни	Bjni, Kotayk; the Vasak comic
+gandzak	city	40.68	46.36	94.5	29.5	Գանձակ	Gandzak	Гандзак	Ganja, now in Azerbaijan; the birthplace of Mkhitar Gosh
+nor-getik	monastery	40.74	45.16	70.5	20.0	Նոր Գետիկ	Nor Getik	Нор Гетик	Goshavank, named after Gosh later
+ani	city	40.51	43.57	25.0	37.5	Անի	Ani	Ани	Ani, on the Turkish border
+erebuni	fortress	40.13	44.53	47.0	32.0	Երեբունի	Erebuni	Эребуни	Yerevan (the fortress of 782 BC stands on its site)
+duin	city	40.01	44.58	48.8	45.9	Դուին	Duin	Дуин	Dvin, the classical spelling
+vagharshapat	city	40.17	44.29	41.0	36.0	Վաղարշապատ	Vagharshapat	Вагаршапат	Etchmiadzin
+artashat	city	39.95	44.55	58.0	47.0	Արտաշատ	Artashat	Арташат	the ancient capital; Khor Virap stands near it
+armavir	city	40.15	43.87	34.5	37.0	Արմավիր	Armavir	Армавир	Armavir
+avarayr	region	39.10	44.40	50.0	54.5	Աւարայր	Avarayr	Аварайр	the plain of the battle of Vardan; the place is uncertain, to 0.3 degree
+tatew	monastery	39.38	46.25	68.0	51.0	Տաթեւ	Tatew	Татев	Tatev
+narek	monastery	38.30	43.00	42.0	77.5	Նարեկ	Narek	Нарек	Narekavank, gone; the place is uncertain
+shamiramakert	city	38.50	43.38	54.7	70.3	Շամիրամակերտ	Shamiramakert	Шамирамакерт	Van (Tosp)
+baghesh	city	38.40	42.11	25.1	71.8	Բաղէշ	Baghesh	Багеш	Bitlis
+karin	city	39.90	41.27	10.1	59.6	Կարին	Karin	Карин	Erzurum
+geghama-tsov	lake	40.30	45.30	60.2	30.3	Գեղամայ ծով	Geghama Tsov	Гегамай цов	Lake Sevan; tsov is sea
+bznunyats-tsov	lake	38.65	42.95	38.4	66.5	Բզնունեաց ծով	Bznunyats Tsov	Бзнунеац цов	Lake Van; tsov is sea
+aghtamar	monastery	38.34	43.03	44.9	69.8	Աղթամար	Aghtamar	Агтамар	Akhtamar island in Lake Van
+masis	mountain	39.70	44.30	51.8	35.5	Մասիս	Masis	Масис	Mount Ararat; Ararat is the name of the plain
+aragats	mountain	40.53	44.20	42.0	26.5	Արագած	Aragats	Арагац	Mount Aragats

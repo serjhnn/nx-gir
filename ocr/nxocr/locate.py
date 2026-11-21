@@ -1,0 +1,103 @@
+"""Find where a page's text lies in a typed reference.
+
+The typed books have no page marks, so the page is
+placed by voting: short letter sequences of the OCR
+that occur in the reference vote for an offset.
+Works for any book, however garbled the OCR is (a
+few intact sequences are enough).
+"""
+
+import re
+from collections import Counter, defaultdict
+
+from .textnorm import key
+
+# an editor's note, like <Սաղմ. ՁԹ 5-6> (a Bible reference):
+# short, with no other < inside, so a note whose > is
+# missing does not swallow the text after it
+NOTE = re.compile(r"<[^<>\n]{1,40}>")
+
+
+class Reference:
+    """The typed text of a book, as one key string."""
+
+    def __init__(self, texts, k=6, common=20, notes=True):
+        self.k = k
+        self.raw = "\n".join(texts)
+        # key string, and for each key char its place in raw
+        keys, self.orig = [], []
+        hidden = set()
+        if notes:
+            for m in NOTE.finditer(self.raw):
+                hidden.update(range(m.start(), m.end()))
+        for i, ch in enumerate(self.raw):
+            part = "" if i in hidden else key(ch)
+            keys.append(part)
+            self.orig.extend([i] * len(part))
+        self.text = "".join(keys)
+        self.index = defaultdict(list)
+        for i in range(len(self.text) - k + 1):
+            self.index[self.text[i : i + k]].append(i)
+        self.common = common
+
+    def original(self, start, end):
+        """The typed text for key positions start..end.
+
+        Runs from the first key char to just before the
+        key char at `end`: marks and spaces between the
+        lines go with the earlier line.
+        """
+        a = self.orig[start]
+        if end >= len(self.orig):
+            b = len(self.raw)
+        else:
+            b = self.orig[end]
+        return self.raw[a:b].strip()
+
+    def without(self, spans):
+        """The typed text with the key spans cut out.
+
+        spans are (start, end) pairs as locate() gives
+        them; returns the pieces that remain, as texts.
+        """
+        cut = sorted(
+            (
+                self.orig[a],
+                self.orig[min(b, len(self.orig)) - 1] + 1,
+            )
+            for a, b in spans
+        )
+        out, at = [], 0
+        for a, b in cut:
+            if a > at:
+                out.append(self.raw[at:a])
+            at = max(at, b)
+        out.append(self.raw[at:])
+        return out
+
+    def locate(self, page_key, slack=150, min_votes=8):
+        """(start, end) of the page stretch, or None."""
+        k = self.k
+        votes = Counter()
+        for i in range(len(page_key) - k + 1):
+            hits = self.index.get(page_key[i : i + k], ())
+            if not hits or len(hits) > self.common:
+                continue
+            for pos in hits:
+                votes[(pos - i) // 32] += 1
+        if not votes:
+            return None
+        best, _ = votes.most_common(1)[0]
+        n = sum(
+            votes[b] for b in (best - 1, best, best + 1)
+        )
+        if n < min_votes:
+            return None
+        off = best * 32 + 16
+        start = max(0, off - slack)
+        # the typed text may hold more than the page does
+        end = min(
+            len(self.text),
+            off + int(len(page_key) * 1.15) + slack,
+        )
+        return start, end

@@ -29,7 +29,7 @@ def test_build(tmp_path, files):
     out = tmp_path / "site"
     tsv = tmp_path / "timeline.tsv"
     tsv.write_text(
-        "2026-10-18\tBooks\t*\tJohn\t\tgrabar/john.txt\n",
+        "2026-10-18\tSite\t*\tJohn\t\tgrabar/john.txt\n",
         encoding="utf-8",
     )
     books, dirs, words = bs.build(out, files, tsv)
@@ -78,6 +78,19 @@ def test_build(tmp_path, files):
         (data / "blog.json").read_text("utf-8")
     )
     assert blog["posts"][-1]["slug"] == "welcome"
+    # the Comics page, from comics/
+    comics = json.loads(
+        (data / "comics.json").read_text("utf-8")
+    )
+    assert comics["series"][0]["slug"] == (
+        "vasak-seven-wolves"
+    )
+    # the Map page: the places, and their stories
+    mp = json.loads((data / "map.json").read_text("utf-8"))
+    assert mp["image"] == "img/map/base.webp"
+    assert (out / mp["image"]).is_file()
+    named = [p for p in mp["places"] if p["stories"]]
+    assert {p["id"] for p in named} >= {"bjni", "gandzak"}
     # the Features page, from features/
     feats = json.loads(
         (data / "features.json").read_text("utf-8")
@@ -224,12 +237,44 @@ def test_searchable(tmp_path, files):
     ) in sm
     assert '<a href="blog/welcome.en.html">' in index
     assert (out / "blog/welcome.hy.html").exists()
+    # a comics series as a plain page too, in
+    # comics/, and in the sitemap
+    cpage = out / "comics/vasak-seven-wolves.en.html"
+    chtml = cpage.read_text("utf-8")
+    assert 'href="./#/comics/vasak-seven-wolves/en"' in (
+        chtml
+    )
+    assert "<h1>Vasak and the Seven Wolves</h1>" in chtml
+    assert (
+        f"{bs.SITE}/comics/vasak-seven-wolves.en.html"
+    ) in sm
     # the Features page as a plain page too
     feat = (out / "features.en.html").read_text("utf-8")
     assert 'href="./#/features/en"' in feat
     assert "<h1>Features</h1>" in feat
     assert f"{bs.SITE}/features.en.html" in sm
     assert '<a href="features.en.html">' in index
+    # the Map: a page of the places, and a page for
+    # each place that a post or comic names
+    mp = (out / "map.en.html").read_text("utf-8")
+    assert "<h1>Map</h1>" in mp
+    assert '<a href="map/bjni.en.html">Bjni</a>' in mp
+    assert "<li>Ani · City</li>" in mp
+    assert 'href="./#/map"' in mp
+    bj = (out / "map/bjni.en.html").read_text("utf-8")
+    assert "<h1>Bjni</h1>" in bj
+    assert "<p>Fortress</p>" in bj
+    assert 'href="./#/map/bjni"' in bj
+    assert 'href="comics/vasak-seven-wolves.en.html"' in bj
+    assert 'hreflang="ru"' in bj
+    ru = (out / "map/bjni.ru.html").read_text("utf-8")
+    assert "<h1>Бджни</h1>" in ru
+    assert "<p>Крепость</p>" in ru
+    # no page for a place nobody wrote about
+    assert not (out / "map/ani.en.html").exists()
+    assert f"{bs.SITE}/map/bjni.en.html" in sm
+    assert f"{bs.SITE}/map.hy.html" in sm
+    assert '<a href="map.en.html">' in index
 
 
 def test_licensed():
@@ -369,7 +414,7 @@ def test_service_worker(tmp_path, files):
     assert "data/book/grabar/john.txt.json" in paths
     assert "data/stats.json" in paths
     assert not any(
-        p.startswith(("read/", "blog/", "sw.js"))
+        p.startswith(("read/", "blog/", "comics/", "sw.js"))
         or p.endswith((".zip", ".xml"))
         for p in paths
     )
