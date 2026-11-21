@@ -12,7 +12,8 @@ part ("Every place a word appears").
 
 Decided (2026-11-21):
 - The Bible is not searched, for now.
-- A search bar on every page, in the top bar.
+- A search box on every page, at the top of the
+  page (on the home page under the menu buttons).
 - Results open on Գրաբար; the filters show the
   translations too (Աշխարհաբար) or both
   (Բոլորը) when the reader wants.
@@ -54,11 +55,12 @@ Screenshots: `search-1` to `search-9`, and
 drawn inside the real web reader, with real
 results).
 
-- **Where it starts**: a search bar in the top
-  bar of every page, under the logo and the
-  buttons: the home page (1), the Library (8), a
-  book in the reader (9). On a results page it
-  holds the search (2). The word panel in the
+- **Where it starts**: a search box on every
+  page, at the top of the page under the top bar:
+  on the home page under the row of menu buttons
+  (1), on the Library (8) and in the reader above
+  the book's path (9). On a results page it is
+  under the heading and holds the search (2). The word panel in the
   reader gets "Որոնել ամբողջ գրադարանում ·
   1074" under the ‹ › of the part (6).
 - **Results** (`#/search?q=...`, 2): the count
@@ -151,7 +153,7 @@ Run `check-limits.py --site --record` after it.
 1. A word in either spelling, Grabar and
    translations: the module, `/api/search`, the
    site files, the results page (by author,
-   folded), the search bar
+   folded), the search box
    on every page, the strip in the reader. Tests; a
    Features entry in hy, en, ru; a Timeline line; a
    limits record.
@@ -167,6 +169,6 @@ Run `check-limits.py --site --record` after it.
   Sparapet's Տարեգիրք and Տարեգիրք (Digilib))
   gives every line twice. Show both, or fold the
   second under the first ("also in ...")?
-- On the reader's pinned bar, when scrolled: the
-  search bar scrolls away with the top bar, or
-  stays as a 🔍 that opens it?
+- In the reader, when scrolled: the search box
+  scrolls away with the page, or a 🔍 in the
+  pinned reading tools opens it?
