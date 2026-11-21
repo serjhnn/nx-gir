@@ -971,6 +971,8 @@ function ago(seen) {
 const SHELF_LANGS = { grabar: "Գրաբար",
   ashkharhabar: "Աշխարհաբար" };
 
+const FORGET_ASK = "Հեռացնե՞լ ընթերցումը ցանկից։";
+
 // take a book off the list of readings: where it
 // was left stays, and reading it again brings it
 // back
@@ -1003,6 +1005,7 @@ function readingList(items) {
       title: "Հեռացնել ցանկից" },
     icon(ICONS.bin));
     x.addEventListener("click", async () => {
+      if (!confirm(FORGET_ASK)) return;
       x.disabled = true;
       try {
         await forget(r.name);
@@ -1383,6 +1386,7 @@ async function libraryPage(who) {
       title: "Հեռացնել ցանկից" },
     icon(ICONS.bin));
     x.addEventListener("click", async () => {
+      if (!confirm(FORGET_ASK)) return;
       x.disabled = true;
       try {
         for (const n of r.names) await forget(n);
