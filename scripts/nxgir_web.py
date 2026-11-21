@@ -396,11 +396,19 @@ def blog(app):
 def authors(app):
     """The ids of the authors written about
     (nxgir_authors.py): the pages show the scroll
-    button beside these only."""
+    button beside these only; and their names in
+    each language, which the search finds too."""
     if not app.authors:
-        return {"authors": []}
+        return {"authors": [], "names": {}}
+    found = author_info.read(app.authors)
     return {
-        "authors": sorted(author_info.read(app.authors))
+        "authors": sorted(found),
+        "names": {
+            aid: {
+                v["lang"]: v["name"] for v in a["versions"]
+            }
+            for aid, a in sorted(found.items())
+        },
     }
 
 
@@ -601,6 +609,8 @@ def library(app):
     for who in sorted(authors, key=place):
         a = authors[who]
         a["books"] = list(a["books"].values())
+        # a page of its own, as the Bible's
+        a["page"] = flat_author(app, PARALLEL[0], who)
         out.append(a)
     return {"authors": out}
 

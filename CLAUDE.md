@@ -404,7 +404,11 @@
   `build-site.py` writes it as `data/search/` and
   `data/lines/`; the search itself is in `app.js`.
   `loose()` in `app.js` must match the Python one
-  (a test checks it); tested in
+  (a test checks it). Above the lines it lists the
+  authors and books whose name the words start
+  (`nameHits()`, `nameList()` in `app.js`), an
+  author also by its English and Russian names from
+  `authors/` (`/api/authors`); tested in
   `tests/test_search.py`. The plan, what is built
   and what is next: `notes/search.md`
 - `scripts/build-site.py`: the read-only copy of the

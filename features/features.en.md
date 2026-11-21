@@ -24,7 +24,7 @@ The word you tapped is marked everywhere in the part. The arrows ‹ › take yo
 
 ## Search the library
 
-Type a word in the search box at the top of any page; in the reader, tap a word and press Որոնել ամբողջ գրադարանում, or select a few words and press the button that appears. It is found in every book, in either spelling: թագավոր also finds թագաւոր. The results open on the Grabar books, by author in the Library's order: tap an author to see its lines, and Աշխարհաբար or Բոլորը to see the translations too; under Բոլորը each Grabar line comes with its translation under it, as one result. A line opens in the reader with the word marked, and the arrows ‹ › take you to the next result. A very common word (եւ, ի) needs a second word with it.
+Type a word in the search box at the top of any page; in the reader, tap a word and press Որոնել ամբողջ գրադարանում, or select a few words and press the button that appears. It is found in every book, in either spelling: թագավոր also finds թագաւոր. The results open on the Grabar books, by author in the Library's order: tap an author to see its lines, and Աշխարհաբար or Բոլորը to see the translations too; under Բոլորը each Grabar line comes with its translation under it, as one result. A line opens in the reader with the word marked, and the arrows ‹ › take you to the next result. A very common word (եւ, ի) needs a second word with it. The search also finds authors and books by name: Գոշ finds Mkhitar Gosh and Դատաստանագիրք the books of that name, and an author can be found by the English or Russian name too (Gosh, Гош). They are shown above the lines.
 
 ## The sentence of a word
 

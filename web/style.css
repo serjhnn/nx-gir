@@ -1112,7 +1112,8 @@ body.home .bar {
     transition: none;
   }
 }
-.library .name .by {
+.library .name .by,
+.s-names .name .by {
   display: block;
   color: var(--muted);
   font-size: 0.8rem;
@@ -3568,4 +3569,26 @@ body.home .search-wrap {
   margin: 0.8rem 0 0;
   color: var(--muted);
   font: 0.75rem/1.4 var(--sans);
+}
+
+/* the authors and books the search finds by
+   name (nameList() in app.js) */
+.s-head2 {
+  margin: 1.2rem 0 0.4rem;
+  font: 500 0.95rem/1.3 var(--sans);
+  color: var(--muted);
+}
+.s-names li {
+  display: flex;
+  align-items: center;
+}
+.s-names .row {
+  flex: 1;
+  min-width: 0;
+}
+.s-names .info-btn {
+  padding: 0.5rem;
+}
+.s-names-more {
+  margin: 0.4rem 0 0;
 }

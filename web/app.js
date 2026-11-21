@@ -75,6 +75,11 @@ const ICONS = {
     "M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z",
     "M13.5 6.5l4 4",
   ],
+  // a person: an author
+  person: [
+    "M12 11a3.5 3.5 0 1 0 0-7a3.5 3.5 0 0 0 0 7z",
+    "M5 20c0-4 3-6.5 7-6.5s7 2.5 7 6.5",
+  ],
   // a rolled sheet with lines: about an author
   scroll: [
     "M7 4h11a2 2 0 0 1 0 4H7",
@@ -1121,15 +1126,19 @@ async function bookPage(folder) {
   // the author under the title, when written about
   const by = h("p", { class: "by", hidden: "" },
     up.label);
-  by.append(authorInfoBtn(folder.split("/")[1],
-    up.label, by));
+  const own = folder.split("/").length === 2;
+  if (!own) {
+    by.append(authorInfoBtn(folder.split("/")[1],
+      up.label, by));
+  }
   show(
     h("p", { class: "crumbs" },
       h("a", { href: up.to, lang: "hy" },
         "← " + up.label)),
     h("div", { class: "volume", lang: "hy" },
-      h("h1", {}, data.book),
-      by,
+      h("h1", {}, data.book, own ? authorInfoBtn(
+        folder.split("/")[1], data.book) : null),
+      own ? null : by,
       data.title !== data.book
         ? h("p", { class: "sub" }, data.title) : null,
       h("p", { class: "sub" }, data.total + " մաս"
@@ -1306,9 +1315,9 @@ async function libraryPage(who) {
       list.append(h("li", {}, libraryRow(b),
         starBtn(b)));
     }
-    // books that are all single files (the Bible)
-    // have a page of their own
-    const page = a.books.every((b) => b.parts === 1);
+    // an author whose books are grouped (the Bible)
+    // has a page of its own (flat_author())
+    const page = a.page;
     return h("section", { class: "author",
       id: "author-" + a.folder.split("/").pop() },
       h("h2", {}, page
@@ -2784,15 +2793,19 @@ const AUTHOR_UI = {
 const AUTHOR_LANG = "nxgir-author-lang";
 const LANG_LABEL = { hy: "Հայ", en: "Eng", ru: "Рус" };
 
-// the ids of the authors written about, asked once
-let authorIds = null;
-function knownAuthors() {
-  if (!authorIds) {
-    authorIds = api("authors")
-      .then((d) => new Set(d.authors))
-      .catch(() => new Set());
+// the authors written about, asked once: their ids
+// and their names in each language
+let authorData = null;
+function authorsAbout() {
+  if (!authorData) {
+    authorData = api("authors")
+      .catch(() => ({ authors: [], names: {} }));
   }
-  return authorIds;
+  return authorData;
+}
+function knownAuthors() {
+  return authorsAbout().then((d) =>
+    new Set(d.authors));
 }
 
 // the scroll button for an author's id (its folder
@@ -5573,6 +5586,76 @@ function authorBooks(a, ctx) {
   return box;
 }
 
+// authors and books whose name has every word of
+// q (as the start of one of its words), in either
+// spelling; an author also by its English and
+// Russian names (names: /api/authors), shown as
+// "also"
+function nameHits(q, parts, names) {
+  const want = q.split(/\s+/).map(loose)
+    .filter(Boolean);
+  const fits = (name) => {
+    const ws = String(name).split(/[\s,.()-]+/)
+      .map(loose);
+    return want.every((w) =>
+      ws.some((x) => x.startsWith(w)));
+  };
+  const authors = [];
+  parts.authors.forEach(([id, name], i) => {
+    if (fits(name)) {
+      authors.push({ id, name, i });
+      return;
+    }
+    const other = Object.entries(names[id] || {})
+      .find(([l, n]) => l !== "hy" && fits(n));
+    if (other) {
+      authors.push({ id, name, i, also: other[1] });
+    }
+  });
+  const books = parts.books
+    .map(([key, name, ai]) => ({ key, name, ai }))
+    .filter((b) => fits(b.name));
+  return { authors, books };
+}
+
+// the names found, above the lines
+function nameList(q, parts, names) {
+  const { authors, books } = nameHits(q, parts,
+    names);
+  if (!authors.length && !books.length) return null;
+  const n = (ai) => parts.books
+    .filter((b) => b[2] === ai).length;
+  const list = h("ul", { class: "shelf s-names" });
+  for (const a of authors) {
+    list.append(h("li", {}, h("a", { class: "row",
+      href: "#/library/" + enc(a.id) },
+    icon(ICONS.person, "ico"),
+    h("span", { class: "name" }, a.name,
+      a.also ? h("span", { class: "by" }, a.also)
+        : null),
+    h("span", { class: "meta" }, n(a.i) + " գիրք")),
+    authorInfoBtn(a.id, a.name)));
+  }
+  const rows = books.map((b) => h("li", {},
+    h("a", { class: "row", href: bookHref(b.key) },
+      icon(ICONS.book, "ico"),
+      h("span", { class: "name" }, b.name,
+        h("span", { class: "by" },
+          parts.authors[b.ai][1])))));
+  // a common title (Պատմութիւն Հայոց): the first
+  // few, and a button for the rest
+  const FEW = 5;
+  list.append(...rows.slice(0, FEW));
+  const more = rows.length > FEW ? btn("Բոլոր "
+    + rows.length + " գրքերը →", () => {
+    list.append(...rows.slice(FEW));
+    more.remove();
+  }, { class: "link-btn s-names-more" }) : null;
+  return h("section", { lang: "hy" },
+    h("h2", { class: "s-head2" },
+      "Հեղինակներ և գրքեր"), list, more);
+}
+
 async function searchPage(query) {
   const p = new URLSearchParams(query);
   const q = (p.get("q") || "").trim();
@@ -5600,8 +5683,8 @@ async function searchPage(query) {
   // index
   say("Որոնվում է…");
   const at = location.hash;
-  const [parts, f] = await Promise.all([partsOf(),
-    findLines(q)]);
+  const [parts, f, about] = await Promise.all([
+    partsOf(), findLines(q), authorsAbout()]);
   // gone to another page meanwhile
   if (location.hash !== at) return;
   // how many parts each book has, for "մաս n"
@@ -5629,6 +5712,7 @@ async function searchPage(query) {
   };
   const ctx = { q, where, parts, index,
     keys: f.keys };
+  const names = nameList(q, parts, about.names);
   const common = f.common.length ? h("p",
     { class: "hint", lang: "hy" },
     f.common.map(([w, n]) => w + " (" + nf(n)
@@ -5636,8 +5720,10 @@ async function searchPage(query) {
     f.spelled.length
       ? "․ շատ հաճախ է, որոնվում են մյուս բառերը։"
       : "․ շատ հաճախ է․ ավելացրեք ևս մի բառ։") : null;
-  if (!f.spelled.length) {
-    show(...head, common);
+  // a name found and no line: the names alone
+  const none = SEARCH_IN.every((w) => !counts[w]);
+  if (!f.spelled.length || (names && none)) {
+    show(...head, names, common);
     return;
   }
   const filters = h("div", { class: "filters",
@@ -5713,7 +5799,9 @@ async function searchPage(query) {
     }));
   };
   draw();
-  show(...head,
+  show(...head, names,
+    names ? h("h2", { class: "s-head2" },
+      "Տողեր") : null,
     h("p", { class: "s-sum", lang: "hy" },
       h("span", {}, nf(g.hits.length) + " տող · "
         + g.authors.length + " հեղինակ · " + nb

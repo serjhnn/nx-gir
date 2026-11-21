@@ -96,7 +96,15 @@ def test_api(folder, tmp_path):
         "utf-8",
     )
     app = App([], authors=folder, places=places)
-    assert web.authors(app) == {"authors": ["gosh"]}
+    assert web.authors(app) == {
+        "authors": ["gosh"],
+        "names": {
+            "gosh": {
+                "hy": "Մխիթար Գոշ",
+                "en": "Mkhitar Gosh",
+            }
+        },
+    }
     a = web.author(app, "gosh")
     assert a["places"] == [
         {
@@ -109,7 +117,7 @@ def test_api(folder, tmp_path):
     with pytest.raises(ApiError):
         web.author(app, "nobody")
     none = App([], authors=None)
-    assert web.authors(none) == {"authors": []}
+    assert web.authors(none) == {"authors": [], "names": {}}
 
 
 # the files of authors/ themselves
