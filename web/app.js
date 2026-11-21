@@ -160,6 +160,9 @@ const ICONS = {
     + " 0-13z", "M16 16l4.5 4.5"],
   // an arrow head: a folded list
   fold: ["M9 6l6 6l-6 6"],
+  // up and down: the found one before, after
+  up: ["M6 15l6-6l6 6"],
+  down: ["M6 9l6 6l6-6"],
 };
 
 // 512 B, 3.4 KB: like human_size() in Python.
@@ -1552,20 +1555,23 @@ function libraryFind(items, show, all) {
     autocapitalize: "off", spellcheck: "false" });
   const count = h("span", { class: "lf-count",
     "aria-live": "polite" });
-  const step = (t, label, d) => {
-    const b = btn(t, () => go(d), {
+  const step = (ico, label, d) => {
+    const b = btn(icon(ico), () => go(d), {
       class: "lf-step", "aria-label": label,
       title: label });
     b.hidden = true;
     return b;
   };
-  const prev = step("▲", "Նախորդը", -1);
-  const next = step("▼", "Հաջորդը", 1);
+  const prev = step(ICONS.up, "Նախորդը", -1);
+  const next = step(ICONS.down, "Հաջորդը", 1);
+  // the count and the steps in one chip
+  const chip = h("span", { class: "lf-chip" },
+    count, prev, next);
   const clear = h("button", { type: "button",
     class: "sbox-x", "aria-label": "Մաքրել",
     title: "Մաքրել" }, "✕");
   clear.hidden = true;
-  count.hidden = true;
+  chip.hidden = true;
   let names = {};
   authorsAbout().then((d) => {
     names = d.names || {};
@@ -1597,7 +1603,10 @@ function libraryFind(items, show, all) {
       all();
     }
     for (const x of found) x.el.classList.add("lf-hit");
-    count.hidden = !q;
+    chip.hidden = !q;
+    chip.classList.toggle("lf-none", !found.length);
+    chip.classList.toggle("lf-one",
+      found.length === 1);
     prev.hidden = next.hidden = found.length < 2;
     if (q) mark();
   };
@@ -1623,8 +1632,7 @@ function libraryFind(items, show, all) {
   });
   const form = h("form", { class: "sbox lib-find",
     role: "search", lang: "hy" },
-  icon(ICONS.search), input, count, prev, next,
-  clear);
+  icon(ICONS.search), input, chip, clear);
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     go(1);

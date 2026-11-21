@@ -3183,29 +3183,60 @@ body.home .search-wrap {
 }
 
 /* the Library's find box: the count of found
-   authors and books, and ▲ ▼ between them */
-.lf-count {
+   authors and books and the steps between them,
+   in one chip tinted like the found rows */
+.lf-chip {
   flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 1px 2px 1px 10px;
+  color: var(--accent-ink);
+  background: color-mix(in srgb, var(--accent)
+    14%, transparent);
+  border-radius: 999px;
+}
+/* one found: the count alone, no steps */
+.lf-chip.lf-one {
+  padding: 3px 10px;
+}
+/* nothing found: the word alone, grey */
+.lf-chip.lf-none {
+  padding: 2px 10px;
+  color: var(--muted);
+  background: none;
+}
+.lf-count {
   font-size: 0.85rem;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+.lf-none .lf-count {
+  font-weight: normal;
+}
 .lf-step {
-  flex: none;
-  width: 1.8rem;
-  height: 1.8rem;
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
   padding: 0;
-  font-size: 0.8rem;
-  color: var(--text);
+  color: inherit;
   background: none;
-  border: 1px solid var(--rule);
+  border: 0;
   border-radius: 50%;
   cursor: pointer;
 }
-.lf-step:hover {
-  border-color: var(--accent);
+.lf-step:hover,
+.lf-step:focus-visible {
+  background: color-mix(in srgb, var(--accent)
+    18%, transparent);
 }
-.lf-count[hidden],
+.lf-step svg {
+  width: 18px;
+  height: 18px;
+}
+.lf-chip[hidden],
 .lf-step[hidden] {
   display: none;
 }
