@@ -69,12 +69,13 @@ the largest book part, 359 KB (35%, Komitas Aghtsetsi,
 Knik havatoy 02); the new parts are far from it.
 
 On 2026-11-21 (after search across the library,
-notes/search.md, and the books of Davit Anyaght, Giwt
-and Mambre): 258 book files, 46.0 MB of text; the site
-254.9 MB (25%), of which the search index
-(`data/search/`) is 26 MB and the lines it shows
-(`data/lines/`) 51 MB; git 42.1 MB (4%); the build
-74 s (12%), about 15 s of it for search. The closest
+notes/search.md, the books of Davit Anyaght, Giwt and
+Mambre, and the eight early works of the second
+Digilib batch): 267 book files, 47.1 MB of text; the
+site 260.1 MB (25%), of which the search index
+(`data/search/`) is about 26 MB and the lines it
+shows (`data/lines/`) about 51 MB; git 42.9 MB (4%);
+the build 68 s (11%), about 15 s of it for search. The closest
 limit is still the largest part (35%).
 
 Since 29dc9cf (2026-11-14): the site fell from 116 MB
