@@ -1638,13 +1638,24 @@ function libraryFind(items, show, all) {
     go(1);
   });
   // the site's mark on its left: home (as in the
-  // reader's tools)
+  // reader's tools), once the top bar with its own
+  // is scrolled away (.away)
   const home = h("a", { class: "lf-home", href: "#/",
     "aria-label": "Գլխավոր", title: "Գլխավոր" },
   document.querySelector(".brand-mark")
     .cloneNode(true));
   const wrap = h("div", { class: "search-wrap"
     + " lib-find-wrap" }, home, form);
+  const bar = topBar.parentNode;
+  const seen = new IntersectionObserver(([e]) => {
+    if (!wrap.isConnected && wrap.dataset.shown) {
+      seen.disconnect();
+      return;
+    }
+    wrap.dataset.shown = "1";
+    wrap.classList.toggle("away", !e.isIntersecting);
+  });
+  seen.observe(bar);
   stickBelow(wrap);
   return wrap;
 }

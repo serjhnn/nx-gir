@@ -3193,19 +3193,39 @@ body.home .search-wrap {
   flex: 1;
   min-width: 0;
 }
+/* hidden while the top bar's own mark is in view;
+   it slides in once that is scrolled away */
 .lf-home {
   flex: none;
   display: grid;
   place-items: center;
-  width: 2.5rem;
+  width: 0;
   height: 2.5rem;
-  border: 1px solid var(--rule);
+  margin-right: -10px;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+  border: 0 solid var(--rule);
   border-radius: 50%;
   background: var(--surface);
+  transition: width 0.2s, margin 0.2s,
+    opacity 0.2s, visibility 0.2s;
 }
-.lf-home:hover,
-.lf-home:focus-visible {
+.away .lf-home {
+  width: 2.5rem;
+  margin-right: 0;
+  visibility: visible;
+  opacity: 1;
+  border-width: 1px;
+}
+.away .lf-home:hover,
+.away .lf-home:focus-visible {
   border-color: var(--accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .lf-home {
+    transition: none;
+  }
 }
 .lf-home svg {
   width: 20px;
