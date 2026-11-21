@@ -1308,24 +1308,30 @@ async function libraryPage(who) {
     return btn;
   };
   const empty = (t) => h("p", { class: "empty" }, t);
+  // what the find box finds: authors and books, in
+  // the order shown (libraryFind())
+  const finds = [];
   // the panes, one per tab
   const groups = data.authors.map((a) => {
+    const id = a.folder.split("/").pop();
     const list = h("ul", { class: "shelf" });
-    for (const b of a.books) {
-      list.append(h("li", {}, libraryRow(b),
-        starBtn(b)));
-    }
+    const rows = a.books.map((b) => {
+      const li = h("li", {}, libraryRow(b),
+        starBtn(b));
+      list.append(li);
+      return { el: li, names: [b.name, b.title] };
+    });
     // an author whose books are grouped (the Bible)
     // has a page of its own (flat_author())
     const page = a.page;
+    const head = h("h2", {}, page
+      ? h("a", { href: "#/b/" + enc(a.folder) },
+        a.name)
+      : a.name, authorInfoBtn(id, a.name));
+    finds.push({ el: head, id, names: [a.name] },
+      ...rows);
     return h("section", { class: "author",
-      id: "author-" + a.folder.split("/").pop() },
-      h("h2", {}, page
-        ? h("a", { href: "#/b/" + enc(a.folder) },
-          a.name)
-        : a.name, authorInfoBtn(
-          a.folder.split("/").pop(), a.name)),
-      list);
+      id: "author-" + id }, head, list);
   });
   const panes = {
     all: h("div", {}, groups.length ? groups
@@ -1483,7 +1489,32 @@ async function libraryPage(who) {
     { passive: true });
   page.addEventListener("touchend", onEnd,
     { passive: true });
-  showBare(
+  // a found one or an author just below the stuck
+  // find box and tabs; a book with its author's
+  // name above it, when both fit
+  const toView = (el) => {
+    const stuck = parseFloat(
+      getComputedStyle(tabs).top) || 0;
+    const room = innerHeight - stuck
+      - tabs.offsetHeight;
+    const head = el.closest(".author")
+      ?.querySelector("h2");
+    const box = el.getBoundingClientRect();
+    if (head && box.bottom - head
+      .getBoundingClientRect().top < room * 0.6) {
+      el = head;
+    }
+    scrollTo(0, el.getBoundingClientRect().top
+      + scrollY - stuck - tabs.offsetHeight - 12);
+  };
+  // the Library's own find box, in place of the
+  // search of the books (withSearch())
+  const find = libraryFind(finds, toView, () => {
+    if (tabs.dataset.tab !== "all") {
+      pick("all", false);
+    }
+  });
+  showBare(find,
     h("p", { class: "crumbs" },
       h("a", { href: "#/" }, "← Home")),
     h("div", { class: "library", lang: "hy" },
@@ -1501,16 +1532,106 @@ async function libraryPage(who) {
   pick(who ? "all" : libraryTab(), false);
   const at = who
     && document.getElementById("author-" + who);
-  // the author's name just below the stuck search
-  // box and tabs; after setStick() has measured
-  // them (withSearch(), the frame before)
-  if (at) requestAnimationFrame(() => {
-    const stuck = parseFloat(
-      getComputedStyle(tabs).top) || 0;
-    const gap = 12;
-    scrollTo(0, at.getBoundingClientRect().top
-      + scrollY - stuck - tabs.offsetHeight - gap);
+  // after setStick() has measured the find box
+  // (withSearch(), the frame before)
+  if (at) requestAnimationFrame(() => toView(at));
+}
+
+// The Library's find box: authors and books whose
+// name has the words (nameFits()), an author also
+// by its English or Russian name; each found one in
+// turn (Enter, ▼; Shift+Enter, ▲), scrolled into
+// view by show. items: { el, names, id? } in the
+// order shown; all() opens the tab of all books.
+function libraryFind(items, show, all) {
+  const input = h("input", { type: "search",
+    name: "find",
+    placeholder: "Գտնել հեղինակ կամ գիրք…",
+    "aria-label": "Գտնել հեղինակ կամ գիրք",
+    enterkeyhint: "search", autocomplete: "off",
+    autocapitalize: "off", spellcheck: "false" });
+  const count = h("span", { class: "lf-count",
+    "aria-live": "polite" });
+  const step = (t, label, d) => {
+    const b = btn(t, () => go(d), {
+      class: "lf-step", "aria-label": label,
+      title: label });
+    b.hidden = true;
+    return b;
+  };
+  const prev = step("▲", "Նախորդը", -1);
+  const next = step("▼", "Հաջորդը", 1);
+  const clear = h("button", { type: "button",
+    class: "sbox-x", "aria-label": "Մաքրել",
+    title: "Մաքրել" }, "✕");
+  clear.hidden = true;
+  count.hidden = true;
+  let names = {};
+  authorsAbout().then((d) => {
+    names = d.names || {};
+    if (input.value.trim()) run();
   });
+  let found = [];
+  let at = 0;
+  const mark = () => {
+    found.forEach((x, i) => x.el.classList
+      .toggle("lf-now", i === at));
+    count.textContent = !found.length ? "Չկա"
+      : found.length === 1 ? "1"
+        : at + 1 + " / " + found.length;
+    if (found.length) show(found[at].el);
+  };
+  const run = () => {
+    for (const x of found) {
+      x.el.classList.remove("lf-hit", "lf-now");
+    }
+    const q = input.value.trim();
+    clear.hidden = !input.value;
+    found = [];
+    at = 0;
+    if (q) {
+      const fits = nameFits(q);
+      found = items.filter((x) => x.names.some(fits)
+        || Object.entries(names[x.id] || {})
+          .some(([l, n]) => l !== "hy" && fits(n)));
+      all();
+    }
+    for (const x of found) x.el.classList.add("lf-hit");
+    count.hidden = !q;
+    prev.hidden = next.hidden = found.length < 2;
+    if (q) mark();
+  };
+  const go = (d) => {
+    if (!found.length) return;
+    at = (at + d + found.length) % found.length;
+    mark();
+  };
+  input.addEventListener("input", run);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && e.shiftKey) {
+      e.preventDefault();
+      go(-1);
+    } else if (e.key === "Escape" && input.value) {
+      input.value = "";
+      run();
+    }
+  });
+  clear.addEventListener("click", () => {
+    input.value = "";
+    run();
+    input.focus();
+  });
+  const form = h("form", { class: "sbox lib-find",
+    role: "search", lang: "hy" },
+  icon(ICONS.search), input, count, prev, next,
+  clear);
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    go(1);
+  });
+  const wrap = h("div", { class: "search-wrap" }, form);
+  stickBelow(wrap);
+  return wrap;
 }
 
 // -- timeline --
@@ -5595,20 +5716,26 @@ function authorBooks(a, ctx) {
   return box;
 }
 
+// a test of a name: has it every word of q, as the
+// start of one of its words, in either spelling
+function nameFits(q) {
+  const want = q.split(/\s+/).map(loose)
+    .filter(Boolean);
+  return (name) => {
+    const ws = String(name || "")
+      .split(/[\s,.()-]+/).map(loose);
+    return want.every((w) =>
+      ws.some((x) => x.startsWith(w)));
+  };
+}
+
 // authors and books whose name has every word of
 // q (as the start of one of its words), in either
 // spelling; an author also by its English and
 // Russian names (names: /api/authors), shown as
 // "also"
 function nameHits(q, parts, names) {
-  const want = q.split(/\s+/).map(loose)
-    .filter(Boolean);
-  const fits = (name) => {
-    const ws = String(name).split(/[\s,.()-]+/)
-      .map(loose);
-    return want.every((w) =>
-      ws.some((x) => x.startsWith(w)));
-  };
+  const fits = nameFits(q);
   const authors = [];
   parts.authors.forEach(([id, name], i) => {
     if (fits(name)) {
