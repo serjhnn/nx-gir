@@ -1218,9 +1218,19 @@ function readingBooks(data, items) {
     if (!x || out.has(x.b.first)) continue;
     const m = /· (\d+\/\d+)$/.exec(r.title || "");
     out.set(x.b.first, { ...x, at: r.name,
+      names: [],
       progress: r.progress || 0,
       part: x.b.parts > 1 && m ? m[1] : "",
       seen: r.seen });
+  }
+  // every part read of a book, to take it off
+  for (const r of items) {
+    const name = r.name.replace(
+      /^ashkharhabar\//, "grabar/");
+    const x = of.get(name) || of.get(dirOf(name));
+    if (x && out.has(x.b.first)) {
+      out.get(x.b.first).names.push(r.name);
+    }
   }
   return [...out.values()];
 }
@@ -1367,7 +1377,23 @@ async function libraryPage(who) {
         + r.progress + "%",
       h("span", { class: "progress", role: "img",
         "aria-label": r.progress + "%" }, fill));
-    readList.append(bookItem(r.b, row, starBtn(r.b)));
+    const x = h("button", { type: "button",
+      class: "forget",
+      "aria-label": "Հեռացնել ցանկից",
+      title: "Հեռացնել ցանկից" },
+    icon(ICONS.bin));
+    x.addEventListener("click", async () => {
+      x.disabled = true;
+      try {
+        for (const n of r.names) await forget(n);
+      } catch (e) {
+        x.disabled = false;
+        return;
+      }
+      route();
+    });
+    readList.append(
+      bookItem(r.b, row, starBtn(r.b), x));
   }
   panes.reading.append(reading.length ? readList
     : empty("Դեռ ոչինչ չեք կարդում։ Բացեք գիրքը՝"
