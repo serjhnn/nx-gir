@@ -3182,20 +3182,21 @@ body.home .search-wrap {
   display: none;
 }
 
-/* the Library's find box, the site's mark (home)
-   on its left */
-.lib-find-wrap {
+/* a search box with the site's mark (home) on its
+   left: the Library and the search page
+   (withHome()) */
+.home-wrap {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-.lib-find-wrap .lib-find {
+.home-wrap > form {
   flex: 1;
   min-width: 0;
 }
 /* hidden while the top bar's own mark is in view;
    it slides in once that is scrolled away */
-.lf-home {
+.box-home {
   flex: none;
   display: grid;
   place-items: center;
@@ -3211,23 +3212,23 @@ body.home .search-wrap {
   transition: width 0.2s, margin 0.2s,
     opacity 0.2s, visibility 0.2s;
 }
-.away .lf-home {
+.away .box-home {
   width: 2.5rem;
   margin-right: 0;
   visibility: visible;
   opacity: 1;
   border-width: 1px;
 }
-.away .lf-home:hover,
-.away .lf-home:focus-visible {
+.away .box-home:hover,
+.away .box-home:focus-visible {
   border-color: var(--accent);
 }
 @media (prefers-reduced-motion: reduce) {
-  .lf-home {
+  .box-home {
     transition: none;
   }
 }
-.lf-home svg {
+.box-home svg {
   width: 20px;
   height: 22px;
 }

@@ -1637,16 +1637,24 @@ function libraryFind(items, show, all) {
     e.preventDefault();
     go(1);
   });
-  // the site's mark on its left: home (as in the
-  // reader's tools), once the top bar with its own
-  // is scrolled away (.away)
-  const home = h("a", { class: "lf-home", href: "#/",
-    "aria-label": "Գլխավոր", title: "Գլխավոր" },
+  const wrap = h("div", { class: "search-wrap" }, form);
+  stickBelow(wrap);
+  return withHome(wrap);
+}
+
+// The site's mark on the left of a stuck search box
+// (wrap, .search-wrap): home, as in the reader's
+// tools, once the top bar with its own mark is
+// scrolled away (.away); the Library and the search
+// page
+function withHome(wrap) {
+  const home = h("a", { class: "box-home",
+    href: "#/", "aria-label": "Գլխավոր",
+    title: "Գլխավոր" },
   document.querySelector(".brand-mark")
     .cloneNode(true));
-  const wrap = h("div", { class: "search-wrap"
-    + " lib-find-wrap" }, home, form);
-  const bar = topBar.parentNode;
+  wrap.classList.add("home-wrap");
+  wrap.prepend(home);
   const seen = new IntersectionObserver(([e]) => {
     if (!wrap.isConnected && wrap.dataset.shown) {
       seen.disconnect();
@@ -1655,8 +1663,7 @@ function libraryFind(items, show, all) {
     wrap.dataset.shown = "1";
     wrap.classList.toggle("away", !e.isIntersecting);
   });
-  seen.observe(bar);
-  stickBelow(wrap);
+  seen.observe(topBar.parentNode);
   return wrap;
 }
 
@@ -5831,7 +5838,7 @@ async function searchPage(query) {
     h("p", { class: "crumbs" },
       h("a", { href: "#/" }, "← Գլխավոր")),
     h("h1", { lang: "hy" }, "Որոնում"),
-    searchBox(q),
+    withHome(searchBox(q)),
   ];
   const say = (...t) => show(...head,
     h("p", { class: "sub", lang: "hy" }, ...t));
