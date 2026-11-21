@@ -3,7 +3,8 @@
 Search across the whole library, in Grabar and in
 the translations, on `nxgir web` and on the Pages
 site (no server there). Not built yet; the numbers
-below were measured on 2026-11-21 with a prototype.
+below were measured on 2026-11-21 (after the
+merge of main at 4399b9a) with a prototype.
 
 Search inside one part already exists: tap a word
 and the ‹ › arrows go through its places in the
@@ -21,15 +22,15 @@ part ("Every place a word appears").
      `եա` → `յա`, `եօ` → `յո`, `է` → `ե`, `օ` → `ո`,
      and `յ` before a vowel at the start → `հ`.
    The results show each spelling found and how
-   often (`թագաւոր 770 · թագավոր 128`).
+   often (`թագաւոր 1071 · թագավոր 195`).
 2. **All forms of a word** (a switch): the forms
    of the word in `grabar/forms.tsv`, the same
-   table the word lookup uses. `թագավոր`: 762
+   table the word lookup uses. `թագավոր`: 1,074
    lines; with all forms (`թագաւորի`,
-   `թագաւորաց`, `թագաւորք` ...) 1,754.
+   `թագաւորաց`, `թագաւորք` ...) 2,382.
 3. **A phrase** in quotes: the words next to each
-   other, in that order (`"արքայ Հայոց"`: 41 lines
-   in 9 books).
+   other, in that order (`"արքայ Հայոց"`: 48 lines
+   in 11 books).
 4. Later: scribal abbreviations
    (`վարդապետ` also finds `վրդ`, from
    `abbreviations.tsv`), a word's start
@@ -46,17 +47,17 @@ drawn inside the real web reader, with real
 results).
 
 - **Where it starts**: a search box on the home
-  page, under the buttons (1); the word panel in
+  page, under the row of menu buttons (1); the word panel in
   the reader gets "Որոնել ամբողջ գրադարանում ·
-  762" under the ‹ › of the part (6).
+  1074" under the ‹ › of the part (6).
 - **Results** (`#/search?q=...`, 2): the box, the
-  count (`762 տող · 42 գիրք`), the filters
+  count (`1074 տող · 58 գիրք`), the filters
   Բոլորը / Գրաբար / Աշխարհաբար with their counts,
   the "Բոլոր ձևերը" switch and the spellings
   found. Then the books in Library order, under
   their authors as on the Library page: each book
   with its count and its first two lines, the word
-  marked, "մաս 1 · տող 1656", and "Բոլոր 48
+  marked, "մաս 1 · տող 463", and "Բոլոր 15
   տողերը →" for the rest. A tag says Գրաբար or
   Աշխարհաբար when both are shown.
 - **All forms** (3): the forms found, each a chip
@@ -66,7 +67,7 @@ results).
 - **In the reader** (5): a result opens the part at
   its line (`#/read/<part>?line=N`, as now), with
   the word marked, and a strip under the reading
-  tools: `Որոնում՝ թագավոր · արդյունք 37 / 762`,
+  tools: `Որոնում՝ թագավոր · արդյունք 37 / 1074`,
   ‹ › to the next result (into the next part or
   book), ← back to the results where they were.
 - Dark and black themes take the colors as they
@@ -118,13 +119,13 @@ both).
 
 | What | Now |
 |---|---|
-| Grabar | 177 parts, 33.5 MB, 2.1 M word-lines, 212 k words |
-| Translations | 37 parts, 6.8 MB, 0.5 M word-lines, 46 k words |
-| Index, plain JSON | about 27 MB, less delta-coded |
-| Line files | about 40 MB |
+| Grabar | 220 parts, 40.9 MB, 2.6 M word-lines, 247 k words |
+| Translations | 39 parts, 7.3 MB, 0.5 M word-lines, 48 k words |
+| Index, plain JSON | about 32 MB, less delta-coded |
+| Line files | about 50 MB |
 
-The site would grow from about 158 MB to about
-220 MB (22% of 1 GB) and the build by about 15 s.
+The site would grow from about 193 MB to about
+275 MB (27% of 1 GB) and the build by about 15 s.
 Run `check-limits.py --site --record` after it.
 With the Bible in, add its share; whether it is
 searched is a question below.
@@ -149,3 +150,7 @@ searched is a question below.
   bar of every page?
 - Should a Grabar line and its translation show as
   one result (the pair), or as two?
+- The same text in two editions (Smbat
+  Sparapet's Տարեգիրք and Տարեգիրք (Digilib))
+  gives every line twice. Show both, or fold the
+  second under the first ("also in ...")?
