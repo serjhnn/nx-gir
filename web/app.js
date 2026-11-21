@@ -1501,7 +1501,16 @@ async function libraryPage(who) {
   pick(who ? "all" : libraryTab(), false);
   const at = who
     && document.getElementById("author-" + who);
-  if (at) at.scrollIntoView();
+  // the author's name just below the stuck search
+  // box and tabs; after setStick() has measured
+  // them (withSearch(), the frame before)
+  if (at) requestAnimationFrame(() => {
+    const stuck = parseFloat(
+      getComputedStyle(tabs).top) || 0;
+    const gap = 12;
+    scrollTo(0, at.getBoundingClientRect().top
+      + scrollY - stuck - tabs.offsetHeight - gap);
+  });
 }
 
 // -- timeline --
