@@ -18,6 +18,7 @@ the same functions (nxgir_web.py):
     data/features.json              /api/features
     data/authors.json               /api/authors
     data/author/<id>.json           /api/author
+    data/book/<author>/<book>.json  /api/book-info
     data/comics.json                /api/comics
     data/map.json                   /api/map
     data/titles.json                each book's title,
@@ -313,6 +314,11 @@ def build(
             write_json(
                 data / "author" / f"{aid}.json",
                 web.author(app, aid),
+            )
+        for bid in ids["books"]:
+            write_json(
+                data / "book" / f"{bid}.json",
+                web.book_info(app, bid),
             )
         write_json(data / "map.json", web.map_data(app))
         # for the list of readings, which only has

@@ -78,6 +78,10 @@ The Library page lists the Grabar books by author, with how many parts each has 
 
 The scroll beside an author's name opens a short card about them: when and where they lived, what they wrote, their places on the map and a blog post about them. The card is in Armenian, English and Russian. The scroll is in the Library, on a book's page and in the search. Claude wrote the cards, and a card says so until a person has reviewed it.
 
+## About the books
+
+Some books in the Library have a card of their own: their icon is in the accent color, and tapping it opens the card. It tells when the book was written, what it is and what is in it, in the same three languages. The rest of the row still opens the book.
+
 ## Blog, Timeline and Statistics
 
 The Blog tells what is new, in themes: about the site, about authors and about books. The Timeline shows the main steps of the project, and the Statistics page how big the library and the site are.

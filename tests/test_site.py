@@ -96,6 +96,17 @@ def test_build(tmp_path, files):
         )
     )
     assert gosh["post"]["slug"] == "mkhitar-gosh"
+    # and the book cards, authors/<author>/<book>
+    assert "mkhitar-gosh/1-datastanagirk-a" in ids["books"]
+    card = json.loads(
+        (
+            data
+            / "book"
+            / "mkhitar-gosh"
+            / "1-datastanagirk-a.json"
+        ).read_text("utf-8")
+    )
+    assert card["versions"][0]["written"]
     # the Map page: the places, and their stories
     mp = json.loads((data / "map.json").read_text("utf-8"))
     assert mp["image"] == "img/map/base.webp"

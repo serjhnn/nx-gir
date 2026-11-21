@@ -97,6 +97,7 @@ def test_api(folder, tmp_path):
     )
     app = App([], authors=folder, places=places)
     assert web.authors(app) == {
+        "books": [],
         "authors": ["gosh"],
         "names": {
             "gosh": {
@@ -117,7 +118,11 @@ def test_api(folder, tmp_path):
     with pytest.raises(ApiError):
         web.author(app, "nobody")
     none = App([], authors=None)
-    assert web.authors(none) == {"authors": [], "names": {}}
+    assert web.authors(none) == {
+        "authors": [],
+        "names": {},
+        "books": [],
+    }
 
 
 # the files of authors/ themselves
@@ -161,3 +166,83 @@ def test_ui_langs_match():
     block = block.split("\n};", 1)[0]
     keys = re.findall(r"^  (\w+): \{", block, re.M)
     assert tuple(keys) == au.LANGS
+
+
+# the book cards: authors/<author>/<book>.LANG.md
+
+BOOK = """# Դատաստանագիրք
+
+written: 1184
+kind: օրենսգիրք
+place: gandzak
+
+Տեքստ։
+"""
+
+
+def test_read_books(folder):
+    (folder / "gosh").mkdir()
+    (folder / "gosh" / "1-law.hy.md").write_text(
+        BOOK, "utf-8"
+    )
+    # the authors are read as before
+    assert set(au.read(folder)) == {"gosh"}
+    b = au.read_books(folder)["gosh/1-law"]
+    assert b["places"] == ["gandzak"]
+    assert b["status"] == "machine"
+    assert "face" not in b
+    (v,) = b["versions"]
+    assert v["written"] == "1184"
+    assert v["kind"] == "օրենսգիրք"
+    assert v["source"] == ""
+    app = App([], authors=folder)
+    assert web.authors(app)["books"] == ["gosh/1-law"]
+    assert web.book_info(app, "gosh/1-law")["id"] == (
+        "gosh/1-law"
+    )
+    with pytest.raises(ApiError):
+        web.book_info(app, "gosh/2-none")
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        # an author's fields, not a book's
+        "# X\n\nyears: 1\n\nT.\n",
+        "# X\n\nface: a.jpg\n\nT.\n",
+        "# X\n\nwritten: 1\nwritten: 2\n\nT.\n",
+    ],
+)
+def test_bad_book(tmp_path, text):
+    (tmp_path / "x").mkdir()
+    (tmp_path / "x" / "b.hy.md").write_text(text, "utf-8")
+    with pytest.raises(au.AuthorError):
+        au.read_books(tmp_path)
+
+
+def test_book_files_are_good():
+    """Every book card is a book of LIBRARY.tsv's
+    authors in books/grabar/, in all three
+    languages, with its places and post."""
+    found = au.read_books()
+    assert found, "authors/ has no book card"
+    grabar = ROOT / "books" / "grabar"
+    places = {p["id"] for p in mp.read()}
+    posts = {p["slug"] for p in bl.read()}
+    authors = library_authors()
+    for bid, b in found.items():
+        assert bid.split("/")[0] in authors, bid
+        path = grabar / bid
+        assert (
+            path.is_dir()
+            or path.with_suffix(".txt").is_file()
+        ), bid
+        langs = [v["lang"] for v in b["versions"]]
+        assert langs == list(au.LANGS), bid
+        for p in b["places"]:
+            assert p in places, (bid, p)
+        if b["post"]:
+            assert b["post"] in posts, bid
+        for v in b["versions"]:
+            assert v["written"] and v["kind"], bid
+            assert v["source"], bid

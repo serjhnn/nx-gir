@@ -786,6 +786,7 @@ def test_library(tmp_path):
     ]
     assert got[0]["books"] == [
         {
+            "id": "ann/1-book",
             "name": "Քարոզ",
             "title": "Գիրք քարոզութեան",
             "first": d + "01.txt",
@@ -794,6 +795,7 @@ def test_library(tmp_path):
         },
         # no short name: its first line
         {
+            "id": "ann/2-poem",
             "name": "Տաղ",
             "title": "Տաղ",
             "first": "grabar/ann/2-poem.txt",

@@ -23,6 +23,19 @@ language; place, post, face and status are shared:
 one version is enough, and the others must not
 differ. read() checks every file and stops on a bad
 one. Tested in tests/test_authors.py.
+
+A book has a card too, opened by its icon on the
+Library: authors/<author>/<book>.LANG.md, <author>/
+<book> its path in books/grabar/ (a folder of parts
+or a single file without .txt), read by
+read_books(). Its fields are the same, but for
+
+    written the time of writing, as the language
+            writes it (in place of years)
+    kind    what the book is, a few words (in place
+            of role)
+
+and it has no face.
 """
 
 import re
@@ -35,6 +48,9 @@ LANGS = ("hy", "en", "ru")
 # the fields of each language, and the shared ones
 OWN = ("years", "role", "source")
 SHARED = ("place", "post", "face", "status")
+# a book's card
+BOOK_OWN = ("written", "kind", "source")
+BOOK_SHARED = ("place", "post", "status")
 STATUSES = ("machine", "reviewed")
 ID_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 NAME_RE = re.compile(
@@ -48,9 +64,10 @@ class AuthorError(ValueError):
     pass
 
 
-def parse(text, name):
+def parse(text, name, keys=OWN + SHARED):
     """The name, fields and paragraphs of one file:
-    (name, {key: value}, [paragraph])."""
+    (name, {key: value}, [paragraph]); keys the
+    fields it may have."""
     lines = text.splitlines()
     while lines and not lines[0].strip():
         lines.pop(0)
@@ -66,7 +83,7 @@ def parse(text, name):
             break
         if m:
             key, value = m.groups()
-            if key not in OWN + SHARED:
+            if key not in keys:
                 raise AuthorError(
                     f"{name}: unknown field {key!r}"
                 )
@@ -127,20 +144,57 @@ def read(folder=AUTHORS):
     folder = Path(folder)
     if not folder.is_dir():
         return {}
-    out = {}
-    for p in sorted(folder.glob("*.md")):
-        if p.name == "README.md":
+    files = [
+        (p, "")
+        for p in sorted(folder.glob("*.md"))
+        if p.name != "README.md"
+    ]
+    out = gather(files, OWN, SHARED)
+    for a in out.values():
+        a.setdefault("face", None)
+    return out
+
+
+def read_books(folder=AUTHORS):
+    """The books written about, by id (<author>/
+    <book>): {id, places, post, status, versions},
+    versions [{lang, name, written, kind, source,
+    text}] in the order of LANGS."""
+    folder = Path(folder)
+    if not folder.is_dir():
+        return {}
+    files = []
+    for d in sorted(folder.iterdir()):
+        if not d.is_dir():
             continue
+        if not ID_RE.fullmatch(d.name):
+            raise AuthorError(f"{d.name}: bad author id")
+        files += [
+            (p, d.name + "/")
+            for p in sorted(d.glob("*.md"))
+        ]
+    return gather(files, BOOK_OWN, BOOK_SHARED)
+
+
+def gather(files, own, shared_keys):
+    """The cards of files [(path, id prefix)], by
+    id, each file read with the fields own (of its
+    language) and shared_keys (of all)."""
+    out = {}
+    for p, prefix in files:
         m = NAME_RE.fullmatch(p.name)
         if not m:
             raise AuthorError(f"{p.name}: not <id>.LANG.md")
         aid, lang = m.groups()
+        aid = prefix + aid
         if lang not in LANGS:
             raise AuthorError(
                 f"{p.name}: language not in {LANGS}"
             )
         text = p.read_text(encoding="utf-8")
-        name, meta, paras = parse(text, p.name)
+        name, meta, paras = parse(
+            text, p.name, own + shared_keys
+        )
         a = out.setdefault(aid, {"id": aid})
         for key, value in shared(meta, p.name).items():
             if a.setdefault(key, value) != value:
@@ -152,14 +206,13 @@ def read(folder=AUTHORS):
             {
                 "lang": lang,
                 "name": name,
-                **{k: meta.get(k, "") for k in OWN},
+                **{k: meta.get(k, "") for k in own},
                 "text": paras,
             }
         )
     for a in out.values():
         a.setdefault("places", [])
         a.setdefault("post", None)
-        a.setdefault("face", None)
         a.setdefault("status", "machine")
         a["versions"].sort(
             key=lambda v: LANGS.index(v["lang"])

@@ -359,6 +359,10 @@ async function staticApi(path) {
     return json("data/author/" + enc(q.get("id"))
       + ".json");
   }
+  if (route === "book-info") {
+    return json("data/book/" + q.get("id")
+      .split("/").map(enc).join("/") + ".json");
+  }
   if (route === "comics") {
     return json("data/comics.json");
   }
@@ -1319,7 +1323,7 @@ async function libraryPage(who) {
     const id = a.folder.split("/").pop();
     const list = h("ul", { class: "shelf" });
     const rows = a.books.map((b) => {
-      const li = h("li", {}, libraryRow(b),
+      const li = bookItem(b, libraryRow(b),
         starBtn(b));
       list.append(li);
       return { el: li, names: [b.name, b.title] };
@@ -1356,7 +1360,7 @@ async function libraryPage(who) {
         + r.progress + "%",
       h("span", { class: "progress", role: "img",
         "aria-label": r.progress + "%" }, fill));
-    readList.append(h("li", {}, row, starBtn(r.b)));
+    readList.append(bookItem(r.b, row, starBtn(r.b)));
   }
   panes.reading.append(reading.length ? readList
     : empty("Դեռ ոչինչ չեք կարդում։ Բացեք գիրքը՝"
@@ -1398,7 +1402,7 @@ async function libraryPage(who) {
     for (const k of stars) {
       const x = books.get(k);
       if (!x) continue;
-      list.append(h("li", {},
+      list.append(bookItem(x.b,
         libraryRow(x.b, x.by), starBtn(x.b)));
     }
     const k = list.children.length;
@@ -2944,12 +2948,15 @@ function zoomable(a) {
 // the words of the card, by language
 const AUTHOR_UI = {
   hy: { about: "Հեղինակի մասին", close: "Փակել",
+    book: "Գրքի մասին",
     source: "Աղբյուր՝ ",
     machine: "Գրել է Claude-ը, դեռ չի ստուգվել" },
   en: { about: "About the author", close: "Close",
+    book: "About the book",
     source: "Source: ",
     machine: "Written by Claude, not yet reviewed" },
   ru: { about: "Об авторе", close: "Закрыть",
+    book: "О книге",
     source: "Источник: ",
     machine: "Написано Claude, ещё не проверено" },
 };
@@ -2962,13 +2969,18 @@ let authorData = null;
 function authorsAbout() {
   if (!authorData) {
     authorData = api("authors")
-      .catch(() => ({ authors: [], names: {} }));
+      .catch(() => ({ authors: [], names: {},
+        books: [] }));
   }
   return authorData;
 }
 function knownAuthors() {
   return authorsAbout().then((d) =>
     new Set(d.authors));
+}
+function knownBooks() {
+  return authorsAbout().then((d) =>
+    new Set(d.books || []));
 }
 
 // the scroll button for an author's id (its folder
@@ -2993,6 +3005,28 @@ function authorInfoBtn(id, name, show) {
   return b;
 }
 
+// a book's row of the Library in its li: its icon
+// opens the card about the book (authors/<author>/
+// <book>.LANG.md), once it is known to have one
+function bookItem(b, row, ...more) {
+  const li = h("li", {}, row, ...more);
+  knownBooks().then((ids) => {
+    if (!ids.has(b.id)) return;
+    const ui = AUTHOR_UI.hy;
+    const k = h("button", { type: "button",
+      class: "book-info", title: ui.book,
+      "aria-label": ui.book + "՝ " + b.name },
+    icon(ICONS.book));
+    k.addEventListener("click", (e) => {
+      e.preventDefault();
+      bookInfo(b.id);
+    });
+    li.classList.add("has-card");
+    li.prepend(k);
+  });
+  return li;
+}
+
 function authorLang(a) {
   let l = "";
   try {
@@ -3011,6 +3045,26 @@ async function authorInfo(id) {
   } catch (e) {
     return;
   }
+  infoCard(a);
+}
+
+// the card about a book: as an author's, the time
+// of writing and what it is in place of the years
+// and the role
+async function bookInfo(id) {
+  let a;
+  try {
+    a = await api("book-info?id="
+      + encodeURIComponent(id));
+  } catch (e) {
+    return;
+  }
+  infoCard({ ...a, versions: a.versions.map((v) =>
+    ({ ...v, years: v.written, role: v.kind })) });
+}
+
+// the dialog of an author's or a book's card
+function infoCard(a) {
   const card = h("div", { class: "ai-card" });
   const box = h("dialog", { class: "author-info" },
     card);
