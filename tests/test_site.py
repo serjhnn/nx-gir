@@ -85,6 +85,17 @@ def test_build(tmp_path, files):
     assert comics["series"][0]["slug"] == (
         "vasak-seven-wolves"
     )
+    # the author cards, from authors/
+    ids = json.loads(
+        (data / "authors.json").read_text("utf-8")
+    )
+    assert "mkhitar-gosh" in ids["authors"]
+    gosh = json.loads(
+        (data / "author" / "mkhitar-gosh.json").read_text(
+            "utf-8"
+        )
+    )
+    assert gosh["post"]["slug"] == "mkhitar-gosh"
     # the Map page: the places, and their stories
     mp = json.loads((data / "map.json").read_text("utf-8"))
     assert mp["image"] == "img/map/base.webp"

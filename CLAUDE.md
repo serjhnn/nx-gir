@@ -198,6 +198,22 @@
   `tests/test_blog.py`; the format is in
   `blog/README.md`); content, exempt from the line
   limit; on the site as `data/blog.json`
+- `authors/`: the card about an author, opened by
+  the scroll button (`ICONS.scroll`) beside the
+  author's name on the Library, a book's page and
+  the search page (`authorInfoBtn()`,
+  `authorInfo()` in `app.js`; `/api/authors`,
+  `/api/author?id=`; on the site
+  `data/authors.json` and `data/author/<id>.json`):
+  one `<id>.LANG.md` per author and language (hy,
+  en, ru), the id the author's folder in
+  `books/grabar/`, read by
+  `scripts/nxgir_authors.py` (tested in
+  `tests/test_authors.py`; the format is in
+  `authors/README.md`); content, exempt from the
+  line limit. Claude writes them from a source,
+  `status: machine` until the user reviews one.
+  The button shows only for an author with a file
 - `features/`: the Features page (`#/features`,
   `/api/features`): what the site can do, one
   `features.LANG.md` per language (drafts in

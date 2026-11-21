@@ -75,6 +75,19 @@ const ICONS = {
     "M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z",
     "M13.5 6.5l4 4",
   ],
+  // a rolled sheet with lines: about an author
+  scroll: [
+    "M7 4h11a2 2 0 0 1 0 4H7",
+    "M7 4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10"
+      + "a2 2 0 0 0 2-2V8",
+    "M9 12h7M9 15h5",
+  ],
+  // a pin: a place on the map
+  pin: [
+    "M12 21s-6-5.5-6-11a6 6 0 0 1 12 0"
+      + "c0 5.5-6 11-6 11z",
+    "M12 12a2 2 0 1 0 0-4a2 2 0 0 0 0 4z",
+  ],
   // a person and a plus: become a contributor
   join: [
     "M9 11a3.5 3.5 0 1 0 0-7a3.5 3.5 0 0 0 0 7z",
@@ -330,6 +343,13 @@ async function staticApi(path) {
   }
   if (route === "features") {
     return json("data/features.json");
+  }
+  if (route === "authors") {
+    return json("data/authors.json");
+  }
+  if (route === "author") {
+    return json("data/author/" + enc(q.get("id"))
+      + ".json");
   }
   if (route === "comics") {
     return json("data/comics.json");
@@ -1098,12 +1118,18 @@ async function bookPage(folder) {
   });
   // back up one level, as the Library's ← Home
   const up = data.up[data.up.length - 1];
+  // the author under the title, when written about
+  const by = h("p", { class: "by", hidden: "" },
+    up.label);
+  by.append(authorInfoBtn(folder.split("/")[1],
+    up.label, by));
   show(
     h("p", { class: "crumbs" },
       h("a", { href: up.to, lang: "hy" },
         "← " + up.label)),
     h("div", { class: "volume", lang: "hy" },
       h("h1", {}, data.book),
+      by,
       data.title !== data.book
         ? h("p", { class: "sub" }, data.title) : null,
       h("p", { class: "sub" }, data.total + " մաս"
@@ -1288,7 +1314,9 @@ async function libraryPage(who) {
       h("h2", {}, page
         ? h("a", { href: "#/b/" + enc(a.folder) },
           a.name)
-        : a.name), list);
+        : a.name, authorInfoBtn(
+          a.folder.split("/").pop(), a.name)),
+      list);
   });
   const panes = {
     all: h("div", {}, groups.length ? groups
@@ -2735,6 +2763,147 @@ function zoomable(a) {
     box.showModal();
   });
   return h("figure", { class: "hero wide" }, open);
+}
+
+// -- about an author: the scroll button beside an
+// author's name opens a card (authors/, read by
+// nxgir_authors.py; /api/authors, /api/author) --
+
+// the words of the card, by language
+const AUTHOR_UI = {
+  hy: { about: "Հեղինակի մասին", close: "Փակել",
+    source: "Աղբյուր՝ ",
+    machine: "Գրել է Claude-ը, դեռ չի ստուգվել" },
+  en: { about: "About the author", close: "Close",
+    source: "Source: ",
+    machine: "Written by Claude, not yet reviewed" },
+  ru: { about: "Об авторе", close: "Закрыть",
+    source: "Источник: ",
+    machine: "Написано Claude, ещё не проверено" },
+};
+const AUTHOR_LANG = "nxgir-author-lang";
+const LANG_LABEL = { hy: "Հայ", en: "Eng", ru: "Рус" };
+
+// the ids of the authors written about, asked once
+let authorIds = null;
+function knownAuthors() {
+  if (!authorIds) {
+    authorIds = api("authors")
+      .then((d) => new Set(d.authors))
+      .catch(() => new Set());
+  }
+  return authorIds;
+}
+
+// the scroll button for an author's id (its folder
+// in grabar/); hidden until the author is known to
+// have a card. show, if given, is shown with it.
+function authorInfoBtn(id, name, show) {
+  const b = h("button", { type: "button",
+    class: "info-btn", hidden: "",
+    title: AUTHOR_UI.hy.about,
+    "aria-label": AUTHOR_UI.hy.about + "՝ " + name },
+  icon(ICONS.scroll));
+  b.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    authorInfo(id);
+  });
+  knownAuthors().then((ids) => {
+    if (!ids.has(id)) return;
+    b.hidden = false;
+    if (show) show.hidden = false;
+  });
+  return b;
+}
+
+function authorLang(a) {
+  let l = "";
+  try {
+    l = localStorage.getItem(AUTHOR_LANG) || "";
+  } catch (e) {}
+  const has = a.versions.map((v) => v.lang);
+  return has.includes(l) ? l : has[0];
+}
+
+// the card about an author (a dialog: ×, Esc, a
+// click outside it or on a link shuts it)
+async function authorInfo(id) {
+  let a;
+  try {
+    a = await api("author?id=" + encodeURIComponent(id));
+  } catch (e) {
+    return;
+  }
+  const card = h("div", { class: "ai-card" });
+  const box = h("dialog", { class: "author-info" },
+    card);
+  const close = () => {
+    box.close();
+    box.remove();
+  };
+  const draw = (lang) => {
+    const v = a.versions.find((x) => x.lang === lang);
+    const ui = AUTHOR_UI[lang] || AUTHOR_UI.en;
+    const shut = h("button", { type: "button",
+      class: "shut", "aria-label": ui.close }, "×");
+    shut.addEventListener("click", close);
+    const langs = a.versions.length > 1 ? h("div",
+      { class: "ai-langs" }, ...a.versions.map((x) => {
+        const b = h("button", { type: "button",
+          lang: x.lang,
+          "aria-pressed": String(x.lang === lang) },
+        LANG_LABEL[x.lang] || x.lang);
+        b.addEventListener("click", () => {
+          try {
+            localStorage.setItem(AUTHOR_LANG, x.lang);
+          } catch (e) {}
+          draw(x.lang);
+        });
+        return b;
+      })) : null;
+    const links = [
+      ...a.places.map((p) => h("a", {
+        href: "#/map/" + enc(p.id) },
+      icon(ICONS.pin), p[lang] || p.hy)),
+    ];
+    if (a.post) {
+      links.push(h("a", { href: "#/blog/"
+        + enc(a.post.slug) }, icon(ICONS.pen),
+      a.post.titles[lang] || a.post.titles.hy
+        || Object.values(a.post.titles)[0]));
+    }
+    const note = [v.source ? ui.source + v.source
+      : null, a.status === "machine" ? ui.machine
+      : null].filter(Boolean).join(" · ");
+    card.setAttribute("lang", lang);
+    card.replaceChildren(shut,
+      h("div", { class: "ai-head" },
+        a.face ? h("img", { src: a.face, alt: "",
+          class: "ai-face" }) : null,
+        h("div", {},
+          h("h2", {}, v.name),
+          v.years ? h("p", { class: "ai-years" },
+            v.years) : null,
+          v.role ? h("p", { class: "ai-role" },
+            v.role) : null)),
+      langs,
+      ...v.text.map((t) => h("p", {}, t)),
+      links.length ? h("div", { class: "ai-links" },
+        ...links) : null,
+      note ? h("p", { class: "ai-src" }, note)
+        : null);
+    for (const l of card.querySelectorAll("a")) {
+      l.addEventListener("click", close);
+    }
+  };
+  draw(authorLang(a));
+  box.addEventListener("click", (e) => {
+    if (e.target === box) close();
+  });
+  box.addEventListener("cancel", () => box.remove());
+  document.body.append(box);
+  box.showModal();
 }
 
 // the languages an announcement has: English, and
@@ -5536,7 +5705,9 @@ async function searchPage(query) {
         else open.add(id);
         draw();
       });
-      return h("li", { class: on ? "on" : null }, row,
+      return h("li", { class: on ? "on" : null },
+        h("div", { class: "s-head" }, row,
+          authorInfoBtn(id, name)),
         on ? authorBooks(a, ctx) : null);
     }));
   };

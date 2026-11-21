@@ -13,6 +13,9 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/timeline           the main steps
   GET  /api/blog               the blog posts
   GET  /api/features           what the site can do
+  GET  /api/authors            the authors written
+                               about (their ids)
+  GET  /api/author?id=         about one author
   GET  /api/comics             the comics series
   GET  /api/map                the places and their stories
   GET  /api/recent?n=          the books read last
@@ -60,6 +63,7 @@ from http.server import (
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
+import nxgir_authors as author_info
 import nxgir_blog as blog_posts
 import nxgir_comics as comic_series
 import nxgir_features as feature_list
@@ -155,6 +159,7 @@ class App:
         comics=comic_series.COMICS,
         places=place_map.PLACES,
         translations=tr.TRANSLATIONS,
+        authors=author_info.AUTHORS,
     ):
         self.files = list(files)
         self.paths = {n: p for n, _, p in self.files}
@@ -176,6 +181,8 @@ class App:
         self.places = places
         # TRANSLATIONS.tsv, or None for no credits
         self.translations = translations
+        # authors/, or None for no author panels
+        self.authors = authors
         # the search index, made on the first search
         self.found = None
         self.finding = threading.Lock()
@@ -384,6 +391,55 @@ def blog(app):
     if not app.blog:
         return {"posts": []}
     return {"posts": blog_posts.read(app.blog)}
+
+
+def authors(app):
+    """The ids of the authors written about
+    (nxgir_authors.py): the pages show the scroll
+    button beside these only."""
+    if not app.authors:
+        return {"authors": []}
+    return {
+        "authors": sorted(author_info.read(app.authors))
+    }
+
+
+def author(app, aid):
+    """About one author: its versions, its places
+    with their names (map/places.tsv) and its blog
+    post with the post's title in each language."""
+    found = (
+        author_info.read(app.authors) if app.authors else {}
+    )
+    if aid not in found:
+        raise ApiError(404, f"no author {aid!r}")
+    a = dict(found[aid])
+    names = {}
+    if app.places and a["places"]:
+        names = {
+            p["id"]: p for p in place_map.read(app.places)
+        }
+    a["places"] = [
+        {k: names[p][k] for k in ("id", "hy", "en", "ru")}
+        for p in a["places"]
+        if p in names
+    ]
+    if a["post"]:
+        posts = (
+            blog_posts.read(app.blog) if app.blog else []
+        )
+        post = next(
+            (p for p in posts if p["slug"] == a["post"]),
+            None,
+        )
+        a["post"] = post and {
+            "slug": post["slug"],
+            "titles": {
+                v["lang"]: v["title"]
+                for v in post["versions"]
+            },
+        }
+    return a
 
 
 def comics(app):
@@ -1135,6 +1191,10 @@ def get(app, route, query):
         return blog(app)
     if route == "/api/features":
         return features(app)
+    if route == "/api/authors":
+        return authors(app)
+    if route == "/api/author":
+        return author(app, arg("id"))
     if route == "/api/comics":
         return comics(app)
     if route == "/api/map":

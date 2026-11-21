@@ -74,6 +74,10 @@ A bar above the text shows how much of the part you have read.
 
 The Library page lists the Grabar books by author, with how many parts each has and how much of it is translated. Tap ☆ beside a book to star it: the Ընտրված (chosen) tab lists them, beside Բոլոր գրքերը (all books); Ընթերցվող (being read) lists the books you have started, each opening where you stopped. On a phone, swipe left or right to move between the tabs.
 
+## About the authors
+
+The scroll beside an author's name opens a short card about them: when and where they lived, what they wrote, their places on the map and a blog post about them. The card is in Armenian, English and Russian. The scroll is in the Library, on a book's page and in the search. Claude wrote the cards, and a card says so until a person has reviewed it.
+
 ## Blog, Timeline and Statistics
 
 The Blog tells what is new, in themes: about the site, about authors and about books. The Timeline shows the main steps of the project, and the Statistics page how big the library and the site are.
