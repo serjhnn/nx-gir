@@ -52,7 +52,8 @@
   Features page, the blog, help texts and the
   word looked up in `docs/` images. Take an
   everyday word: վրդ → վարդապետ, թգր → թագաւոր.
-  The books themselves are quoted as they are.
+  The books themselves are quoted as they are,
+  and the author cards (`authors/`) may use them.
 
 ## Layout
 

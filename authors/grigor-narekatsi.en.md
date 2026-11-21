@@ -1,7 +1,7 @@
 # Grigor Narekatsi
 
 years: c. 950 – 1003/1011
-role: poet, monk, mystic
+role: poet, monk, theologian
 source: Wikipedia
 
 He lived in Vaspurakan, on the southern shore of Lake Van. His mother died when he was small, and he grew up and studied at the monastery of Narek, where he spent his whole life.

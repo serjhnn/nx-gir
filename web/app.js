@@ -2877,7 +2877,8 @@ async function authorInfo(id) {
       : null, a.status === "machine" ? ui.machine
       : null].filter(Boolean).join(" · ");
     card.setAttribute("lang", lang);
-    card.replaceChildren(shut,
+    // replaceChildren() would show a null as "null"
+    card.replaceChildren(...[shut,
       h("div", { class: "ai-head" },
         a.face ? h("img", { src: a.face, alt: "",
           class: "ai-face" }) : null,
@@ -2892,7 +2893,7 @@ async function authorInfo(id) {
       links.length ? h("div", { class: "ai-links" },
         ...links) : null,
       note ? h("p", { class: "ai-src" }, note)
-        : null);
+        : null].filter(Boolean));
     for (const l of card.querySelectorAll("a")) {
       l.addEventListener("click", close);
     }

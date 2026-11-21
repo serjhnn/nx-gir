@@ -34,7 +34,8 @@ code.
   empty line, no other Markdown. What matters for a
   reader of the books: where and when the author
   lived, what they wrote, the books of ours.
-- No sacred words (`CLAUDE.md`, Examples).
+- Sacred words may be used here: these are about
+  the authors, not examples (`CLAUDE.md`).
 - A test (`tests/test_authors.py`) checks that
   every id is an author of `LIBRARY.tsv`, that every
   place, post and face exists, and that every author
