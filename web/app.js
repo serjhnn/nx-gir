@@ -971,7 +971,44 @@ function ago(seen) {
 const SHELF_LANGS = { grabar: "Գրաբար",
   ashkharhabar: "Աշխարհաբար" };
 
-const FORGET_ASK = "Հեռացնե՞լ ընթերցումը ցանկից։";
+// a styled question before a reading is taken off
+// the list: true when answered yes
+function askForget(title) {
+  return new Promise((done) => {
+    const box = h("dialog", { class: "ask" });
+    const end = (yes) => {
+      box.close();
+      box.remove();
+      done(yes);
+    };
+    const no = h("button", { type: "button",
+      class: "icon-btn" }, "Չեղարկել");
+    const yes = h("button", { type: "button",
+      class: "icon-btn danger" },
+    icon(ICONS.bin), "Հեռացնել");
+    no.addEventListener("click", () => end(false));
+    yes.addEventListener("click", () => end(true));
+    box.append(h("div", { class: "ask-card",
+      lang: "hy" },
+    h("h2", {}, "Հեռացնե՞լ ցանկից"),
+    h("p", { class: "ask-book" }, title),
+    h("p", { class: "ask-note" },
+      "Գիրքը չի ջնջվի։ Որտեղ կանգ եք առել՝"
+        + " կմնա, և նորից բացելիս այն կվերադառնա"
+        + " ցանկ։"),
+    h("div", { class: "ask-btns" }, no, yes)));
+    box.addEventListener("click", (e) => {
+      if (e.target === box) end(false);
+    });
+    box.addEventListener("cancel", (e) => {
+      e.preventDefault();
+      end(false);
+    });
+    document.body.append(box);
+    box.showModal();
+    no.focus();
+  });
+}
 
 // take a book off the list of readings: where it
 // was left stays, and reading it again brings it
@@ -1005,7 +1042,7 @@ function readingList(items) {
       title: "Հեռացնել ցանկից" },
     icon(ICONS.bin));
     x.addEventListener("click", async () => {
-      if (!confirm(FORGET_ASK)) return;
+      if (!await askForget(r.title)) return;
       x.disabled = true;
       try {
         await forget(r.name);
@@ -1386,7 +1423,7 @@ async function libraryPage(who) {
       title: "Հեռացնել ցանկից" },
     icon(ICONS.bin));
     x.addEventListener("click", async () => {
-      if (!confirm(FORGET_ASK)) return;
+      if (!await askForget(r.b.name)) return;
       x.disabled = true;
       try {
         for (const n of r.names) await forget(n);

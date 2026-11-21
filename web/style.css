@@ -3773,3 +3773,53 @@ body.home .search-wrap {
 .s-names-more {
   margin: 0.4rem 0 0;
 }
+
+/* the question before a reading is taken off the
+   list (askForget() in app.js) */
+.ask {
+  width: min(24rem, calc(100% - 2rem));
+  padding: 0;
+  border: 1px solid var(--panel-rule);
+  border-radius: 12px;
+  background: var(--panel);
+  color: var(--text);
+  box-shadow: 0 8px 28px var(--panel-shadow);
+}
+.ask::backdrop {
+  background: rgb(0 0 0 / 0.45);
+}
+.ask-card {
+  padding: 1.1rem 1.2rem 1rem;
+}
+.ask-card h2 {
+  margin: 0 0 0.6rem;
+  font: 600 1.2rem/1.2 var(--serif);
+  color: var(--accent-ink);
+}
+.ask-book {
+  margin: 0 0 0.5rem;
+  font: 500 1rem/1.35 var(--serif);
+}
+.ask-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+.ask-btns {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+.ask-btns .icon-btn {
+  gap: 0.4rem;
+}
+.ask-btns .danger {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+.ask-btns .danger:hover {
+  background: var(--accent-ink);
+}
