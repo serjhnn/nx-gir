@@ -371,6 +371,25 @@
   welcome. Add a line with every milestone, in
   English for now. `KINDS` must match `app.js` (a
   test checks it)
+- `scripts/nxgir_search.py`: search across the
+  library (`#/search`; the search box at the top of
+  every page but the reader, kept in view on
+  scrolling: `searchBox()`, `searchPage()` in
+  `app.js`; in the reader the word panel's button,
+  `searchWordButton()`, and a button for selected
+  text, `selSearch`): an
+  index of `grabar/` and `ashkharhabar/` (not the
+  Bible, `LEFT_OUT`) by `loose()` key, which folds
+  the classical spelling into the reformed one
+  (թագավոր finds թագաւոր). `nxgir web` serves it
+  (`/api/search`, `/api/search-parts`,
+  `/api/lines`; built at start, in a thread) and
+  `build-site.py` writes it as `data/search/` and
+  `data/lines/`; the search itself is in `app.js`.
+  `loose()` in `app.js` must match the Python one
+  (a test checks it); tested in
+  `tests/test_search.py`. The plan, what is built
+  and what is next: `notes/search.md`
 - `scripts/build-site.py`: the read-only copy of the
   web reader for GitHub Pages (`site/`, published by
   `.github/workflows/pages.yml`): the answers of the

@@ -323,6 +323,40 @@ def test_build_volumes(tmp_path):
     assert not (data / "volume/grabar.json").exists()
 
 
+def test_build_search(tmp_path):
+    # the search index as files, as /api/search*
+    d = tmp_path / "books/grabar/ann/1-book"
+    d.mkdir(parents=True)
+    one = d / "01.txt"
+    text = "Գիրք · 1/1\n" + "տող\n" * 120
+    text += "թագաւոր\n"
+    one.write_text(text, encoding="utf-8")
+    files = [("grabar/ann/1-book/01.txt", 9, one)]
+    out = tmp_path / "site"
+    bs.build(out, files, None)
+    data = out / "data"
+
+    def read(p):
+        return json.loads((data / p).read_text("utf-8"))
+
+    assert read("search/parts.json")["parts"] == [
+        ["grabar/ann/1-book/01.txt", 0, 1]
+    ]
+    key = "թագավոր"
+    found = read(f"search/{bs.bucket(key)}.json")
+    assert found[key] == {"թագաւոր": [[0, 122]]}
+    assert len(list((data / "search").glob("*.json"))) == (
+        bs.BUCKETS + 1
+    )
+    lines = "lines/grabar/ann/1-book/01.txt"
+    assert read(f"{lines}/0.json")["lines"][0] == (
+        "Գիրք · 1/1"
+    )
+    assert read(f"{lines}/1.json")["lines"][21] == (
+        "թագաւոր"
+    )
+
+
 def test_offline_zip(tmp_path, files):
     import zipfile
 
