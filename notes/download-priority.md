@@ -53,6 +53,19 @@ Next batch: 4 to 8 (1153, 1154, 2051, 1597, 1533,
 2202 to 2204): about 100 sections, 4 to 5 minutes at
 3 seconds a request. Then 9 and 10.
 
+Added 2026-11-21: Grigor Aknertsi, Պատմութիւն
+թաթարաց (1534, 17 sections) and Sargis Pitsak,
+Ժամանակագրութիւն (317). Not taken: 202 (Hetum II,
+mixed with a modern foreword), 336 (Orbelian, modern
+text). Not on Digilib as typed text: Asoghik,
+Mkhitar Ayrivanetsi, Hovhannes Erznkatsi, Vahram
+Rabuni. Those with 0 sections (scans: Philon
+Tirakatsi 1152, Vachagan 1156, Smbat Bagratuni 1157,
+Sahak Ughkatsi 1158, Petros Syunetsi 1161-1163,
+Nerses Bagrevandatsi 1166-1168, Hovhannes Gabeghenatsi
+1170-1171, Hovhan Mayragometsi 1172-1174, Mathusagha
+1189) cannot be fetched.
+
 After these: the 1500s to 1800s chronicles and about
 300 one-section songs (Տաղեր), minor.
 

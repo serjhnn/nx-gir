@@ -237,11 +237,12 @@ translations.
   grammar, poems. Not yet.
 - **Grigor Aknertsi** (c. 1250-1335): *Պատմութիւն
   թաթարաց* (History of the Nation of Archers).
-  **[digilib]**
+  **[lib]** `grigor-aknertsi` (2026-11-21)
 - **Hetum II** (king of Cilicia, 1289-1307):
   *Տարեգրութիւն*. **[digilib]**
-- **Frik** (late 13th-14th c.): Middle Armenian poet;
-  not in Digilib's classical list.
+- **Frik** (c. 1230-1310, or 1234-1315; the dates are
+  not known): Middle Armenian poet, *Դիւան* (Digilib
+  2150, no typed text).
 - **Kostandin Erznkatsi** (c. 1250-1310): poems.
 - **Vahram Rabuni** (13th c.): *Rhymed Chronicle*.
   Not yet.
@@ -253,8 +254,9 @@ translations.
 
 - **Hakob Hrimetsi** (Yakob Ghrimetsi, date ?):
   calendar works. **[lib]** `yakob-hrimetsi`
-- **Sargis Pitsak** (14th c.?): *Ժամանակագրութիւն*.
-  **[digilib]**
+- **Sargis Pitsak** (14th c.?): *Ժամանակագրութիւն*
+  (a list of years from 1187, Middle Armenian).
+  **[lib]** `sargis-pitsak` (2026-11-21)
 - **Hovhan Vorotnetsi** (1315-1386): sermons,
   commentary on the Gospels.
 - **Esayi Nchetsi** (c. 1260-1338): commentaries.
@@ -262,6 +264,37 @@ translations.
 - **Grigor Tatevatsi** (1346-1409): *Գիրք հարցմանց*,
   *Ձմեռան հատոր*, *Ամառան հատոր*. **[lib]**
   `grigor-tatevatsi` (died 1409: borderline).
+
+## The poets of the *Տաղեր* (dates)
+
+Digilib has 143 one-section files of songs
+(*Տաղեր*, one poet each). Dates found by web search
+(2026-11-21); the rest could not be dated and are
+left out, not guessed:
+
+- **Nerses Shnorhali** (1102-1173), above.
+- **Hovhannes Erznkatsi (Pluz)** (c. 1230-1293); a
+  museum page puts him in the 14th c.
+- **Kostandin Erznkatsi** (13th-14th c.): a Tabriz
+  manuscript of 1336 holds 22 of his poems; tied to
+  the brotherhood founded by Hovhannes Erznkatsi in
+  1280.
+- **Frik**: see the 13th-14th c. above.
+- **Arakel Syunetsi** (c. 1350-1425; one source says
+  14th-15th c.): *Ադամագիրք*; borderline.
+- **Hovhannes Tlkurantsi** (c. 1450-1535): 15th-16th
+  c., out of range (Digilib 225).
+- **Grigor Aghtamartsi**: a museum page says 16th c.
+  (no precise dates found); out of range.
+- **Amiras Erznkatsi** (Digilib 55): no date or
+  biography found; do not place him yet.
+
+Every other name (Azaria Jughayetsi, Minas
+Tokhatetsi, Grigor Oshakantsi, Karapet Baghishetsi,
+Aghel Baghishetsi, Sayat-Nova (18th c.) and the
+rest) was not found dated before 1400. Their usual
+place is the 15th-17th c.; scholarly articles say
+the biographies of many of them are scarce.
 
 ## Not in range, in the library
 
