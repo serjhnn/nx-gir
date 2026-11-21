@@ -49,7 +49,8 @@ in it. Matching is on whole words only.
 
 ## The pages
 
-Screenshots: `search-1` to `search-9` (mockups
+Screenshots: `search-1` to `search-9`, and
+`search-2b` (mockups
 drawn inside the real web reader, with real
 results).
 
@@ -61,16 +62,22 @@ results).
   reader gets "Որոնել ամբողջ գրադարանում ·
   1074" under the ‹ › of the part (6).
 - **Results** (`#/search?q=...`, 2): the count
-  (`892 տող · 58 գիրք`), the filters Բոլորը /
-  Գրաբար / Աշխարհաբար with their counts, Գրաբար
-  chosen at first (`&in=` keeps another choice),
-  the "Բոլոր ձևերը" switch and the spellings
-  found. Then the books in Library order, under
-  their authors as on the Library page: each book
+  (`892 տող · 40 հեղինակ · 58 գիրք`), the filters
+  Բոլորը / Գրաբար / Աշխարհաբար with their counts,
+  Գրաբար chosen at first (`&in=` keeps another
+  choice), the "Բոլոր ձևերը" switch and the
+  spellings found. Then the authors, in Library
+  order, each folded: a row with › , the name and
+  `147 տող · 3 գիրք` (the books only when more
+  than one). "Բացել բոլորը" unfolds them all.
+- **An author unfolded** (2b): its books, each
   with its count and its first two lines, the word
-  marked, "մաս 1 · տող 463", and "Բոլոր 15
+  marked, "մաս 1 · տող 1656", and "Բոլոր 43
   տողերը →" for the rest. A tag says Գրաբար or
-  Աշխարհաբար when both are shown.
+  Աշխարհաբար when both are shown. The unfolded
+  authors stay in the link (`&open=`), so the
+  back button from the reader finds them open.
+  With one author only, it is unfolded at once.
 - **All forms** (3): the forms found, each a chip
   with its count; tapping one turns it off.
 - **A phrase** (4): a hint under the box says what
@@ -143,7 +150,8 @@ Run `check-limits.py --site --record` after it.
 
 1. A word in either spelling, Grabar and
    translations: the module, `/api/search`, the
-   site files, the results page, the search bar
+   site files, the results page (by author,
+   folded), the search bar
    on every page, the strip in the reader. Tests; a
    Features entry in hy, en, ru; a Timeline line; a
    limits record.
