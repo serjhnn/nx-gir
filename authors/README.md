@@ -40,3 +40,28 @@ code.
   every id is an author of `LIBRARY.tsv`, that every
   place, post and face exists, and that every author
   has all three languages.
+
+## About the books
+
+The card the book icon opens on the Library (a
+book with a card has its icon in the accent color).
+
+- One file per book and language, in the author's
+  folder here: `<author>/<book>.LANG.md`, the path
+  being the book's in `books/grabar/` (a folder of
+  parts, or a single file without `.txt`):
+  `mkhitar-gosh/1-datastanagirk-a.hy.md`.
+- First line: `# Name`, the book's name as the
+  language writes it (in Armenian, as in
+  `books/LIBRARY.tsv`).
+- Then the same `key: value` lines as an author's,
+  but `written` (when it was written) in place of
+  `years`, `kind` (what the book is, a few words) in
+  place of `role`, and no `face`.
+- Then two short paragraphs: what the book is,
+  when, where and why it was written, what is in
+  it; and what this copy is (an edition, a part
+  of the work), and what it meant later.
+- A test (`tests/test_authors.py`) checks that
+  every book is in `books/grabar/` under an author
+  of `LIBRARY.tsv`, with all three languages.

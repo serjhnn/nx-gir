@@ -214,7 +214,16 @@
   `authors/README.md`); content, exempt from the
   line limit. Claude writes them from a source,
   `status: machine` until the user reviews one.
-  The button shows only for an author with a file
+  The button shows only for an author with a file.
+  A book has a card too, opened by its icon on the
+  Library (`bookItem()`, `bookInfo()` in `app.js`;
+  `/api/book-info?id=<author>/<book>`, ids in
+  `/api/authors`; on the site
+  `data/book/<author>/<book>.json`):
+  `authors/<author>/<book>.LANG.md`, the book's
+  path in `books/grabar/`, read by `read_books()`
+  (`written` and `kind` in place of `years` and
+  `role`)
 - `features/`: the Features page (`#/features`,
   `/api/features`): what the site can do, one
   `features.LANG.md` per language (drafts in

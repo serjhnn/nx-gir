@@ -497,6 +497,12 @@ h1 {
 .menu-more[aria-expanded="true"] {
   background: var(--hover);
 }
+/* only on the top page: the other pages reach it by
+   the logo, and the main pages by the footer */
+body:not(.home) .menu-more,
+body:not(.home) .menu-panel {
+  display: none;
+}
 .menu-panel {
   position: absolute;
   top: 100%;
@@ -1003,6 +1009,39 @@ body.home .bar {
 .library .star:focus-visible {
   background: var(--hover);
 }
+/* a book with a card (bookItem() in app.js): its
+   icon is a button over the row's own, which
+   opens the card about the book */
+.library .shelf li.has-card {
+  position: relative;
+}
+.library .has-card .row .ico {
+  visibility: hidden;
+}
+.book-info {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+.book-info svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.book-info:hover,
+.book-info:focus-visible {
+  background: var(--hover);
+}
 /* the tabs: all the books, the starred ones, the
    ones being read; lines above and below only, the
    chosen tab's in the accent color (they slide) */
@@ -1020,10 +1059,6 @@ body.home .bar {
   top: var(--stick, 0px);
   z-index: 2;
   background: var(--bg);
-}
-/* an author the Library opens at: below the tabs */
-.library .author {
-  scroll-margin-top: 4.5rem;
 }
 .lib-tabs[data-tab="starred"] {
   --i: 1;
@@ -3189,6 +3224,126 @@ body.home .search-wrap {
 }
 .sbox-x[hidden] {
   display: none;
+}
+
+/* a search box with the site's mark (home) on its
+   left: the Library and the search page
+   (withHome()) */
+.home-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.home-wrap > form {
+  flex: 1;
+  min-width: 0;
+}
+/* hidden while the top bar's own mark is in view;
+   it slides in once that is scrolled away */
+.box-home {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 0;
+  height: 2.5rem;
+  margin-right: -10px;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+  border: 0 solid var(--rule);
+  border-radius: 50%;
+  background: var(--surface);
+  transition: width 0.2s, margin 0.2s,
+    opacity 0.2s, visibility 0.2s;
+}
+.away .box-home {
+  width: 2.5rem;
+  margin-right: 0;
+  visibility: visible;
+  opacity: 1;
+  border-width: 1px;
+}
+.away .box-home:hover,
+.away .box-home:focus-visible {
+  border-color: var(--accent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .box-home {
+    transition: none;
+  }
+}
+.box-home svg {
+  width: 20px;
+  height: 22px;
+}
+
+/* the Library's find box: the count of found
+   authors and books and the steps between them,
+   in one chip tinted like the found rows */
+.lf-chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 1px 2px 1px 10px;
+  color: var(--accent-ink);
+  background: color-mix(in srgb, var(--accent)
+    14%, transparent);
+  border-radius: 999px;
+}
+/* one found: the count alone, no steps */
+.lf-chip.lf-one {
+  padding: 3px 10px;
+}
+/* nothing found: the word alone, grey */
+.lf-chip.lf-none {
+  padding: 2px 10px;
+  color: var(--muted);
+  background: none;
+}
+.lf-count {
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.lf-none .lf-count {
+  font-weight: normal;
+}
+.lf-step {
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  padding: 0;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.lf-step:hover,
+.lf-step:focus-visible {
+  background: color-mix(in srgb, var(--accent)
+    18%, transparent);
+}
+.lf-step svg {
+  width: 18px;
+  height: 18px;
+}
+.lf-chip[hidden],
+.lf-step[hidden] {
+  display: none;
+}
+/* the found ones in the list; the one shown */
+.library .lf-hit {
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--accent)
+    10%, transparent);
+}
+.library .lf-now {
+  background: color-mix(in srgb, var(--accent)
+    24%, transparent);
 }
 
 /* the results */

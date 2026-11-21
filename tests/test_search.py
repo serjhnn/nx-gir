@@ -219,6 +219,7 @@ def test_name_hits_in_app_js():
     src = (
         js_function(js, "wordKey")
         + js_function(js, "loose")
+        + js_function(js, "nameFits")
         + js_function(js, "nameHits")
         + "const [qs, parts, names] = JSON.parse("
         "require('fs').readFileSync(0, 'utf8'));\n"

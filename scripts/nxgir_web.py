@@ -15,7 +15,9 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/features           what the site can do
   GET  /api/authors            the authors written
                                about (their ids)
+                               and the books
   GET  /api/author?id=         about one author
+  GET  /api/book-info?id=      about one book
   GET  /api/comics             the comics series
   GET  /api/map                the places and their stories
   GET  /api/recent?n=          the books read last
@@ -396,10 +398,12 @@ def blog(app):
 def authors(app):
     """The ids of the authors written about
     (nxgir_authors.py): the pages show the scroll
-    button beside these only; and their names in
-    each language, which the search finds too."""
+    button beside these only; their names in each
+    language, which the search finds too; and the
+    ids of the books written about (<author>/
+    <book>), whose icon on the Library opens it."""
     if not app.authors:
-        return {"authors": [], "names": {}}
+        return {"authors": [], "names": {}, "books": []}
     found = author_info.read(app.authors)
     return {
         "authors": sorted(found),
@@ -409,6 +413,9 @@ def authors(app):
             }
             for aid, a in sorted(found.items())
         },
+        "books": sorted(
+            author_info.read_books(app.authors)
+        ),
     }
 
 
@@ -421,7 +428,26 @@ def author(app, aid):
     )
     if aid not in found:
         raise ApiError(404, f"no author {aid!r}")
-    a = dict(found[aid])
+    return linked(app, found[aid])
+
+
+def book_info(app, bid):
+    """About one book (<author>/<book>), as about an
+    author."""
+    found = (
+        author_info.read_books(app.authors)
+        if app.authors
+        else {}
+    )
+    if bid not in found:
+        raise ApiError(404, f"no book {bid!r}")
+    return linked(app, found[bid])
+
+
+def linked(app, card):
+    """A card with its places named (map/places.tsv)
+    and its blog post titled in each language."""
+    a = dict(card)
     names = {}
     if app.places and a["places"]:
         names = {
@@ -588,6 +614,7 @@ def library(app):
         b = a["books"].setdefault(
             key,
             {
+                "id": key.removesuffix(".txt"),
                 "name": names.get(key) or title or key,
                 "title": title or key,
                 "first": name,
@@ -1205,6 +1232,8 @@ def get(app, route, query):
         return authors(app)
     if route == "/api/author":
         return author(app, arg("id"))
+    if route == "/api/book-info":
+        return book_info(app, arg("id"))
     if route == "/api/comics":
         return comics(app)
     if route == "/api/map":
