@@ -10,6 +10,13 @@ Search inside one part already exists: tap a word
 and the ‹ › arrows go through its places in the
 part ("Every place a word appears").
 
+Decided (2026-11-21):
+- The Bible is not searched, for now.
+- A search bar on every page, in the top bar.
+- Results open on Գրաբար; the filters show the
+  translations too (Աշխարհաբար) or both
+  (Բոլորը) when the reader wants.
+
 ## What it finds
 
 1. **A word, in either spelling.** A reader types
@@ -42,17 +49,21 @@ in it. Matching is on whole words only.
 
 ## The pages
 
-Screenshots: `search-1` to `search-7` (mockups
+Screenshots: `search-1` to `search-9` (mockups
 drawn inside the real web reader, with real
 results).
 
-- **Where it starts**: a search box on the home
-  page, under the row of menu buttons (1); the word panel in
-  the reader gets "Որոնել ամբողջ գրադարանում ·
+- **Where it starts**: a search bar in the top
+  bar of every page, under the logo and the
+  buttons: the home page (1), the Library (8), a
+  book in the reader (9). On a results page it
+  holds the search (2). The word panel in the
+  reader gets "Որոնել ամբողջ գրադարանում ·
   1074" under the ‹ › of the part (6).
-- **Results** (`#/search?q=...`, 2): the box, the
-  count (`1074 տող · 58 գիրք`), the filters
-  Բոլորը / Գրաբար / Աշխարհաբար with their counts,
+- **Results** (`#/search?q=...`, 2): the count
+  (`892 տող · 58 գիրք`), the filters Բոլորը /
+  Գրաբար / Աշխարհաբար with their counts, Գրաբար
+  chosen at first (`&in=` keeps another choice),
   the "Բոլոր ձևերը" switch and the spellings
   found. Then the books in Library order, under
   their authors as on the Library page: each book
@@ -71,7 +82,7 @@ results).
   ‹ › to the next result (into the next part or
   book), ← back to the results where they were.
 - Dark and black themes take the colors as they
-  are (7). The labels are in Armenian, as on the
+  are (7: the translations chosen). The labels are in Armenian, as on the
   home page.
 
 ## How it is built
@@ -115,7 +126,7 @@ both).
   a word"; in a phrase they are checked in the line
   files only.
 
-### Size (measured, without the Bible)
+### Size (measured; the Bible is not searched)
 
 | What | Now |
 |---|---|
@@ -127,15 +138,13 @@ both).
 The site would grow from about 193 MB to about
 275 MB (27% of 1 GB) and the build by about 15 s.
 Run `check-limits.py --site --record` after it.
-With the Bible in, add its share; whether it is
-searched is a question below.
 
 ## Steps
 
 1. A word in either spelling, Grabar and
    translations: the module, `/api/search`, the
-   site files, the results page, the box on the
-   home page, the strip in the reader. Tests; a
+   site files, the results page, the search bar
+   on every page, the strip in the reader. Tests; a
    Features entry in hy, en, ru; a Timeline line; a
    limits record.
 2. Phrases, all forms, the button in the word
@@ -144,13 +153,12 @@ searched is a question below.
 
 ## Open questions
 
-- Is the Bible searched too? (It is quoted as it
-  is; it adds results to every common word.)
-- The box on the home page only, or a 🔍 in the top
-  bar of every page?
 - Should a Grabar line and its translation show as
   one result (the pair), or as two?
 - The same text in two editions (Smbat
   Sparapet's Տարեգիրք and Տարեգիրք (Digilib))
   gives every line twice. Show both, or fold the
   second under the first ("also in ...")?
+- On the reader's pinned bar, when scrolled: the
+  search bar scrolls away with the top bar, or
+  stays as a 🔍 that opens it?
