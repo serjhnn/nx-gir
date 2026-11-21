@@ -24,7 +24,7 @@ The word you tapped is marked everywhere in the part. The arrows ‹ › take yo
 
 ## Search the library
 
-Type a word in the search box at the top of any page; in the reader, tap a word and press Որոնել ամբողջ գրադարանում, or select a few words and press the button that appears. It is found in every book, in either spelling: թագավոր also finds թագաւոր. The results open on the Grabar books, by author in the Library's order: tap an author to see its lines, and Աշխարհաբար or Բոլորը to see the translations too; under Բոլորը each Grabar line comes with its translation under it, as one result. A line opens in the reader with the word marked, and the arrows ‹ › take you to the next result. A very common word (եւ, ի) needs a second word with it.
+Type a word in the search box at the top of any page; in the reader, tap a word and press Որոնել ամբողջ գրադարանում, or select a few words and press the button that appears. It is found in every book, in either spelling: թագավոր also finds թագաւոր. The results open on the Grabar books, by author in the Library's order: tap an author to see its lines, and Աշխարհաբար or Բոլորը to see the translations too; under Բոլորը each Grabar line comes with its translation under it, as one result. A line opens in the reader with the word marked, and the arrows ‹ › take you to the next result. A very common word (եւ, ի) needs a second word with it. The search also finds authors and books by name: Գոշ finds Mkhitar Gosh and Դատաստանագիրք the books of that name, and an author can be found by the English or Russian name too (Gosh, Гош). They are shown above the lines.
 
 ## The sentence of a word
 
@@ -73,6 +73,10 @@ A bar above the text shows how much of the part you have read.
 ## The Library
 
 The Library page lists the Grabar books by author, with how many parts each has and how much of it is translated. Tap ☆ beside a book to star it: the Ընտրված (chosen) tab lists them, beside Բոլոր գրքերը (all books); Ընթերցվող (being read) lists the books you have started, each opening where you stopped. On a phone, swipe left or right to move between the tabs.
+
+## About the authors
+
+The scroll beside an author's name opens a short card about them: when and where they lived, what they wrote, their places on the map and a blog post about them. The card is in Armenian, English and Russian. The scroll is in the Library, on a book's page and in the search. Claude wrote the cards, and a card says so until a person has reviewed it.
 
 ## Blog, Timeline and Statistics
 

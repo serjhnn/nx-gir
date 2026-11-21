@@ -764,6 +764,8 @@ def test_library(tmp_path):
     add(d + "02.txt", "Գիրք քարոզութեան · 2/2")
     add("ashkharhabar/ann/1-book/02.txt", "Գիրք · 2/2")
     add("grabar/ann/2-poem.txt", "Տաղ")
+    # an author of one-part books, as Digilib's
+    add("grabar/mam/1-ch/01.txt", "Ճառք · 1/1")
     # not in an author's folder, or not Grabar
     add("grabar/john.txt", "Ի սկզբանէ")
     add("ashkharhabar/ann/x.txt", "Թարգմանություն")
@@ -775,10 +777,12 @@ def test_library(tmp_path):
     )
     app = App(files, tmp_path / "s.json", library=names)
     got = web.get(app, "/api/library", {})["authors"]
-    # authors in the order of LIBRARY.tsv
+    # authors in the order of LIBRARY.tsv, then the
+    # ones not listed
     assert [a["name"] for a in got] == [
         "Աննա",
         "Աստվածաշունչ",
+        "mam",
     ]
     assert got[0]["books"] == [
         {
@@ -798,10 +802,21 @@ def test_library(tmp_path):
         },
     ]
     assert got[1]["books"][0]["name"] == "Աւետարան"
+    # only an author of grouped single files (the
+    # Bible) has a page of its own
+    assert {a["folder"]: a["page"] for a in got} == {
+        "grabar/ann": False,
+        "grabar/bible": True,
+        "grabar/mam": False,
+    }
     # an author not listed: the folder's name, last
     app = App(files, tmp_path / "s.json", library=None)
     got = web.library(app)["authors"]
-    assert [a["name"] for a in got] == ["ann", "bible"]
+    assert [a["name"] for a in got] == [
+        "ann",
+        "bible",
+        "mam",
+    ]
     names.write_text("ann Աննա\n", encoding="utf-8")
     app = App(files, tmp_path / "s.json", library=names)
     with pytest.raises(ValueError):

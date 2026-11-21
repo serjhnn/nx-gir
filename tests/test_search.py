@@ -177,6 +177,75 @@ def test_loose_matches_app_js():
     assert bad == []
 
 
+@pytest.mark.skipif(
+    not shutil.which("node"), reason="needs Node.js"
+)
+def test_name_hits_in_app_js():
+    """The search finds authors and books by name:
+    each word starts a word of the name, in either
+    spelling, and an author by its English or
+    Russian name too."""
+    js = (ROOT / "web/app.js").read_text("utf-8")
+    parts = {
+        "authors": [
+            ["mkhitar-gosh", "Մխիթար Գոշ"],
+            ["yeghishe", "Եղիշէ"],
+        ],
+        "books": [
+            [
+                "mkhitar-gosh/1-a",
+                "Դատաստանագիրք, Ա խմբ.",
+                0,
+            ],
+            ["yeghishe/1-v", "Վասն Վարդանայ", 1],
+        ],
+    }
+    names = {
+        "mkhitar-gosh": {
+            "en": "Mkhitar Gosh",
+            "ru": "Мхитар Гош",
+        },
+        "yeghishe": {"en": "Yeghishe", "ru": "Егише"},
+    }
+    queries = [
+        "Գոշ",
+        "եղիշե",
+        "gosh",
+        "Гош",
+        "դատաստանագիրք ա",
+        "վարդանա",
+        "իշխան",
+    ]
+    src = (
+        js_function(js, "wordKey")
+        + js_function(js, "loose")
+        + js_function(js, "nameHits")
+        + "const [qs, parts, names] = JSON.parse("
+        "require('fs').readFileSync(0, 'utf8'));\n"
+        "console.log(JSON.stringify(qs.map((q) => {"
+        " const r = nameHits(q, parts, names);"
+        " return [r.authors.map((a) => [a.id,"
+        " a.also || null]), r.books.map((b) => b.key)];"
+        " })))"
+    )
+    got = subprocess.run(
+        ["node", "-e", src],
+        input=json.dumps([queries, parts, names]),
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
+    assert json.loads(got) == [
+        [[["mkhitar-gosh", None]], []],
+        [[["yeghishe", None]], []],
+        [[["mkhitar-gosh", "Mkhitar Gosh"]], []],
+        [[["mkhitar-gosh", "Мхитар Гош"]], []],
+        [[], ["mkhitar-gosh/1-a"]],
+        [[], ["yeghishe/1-v"]],
+        [[], []],
+    ]
+
+
 # -- the API of nxgir web --
 
 
