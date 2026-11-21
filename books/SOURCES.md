@@ -727,3 +727,40 @@ as Digilib has them (page numbers and `[ ]` stay):
 
 One section of 2051 and two of 1597 are empty on
 Digilib (their titles and prefaces).
+
+## grabar/grigor-magistros/, vardan-areveltsi/
+
+Four works from Digilib (digilib.am), fetched with
+`scripts/fetch-digilib.py --by-id` on 2026-11-21, kept
+as Digilib has them (page numbers and `[ ]` stay):
+
+| Folder | Work | Digilib | Sections |
+|--------|------|---------|----------|
+| `grigor-magistros/1-tghter` | Թղթեր | [177](https://www.digilib.am/book/177/) | 88 |
+| `vardan-areveltsi/1-patmutiun` | Պատմութիւն | [356](https://www.digilib.am/book/356/) | 101 |
+| `vardan-areveltsi/2-ashkharhatsuyts` | Աշխարհացոյց | [354](https://www.digilib.am/book/354/) | 8 |
+| `vardan-areveltsi/3-meknutiun-kerakani` | Մեկնութիւն քերականի | [355](https://www.digilib.am/book/355/) | 21 |
+
+The Patmutiun starts with the editor's preface of the
+printed edition (`[յԱռաջաբան]`, about 20,000 letters,
+in Grabar, with notes on the author's life), kept as
+Digilib has it, like the edition notes in other books.
+Digilib answered with 502 and 504 errors for a while;
+the fetch tried again and every section arrived.
+
+## grabar/mkhitar-anetsi/, mkhitar-heratsi/
+
+Two works from Digilib (digilib.am), fetched with
+`scripts/fetch-digilib.py --by-id` on 2026-11-21, kept
+as Digilib has them (page marks like `/232ա/` and
+`[ ]` stay):
+
+| Folder | Work | Digilib | Sections |
+|--------|------|---------|----------|
+| `mkhitar-anetsi/1-ashkharhavep` | Մատեան աշխարհավէպ հանդիսարանաց | [276](https://www.digilib.am/book/276/) | 22 |
+| `mkhitar-heratsi/1-jermants-mkhitarutyun` | Ջերմանց մխիթարութիւն | [280](https://www.digilib.am/book/280/) | 49 |
+
+Digilib's list marked both "unclear"; the samples are
+Grabar throughout. The first section of 280 (`- ԳԼՈՒԽ`,
+a title) is empty; its last section, ՆՈՒՍԽԱՅՔ, is a
+list of remedies.
