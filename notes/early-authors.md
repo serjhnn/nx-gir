@@ -4,11 +4,15 @@ Authors known by name (and the main anonymous works)
 from the 5th century to 1400, with their books.
 
 **Status: NOT checked against Matenagirk Hayots.**
-`matenagirq.am` and `matenadaran.am` are blocked in
-the cloud container (proxy 403), and a web search
-found no volume-by-volume list. The list is from
-general knowledge, cleaned up once; the book titles
-of authors we hold are from `books/LIBRARY.tsv`.
+`matenagirq.am` gives a proxy 502 (even when allowed)
+and `matenadaran.am` a 403, and a web search found no
+volume-by-volume list. Instead the list was compared
+with the Digilib catalogue (`notes/digilib.tsv`,
+section "Հայ դասական մատենագրութիւն", 445 author
+names): authors and titles marked **[digilib]** are
+there. Dates are still from general knowledge; the
+book titles of authors we hold are from
+`books/LIBRARY.tsv`.
 Dates are the usual ones, many approximate; "?" marks
 a doubtful date or attribution. **[lib]** means the
 author is in `books/grabar/` (folder name given).
@@ -49,6 +53,9 @@ translations.
   `hovhan-mandakuni`
 - **Giwt Arahezatsi** (catholicos 461-478): *Թուղթ
   առ Վաչէ*. **[lib]** `giwt-arahezatsi`
+- **Vachagan III** (king of Caucasian Albania,
+  487-510): *Սահմանադրութիւն կանոնական* (the canons of
+  the Aghuen council, 488). **[digilib]**
 - **Mambre Vertsanogh** (5th-6th c.): sermons
   (*Ճառք*). **[lib]** `mambre-vertsanogh`
 - **Gregory the Illuminator** (c. 257-331): the
@@ -73,6 +80,16 @@ translations.
 - **Hellenizing school** (6th-8th c.): literal Armenian
   versions of Greek texts (Dionysius Thrax's
   *Grammar*, Philo, Aristotle, Plato).
+- **Nerses II Bagrevandatsi** (catholicos c. 548-557):
+  letters (*Թղթեր*), the covenant of the Armenian
+  church (*Ուխտ միաբանութեան*), canons. **[digilib]**
+- **Hovhannes Gabeghenatsi** (6th-7th c.?): letters
+  and *Ի յայտնութիւն Քրիստոսի*. **[digilib]**
+- **Mathusagha**, bishop of Syunik (date ?): a letter.
+  **[digilib]**
+- **Anonymous works of the 6th c.:** the martyrdoms
+  of Shushanik and of Thaddeus, the *Life of
+  Vachagan*. **[digilib]**
 - The *Book of Letters* (*Գիրք թղթոց*, letters of
   catholicoi, from the Council of Dvin 506 on;
   compiled in the 7th c.), anonymous.
@@ -90,6 +107,10 @@ translations.
   calendar (*Տոմար*), cosmography, *Աշխարհացոյց*
   (attributed), weights and measures, an
   autobiography. **[lib]** `anania-shirakatsi`
+- **Hovhan Mayragometsi** (7th c.): *Վերլուծութիւն
+  կաթողիկէ եկեղեցւոյ* and letters. **[digilib]**
+- **Philon Tirakatsi** (7th c.?): *Ժամանակագրութիւն*.
+  **[digilib]**
 - **Sebeos** (7th c.): *Պատմութիւն* (to 661). **[lib]**
   `sebeos`
 - **Anonymous chronicle of 684** (Pseudo-Sebeos).
@@ -117,7 +138,9 @@ translations.
 - **Ghevond** (late 8th c.): *Պատմութիւն Հայոց* (the
   Arab wars, 632-788). **[lib]** `ghevond`
 - **Sahak Dzoraporetsi** (catholicos 677-703): canons
-  and letters.
+  and *Ճառ յարմաւենեացն օր*. **[digilib]**
+- **Sahak Ughkatsi** (date ?): *Կանոնք ժողովոյն
+  Կարնոյ*. **[digilib]**
 
 ## 9th century
 
@@ -125,6 +148,8 @@ translations.
   Արծրունեաց* (to 904). **[lib]** `tovma-artsruni`
 - **Samuel Kamrjadzoretsi** (9th-10th c.?): works on
   the faith.
+- **Smbat Bagratuni** (date ?): letters (*Թղթեր*).
+  **[digilib]**
 
 ## 10th century
 
@@ -154,6 +179,8 @@ translations.
 - **Grigor Magistros Pahlavuni** (c. 990-1058):
   *Թղթեր*, a verse retelling of the Bible, versions
   of Plato and Euclid. **[lib]** `grigor-magistros`
+- **Petros Syunetsi** (11th c.?): panegyrics and
+  sermons. **[digilib]**
 - **Hovhan Sarkavag** (c. 1045-1129): sermons and a
   commentary on the hours.
 - **Grigoris Arsharuni** (11th-12th c.): *Մեկնութիւն
@@ -208,6 +235,13 @@ translations.
   *Ժամանակագրութիւն*. Not yet.
 - **Hovhannes Erznkatsi** (c. 1230-1293): sermons,
   grammar, poems. Not yet.
+- **Grigor Aknertsi** (c. 1250-1335): *Պատմութիւն
+  թաթարաց* (History of the Nation of Archers).
+  **[digilib]**
+- **Hetum II** (king of Cilicia, 1289-1307):
+  *Տարեգրութիւն*. **[digilib]**
+- **Frik** (late 13th-14th c.): Middle Armenian poet;
+  not in Digilib's classical list.
 - **Kostandin Erznkatsi** (c. 1250-1310): poems.
 - **Vahram Rabuni** (13th c.): *Rhymed Chronicle*.
   Not yet.
@@ -219,6 +253,8 @@ translations.
 
 - **Hakob Hrimetsi** (Yakob Ghrimetsi, date ?):
   calendar works. **[lib]** `yakob-hrimetsi`
+- **Sargis Pitsak** (14th c.?): *Ժամանակագրութիւն*.
+  **[digilib]**
 - **Hovhan Vorotnetsi** (1315-1386): sermons,
   commentary on the Gospels.
 - **Esayi Nchetsi** (c. 1260-1338): commentaries.
@@ -243,6 +279,13 @@ Zakaria Kanakertsi, Nerses Paliants (17th).
   manuscripts from the 5th century on.
 - Lives and martyrdoms of saints (Hripsime, Vardan).
 - Armenian versions of the *Alexander Romance*.
+- Anonymous chronicles (*Անանուն ժամանակագիր*,
+  Digilib lists a dozen, Middle Armenian, mostly
+  14th-17th c.) and anonymous *Տաղեր* (songs).
+- The many Middle Armenian poets of the *Տաղեր*
+  in Digilib (Hovhannes, Zakaria, Kirakos, Minas
+  and others) are mostly 15th-17th c.; each needs a
+  date before it is placed here.
 
 ## To do
 
