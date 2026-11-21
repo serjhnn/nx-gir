@@ -373,8 +373,11 @@
   test checks it)
 - `scripts/nxgir_search.py`: search across the
   library (`#/search`; the search box at the top of
-  every page, kept in view on scrolling:
-  `searchBox()`, `searchPage()` in `app.js`): an
+  every page but the reader, kept in view on
+  scrolling: `searchBox()`, `searchPage()` in
+  `app.js`; in the reader the word panel's button,
+  `searchWordButton()`, and a button for selected
+  text, `selSearch`): an
   index of `grabar/` and `ashkharhabar/` (not the
   Bible, `LEFT_OUT`) by `loose()` key, which folds
   the classical spelling into the reformed one

@@ -3349,3 +3349,59 @@ body.home .search-wrap {
 .found .off {
   opacity: 0.35;
 }
+
+/* in the word panel: search the library */
+.s-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: max-content;
+  max-width: 100%;
+  margin: 0.2rem 0 0.8rem;
+  padding: 0.45rem 0.8rem;
+  font-size: max(0.85em, 0.75rem);
+  color: var(--accent-ink);
+  text-decoration: none;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+}
+.s-btn svg {
+  flex: none;
+  width: 15px;
+  height: 15px;
+}
+/* text selected in the reader: search it */
+.sel-search {
+  position: fixed;
+  left: 50%;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: calc(100vw - 32px);
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  color: var(--on-accent);
+  text-decoration: none;
+  background: var(--accent-ink);
+  border-radius: 999px;
+  box-shadow: 0 4px 16px var(--shadow);
+  transform: translateX(-50%);
+}
+.sel-search[hidden] {
+  display: none;
+}
+.sel-search svg {
+  flex: none;
+  width: 17px;
+  height: 17px;
+}
+.sel-search span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.sel-search b {
+  font-weight: 600;
+}

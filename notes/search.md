@@ -21,7 +21,12 @@ Decided (2026-11-21):
 - Results by author, folded, in the Library's
   order; a tap unfolds one.
 - The search box stays in view on scrolling (it
-  sticks to the top, the reader's tools below it).
+  sticks to the top). Not in the reader (decided
+  later the same day): there the word panel has
+  "Որոնել ամբողջ գրադարանում · 915" (the Grabar
+  lines), and selected text (up to 6 words) a
+  button at the bottom of the screen that searches
+  its words.
 - A book in two editions (the Taregirk and the
   Taregirk (Digilib)) shows in both.
 
@@ -174,8 +179,9 @@ Run `check-limits.py --site --record` after it.
    thread at start (about 10 s, some 300 MB at the
    peak, 40-70 MB kept). The site: 267 MB (search
    26 MB, lines 51 MB), the build about 70 s.
-2. Phrases, all forms, the button in the word
-   panel.
+2. Phrases, all forms. (The button in the word
+   panel was built with step 1, with one for
+   selected text.)
 3. Abbreviations, a word's start, inside one book.
 
 ## Open questions

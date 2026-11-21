@@ -3544,7 +3544,7 @@ async function drawWord() {
     ? h("div", { class: "actions" }, linkButton(),
       reportButton())
     : wordActions(),
-    placesNav()];
+    placesNav(), searchWordButton(w)];
   if (data.error) {
     parts.push(h("p", { class: "error" },
       "Lookup failed: " + data.error));
@@ -5116,6 +5116,13 @@ function setStick() {
 // page has its own
 function withSearch(kids) {
   kids = kids.filter((k) => k != null);
+  requestAnimationFrame(setStick);
+  // not in the reader: its tools are at the top, and
+  // a word or a selection is searched from there
+  // (searchWordButton(), selection button)
+  if (document.body.classList.contains("reading")) {
+    return kids;
+  }
   if (kids.some((k) => k.classList
     && k.classList.contains("search-wrap"))) {
     return kids;
@@ -5124,7 +5131,6 @@ function withSearch(kids) {
   const at = kids.findIndex((k) => k.classList
     && k.classList.contains("menu-bar"));
   kids.splice(at + 1, 0, box);
-  requestAnimationFrame(setStick);
   return kids;
 }
 
@@ -5502,6 +5508,68 @@ async function searchPage(query) {
       ? "Այստեղ չկա․ նայեք մյուս ֆիլտրերը։"
       : "Չգտնվեց։"));
 }
+
+// -- searching the library from the reader --
+
+// in the word panel: the word in the whole library,
+// with how many Grabar lines have it
+function searchWordButton(w) {
+  const n = h("span", { class: "n" });
+  const a = h("a", { class: "s-btn", lang: "hy",
+    href: searchHref(w) }, icon(ICONS.search),
+  "Որոնել ամբողջ գրադարանում", n);
+  Promise.all([partsOf(), searchEntry(w)])
+    .then(([parts, f]) => {
+      if (!f.entry || f.entry["*"]) return;
+      let k = 0;
+      for (const id of linesOf(f.entry).keys()) {
+        const p = Number(id.split(":")[0]);
+        if (parts.parts[p][0].startsWith("grabar/")) k++;
+      }
+      if (k) n.textContent = " · " + nf(k);
+    }).catch(() => {});
+  return a;
+}
+
+// text selected in the reader (a long press, or a
+// drag over the words): a button at the bottom of
+// the screen searches its words in the library
+const selSearch = h("a", { class: "sel-search",
+  lang: "hy", hidden: "" });
+document.body.append(selSearch);
+// at most this many words: a few words, not a page
+const SEL_WORDS = 6;
+let selTimer = 0;
+document.addEventListener("selectionchange", () => {
+  clearTimeout(selTimer);
+  selTimer = setTimeout(() => {
+    const sel = document.getSelection();
+    const text = sel && !sel.isCollapsed
+      ? sel.toString() : "";
+    const words = text.match(SEARCH_WORD) || [];
+    const inText = R.text && R.text.isConnected
+      && sel.rangeCount
+      && R.text.contains(sel.getRangeAt(0)
+        .commonAncestorContainer);
+    if (!inText || !words.length
+      || words.length > SEL_WORDS) {
+      selSearch.hidden = true;
+      return;
+    }
+    const q = words.join(" ");
+    selSearch.href = searchHref(q);
+    selSearch.replaceChildren(icon(ICONS.search),
+      h("span", {}, "Որոնել գրադարանում՝ ",
+        h("b", {}, q)));
+    selSearch.hidden = false;
+  }, 250);
+});
+selSearch.addEventListener("click", () => {
+  selSearch.hidden = true;
+});
+window.addEventListener("hashchange", () => {
+  selSearch.hidden = true;
+});
 
 // -- a result in the reader: the words marked, and
 // ‹ › to the results before and after it --
