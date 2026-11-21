@@ -137,6 +137,11 @@ const ICONS = {
   rows: ["M4 4h16v7H4zM4 13h16v7H4z"],
   // arrows out to both sides: full width
   width: ["M3 12h18M7 8l-4 4l4 4M17 8l4 4l-4 4"],
+  // a magnifying glass: search
+  search: ["M11 4.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0"
+    + " 0-13z", "M16 16l4.5 4.5"],
+  // an arrow head: a folded list
+  fold: ["M9 6l6 6l-6 6"],
 };
 
 // 512 B, 3.4 KB: like human_size() in Python.
@@ -379,6 +384,27 @@ async function staticApi(path) {
     return { word: w, abbr: e ? e[0] : [],
       meaning: e ? e[1] : [] };
   }
+  // search: the files of build-site.py
+  if (route === "search") {
+    const key = loose(q.get("w").trim());
+    const k = "search/" + bucket(key);
+    if (!buckets.has(k)) {
+      buckets.set(k, json("data/" + k + ".json")
+        .catch((e) => {
+          buckets.delete(k);
+          throw e;
+        }));
+    }
+    const e = (await buckets.get(k))[key];
+    return { key, entry: e || null };
+  }
+  if (route === "search-parts") {
+    return json("data/search/parts.json");
+  }
+  if (route === "lines") {
+    return json("data/lines/" + enc(q.get("name"))
+      + "/" + Number(q.get("k")) + ".json");
+  }
   throw new Error("Not in the published copy");
 }
 
@@ -398,15 +424,14 @@ function enc(name) {
 function show(...kids) {
   // (replaceChildren would write null as "null")
   main.replaceChildren(
-    ...kids.filter((k) => k != null), siteFooter());
+    ...withSearch(kids), siteFooter());
   window.scrollTo(0, 0);
 }
 
 // a page without the footer (the Library: its
 // lists go on to the bottom of the screen)
 function showBare(...kids) {
-  main.replaceChildren(
-    ...kids.filter((k) => k != null));
+  main.replaceChildren(...withSearch(kids));
   window.scrollTo(0, 0);
 }
 
@@ -3130,6 +3155,17 @@ function wordKey(w) {
     .replace(/և/g, "եւ");
 }
 
+// Key of a word for search: the classical spelling
+// folded into the reformed one, so թագավոր finds
+// թագաւոր; as loose() in nxgir_search.py
+function loose(w) {
+  return wordKey(w).replace(/իւ/g, "յու")
+    .replace(/եա/g, "յա").replace(/եօ/g, "յո")
+    .replace(/(?<!ո)ւ/g, "վ").replace(/է/g, "ե")
+    .replace(/օ/g, "ո")
+    .replace(/^յ(?=[աեէըիոօ])/, "հ");
+}
+
 const LANG_NAMES = { en: "English", hy: "Հայերեն" };
 const cache = new Map();
 let lang = "en";
@@ -3561,9 +3597,16 @@ function sentence(on, i) {
   }
 }
 
-// height of the toolbar stuck to the top
+// where the toolbar sticks: below the search box
+function stickTop() {
+  return R.tools ? parseFloat(
+    getComputedStyle(R.tools).top) || 0 : 0;
+}
+
+// the bottom of the toolbar stuck to the top
 function bar() {
-  return R.tools ? R.tools.offsetHeight : 0;
+  return R.tools ? R.tools.offsetHeight + stickTop()
+    : 0;
 }
 
 // keep a word in view between the toolbar and the
@@ -3705,6 +3748,7 @@ function decorate() {
       "aria-label": "Text settings",
       title: "Text settings" }),
     viewTools(),
+    R.found ? foundStrip() : null,
   ].filter(Boolean));
   const more = R.tools.querySelector(".more");
   fit();
@@ -3723,7 +3767,8 @@ function fit() {
   const one = () => {
     const kids = [...t.children].filter((e) =>
       e.offsetParent
-      && !e.classList.contains("readbar"));
+      && !e.classList.contains("readbar")
+      && !e.classList.contains("found"));
     const edge = t.getBoundingClientRect().right;
     return !kids.some((e) =>
       e.offsetTop !== kids[0].offsetTop
@@ -4262,7 +4307,8 @@ function savePos(keepalive) {
 function stick() {
   if (!R.tools) return;
   R.tools.classList.toggle("stuck",
-    R.tools.getBoundingClientRect().top < 1);
+    R.tools.getBoundingClientRect().top
+      < stickTop() + 1);
 }
 
 // how much of the text has been scrolled past,
@@ -4659,7 +4705,7 @@ function cut() {
   return h("span", { class: "cut" });
 }
 
-async function book(name, line) {
+async function book(name, line, found) {
   const data = await api("book?name=" +
     encodeURIComponent(name));
   const title = name.split("/").pop();
@@ -4678,6 +4724,7 @@ async function book(name, line) {
     credit: data.credit, src: data.lines,
     format: data.format || {},
     startSet: new Set(data.starts || []),
+    found: found || null,
   });
   // every word as data; the elements are made a
   // page at a time (showPage)
@@ -4753,8 +4800,14 @@ async function book(name, line) {
     h("div", { class: "reader" }, text, R.panel,
       R.end));
   decorate();
-  // a link to a line: open exactly there
-  if (want >= 0) {
+  // a link to a line: open exactly there; a search's
+  // result: its words marked
+  if (want >= 0 && R.found) {
+    const i = foundWord(want);
+    go(i);
+    R.sel = i;
+    mark(true);
+  } else if (want >= 0) {
     go(wordOfLine(want));
   } else if (data.at > 0 && R.spans[data.at]) {
     // the first word: stay at the top, title shown
@@ -4959,6 +5012,555 @@ function clearReading() {
     "parallel", "full");
 }
 
+// -- search across the library (notes/search.md) --
+
+// The index is nxgir_search.py's: /api/search gives
+// a word's entry, {spelling: [[part, line, +line,
+// ...]]}, or {"*": lines} for a word too common to
+// search alone; /api/search-parts the parts, books
+// and authors (in the Library's order); /api/lines
+// 100 lines of a part, for the lines shown.
+
+// the words of a search, as WORD_RE in the reader
+const SEARCH_WORD = /\p{L}+(?:[՛՜՞՟'’]\p{L}*)*/gu;
+// the texts a search shows: Grabar first
+const SEARCH_IN = ["all", "grabar", "ashkharhabar"];
+const SEARCH_IN_NAMES = { all: "Բոլորը",
+  grabar: "Գրաբար", ashkharhabar: "Աշխարհաբար" };
+// lines a book shows before "all its lines"
+const SEARCH_FIRST = 2;
+// lines a part's file holds (CHUNK in Python)
+const SEARCH_CHUNK = 100;
+// the last results, for ‹ › in the reader (this tab)
+const FOUND = "nxgir-found";
+const searchCache = new Map();
+const lineFiles = new Map();
+let searchParts = null;
+
+function searchHref(q, where, open) {
+  const p = new URLSearchParams({ q });
+  if (where && where !== "grabar") p.set("in", where);
+  if (open && open.size) {
+    p.set("open", [...open].join(","));
+  }
+  return "#/search?" + p;
+}
+
+// 1 074: thousands apart, as in the mockups
+function nf(n) {
+  return String(n).replace(/\B(?=(\d{3})+$)/g, " ");
+}
+
+// the search box at the top of every page; it stays
+// in view on scrolling (style.css)
+function searchBox(value) {
+  const input = h("input", { type: "search", name: "q",
+    placeholder: "Որոնել գրքերում…",
+    "aria-label": "Որոնել գրքերում",
+    enterkeyhint: "search", autocomplete: "off",
+    autocapitalize: "off", spellcheck: "false" });
+  input.value = value || "";
+  const clear = h("button", { type: "button",
+    class: "sbox-x", "aria-label": "Մաքրել",
+    title: "Մաքրել" }, "✕");
+  const showClear = () => {
+    clear.hidden = !input.value;
+  };
+  showClear();
+  input.addEventListener("input", showClear);
+  clear.addEventListener("click", () => {
+    input.value = "";
+    showClear();
+    input.focus();
+  });
+  const form = h("form", { class: "sbox",
+    role: "search", lang: "hy" },
+  icon(ICONS.search), input, clear);
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const q = input.value.trim();
+    if (!q) return;
+    input.blur();
+    location.hash = searchHref(q);
+  });
+  const wrap = h("div", { class: "search-wrap" }, form);
+  stickBelow(wrap);
+  return wrap;
+}
+
+// The height of what is stuck at the top: the top
+// bar on the top page and the search box, as --stick;
+// the Library's tabs and the reader's tools stick
+// below it (style.css)
+const stuckTop = new ResizeObserver(() => setStick());
+let stuckBox = null;
+function stickBelow(wrap) {
+  if (stuckBox) stuckTop.unobserve(stuckBox);
+  stuckBox = wrap;
+  stuckTop.observe(wrap);
+}
+stuckTop.observe(topBar.parentNode);
+function setStick() {
+  const head = topBar.parentNode.offsetHeight;
+  const root = document.documentElement.style;
+  const home = document.body.classList.contains("home");
+  root.setProperty("--head", head + "px");
+  const box = stuckBox && stuckBox.isConnected
+    ? stuckBox.offsetHeight : 0;
+  root.setProperty("--stick",
+    (home ? head : 0) + box + "px");
+}
+
+// a page's parts with the search box: under the menu
+// buttons on the top page, else first; the results
+// page has its own
+function withSearch(kids) {
+  kids = kids.filter((k) => k != null);
+  if (kids.some((k) => k.classList
+    && k.classList.contains("search-wrap"))) {
+    return kids;
+  }
+  const box = searchBox("");
+  const at = kids.findIndex((k) => k.classList
+    && k.classList.contains("menu-bar"));
+  kids.splice(at + 1, 0, box);
+  requestAnimationFrame(setStick);
+  return kids;
+}
+
+async function searchEntry(w) {
+  const k = loose(w);
+  if (!searchCache.has(k)) {
+    searchCache.set(k, api("search?w="
+      + encodeURIComponent(w)).catch((e) => {
+      searchCache.delete(k);
+      throw e;
+    }));
+  }
+  return searchCache.get(k);
+}
+
+async function partsOf() {
+  if (!searchParts) {
+    searchParts = api("search-parts").catch((e) => {
+      searchParts = null;
+      throw e;
+    });
+  }
+  return searchParts;
+}
+
+// line n (1-based) of a part, from its file of 100
+async function lineText(name, n) {
+  const k = Math.floor((n - 1) / SEARCH_CHUNK);
+  const id = name + "|" + k;
+  if (!lineFiles.has(id)) {
+    lineFiles.set(id, api("lines?name="
+      + encodeURIComponent(name) + "&k=" + k)
+      .catch((e) => {
+        lineFiles.delete(id);
+        throw e;
+      }));
+  }
+  const data = await lineFiles.get(id);
+  return data.lines[(n - 1) % SEARCH_CHUNK] || "";
+}
+
+// {"part:line": [spelling, ...]} of an entry
+function linesOf(entry) {
+  const out = new Map();
+  for (const [s, rows] of Object.entries(entry)) {
+    for (const [p, ...ns] of rows) {
+      let n = 0;
+      ns.forEach((d, i) => {
+        n = i ? n + d : d;
+        const id = p + ":" + n;
+        if (!out.has(id)) out.set(id, []);
+        out.get(id).push(s);
+      });
+    }
+  }
+  return out;
+}
+
+// The lines of a search: those with all its words
+// (each in either spelling). A word too common to
+// search alone is left out when there are others.
+async function findLines(q) {
+  const words = [...new Set(q.match(SEARCH_WORD)
+    || [])];
+  const found = await Promise.all(
+    words.map(searchEntry));
+  const common = [];
+  const used = [];
+  found.forEach((f, i) => {
+    if (f.entry && f.entry["*"]) {
+      common.push([words[i], f.entry["*"]]);
+    } else {
+      used.push([words[i], f]);
+    }
+  });
+  let lines = null;
+  const spelled = [];
+  for (const [w, f] of used) {
+    const got = f.entry ? linesOf(f.entry) : new Map();
+    spelled.push([w, f.key, got]);
+    if (lines === null) {
+      lines = new Set(got.keys());
+    } else {
+      lines = new Set([...lines].filter((id) =>
+        got.has(id)));
+    }
+  }
+  return { words, common, spelled,
+    keys: new Set(spelled.map((x) => x[1])),
+    lines: lines ? [...lines] : [] };
+}
+
+// the lines of a search, by author and book, in the
+// Library's order; in a book the Grabar lines first
+function grouped(parts, ids, where) {
+  const hits = [];
+  for (const id of ids) {
+    const [p, line] = id.split(":").map(Number);
+    const [name, b, n] = parts.parts[p];
+    const top = name.split("/")[0];
+    if (where !== "all" && top !== where) continue;
+    hits.push({ id, name, top, b, n, line,
+      a: parts.books[b][2] });
+  }
+  const tops = { grabar: 0, ashkharhabar: 1 };
+  hits.sort((x, y) => x.a - y.a || x.b - y.b
+    || tops[x.top] - tops[y.top] || x.n - y.n
+    || x.line - y.line);
+  const authors = [];
+  for (const x of hits) {
+    let a = authors[authors.length - 1];
+    if (!a || a.a !== x.a) {
+      a = { a: x.a, books: [], lines: 0 };
+      authors.push(a);
+    }
+    let bk = a.books[a.books.length - 1];
+    if (!bk || bk.b !== x.b) {
+      bk = { b: x.b, hits: [] };
+      a.books.push(bk);
+    }
+    bk.hits.push(x);
+    a.lines++;
+  }
+  return { hits, authors };
+}
+
+// the line, the words searched marked, cut around
+// the first of them
+function hitSnippet(text, keys) {
+  const marks = [];
+  for (const m of text.matchAll(SEARCH_WORD)) {
+    if (keys.has(loose(m[0]))) {
+      marks.push([m.index, m.index + m[0].length]);
+    }
+  }
+  let a = 0;
+  let b = text.length;
+  if (marks.length) {
+    a = Math.max(0, marks[0][0] - 40);
+    b = Math.min(text.length, marks[0][1] + 100);
+    if (a > 0) a = text.indexOf(" ", a) + 1 || a;
+    if (b < text.length) {
+      b = text.lastIndexOf(" ", b);
+      if (b <= marks[0][1]) b = marks[0][1];
+    }
+  }
+  const out = [a > 0 ? "… " : ""];
+  let at = a;
+  for (const [x, y] of marks) {
+    if (x < a || y > b) continue;
+    out.push(text.slice(at, x),
+      h("mark", {}, text.slice(x, y)));
+    at = y;
+  }
+  out.push(text.slice(at, b), b < text.length
+    ? " …" : "");
+  return out;
+}
+
+// fill the lines of the results as they come into
+// view
+const snippetsSeen = new IntersectionObserver(
+  (entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      snippetsSeen.unobserve(e.target);
+      const el = e.target;
+      lineText(el.dataset.name, Number(el.dataset.line))
+        .then((t) => el.replaceChildren(
+          ...hitSnippet(t, el.keys)))
+        .catch(() => el.replaceChildren("…"));
+    }
+  }, { rootMargin: "200px" });
+
+function hitHref(q, name, line, r) {
+  return "#/read/" + enc(name) + "?" + new
+  URLSearchParams({ line, q, r });
+}
+
+// one line found: where it is and its text
+function hitItem(x, i, ctx) {
+  const parts = ctx.parts.books[x.b][3] > 1;
+  const where = (parts ? "մաս " + x.n + " · " : "")
+    + "տող " + x.line;
+  const snip = h("span", { class: "snip",
+    lang: "hy" }, "…");
+  snip.dataset.name = x.name;
+  snip.dataset.line = x.line;
+  snip.keys = ctx.keys;
+  snippetsSeen.observe(snip);
+  return h("li", {}, h("a", {
+    href: hitHref(ctx.q, x.name, x.line, i) },
+  h("span", { class: "where" },
+    ctx.where === "all" ? h("span", { class: "chip" },
+      SEARCH_IN_NAMES[x.top]) : null, where),
+  snip));
+}
+
+function bookHref(key) {
+  return /\.(txt|md)$/.test(key)
+    ? "#/read/grabar/" + enc(key)
+    : "#/b/grabar/" + enc(key);
+}
+
+// an author's books and their lines
+function authorBooks(a, ctx) {
+  const box = h("div", { class: "s-in" });
+  for (const bk of a.books) {
+    const [key, title] = ctx.parts.books[bk.b];
+    const list = h("ul", { class: "s-hits" });
+    const shown = (n) => {
+      list.replaceChildren(...bk.hits.slice(0, n)
+        .map((x) => hitItem(x, ctx.index.get(x.id),
+          ctx)));
+    };
+    shown(SEARCH_FIRST);
+    const all = bk.hits.length > SEARCH_FIRST
+      ? btn("Բոլոր " + nf(bk.hits.length)
+        + " տողերը →", () => {
+        shown(bk.hits.length);
+        all.remove();
+      }, { class: "s-all" }) : null;
+    box.append(h("a", { class: "s-book",
+      href: bookHref(key) }, title,
+    h("span", { class: "meta" },
+      nf(bk.hits.length) + " տող")), list, all);
+  }
+  return box;
+}
+
+async function searchPage(query) {
+  const p = new URLSearchParams(query);
+  const q = (p.get("q") || "").trim();
+  const where = SEARCH_IN.includes(p.get("in"))
+    ? p.get("in") : "grabar";
+  const open = new Set((p.get("open") || "")
+    .split(",").filter(Boolean));
+  document.title = (q ? q + " · " : "")
+    + "Որոնում · " + NAME;
+  const head = [
+    h("p", { class: "crumbs" },
+      h("a", { href: "#/" }, "← Գլխավոր")),
+    h("h1", { lang: "hy" }, "Որոնում"),
+    searchBox(q),
+  ];
+  const say = (...t) => show(...head,
+    h("p", { class: "sub", lang: "hy" }, ...t));
+  if (!q.match(SEARCH_WORD)) {
+    say("Գրեք բառը գրաբար կամ աշխարհաբար"
+      + " ուղղագրությամբ․ թագավոր-ը կգտնի նաև"
+      + " թագաւոր-ը։");
+    return;
+  }
+  // the first search of `nxgir web` waits for its
+  // index
+  say("Որոնվում է…");
+  const at = location.hash;
+  const [parts, f] = await Promise.all([partsOf(),
+    findLines(q)]);
+  // gone to another page meanwhile
+  if (location.hash !== at) return;
+  // how many parts each book has, for "մաս n"
+  for (const b of parts.books) b[3] = 0;
+  const seen = new Set();
+  for (const [name, b] of parts.parts) {
+    const k = b + ":" + name.split("/").pop();
+    if (!seen.has(k)) parts.books[b][3]++;
+    seen.add(k);
+  }
+  const counts = {};
+  for (const w of SEARCH_IN) {
+    counts[w] = grouped(parts, f.lines, w).hits.length;
+  }
+  const g = grouped(parts, f.lines, where);
+  // the list in the order shown, for the reader
+  const index = new Map(g.hits.map((x, i) =>
+    [x.id, i]));
+  const remember = () => {
+    try {
+      sessionStorage.setItem(FOUND, JSON.stringify({
+        q, back: searchHref(q, where, open),
+        list: g.hits.map((x) => [x.name, x.line]) }));
+    } catch (e) {}
+  };
+  const ctx = { q, where, parts, index,
+    keys: f.keys };
+  const common = f.common.length ? h("p",
+    { class: "hint", lang: "hy" },
+    f.common.map(([w, n]) => w + " (" + nf(n)
+      + " տող)").join(", "),
+    f.spelled.length
+      ? "․ շատ հաճախ է, որոնվում են մյուս բառերը։"
+      : "․ շատ հաճախ է․ ավելացրեք ևս մի բառ։") : null;
+  if (!f.spelled.length) {
+    show(...head, common);
+    return;
+  }
+  const filters = h("div", { class: "filters",
+    lang: "hy" }, ...SEARCH_IN.map((w) =>
+    h("a", { href: searchHref(q, w),
+      "aria-current": w === where ? "page" : null },
+    SEARCH_IN_NAMES[w] + " · " + nf(counts[w]))));
+  // each spelling found, and in how many lines; for
+  // the words found in more than one
+  const spells = new Map();
+  for (const [, , got] of f.spelled) {
+    const one = new Map();
+    for (const x of g.hits) {
+      for (const s of got.get(x.id) || []) {
+        one.set(s, (one.get(s) || 0) + 1);
+      }
+    }
+    if (one.size > 1) {
+      for (const [s, n] of one) spells.set(s, n);
+    }
+  }
+  const spelling = spells.size ? h("p",
+    { class: "s-opts", lang: "hy" },
+    h("span", {}, "Գրված է՝"),
+    ...[...spells].sort((x, y) => y[1] - x[1])
+      .map(([s, n]) => h("span", { class: "chip" },
+        h("b", {}, s), " " + nf(n)))) : null;
+  const nb = g.authors.reduce((n, a) =>
+    n + a.books.length, 0);
+  const all = g.authors.length > 1 && btn(
+    "Բացել բոլորը", () => {
+      const on = open.size < g.authors.length;
+      for (const a of g.authors) {
+        const id = parts.authors[a.a][0];
+        if (on) open.add(id);
+        else open.delete(id);
+      }
+      draw();
+    }, { class: "link-btn s-open" });
+  const list = h("ul", { class: "s-authors",
+    lang: "hy" });
+  // an author folded or not, in the address too, so
+  // that back from the reader finds it the same
+  const draw = () => {
+    history.replaceState(history.state, "",
+      searchHref(q, where, open));
+    remember();
+    if (all) {
+      all.textContent = open.size >= g.authors.length
+        ? "Փակել բոլորը" : "Բացել բոլորը";
+    }
+    list.replaceChildren(...g.authors.map((a) => {
+      const [id, name] = parts.authors[a.a];
+      const on = open.has(id) || g.authors.length === 1;
+      const row = h("button", { type: "button",
+        class: "s-auth", "aria-expanded": String(on) },
+      icon(ICONS.fold, "chev"),
+      h("span", { class: "s-name" }, name),
+      h("span", { class: "meta" }, nf(a.lines) + " տող"
+        + (a.books.length > 1 ? " · "
+          + a.books.length + " գիրք" : "")));
+      row.addEventListener("click", () => {
+        if (open.has(id)) open.delete(id);
+        else open.add(id);
+        draw();
+      });
+      return h("li", { class: on ? "on" : null }, row,
+        on ? authorBooks(a, ctx) : null);
+    }));
+  };
+  draw();
+  show(...head,
+    h("p", { class: "s-sum", lang: "hy" },
+      h("span", {}, nf(g.hits.length) + " տող · "
+        + g.authors.length + " հեղինակ · " + nb
+        + " գիրք"), all || null),
+    filters, spelling, common,
+    g.hits.length ? list : h("p", { class: "sub",
+      lang: "hy" }, f.lines.length
+      ? "Այստեղ չկա․ նայեք մյուս ֆիլտրերը։"
+      : "Չգտնվեց։"));
+}
+
+// -- a result in the reader: the words marked, and
+// ‹ › to the results before and after it --
+
+// R.found from #/read/...?q=&r=: the search, this
+// result's number and the list, if this tab has it
+function foundOf(q, r, name, line) {
+  if (!q) return null;
+  const f = { q, r: -1, list: null,
+    back: searchHref(q),
+    keys: new Set((q.match(SEARCH_WORD) || [])
+      .map(loose)) };
+  try {
+    const s = JSON.parse(sessionStorage.getItem(FOUND)
+      || "null");
+    const x = s && s.q === q && s.list[r];
+    if (x && x[0] === name && x[1] === line) {
+      Object.assign(f, { r, list: s.list,
+        back: s.back });
+    }
+  } catch (e) {}
+  return f;
+}
+
+// the word searched on a line, or its first word
+function foundWord(line) {
+  R.refs = [];
+  R.keys.forEach((k, j) => {
+    if (R.found.keys.has(loose(k))) R.refs.push(j);
+  });
+  const i = R.refs.find((j) => R.wpos[j][0] === line);
+  return i === undefined ? wordOfLine(line) : i;
+}
+
+// in the reader's tools: back to the results, and
+// the result before and after
+function foundStrip() {
+  const f = R.found;
+  const n = f.list ? f.list.length : 0;
+  const to = (k, sign, label) => {
+    const x = n && f.list[k];
+    return x ? h("a", { class: "icon-btn",
+      href: hitHref(f.q, x[0], x[1], k),
+      "aria-label": label, title: label }, sign)
+      : h("span", { class: "icon-btn off",
+        "aria-hidden": "true" }, sign);
+  };
+  return h("div", { class: "found", lang: "hy" },
+    h("a", { class: "icon-btn", href: f.back,
+      "aria-label": "Արդյունքներին",
+      title: "Արդյունքներին" }, icon(ICONS.back)),
+    h("span", { class: "t" }, "Որոնում՝ ",
+      h("b", {}, f.q), n ? h("br") : null,
+      n ? "արդյունք " + nf(f.r + 1) + " / " + nf(n)
+        : null),
+    n ? to(f.r - 1, "‹", "Նախորդը") : null,
+    n ? to(f.r + 1, "›", "Հաջորդը") : null);
+}
+
 async function route() {
   clearTimeout(placeTimer);
   // unsaved text: ask before leaving the editor
@@ -4990,18 +5592,23 @@ async function route() {
   if (button.parentNode !== topBar) topBar.append(button);
   try {
     if (hash.startsWith("read/")) {
-      // #/read/<book>?line=N opens at line N
+      // #/read/<book>?line=N opens at line N; with
+      // q=, a search's result (r= its number)
       const [path, query] = hash.split("?");
-      const line = Number(
-        new URLSearchParams(query).get("line"));
-      await book(decodeURIComponent(path.slice(5)),
-        line);
+      const p = new URLSearchParams(query);
+      const line = Number(p.get("line"));
+      const name = decodeURIComponent(path.slice(5));
+      await book(name, line, foundOf(p.get("q"),
+        Number(p.get("r")), name, line));
     } else if (hash.startsWith("edit/")) {
       E.hash = location.hash;
       await edit(decodeURIComponent(hash.slice(5)));
     } else if (hash.startsWith("new/")) {
       E.hash = location.hash;
       await newText(hash.slice(4));
+    } else if (hash === "search"
+      || hash.startsWith("search?")) {
+      await searchPage(hash.slice(7));
     } else if (hash === "timeline") {
       await timelinePage();
     } else if (hash === "blog"

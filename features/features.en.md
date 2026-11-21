@@ -22,6 +22,10 @@ Old manuscripts and books shorten common words (վրդ for վարդապետ). Ta
 
 The word you tapped is marked everywhere in the part. The arrows ‹ › take you from one place to the next; on a keyboard, n and N do the same.
 
+## Search the library
+
+Type a word in the search box at the top of any page. It is found in every book, in either spelling: թագավոր also finds թագաւոր. The results open on the Grabar books, by author in the Library's order: tap an author to see its lines, and Աշխարհաբար or Բոլորը to see the translations too. A line opens in the reader with the word marked, and the arrows ‹ › take you to the next result. A very common word (եւ, ի) needs a second word with it.
+
 ## The sentence of a word
 
 Tapping a word also highlights the whole sentence it belongs to, so long Grabar sentences are easier to follow.

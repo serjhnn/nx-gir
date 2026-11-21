@@ -2,7 +2,8 @@
 
 Search across the whole library, in Grabar and in
 the translations, on `nxgir web` and on the Pages
-site (no server there). Not built yet; the numbers
+site (no server there). Step 1 is built
+(2026-11-21, see Steps); the numbers
 below were measured on 2026-11-21 (after the
 merge of main at 4399b9a) with a prototype.
 
@@ -17,6 +18,12 @@ Decided (2026-11-21):
 - Results open on Գրաբար; the filters show the
   translations too (Աշխարհաբար) or both
   (Բոլորը) when the reader wants.
+- Results by author, folded, in the Library's
+  order; a tap unfolds one.
+- The search box stays in view on scrolling (it
+  sticks to the top, the reader's tools below it).
+- A book in two editions (the Taregirk and the
+  Taregirk (Digilib)) shows in both.
 
 ## What it finds
 
@@ -150,13 +157,23 @@ Run `check-limits.py --site --record` after it.
 
 ## Steps
 
-1. A word in either spelling, Grabar and
+1. (Built 2026-11-21.) A word in either spelling, Grabar and
    translations: the module, `/api/search`, the
    site files, the results page (by author,
    folded), the search box
    on every page, the strip in the reader. Tests; a
    Features entry in hy, en, ru; a Timeline line; a
    limits record.
+   Built as planned, with these differences: the
+   index is served as data and the search runs in
+   `app.js` (the same code for `nxgir web` and the
+   site); a search of several words finds the lines
+   with all of them, in any order (the phrase in
+   quotes is step 2); the reader's strip is a row
+   of its tools. `nxgir web` builds the index in a
+   thread at start (about 10 s, some 300 MB at the
+   peak, 40-70 MB kept). The site: 267 MB (search
+   26 MB, lines 51 MB), the build about 70 s.
 2. Phrases, all forms, the button in the word
    panel.
 3. Abbreviations, a word's start, inside one book.
@@ -165,10 +182,3 @@ Run `check-limits.py --site --record` after it.
 
 - Should a Grabar line and its translation show as
   one result (the pair), or as two?
-- The same text in two editions (Smbat
-  Sparapet's Տարեգիրք and Տարեգիրք (Digilib))
-  gives every line twice. Show both, or fold the
-  second under the first ("also in ...")?
-- In the reader, when scrolled: the search box
-  scrolls away with the page, or a 🔍 in the
-  pinned reading tools opens it?

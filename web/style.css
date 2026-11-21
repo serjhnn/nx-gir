@@ -1009,9 +1009,10 @@ body.home .bar {
   border-top: 1px solid var(--rule);
   border-bottom: 1px solid var(--rule);
   --i: 0;
-  /* kept at the top of the screen on scrolling */
+  /* kept at the top of the screen on scrolling,
+     below the search box (--stick, app.js) */
   position: sticky;
-  top: 0;
+  top: var(--stick, 0px);
   z-index: 2;
   background: var(--bg);
 }
@@ -1955,10 +1956,11 @@ body.reading .bar {
   }
 }
 
-/* stays at the top while reading */
+/* stays at the top while reading, below the
+   search box (--stick, set by app.js) */
 .tools {
   position: sticky;
-  top: 0;
+  top: var(--stick, 0px);
   z-index: 5;
   display: flex;
   flex-wrap: wrap;
@@ -2382,9 +2384,10 @@ body.panel-open main {
     position: sticky;
     /* below the toolbar: --tools is its height,
        set by app.js */
-    top: calc(var(--tools, 84px) + 8px);
-    max-height: calc(100vh - var(--tools, 84px)
-      - 24px);
+    top: calc(var(--stick, 0px) + var(--tools, 84px)
+      + 8px);
+    max-height: calc(100vh - var(--stick, 0px)
+      - var(--tools, 84px) - 24px);
     border: 1px solid var(--rule);
     border-radius: 12px;
     box-shadow: none;
@@ -3118,4 +3121,231 @@ body.reading.full .bar {
 }
 .post-places a {
   color: var(--accent-ink);
+}
+
+/* -- search (searchBox(), searchPage() in app.js) -- */
+
+/* the box at the top of every page, kept in view on
+   scrolling: below the pinned top bar on the top
+   page (--head) */
+.search-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 6;
+  margin: 0 0 1rem;
+  padding: 8px 0;
+  background: var(--bg);
+}
+body.home .search-wrap {
+  top: var(--head, 0px);
+}
+.sbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.45rem 0.8rem;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+}
+.sbox:focus-within {
+  border-color: var(--accent);
+}
+.sbox svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+}
+.sbox input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 1rem;
+  color: var(--text);
+  background: none;
+  border: 0;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.sbox input::-webkit-search-cancel-button {
+  display: none;
+}
+.sbox-x {
+  padding: 0 0.2rem;
+  font: inherit;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.sbox-x[hidden] {
+  display: none;
+}
+
+/* the results */
+.s-sum {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 1rem;
+  margin: -0.2rem 0 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.s-sum .s-open {
+  margin-left: auto;
+  font-size: 0.85rem;
+  color: var(--accent-ink);
+}
+.s-opts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: -0.6rem 0 1.4rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.s-opts .chip {
+  margin: 0;
+}
+.s-opts .chip b {
+  color: var(--text);
+  font-weight: 500;
+}
+.hint {
+  margin: -0.8rem 0 1.4rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.s-authors {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+.s-authors > li {
+  border-bottom: 1px solid var(--rule);
+}
+.s-auth {
+  display: grid;
+  grid-template-columns: 1.1rem 1fr auto;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.9rem 0.4rem;
+  font: inherit;
+  color: var(--text);
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.s-auth:hover {
+  background: var(--hover);
+}
+.s-auth .chev {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--muted);
+  transition: transform 0.2s;
+}
+.s-authors li.on .chev {
+  color: var(--accent);
+  transform: rotate(90deg);
+}
+.s-authors li.on .s-name {
+  color: var(--accent-ink);
+}
+.s-name {
+  font-size: 1.05rem;
+}
+.s-in {
+  padding: 0 0 0.6rem 1.2rem;
+}
+.s-book {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.6rem 0.5rem 0.3rem;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+}
+.s-book .meta {
+  font-weight: 400;
+}
+.s-hits {
+  margin: 0 0 0.4rem;
+  padding: 0;
+  list-style: none;
+}
+.s-hits a {
+  display: block;
+  padding: 0.5rem 0.5rem 0.55rem;
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 6px;
+}
+.s-hits a:hover {
+  background: var(--hover);
+}
+.s-hits .where {
+  display: block;
+  margin-bottom: 0.15rem;
+  color: var(--muted);
+  font: 0.72rem/1.4 var(--sans);
+}
+.s-hits .where .chip {
+  font-size: 0.64rem;
+}
+.s-hits .snip {
+  font-family: var(--book);
+  font-size: 1.02rem;
+  line-height: 1.5;
+}
+.s-hits mark {
+  padding: 0 1px;
+  color: inherit;
+  background: var(--mark);
+  border-radius: 3px;
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+.s-all {
+  display: block;
+  padding: 0.2rem 0.5rem 1rem;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--accent-ink);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+/* a result in the reader: a row of the tools */
+.tools .found {
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+}
+.found .t {
+  flex: 1;
+  min-width: 0;
+}
+.found .t b {
+  font-weight: 500;
+  color: var(--accent-ink);
+}
+.found .off {
+  opacity: 0.35;
 }

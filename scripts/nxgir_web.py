@@ -20,6 +20,11 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/library            the Grabar books
                                and the starred ones
   GET  /api/volume?folder=     a book's page: its parts
+  GET  /api/search?w=          the lines of a word
+                               (nxgir_search.py)
+  GET  /api/search-parts       the parts searched,
+                               their books and authors
+  GET  /api/lines?name=&k=     100 lines of a book
   POST /api/position           {name, pos, lines}
   POST /api/mark               {name, pos}
   POST /api/forget             {name}: off the list
@@ -47,6 +52,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import threading
 from http.server import (
     BaseHTTPRequestHandler,
     ThreadingHTTPServer,
@@ -60,6 +66,7 @@ import nxgir_features as feature_list
 import nxgir_grabar as grabar
 import nxgir_limits as lim
 import nxgir_map as place_map
+import nxgir_search as srch
 import nxgir_timeline as tl
 import nxgir_translations as tr
 from nxgir_browse import (
@@ -169,6 +176,9 @@ class App:
         self.places = places
         # TRANSLATIONS.tsv, or None for no credits
         self.translations = translations
+        # the search index, made on the first search
+        self.found = None
+        self.finding = threading.Lock()
 
     def events(self):
         """The events of the timeline, oldest first,
@@ -1065,6 +1075,46 @@ def new_text(app, body):
     return {"name": name}
 
 
+def search_index(app):
+    """(index, parts) for search, made on the first
+    search (some seconds) and kept."""
+    with app.finding:
+        if app.found is None:
+            index = srch.build(
+                (n, book_text(app, n))
+                for n, _, _ in app.files
+                if srch.searched(n)
+            )
+            first = {
+                n: first_line(app.path(n))
+                for n in index.parts
+            }
+            parts = srch.parts(
+                index, first, read_names(app.library)
+            )
+            app.found = (index, parts)
+        return app.found
+
+
+def search(app, w):
+    """A word's entry in the index: {"key": its loose
+    key, "entry": see nxgir_search.py, or None}."""
+    key = srch.loose(w.strip())
+    if not key:
+        raise ApiError(400, "no word to search")
+    index, _ = search_index(app)
+    return {"key": key, "entry": index.entry(key)}
+
+
+def lines(app, name, k):
+    """Lines k*100+1 to (k+1)*100 of a book, for the
+    search results."""
+    if not k.isdigit():
+        raise ApiError(400, "k must be a number")
+    text = book_text(app, name)
+    return {"lines": srch.chunk(text, int(k))}
+
+
 def get(app, route, query):
     """Answer a GET /api/... request."""
 
@@ -1103,6 +1153,12 @@ def get(app, route, query):
         return {**library(app), "stars": stars}
     if route == "/api/volume":
         return volume(app, arg("folder"))
+    if route == "/api/search":
+        return search(app, arg("w"))
+    if route == "/api/search-parts":
+        return search_index(app)[1]
+    if route == "/api/lines":
+        return lines(app, arg("name"), arg("k", "0"))
     raise ApiError(404, f"no such page: {route}")
 
 
@@ -1257,6 +1313,11 @@ def serve(files, host=HOST, port=PORT, notes=None):
     notes: (folder, shelf prefix) of the texts that
     can be edited."""
     app = App(files, notes=notes)
+    # the search index, made while the first pages
+    # are read
+    threading.Thread(
+        target=search_index, args=(app,), daemon=True
+    ).start()
     try:
         srv = server(app, host, port)
     except OSError as e:

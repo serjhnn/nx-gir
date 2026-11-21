@@ -26,6 +26,13 @@ the same functions (nxgir_web.py):
         ashkharhabar/
     data/stats.json                 /api/stats, with
         this site's size and build time
+    data/search/parts.json          /api/search-parts
+    data/search/<n>.json            /api/search, the
+        words of the searched books (nxgir_search.py),
+        spread over BUCKETS files by bucket() of their
+        loose key
+    data/lines/<book>/<k>.json      /api/lines: a book
+        searched, 100 lines a file
 
 and, for search engines (searchable()), which do
 not see the #/ pages of app.js:
@@ -315,6 +322,7 @@ def build(
                     data / "volume" / f"{f}.json",
                     web.volume(app, f),
                 )
+        search_files(data, app)
         words = set()
         searchable(out, app, files)
         for name, _, _ in files:
@@ -344,6 +352,28 @@ def build(
     if zip_site:
         offline_zip(out)
     return len(files), len(dirs), len(words)
+
+
+def search_files(data, app):
+    """The search index as files (nxgir_search.py):
+    the parts searched, the words by bucket of their
+    loose key, and the lines of each part."""
+    index, parts = web.search_index(app)
+    write_json(data / "search" / "parts.json", parts)
+    found = [{} for _ in range(BUCKETS)]
+    for key in index.keys():
+        found[bucket(key)][key] = index.entry(key)
+    for n, part in enumerate(found):
+        write_json(data / "search" / f"{n}.json", part)
+    for name in index.parts:
+        text = web.book_text(app, name)
+        n = len(text.splitlines())
+        for k in range(0, max(n, 1), web.srch.CHUNK):
+            k //= web.srch.CHUNK
+            write_json(
+                data / "lines" / name / f"{k}.json",
+                {"lines": web.srch.chunk(text, k)},
+            )
 
 
 def offline_list(out):
