@@ -1,3 +1,4 @@
+import importlib.util
 import re
 
 import nxgir_authors as au
@@ -8,6 +9,11 @@ import pytest
 from nxgir_web import ApiError, App
 
 ROOT = au.ROOT
+_spec = importlib.util.spec_from_file_location(
+    "bs", ROOT / "scripts" / "build-site.py"
+)
+bs = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(bs)
 
 HY = """# Մխիթար Գոշ
 
@@ -251,3 +257,25 @@ def test_book_files_are_good():
         for v in b["versions"]:
             assert v["written"] and v["kind"], bid
             assert v["source"], bid
+
+
+def test_book_cards():
+    """/api/book-cards: every book card, once, in
+    the language asked, with where it opens."""
+    files = bs.shelf_files()
+    app = App(files)
+    ids = set(au.read_books())
+    for lang in au.LANGS:
+        cards = web.book_cards(app, lang)["books"]
+        assert {c["id"] for c in cards} == ids
+        assert len(cards) == len(ids)
+        for c in cards:
+            assert c["lang"] == lang
+            assert c["name"] and c["lead"]
+            assert c["to"].startswith(("#/b/", "#/read/"))
+            assert c["authors"]
+    js = (ROOT / "web" / "app.js").read_text("utf-8")
+    block = js.split("const CARDS_UI = {", 1)[1]
+    block = block.split("\n};", 1)[0]
+    keys = re.findall(r"^  (\w+): \{", block, re.M)
+    assert tuple(keys) == au.LANGS

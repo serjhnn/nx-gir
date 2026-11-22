@@ -18,6 +18,7 @@ tests/test_web.py); Handler only moves bytes.
                                and the books
   GET  /api/author?id=         about one author
   GET  /api/book-info?id=      about one book
+  GET  /api/book-cards?lang=   every book's card
   GET  /api/comics             the comics series
   GET  /api/map                the places and their stories
   GET  /api/recent?n=          the books read last
@@ -454,6 +455,78 @@ def book_info(app, bid):
     if bid not in found:
         raise ApiError(404, f"no book {bid!r}")
     return linked(app, found[bid])
+
+
+def book_cards(app, lang=None):
+    """The Book cards page: every book written about
+    (authors/<author>/<book>), in the Library's
+    order, in lang (else its first language): name,
+    time of writing, kind, first paragraph, its
+    authors, where it opens ("to"), its parts and
+    how many are translated. A group (the Bible's
+    Testaments) counts the books in it."""
+    cards = (
+        author_info.read_books(app.authors)
+        if app.authors
+        else {}
+    )
+    names = authors(app)["names"]
+
+    def named(p):
+        n = names.get(p["id"], {}).get(lang)
+        return {**p, "name": n or p["name"]}
+
+    out, seen = [], set()
+    for a in library(app)["authors"]:
+        who = a["folder"].rpartition("/")[2]
+        for b in a["books"]:
+            group = "/".join(b["id"].split("/")[:2])
+            cid = b["id"] if b["id"] in cards else group
+            if cid not in cards:
+                continue
+            if cid in seen:
+                c = out[-1]
+                c["parts"] += b["parts"]
+                c["done"] += b["done"]
+                continue
+            seen.add(cid)
+            card = cards[cid]
+            v = next(
+                (
+                    x
+                    for x in card["versions"]
+                    if x["lang"] == lang
+                ),
+                card["versions"][0],
+            )
+            if cid != b["id"]:
+                to = "#/" + a["folder"].join(["b/", ""])
+            elif b["parts"] > 1:
+                to = "#/b/" + b["first"].rpartition("/")[0]
+            else:
+                to = "#/read/" + b["first"]
+            people = b["with"] + [
+                {"id": who, "name": a["name"]}
+            ]
+            hy = card["versions"][0]["name"]
+            group = cid != b["id"]
+            out.append(
+                {
+                    "id": cid,
+                    "lang": v["lang"],
+                    "name": v["name"],
+                    "short": hy if group else b["name"],
+                    "written": v["written"],
+                    "kind": v["kind"],
+                    "lead": v["text"][0],
+                    "authors": [named(p) for p in people],
+                    "to": to,
+                    "parts": b["parts"],
+                    "done": b["done"],
+                    "status": card["status"],
+                }
+            )
+    return {"langs": list(author_info.LANGS), "books": out}
 
 
 def linked(app, card):
@@ -1315,6 +1388,8 @@ def get(app, route, query):
         return authors(app)
     if route == "/api/author":
         return author(app, arg("id"))
+    if route == "/api/book-cards":
+        return book_cards(app, arg("lang") or None)
     if route == "/api/book-info":
         return book_info(app, arg("id"))
     if route == "/api/comics":

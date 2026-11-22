@@ -19,6 +19,7 @@ the same functions (nxgir_web.py):
     data/authors.json               /api/authors
     data/author/<id>.json           /api/author
     data/book/<author>/<book>.json  /api/book-info
+    data/book-cards/<lang>.json     /api/book-cards
     data/comics.json                /api/comics
     data/map.json                   /api/map
     data/titles.json                each book's title,
@@ -331,6 +332,11 @@ def build(
             write_json(
                 data / "book" / f"{bid}.json",
                 web.book_info(app, bid),
+            )
+        for lang in web.author_info.LANGS:
+            write_json(
+                data / "book-cards" / f"{lang}.json",
+                web.book_cards(app, lang),
             )
         write_json(data / "map.json", web.map_data(app))
         # for the list of readings, which only has
@@ -907,6 +913,34 @@ def list_page(out, path, title, desc, items, lang="hy"):
     return path, title
 
 
+def cards_page(out, app):
+    """books/: the Book cards page, each book with
+    its name, author, time of writing and first
+    paragraph, in Armenian. Returns (path, title)."""
+    esc = htm.escape
+    body = []
+    for c in web.book_cards(app, "hy")["books"]:
+        to = c["to"].removeprefix("#/")
+        who = " · ".join(p["name"] for p in c["authors"])
+        body.append(
+            f'<h2><a href="/{esc(to)}/">'
+            f"{esc(c['name'])}</a></h2>\n"
+            f"<p>{esc(who)} · {esc(c['written'])}"
+            f" · {esc(c['kind'])}</p>\n"
+            f"<p>{esc(c['lead'])}</p>"
+        )
+    title = "Գրքերի քարտեր · Book cards"
+    route_page(
+        out,
+        "books",
+        title=title,
+        desc="Every Grabar book of nxGir on a card:"
+        " what it is, who wrote it and when.",
+        text="\n".join(body),
+    )
+    return "books", title
+
+
 def author_page(out, app, author, books, ids, names):
     """library/<id>/: an author with the card about
     them (authors/), in each language it has, and
@@ -995,6 +1029,7 @@ def hub_pages(out, app, dirs):
         " translations.</p>\n" + "\n".join(body),
     )
     links = [("library", "Library")] + more
+    links.append(cards_page(out, app))
     for kind, title, posts in (
         ("blog", "Blog", web.blog(app)["posts"]),
         ("comics", "Comics", web.comics(app)["series"]),

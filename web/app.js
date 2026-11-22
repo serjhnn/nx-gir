@@ -1,7 +1,8 @@
 // nx-gir web: the bookshelf and the theme button.
 // Pages are #/ (top), #/f/<folder>, #/b/<book>
 // (a book's parts), #/read/<book>,
-// #/library, #/timeline, #/blog, #/comics,
+// #/library, #/books (the book cards),
+// #/timeline, #/blog, #/comics,
 // #/features,
 // #/contribute, #/news and #/stats; the
 // data
@@ -176,6 +177,13 @@ const ICONS = {
     "M4 4h16a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H4" +
       "a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z",
     "M3 12h18M12 4v8",
+  ],
+  // a card over another: the book cards
+  cards: [
+    "M8 7h11a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H8" +
+      "a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z",
+    "M4 16V5a1 1 0 0 1 1-1h11",
+    "M10 11h7M10 14h7M10 17h4",
   ],
   // a folded map: the map
   map: [
@@ -431,6 +439,10 @@ async function staticApi(path) {
     return json("data/author/" + enc(q.get("id"))
       + ".json");
   }
+  if (route === "book-cards") {
+    return json("data/book-cards/"
+      + (q.get("lang") || "hy") + ".json");
+  }
   if (route === "book-info") {
     return json("data/book/" + q.get("id")
       .split("/").map(enc).join("/") + ".json");
@@ -547,7 +559,8 @@ const BY_SA = "https://creativecommons.org/"
 
 function siteFooter() {
   const pages = [["#/library", "Library"],
-    ["#/blog", "Blog"], ["#/comics", "Comics"],
+    ["#/books", "Book cards"], ["#/blog", "Blog"],
+    ["#/comics", "Comics"],
     ["#/map", "Map"], ["#/features", "Features"],
     ["#/timeline", "Timeline"],
     ["#/stats", "Statistics"],
@@ -745,6 +758,7 @@ const CONTACT = ["nxgir.lib", "gmail.com"];
 // list the ☰ button of the top bar opens
 const MENU = [
   ["#/library", "book", "Գրադարան"],
+  ["#/books", "cards", "Գրքեր"],
   ["#/blog", "pen", "Բլոգ"],
   ["#/comics", "panels", "Կոմիքսներ"],
   ["#/map", "map", "Քարտեզ"],
@@ -962,6 +976,7 @@ const TABS = [
 // the pages the More tab opens
 const MORE = [
   ["#/recent", "clock", "Ընթերցումներ"],
+  ["#/books", "cards", "Գրքերի քարտեր"],
   ["#/blog", "pen", "Բլոգ"],
   ["#/map", "map", "Քարտեզ"],
   ["#/comics", "panels", "Կոմիքսներ"],
@@ -1934,7 +1949,8 @@ async function libraryPage(who) {
     h("div", { class: "library", lang: "hy" },
       h("h1", {}, "Գրադարան"),
       h("p", { class: "sub" },
-        "Գրաբար գրքեր · " + n),
+        "Գրաբար գրքեր · " + n + " · ",
+        h("a", { href: "#/books" }, "Քարտերով →")),
       tabs, body));
   drawStars();
   // the lists at least a screen high: a short one
@@ -3677,6 +3693,170 @@ function infoCard(a) {
   box.addEventListener("cancel", () => box.remove());
   document.body.append(box);
   box.showModal();
+}
+
+// -- book cards --
+
+// the words of #/books, in the language of the
+// cards
+const CARDS_UI = {
+  hy: { title: "Գրքերի քարտեր", home: "← Գլխավոր",
+    count: (b, a) => b + " գիրք · " + a + " հեղինակ",
+    find: "Գտնել գիրք, հեղինակ կամ տեսակ…",
+    read: "Կարդալ", more: "Ավելին",
+    parts: (n) => n + " մաս", done: "թարգմանված",
+    none: "Ոչինչ չգտնվեց։",
+    library: "Ցանկով՝ Գրադարան →" },
+  en: { title: "Book cards", home: "← Home",
+    count: (b, a) => b + " books · " + a + " authors",
+    find: "Find a book, an author or a kind…",
+    read: "Read", more: "More",
+    parts: (n) => plural(n, "part"),
+    done: "translated", none: "Nothing found.",
+    library: "As a list: Library →" },
+  ru: { title: "Карточки книг", home: "← Главная",
+    count: (b, a) => "Книг: " + b + " · авторов: " + a,
+    find: "Найти книгу, автора или жанр…",
+    read: "Читать", more: "Подробнее",
+    parts: (n) => n + " ч.", done: "переведено",
+    none: "Ничего не найдено.",
+    library: "Списком: Библиотека →" },
+};
+
+// a hue for each author, the same on every visit:
+// the colored edge of its books' cards
+function authorHue(id) {
+  let k = 0;
+  for (const c of id) k = (k * 31 + c.charCodeAt(0)) % 360;
+  return k;
+}
+
+// one card of #/books: what the book is and when it
+// was written, its name (opens it), its authors,
+// the first paragraph about it, its parts and how
+// much is translated; More opens the whole card
+function bookCard(c, ui) {
+  const who = c.authors[c.authors.length - 1];
+  const meta = h("span", { class: "bc-meta" });
+  if (c.parts > 1) meta.append(ui.parts(c.parts));
+  if (c.done) {
+    meta.append(h("span", { class: "done" },
+      c.done === c.parts ? ui.done
+        : ui.done + " " + c.done + "/" + c.parts));
+  }
+  const more = btn(ui.more, () => bookInfo(c.id),
+    { class: "icon-btn bc-more" });
+  const el = h("li", { class: "bcard",
+    lang: c.lang },
+  h("p", { class: "bc-top" },
+    h("span", { class: "bc-kind" }, c.kind),
+    c.written ? h("span", { class: "bc-when" },
+      c.written) : null),
+  h("h2", {}, h("a", { href: c.to }, c.name)),
+  c.lang !== "hy" ? h("p", { class: "bc-hy",
+    lang: "hy" }, c.short) : null,
+  h("p", { class: "bc-by", lang: c.lang },
+    ...authorNames(c.authors)),
+  h("p", { class: "bc-lead" }, c.lead),
+  h("div", { class: "bc-foot" }, meta, more,
+    h("a", { class: "bc-read", href: c.to },
+      ui.read)));
+  el.style.setProperty("--hue",
+    String(authorHue(who.id)));
+  return el;
+}
+
+// #/books: every book written about (authors/), a
+// card each, in the Library's order; the language
+// of the cards is the one of the author cards
+// (AUTHOR_LANG), and a find box keeps the cards
+// whose name, authors, kind or time have its words
+async function booksPage() {
+  let lang = "hy";
+  try {
+    lang = localStorage.getItem(AUTHOR_LANG) || lang;
+  } catch (e) {}
+  if (!(lang in CARDS_UI)) lang = "hy";
+  let data = await api("book-cards?lang=" + lang);
+  let q = "";
+  const grid = h("ul", { class: "bcards" });
+  const none = h("p", { class: "empty", hidden: "" });
+  const input = h("input", { type: "search",
+    name: "find", enterkeyhint: "search",
+    autocomplete: "off", autocapitalize: "off",
+    spellcheck: "false" });
+  const head = h("div", { class: "bc-head" });
+  const filter = () => {
+    const fits = q ? nameFits(q) : null;
+    let n = 0;
+    data.books.forEach((c, i) => {
+      const words = [c.name, c.short, c.kind,
+        c.written, ...c.authors.map((p) => p.name)];
+      const on = !fits || words.some(fits);
+      grid.children[i].hidden = !on;
+      if (on) n += 1;
+    });
+    none.hidden = n > 0;
+  };
+  const draw = () => {
+    const ui = CARDS_UI[lang];
+    document.title = ui.title + " · " + NAME;
+    const n = new Set(data.books.map((c) =>
+      c.authors[c.authors.length - 1].id)).size;
+    input.placeholder = ui.find;
+    input.setAttribute("aria-label", ui.find);
+    none.textContent = ui.none;
+    const pick = h("div", { class: "filters outline",
+      role: "group", "aria-label": "Language" },
+    data.langs.map((l) => {
+      const b = h("button", { type: "button",
+        lang: l, "aria-pressed": String(l === lang) },
+      LANG_LABEL[l] || l);
+      b.addEventListener("click", async () => {
+        if (l === lang) return;
+        try {
+          data = await api("book-cards?lang=" + l);
+        } catch (e) {
+          return;
+        }
+        lang = l;
+        try {
+          localStorage.setItem(AUTHOR_LANG, l);
+        } catch (e) {}
+        draw();
+      });
+      return b;
+    }));
+    head.setAttribute("lang", lang);
+    head.replaceChildren(
+      h("p", { class: "crumbs" },
+        h("a", { href: "#/" }, ui.home)),
+      h("h1", {}, ui.title),
+      h("p", { class: "sub" },
+        ui.count(data.books.length, n), " · ",
+        h("a", { href: "#/library" }, ui.library)),
+      pick);
+    grid.replaceChildren(
+      ...data.books.map((c) => bookCard(c, ui)));
+    for (const el of grid.querySelectorAll(
+      ".bc-by")) watchNames(el);
+    filter();
+  };
+  input.addEventListener("input", () => {
+    q = input.value.trim();
+    filter();
+  });
+  // the page's own find box, in place of the search
+  // of the books (withSearch()), as the Library's
+  const form = h("form", { class: "sbox",
+    role: "search" }, icon(ICONS.search), input);
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    input.blur();
+  });
+  draw();
+  show(h("div", { class: "search-wrap" }, form),
+    head, grid, none);
 }
 
 // the languages an announcement has: English, and
@@ -6900,6 +7080,8 @@ async function route() {
     } else if (hash === "features"
       || hash.startsWith("features/")) {
       await featuresPage(hash.slice(9));
+    } else if (hash === "books") {
+      await booksPage();
     } else if (hash === "contribute") {
       contributePage();
     } else if (hash === "news"

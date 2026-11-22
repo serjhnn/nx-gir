@@ -4039,3 +4039,119 @@ body.home .search-wrap {
     font-size: 0.56rem;
   }
 }
+
+/* -- the book cards (#/books) -- */
+
+/* a grid of cards, two across where they fit; each
+   has an edge in its author's color (--hue) */
+.bcards {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 14px;
+  margin: 0 0 2rem;
+  padding: 0;
+  list-style: none;
+}
+.bcard {
+  --edge: hsl(var(--hue, 20) 45% 58%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.9rem 1rem 0.8rem;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-top: 4px solid var(--edge);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px var(--shadow);
+}
+.bcard[hidden] {
+  display: none;
+}
+.bcard p {
+  margin: 0;
+}
+.bc-top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.2rem 0.8rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.bc-kind {
+  color: var(--accent-ink);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.bcard h2 {
+  margin: 0;
+  font: 500 1.2rem/1.3 var(--serif);
+}
+.bcard h2 a {
+  color: var(--text);
+  text-decoration: none;
+}
+.bcard h2 a:hover {
+  color: var(--accent-ink);
+}
+.bc-hy {
+  margin-top: -0.3rem;
+  font: 0.9rem/1.3 var(--serif);
+  color: var(--muted);
+}
+.bc-by {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.bc-by .info-btn {
+  margin-left: 0.1rem;
+  padding: 0.1rem;
+}
+.bc-by .info-btn svg {
+  width: 1rem;
+  height: 1rem;
+}
+/* the first paragraph, cut after five lines */
+.bc-lead {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  line-clamp: 5;
+  overflow: hidden;
+  font: 0.9rem/1.5 var(--serif);
+}
+.bc-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--rule);
+}
+.bc-meta {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.bc-meta .done {
+  display: block;
+  color: var(--accent-ink);
+}
+.bc-foot .bc-more {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+}
+.bc-read {
+  padding: 0.3rem 0.85rem;
+  font-size: 0.8rem;
+  color: var(--on-accent);
+  text-decoration: none;
+  background: var(--accent);
+  border-radius: 999px;
+}
+.bc-read:hover {
+  background: var(--accent-ink);
+}
