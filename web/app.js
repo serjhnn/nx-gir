@@ -32,10 +32,65 @@ function h(tag, attrs, ...kids) {
   for (const [k, v] of Object.entries(attrs || {})) {
     if (v == null) continue;
     if (k === "class") el.className = v;
-    else el.setAttribute(k, v);
+    else if (k === "href" && String(v).startsWith("#/")) {
+      setRoute(el, v);
+    } else el.setAttribute(k, v);
   }
   el.append(...kids.flat().filter((k) => k != null));
   return el;
+}
+
+// -- addresses --
+// A page is a path: /library, /read/<book>?line=3.
+// The code names a page as it did when the pages were
+// after a #: "#/library"; setRoute() turns that into
+// the path for a link, hashNow() gives the page shown
+// in that form, goTo() opens one without reloading.
+
+// the link of an <a> to a page: a path, opened by the
+// click handler below, not by the browser
+function setRoute(a, hash) {
+  a.setAttribute("href", hash.slice(1));
+  a.setAttribute("data-r", "");
+}
+
+// the page shown, as "#/library" (the root: "#/")
+function hashNow() {
+  const path = location.pathname.replace(/\/+$/, "");
+  return "#" + (path || "/") + location.search;
+}
+
+// open a page: "#/library" (or a path); replace: the
+// entry of history is replaced, not added to
+function goTo(to, replace) {
+  const url = to.replace(/^#/, "");
+  const now = location.pathname + location.search;
+  if (url === now) return;
+  if (replace) history.replaceState(null, "", url);
+  else history.pushState(null, "", url);
+  window.dispatchEvent(new Event("navigate"));
+}
+
+// back and forward
+window.addEventListener("popstate", () => {
+  window.dispatchEvent(new Event("navigate"));
+});
+
+// a link to a page: no reload
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("a[data-r]");
+  if (!a || e.defaultPrevented || e.button
+    || e.metaKey || e.ctrlKey || e.shiftKey
+    || e.altKey || a.target) return;
+  e.preventDefault();
+  goTo(a.getAttribute("href"));
+});
+
+// an old link, nxgir.am/#/library: the same page as
+// a path
+if (location.hash.startsWith("#/")) {
+  history.replaceState(null, "",
+    location.hash.slice(1));
 }
 
 const SVG = "http://www.w3.org/2000/svg";
@@ -778,7 +833,7 @@ async function shelf(folder) {
   // an old link to a book's folder: its page
   const page = folderHref(folder);
   if (page.startsWith("#/b/")) {
-    location.replace(page);
+    goTo(page, true);
     return;
   }
   const q = encodeURIComponent(folder);
@@ -888,7 +943,7 @@ function headerMenu() {
       more.focus();
     }
   });
-  window.addEventListener("hashchange",
+  window.addEventListener("navigate",
     () => open(false));
   topBar.append(more);
   bar.append(panel);
@@ -966,7 +1021,7 @@ async function tabClick(e) {
   if (!a || e.defaultPrevented) return;
   const key = a.dataset.tab;
   const now = tabFor(
-    location.hash.replace(/^#\/?/, ""));
+    hashNow().replace(/^#\/?/, ""));
   if (key === "continue") {
     e.preventDefault();
     if (now === "continue") return; // already reading
@@ -978,7 +1033,7 @@ async function tabClick(e) {
     } catch (err) {
       // the list of readings instead
     }
-    location.hash = to;
+    goTo(to);
   } else if (key === now) {
     if (window.scrollY > 4) {
       e.preventDefault();
@@ -987,7 +1042,7 @@ async function tabClick(e) {
   } else if (tabPlace[key]) {
     e.preventDefault();
     restoreY = tabPlace[key].y;
-    location.hash = "#/" + tabPlace[key].hash;
+    goTo("#/" + tabPlace[key].hash);
   }
 }
 
@@ -1030,7 +1085,7 @@ function tabBar() {
       more.focus();
     }
   });
-  window.addEventListener("hashchange",
+  window.addEventListener("navigate",
     () => open(false));
   document.body.append(sheet, bar);
   return bar;
@@ -1684,7 +1739,7 @@ async function libraryPage(who) {
   const readList = h("ul", { class: "shelf" });
   for (const r of reading) {
     const row = libraryRow(r.b, r.by);
-    row.href = "#/read/" + enc(r.at);
+    setRoute(row, "#/read/" + enc(r.at));
     const meta = row.querySelector(".meta");
     const fill = h("span");
     fill.style.width = r.progress + "%";
@@ -2703,14 +2758,14 @@ async function mapPage(want) {
     };
     function closePop() {
       st.sel = "";
-      history.replaceState(history.state, "", "#/map");
+      history.replaceState(history.state, "", "/map");
       drawPop();
     }
     // move: bring the place to the middle of the view
     function pick(id, zoomIn, move) {
       st.sel = id;
       history.replaceState(history.state, "",
-        "#/map/" + id);
+        "/map/" + id);
       drawPop();
       if (move) center(zoomIn);
     }
@@ -4248,8 +4303,8 @@ function markAt(i) {
 
 // the address of the line of word i, to share
 function lineLink(i) {
-  return location.origin + location.pathname +
-    "#/read/" + enc(R.name) +
+  return location.origin +
+    "/read/" + enc(R.name) +
     "?line=" + (R.wpos[i][0] + 1);
 }
 
@@ -5940,7 +5995,7 @@ async function newText(lang) {
       const r = await send("new", { lang,
         file: file.value.trim(), text: box.value });
       E.dirty = false;
-      location.hash = "#/read/" + enc(r.name);
+      goTo("#/read/" + enc(r.name));
     } catch (e) {
       msg.className = "status error";
       msg.textContent = "Not saved: " + e.message;
@@ -6043,7 +6098,7 @@ function searchBox(value) {
     const q = input.value.trim();
     if (!q) return;
     input.blur();
-    location.hash = searchHref(q);
+    goTo(searchHref(q));
   });
   const wrap = h("div", { class: "search-wrap" }, form);
   stickBelow(wrap);
@@ -6473,11 +6528,11 @@ async function searchPage(query) {
   // the first search of `nxgir web` waits for its
   // index
   say("Որոնվում է…");
-  const at = location.hash;
+  const at = hashNow();
   const [parts, f, about] = await Promise.all([
     partsOf(), findLines(q), authorsAbout()]);
   // gone to another page meanwhile
-  if (location.hash !== at) return;
+  if (hashNow() !== at) return;
   // how many parts each book has, for "մաս n"
   for (const b of parts.books) b[3] = 0;
   const seen = new Set();
@@ -6562,7 +6617,7 @@ async function searchPage(query) {
   // that back from the reader finds it the same
   const draw = () => {
     history.replaceState(history.state, "",
-      searchHref(q, where, open));
+      searchHref(q, where, open).slice(1));
     remember();
     if (all) {
       all.textContent = open.size >= g.authors.length
@@ -6652,7 +6707,7 @@ document.addEventListener("selectionchange", () => {
       return;
     }
     const q = words.join(" ");
-    selSearch.href = searchHref(q);
+    setRoute(selSearch, searchHref(q));
     selSearch.replaceChildren(icon(ICONS.search),
       h("span", {}, "Որոնել գրադարանում՝ ",
         h("b", {}, q)));
@@ -6662,7 +6717,7 @@ document.addEventListener("selectionchange", () => {
 selSearch.addEventListener("click", () => {
   selSearch.hidden = true;
 });
-window.addEventListener("hashchange", () => {
+window.addEventListener("navigate", () => {
   selSearch.hidden = true;
 });
 
@@ -6731,17 +6786,17 @@ async function route() {
     E.back = false;
     return;
   }
-  if (E.hash && location.hash !== E.hash) {
+  if (E.hash && hashNow() !== E.hash) {
     if (!leaveOk()) {
       E.back = true;
-      location.hash = E.hash;
+      goTo(E.hash);
       return;
     }
   }
   E.dirty = false;
   E.save = null;
   E.hash = "";
-  const hash = location.hash.replace(/^#\/?/, "");
+  const hash = hashNow().replace(/^#\/?/, "");
   markTab(hash);
   if (shownHash !== null) {
     rememberTab(shownHash, window.scrollY);
@@ -6770,10 +6825,10 @@ async function route() {
       await book(name, line, foundOf(p.get("q"),
         Number(p.get("r")), name, line));
     } else if (hash.startsWith("edit/")) {
-      E.hash = location.hash;
+      E.hash = hashNow();
       await edit(decodeURIComponent(hash.slice(5)));
     } else if (hash.startsWith("new/")) {
-      E.hash = location.hash;
+      E.hash = hashNow();
       await newText(hash.slice(4));
     } else if (hash === "search"
       || hash.startsWith("search?")) {
@@ -6841,7 +6896,7 @@ let placeTimer = 0;
 window.addEventListener("scroll", () => {
   clearTimeout(placeTimer);
   placeTimer = setTimeout(() => {
-    const hash = location.hash.replace(/^#\/?/, "");
+    const hash = hashNow().replace(/^#\/?/, "");
     if (reading(hash)) return;
     history.replaceState(
       { ...(history.state || {}), y: window.scrollY },
@@ -6857,7 +6912,7 @@ function backToPlace(hash) {
   if (!reading(hash) && y) window.scrollTo(0, y);
 }
 
-window.addEventListener("hashchange", route);
+window.addEventListener("navigate", route);
 drawTheme();
 drawView();
 route();

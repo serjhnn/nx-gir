@@ -263,6 +263,26 @@ def test_static_file(tmp_path):
     assert web.static_file("/%2e%2e/x", tmp_path) is None
 
 
+def test_page_request():
+    assert web.page_request("text/html,*/*;q=0.8")
+    assert not web.page_request("*/*")
+    assert not web.page_request(None)
+
+
+def test_page_address_gets_the_app(url):
+    # a page of the app (a path, not a file): a
+    # browser gets index.html, anything else 404
+    page = "/read/grabar/x/1.txt"
+    r, data = request(url, "GET", page, Accept="text/html")
+    assert r.status == 200 and b"nx-gir" in data
+    r, _ = request(url, "GET", page)
+    assert r.status == 404
+    r, _ = request(
+        url, "GET", "/api/nope", Accept="text/html"
+    )
+    assert r.status == 404
+
+
 def test_local_host():
     for h in (
         "localhost:8080",
