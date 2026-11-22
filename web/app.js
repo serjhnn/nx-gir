@@ -6460,6 +6460,22 @@ function nameHits(q, parts, names) {
   const coFits = ([id, name]) => fits(name)
     || Object.values(names[id] || {}).some(fits);
   const co = parts.with || {};
+  // a co-author has no folder: a row of its own, to
+  // its first book (bi), with the books it is in
+  const seen = new Set(authors.map((a) => a.id));
+  for (const [bi, list] of Object.entries(co)) {
+    for (const c of list) {
+      if (seen.has(c[0]) || !coFits(c)) continue;
+      seen.add(c[0]);
+      const also = Object.entries(names[c[0]] || {})
+        .find(([l, n]) => l !== "hy" && fits(n));
+      authors.push({ id: c[0], name: c[1],
+        bi: Number(bi), co: true,
+        also: also && !fits(c[1]) ? also[1] : "",
+        n: Object.values(co).filter((l) =>
+          l.some((x) => x[0] === c[0])).length });
+    }
+  }
   const books = parts.books
     .map(([key, name, ai], i) => ({ key, name, ai,
       co: co[i] || [] }))
@@ -6476,13 +6492,16 @@ function nameList(q, parts, names) {
     .filter((b) => b[2] === ai).length;
   const list = h("ul", { class: "shelf s-names" });
   for (const a of authors) {
+    const to = a.co ? bookHref(parts.books[a.bi][0])
+      : "#/library/" + enc(a.id);
     list.append(h("li", {}, h("a", { class: "row",
-      href: "#/library/" + enc(a.id) },
+      href: to },
     icon(ICONS.person, "ico"),
     h("span", { class: "name" }, a.name,
       a.also ? h("span", { class: "by" }, a.also)
         : null),
-    h("span", { class: "meta" }, n(a.i) + " գիրք")),
+    h("span", { class: "meta" },
+      (a.co ? a.n : n(a.i)) + " գիրք")),
     authorInfoBtn(a.id, a.name)));
   }
   const rows = books.map((b) => h("li", {},
