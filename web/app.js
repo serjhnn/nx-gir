@@ -1086,17 +1086,18 @@ function topBanner() {
 }
 
 // a note at the top of the top page: the site is
-// being built, with something new every day. The
-// look is one of four (a, b, c, d: .dev-a ...)
-const DEV_LOOK = "a";
-function devBanner(look = DEV_LOOK) {
-  return h("div", { class: "dev-banner dev-" + look,
+// being built, with something new every day, and
+// the contact address
+function devBanner() {
+  return h("div", { class: "dev-banner",
     role: "note", lang: "en" },
   h("span", { class: "dev-dot", "aria-hidden": "true" }),
   h("span", { class: "dev-text" },
     h("b", {}, "Under active development"),
     h("span", {}, "New features are added every day."
-      + " Come back often to see what is new.")));
+      + " Come back often to see what is new."),
+    h("span", { class: "dev-mail" },
+      "Questions or ideas? Write to ", mail(), ".")));
 }
 
 // a narrow banner on the top page, with the

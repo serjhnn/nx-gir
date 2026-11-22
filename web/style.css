@@ -870,14 +870,17 @@ body.home .bar {
 }
 
 /* the top page: the note that the site is being
-   built; four looks (.dev-a to .dev-d) */
+   built, an outline with the accent on the left */
 .dev-banner {
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
   margin: 0 0 1rem;
   padding: 0.7rem 1rem;
-  border-radius: 12px;
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent);
+  border-radius: 6px 12px 12px 6px;
+  background: var(--surface);
   font-family: var(--sans);
   line-height: 1.35;
 }
@@ -887,7 +890,15 @@ body.home .bar {
   font-size: 0.95rem;
 }
 .dev-banner .dev-text span {
+  display: block;
   font-size: 0.85rem;
+}
+.dev-banner .dev-mail {
+  margin-top: 0.25rem;
+  color: var(--muted);
+}
+.dev-banner a {
+  color: var(--accent-ink);
 }
 .dev-dot {
   flex: none;
@@ -906,43 +917,6 @@ body.home .bar {
 @keyframes dev-pulse {
   70% { box-shadow: 0 0 0 0.5rem transparent; }
   100% { box-shadow: 0 0 0 0 transparent; }
-}
-/* a: a soft note with a pulsing dot */
-.dev-a {
-  background: var(--mark);
-  color: var(--text);
-}
-/* b: an outline, the accent on the left */
-.dev-b {
-  border: 1px solid var(--rule);
-  border-left: 4px solid var(--accent);
-  border-radius: 6px 12px 12px 6px;
-  background: var(--surface);
-}
-/* c: a filled bar in the accent color */
-.dev-c {
-  background: #b85c3e;
-  color: #fff;
-}
-.dev-c .dev-dot {
-  background: #fff;
-  box-shadow: 0 0 0 0 #fff;
-}
-/* d: a thin dashed line, the words small */
-.dev-d {
-  padding: 0.5rem 0.9rem;
-  border: 1px dashed var(--accent);
-  background: transparent;
-  color: var(--muted);
-}
-.dev-d b {
-  display: inline;
-  margin-right: 0.35em;
-  color: var(--accent-ink);
-  font-size: 0.85rem;
-}
-.dev-d .dev-text span {
-  font-size: 0.8rem;
 }
 
 /* the top page: a narrow banner to #/contribute,
