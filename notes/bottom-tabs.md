@@ -1,6 +1,17 @@
 # Bottom navigation tabs on phones: plan
 
-Status: **plan and mock-ups only, no code changed.**
+Status: **built** (2026-11-22). Tabs: Library, Blog,
+Readings, Search, More (Map moved into More). Hidden in
+the reader and while typing. Left: home, More sheet
+open, the same in dark; right: Readings, Library, the
+reader (no bar):
+
+![built](bottom-tabs/built-more.jpg)
+![built](bottom-tabs/built-pages.jpg)
+
+Code: `TABS`, `MORE`, `tabFor()`, `tabBar()` in
+`web/app.js`; `.tabbar` at the end of `web/style.css`.
+Below is the original plan.
 
 ## Why
 

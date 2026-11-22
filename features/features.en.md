@@ -34,6 +34,10 @@ Tapping a word also highlights the whole sentence it belongs to, so long Grabar 
 
 The site remembers where you stopped reading each book, in this browser. The home page shows what you read last under Continue reading, with how far you got; open a book and it starts where you left it. All your readings are on the Readings page.
 
+## Tabs at the bottom of a phone
+
+On a phone, a bar at the bottom of every page leads to the Library, the Blog, your Readings and the search; Ավելին opens the other pages (the Map, Comics, Features, Timeline and more). In the reader it steps aside, to leave the room to the text.
+
 ## Contents
 
 ☰ Contents lists the chapters and sermons of the part you are reading and marks the one you are in. Tap one to go there; tap × or ☰ again to close the list.

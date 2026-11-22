@@ -76,6 +76,11 @@ const ICONS = {
   ],
   // three lines: the menu
   menu: ["M4 7h16", "M4 12h16", "M4 17h16"],
+  // a clock: the readings
+  clock: [
+    "M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18z",
+    "M12 7v5l3 2",
+  ],
   // a pen: the blog
   pen: [
     "M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z",
@@ -881,6 +886,89 @@ function headerMenu() {
   bar.append(panel);
 }
 headerMenu();
+
+// the tab bar at the bottom of a phone (shown by
+// style.css under 40rem; hidden in the reader):
+// the main pages, and a sheet with all the others
+const TABS = [
+  ["#/library", "book", "Գրադարան", "library"],
+  ["#/blog", "pen", "Բլոգ", "blog"],
+  ["#/recent", "clock", "Ընթերցումներ", "recent"],
+  ["#/search", "search", "Որոնում", "search"],
+];
+// the pages the More tab opens
+const MORE = [
+  ["#/map", "map", "Քարտեզ"],
+  ["#/comics", "panels", "Կոմիքսներ"],
+  ["#/features", "tick", "Հնարավորություններ"],
+  ["#/contribute", "join", "Միանալ"],
+  ["#/news", "horn", "Հայտարարություններ"],
+  ["#/timeline", "scroll", "Ժամանակագրություն"],
+  ["#/stats", "sliders", "Վիճակագրություն"],
+];
+
+// which tab a page belongs to: a TABS key, "more",
+// or "" (the reader and the editor have no bar)
+function tabFor(hash) {
+  const top = hash.split(/[/?]/)[0];
+  if (["read", "edit", "new"].includes(top)) return "";
+  if (["", "library", "b", "f"].includes(top)) {
+    return "library";
+  }
+  if (top === "comics") return "blog";
+  if (TABS.some((t) => t[3] === top)) return top;
+  return "more";
+}
+
+function tabBar() {
+  const link = ([href, ic, label, key]) => h("a",
+    { href, "data-tab": key },
+    icon(ICONS[ic]), label);
+  const sheet = h("nav", { class: "more-sheet",
+    id: "more-sheet", lang: "hy", hidden: "",
+    "aria-label": "Ավելին" },
+  ...MORE.map(menuLink));
+  const more = h("button", { type: "button",
+    "data-tab": "more", "aria-expanded": "false",
+    "aria-controls": "more-sheet" },
+  icon(ICONS.menu), "Ավելին");
+  const bar = h("nav", { class: "tabbar", lang: "hy",
+    "aria-label": "Հիմնական էջեր" },
+  ...TABS.map(link), more);
+  const open = (on) => {
+    sheet.hidden = !on;
+    more.setAttribute("aria-expanded", String(on));
+  };
+  more.addEventListener("click",
+    () => open(sheet.hidden));
+  document.addEventListener("pointerdown", (e) => {
+    if (!bar.contains(e.target)
+      && !sheet.contains(e.target)) open(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !sheet.hidden) {
+      open(false);
+      more.focus();
+    }
+  });
+  window.addEventListener("hashchange",
+    () => open(false));
+  document.body.append(sheet, bar);
+  return bar;
+}
+const tabs = tabBar();
+
+// mark the tab of the page shown
+function markTab(hash) {
+  const now = tabFor(hash);
+  for (const el of tabs.children) {
+    if (el.dataset.tab === now) {
+      el.setAttribute("aria-current", "page");
+    } else {
+      el.removeAttribute("aria-current");
+    }
+  }
+}
 
 // on scrolling, the top bar of the top page stays
 // at the top, with a line under it (.scrolled)
@@ -6248,6 +6336,7 @@ async function route() {
   E.save = null;
   E.hash = "";
   const hash = location.hash.replace(/^#\/?/, "");
+  markTab(hash);
   if (R.timer) savePos(true);
   R.name = "";
   closePanel();

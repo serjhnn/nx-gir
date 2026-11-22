@@ -1118,3 +1118,18 @@ def test_status_leaves_out_short_shirakatsi_works(tmp_path):
             files.append((name, 10, p))
     got = [b["folder"] for b in web.status(App(files))]
     assert got == ["grabar/anania-shirakatsi/15-c"]
+
+
+def test_tab_bar_covers_the_menu():
+    """Every MENU page is a tab or in the More sheet
+    (TABS and MORE in web/app.js)."""
+    js = web.static_file("/app.js").read_text()
+
+    def links(name):
+        start = js.index(f"const {name} = [")
+        end = js.index("\n];", start)
+        return set(
+            re.findall(r'\["(#/\w+)"', js[start:end])
+        )
+
+    assert links("MENU") <= links("TABS") | links("MORE")
