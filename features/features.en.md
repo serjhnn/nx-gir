@@ -84,7 +84,7 @@ The scroll beside an author's name opens a short card about them: when and where
 
 ## About the books
 
-Some books in the Library have a card of their own: their icon is in the accent color, and tapping it opens the card. It tells when the book was written, what it is and what is in it, in the same three languages. The rest of the row still opens the book. A book written by two authors shows both names, the earlier first, each with its own card: «Պատմութիւն Տարաւնոյ» is by Զենոբ Գլակ and Յովհան Մամիկոնեան, and its card tells which sections each wrote.
+Every book in the Library has a card of its own: its icon is in the accent color, and tapping it opens the card. It tells when the book was written, what it is and what is in it, in the same three languages. The rest of the row still opens the book. A book written by two authors shows both names, the earlier first, each with its own card: «Պատմութիւն Տարաւնոյ» is by Զենոբ Գլակ and Յովհան Մամիկոնեան, and its card tells which sections each wrote.
 
 ## Blog, Timeline and Statistics
 

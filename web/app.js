@@ -3543,11 +3543,17 @@ function authorInfoBtn(id, name, show) {
 
 // a book's row of the Library in its li: its icon
 // opens the card about the book (authors/<author>/
-// <book>.LANG.md), once it is known to have one
+// <book>.LANG.md), once it is known to have one; a
+// file of a grouped book (the Bible's Gospels) has
+// the card of its group (bible/new-testament)
 function bookItem(b, row, ...more) {
   const li = h("li", {}, row, ...more);
   knownBooks().then((ids) => {
-    if (!ids.has(b.id)) return;
+    const group = b.id.split("/").slice(0, 2)
+      .join("/");
+    const id = ids.has(b.id) ? b.id
+      : ids.has(group) ? group : "";
+    if (!id) return;
     const ui = AUTHOR_UI.hy;
     const k = h("button", { type: "button",
       class: "book-info", title: ui.book,
@@ -3555,7 +3561,7 @@ function bookItem(b, row, ...more) {
     icon(ICONS.book));
     k.addEventListener("click", (e) => {
       e.preventDefault();
-      bookInfo(b.id);
+      bookInfo(id);
     });
     li.classList.add("has-card");
     li.prepend(k);
