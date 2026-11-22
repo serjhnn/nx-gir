@@ -893,12 +893,12 @@ headerMenu();
 const TABS = [
   ["#/", "logo", "Գլխավոր", "home"],
   ["#/library", "book", "Գրադարան", "library"],
-  ["#/blog", "pen", "Բլոգ", "blog"],
-  ["#/recent", "clock", "Ընթերցում", "recent"],
+  ["#/recent", "clock", "Ընթերցումներ", "recent"],
   ["#/search", "search", "Որոնում", "search"],
 ];
 // the pages the More tab opens
 const MORE = [
+  ["#/blog", "pen", "Բլոգ"],
   ["#/map", "map", "Քարտեզ"],
   ["#/comics", "panels", "Կոմիքսներ"],
   ["#/features", "tick", "Հնարավորություններ"],
@@ -917,7 +917,6 @@ function tabFor(hash) {
   if (["library", "b", "f"].includes(top)) {
     return "library";
   }
-  if (top === "comics") return "blog";
   if (TABS.some((t) => t[3] === top)) return top;
   return "more";
 }

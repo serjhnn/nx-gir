@@ -36,7 +36,7 @@ The site remembers where you stopped reading each book, in this browser. The hom
 
 ## Tabs at the bottom of a phone
 
-On a phone, a bar at the bottom of every page leads to the Library, the Blog, your Readings and the search; Ավելին opens the other pages (the Map, Comics, Features, Timeline and more). In the reader it steps aside, to leave the room to the text.
+On a phone, a bar at the bottom of every page leads to the Home page, the Library, your Readings and the search; Ավելին opens the other pages (the Blog, the Map, Comics, Features, Timeline and more). In the reader it steps aside, to leave the room to the text.
 
 ## Contents
 
