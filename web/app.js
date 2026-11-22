@@ -966,6 +966,24 @@ function tabBar() {
 }
 const tabs = tabBar();
 
+// in the reader the bar shows on scrolling up, and
+// goes again on scrolling down (.peek, style.css)
+let lastY = 0;
+window.addEventListener("scroll", () => {
+  const y = window.scrollY;
+  const body = document.body;
+  if (!body.classList.contains("reading")) {
+    body.classList.remove("peek");
+  } else if (y < lastY - 8) {
+    body.classList.add("peek");
+  } else if (y > lastY + 8 || y < 50) {
+    body.classList.remove("peek");
+  } else {
+    return;
+  }
+  lastY = y;
+}, { passive: true });
+
 // mark the tab of the page shown
 function markTab(hash) {
   const now = tabFor(hash);
@@ -6345,6 +6363,7 @@ async function route() {
   E.hash = "";
   const hash = location.hash.replace(/^#\/?/, "");
   markTab(hash);
+  document.body.classList.remove("peek");
   if (R.timer) savePos(true);
   R.name = "";
   closePanel();

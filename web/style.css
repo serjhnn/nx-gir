@@ -3924,8 +3924,26 @@ body.home .search-wrap {
   .menu-panel {
     display: none !important;
   }
-  body.reading .tabbar,
-  body.reading .more-sheet,
+  /* the reader: the bar is out of sight, and slides
+     in on scrolling up (.peek, set by app.js) */
+  body.reading .tabbar {
+    visibility: hidden;
+    transform: translateY(100%);
+    transition: transform 0.2s, visibility 0s 0.2s;
+  }
+  body.reading.peek .tabbar {
+    visibility: visible;
+    transform: none;
+    transition: transform 0.2s;
+  }
+  body.reading:not(.peek) .more-sheet {
+    display: none;
+  }
+  body.reading.peek .sel-search {
+    bottom: calc(var(--tabbar) + 16px);
+  }
+  body.panel-open .tabbar,
+  body.panel-open .more-sheet,
   body:has(input:focus, textarea:focus) .tabbar {
     display: none;
   }
