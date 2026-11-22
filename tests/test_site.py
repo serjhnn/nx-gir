@@ -527,3 +527,12 @@ def test_service_worker(tmp_path, files):
         assert (out / icon["src"]).is_file()
     html = (out / "index.html").read_text("utf-8")
     assert 'rel="manifest"' in html
+
+
+def test_all_names():
+    # an author in each language, for a search by the
+    # English or Russian name
+    names = {"a": {"hy": "Ա", "en": "A", "ru": "Б"}}
+    assert bs.all_names(names, "a") == "Ա · A · Б"
+    assert bs.all_names(names, "a", "Ա") == "Ա · A · Б"
+    assert bs.all_names(names, "x", "Ք") == "Ք"

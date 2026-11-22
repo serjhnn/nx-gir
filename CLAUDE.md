@@ -190,9 +190,9 @@
   pins' position is set with `el.style`, never a style
   attribute (the CSP forbids it). A post page links
   its places (`placeChips()`). For search engines
-  `build-site.py` writes `map.<lang>.html` and a page
+  `build-site.py` writes `map/<lang>/` and a page
   for each place that a post names,
-  `map/<id>.<lang>.html` (`map_pages()`; the kind
+  `map/<id>/<lang>/` (`map_pages()`; the kind
   names are `KIND_NAMES` in `nxgir_map.py`). The
   README picture `docs/web-map.jpg` is made by
   `scripts/render-web.py`. How it works, the pitfalls
@@ -237,7 +237,7 @@
   `tests/test_features.py`; see
   `features/README.md`); on the site as
   `data/features.json` and
-  `features.<lang>.html`. Add a feature there
+  `features/<lang>/`. Add a feature there
   with every new one on the site
 - `notes/`: working notes, e.g. what each part of a
   book covers (`notes/3-amaran-hator.md`,
@@ -444,10 +444,12 @@
   web reader for GitHub Pages (`site/`, published by
   `.github/workflows/pages.yml`): the answers of the
   API as files, read by `app.js` when `static.js`
-  sets `NXGIR_STATIC`; for search engines, each
-  book also as plain HTML (`read/<book>.html`)
-  and each blog post (`blog/<slug>.<lang>.html`),
-  `sitemap.xml` and `robots.txt`; tested in
+  sets `NXGIR_STATIC`; for search engines, a page of
+  its own for each book (`read/<book>/`), author
+  (`library/<id>/`, named in Armenian, English and
+  Russian: `all_names()`), book (`b/<folder>/`) and
+  blog post (`blog/<slug>/<lang>/`), `sitemap.xml`
+  and `robots.txt`; tested in
   `tests/test_site.py`. `bucket()` and `BUCKETS` must
   match `app.js` (a test checks it). It also writes
   `nxgir-site.zip` only with `--zip` (not built now,
