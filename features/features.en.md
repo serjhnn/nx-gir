@@ -86,6 +86,10 @@ The scroll beside an author's name opens a short card about them: when and where
 
 Every book in the Library has a card of its own: its icon is in the accent color, and tapping it opens the card. It tells when the book was written, what it is and what is in it, in the same three languages. The rest of the row still opens the book. A book written by two authors shows both names, the earlier first, each with its own card: «Պատմութիւն Տարաւնոյ» is by Զենոբ Գլակ and Յովհան Մամիկոնեան, and its card tells which sections each wrote.
 
+## Reference
+
+The Reference page shows all the books as cards: what each book is, when it was written, who wrote it and a few lines about it, with a button to read it and one to open the whole card. Chips keep only one kind of book (history, law, poetry, letters, sermons, science…) or one century, and the two work together; the find box finds a book by its name, author or kind. The cards are in Armenian, English or Russian, and on a phone they are low banners, one under the other.
+
 ## Blog, Timeline and Statistics
 
 The Blog tells what is new, in themes: about the site, about authors and about books. The Timeline shows the main steps of the project, and the Statistics page how big the library and the site are.

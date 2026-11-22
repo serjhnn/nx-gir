@@ -229,6 +229,17 @@
   path in `books/grabar/`, read by `read_books()`
   (`written` and `kind` in place of `years` and
   `role`)
+- The Reference page, Տեղեկատու (`/reference`,
+  `referencePage()`, `bookCard()` in `app.js`;
+  `/api/book-cards?lang=`, `book_cards()` in
+  `nxgir_web.py`; on the site
+  `data/book-cards/<lang>.json` and `reference/`):
+  every book card, in the Library's order, with
+  chips for its kind and century. The kind is
+  `group_of()` of the English `kind` (`GROUPS` in
+  `nxgir_authors.py`: a new book whose kind fits
+  none fails a test, add a word there), the
+  century `century_of()` of the English `written`
 - `features/`: the Features page (`/features`,
   `/api/features`): what the site can do, one
   `features.LANG.md` per language (drafts in
