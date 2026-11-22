@@ -401,10 +401,18 @@ def authors(app):
     button beside these only; their names in each
     language, which the search finds too; and the
     ids of the books written about (<author>/
-    <book>), whose icon on the Library opens it."""
+    <book>), whose icon on the Library opens it,
+    and their titles in each language ("titles"),
+    which the search finds too."""
     if not app.authors:
-        return {"authors": [], "names": {}, "books": []}
+        return {
+            "authors": [],
+            "names": {},
+            "books": [],
+            "titles": {},
+        }
     found = author_info.read(app.authors)
+    books = author_info.read_books(app.authors)
     return {
         "authors": sorted(found),
         "names": {
@@ -413,9 +421,13 @@ def authors(app):
             }
             for aid, a in sorted(found.items())
         },
-        "books": sorted(
-            author_info.read_books(app.authors)
-        ),
+        "books": sorted(books),
+        "titles": {
+            bid: {
+                v["lang"]: v["name"] for v in b["versions"]
+            }
+            for bid, b in sorted(books.items())
+        },
     }
 
 

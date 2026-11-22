@@ -1711,7 +1711,7 @@ async function libraryPage(who) {
       list.append(li);
       return { el: li, names: [b.name, b.title,
         ...own.map((c) => c.name)],
-      ids: own.map((c) => c.id) };
+      ids: own.map((c) => c.id), book: b.id };
     });
     // an author whose books are grouped (the Bible)
     // has a page of its own (flat_author())
@@ -1955,10 +1955,11 @@ async function libraryPage(who) {
 // name has the words (nameFits()), an author also
 // by its English or Russian name; each found one in
 // turn (Enter, ▼; Shift+Enter, ▲), scrolled into
-// view by show. items: { el, names, ids } in the
-// order shown, ids the authors and co-authors
-// whose other names count; all() opens the tab of
-// all books.
+// view by show. items: { el, names, ids, book? }
+// in the order shown, ids the authors and
+// co-authors whose other names count, book the
+// id whose card's titles count (/api/authors
+// "titles"); all() opens the tab of all books.
 function libraryFind(items, show, all) {
   const input = h("input", { type: "search",
     name: "find",
@@ -1986,8 +1987,10 @@ function libraryFind(items, show, all) {
   clear.hidden = true;
   chip.hidden = true;
   let names = {};
+  let titles = {};
   authorsAbout().then((d) => {
     names = d.names || {};
+    titles = d.titles || {};
     if (input.value.trim()) run();
   });
   let found = [];
@@ -2014,7 +2017,9 @@ function libraryFind(items, show, all) {
         names[id] || {}).some(([l, n]) => l !== "hy"
         && fits(n));
       found = items.filter((x) => x.names.some(fits)
-        || x.ids.some(other));
+        || x.ids.some(other)
+        || Object.values(titles[x.book] || {})
+          .some(fits));
       all();
     }
     for (const x of found) x.el.classList.add("lf-hit");
@@ -3501,7 +3506,7 @@ function authorsAbout() {
   if (!authorData) {
     authorData = api("authors")
       .catch(() => ({ authors: [], names: {},
-        books: [] }));
+        books: [], titles: {} }));
   }
   return authorData;
 }
@@ -6447,8 +6452,9 @@ function nameFits(q) {
 // q (as the start of one of its words), in either
 // spelling; an author also by its English and
 // Russian names (names: /api/authors), shown as
-// "also"
-function nameHits(q, parts, names) {
+// "also"; a book also by the titles of its card
+// (titles: /api/authors), shown the same way
+function nameHits(q, parts, names, titles = {}) {
   const fits = nameFits(q);
   const authors = [];
   parts.authors.forEach(([id, name], i) => {
@@ -6485,14 +6491,22 @@ function nameHits(q, parts, names) {
   const books = parts.books
     .map(([key, name, ai], i) => ({ key, name, ai,
       co: co[i] || [] }))
-    .filter((b) => fits(b.name) || b.co.some(coFits));
+    .filter((b) => {
+      if (fits(b.name) || b.co.some(coFits)) {
+        return true;
+      }
+      const t = Object.entries(titles[b.key] || {})
+        .find(([l, n]) => l !== "hy" && fits(n));
+      if (t) b.also = t[1];
+      return !!t;
+    });
   return { authors, books };
 }
 
 // the names found, above the lines
-function nameList(q, parts, names) {
+function nameList(q, parts, names, titles) {
   const { authors, books } = nameHits(q, parts,
-    names);
+    names, titles);
   if (!authors.length && !books.length) return null;
   const n = (ai) => parts.books
     .filter((b) => b[2] === ai).length;
@@ -6515,7 +6529,8 @@ function nameList(q, parts, names) {
       icon(ICONS.book, "ico"),
       h("span", { class: "name" }, b.name,
         h("span", { class: "by" },
-          b.co.map((c) => c[1]).concat(
+          (b.also ? [b.also] : []).concat(
+            b.co.map((c) => c[1]),
             [parts.authors[b.ai][1]]).join(" · "))))));
   // a common title (Պատմութիւն Հայոց): the first
   // few, and a button for the rest
@@ -6587,7 +6602,8 @@ async function searchPage(query) {
   };
   const ctx = { q, where, parts, index,
     keys: f.keys };
-  const names = nameList(q, parts, about.names);
+  const names = nameList(q, parts, about.names,
+    about.titles);
   const common = f.common.length ? h("p",
     { class: "hint", lang: "hy" },
     f.common.map(([w, n]) => w + " (" + nf(n)

@@ -225,23 +225,32 @@ def test_name_hits_in_app_js():
         "իշխան",
         "glak",
         "Գլակ",
+        "taron",
     ]
+    titles = {
+        "yeghishe/1-v": {
+            "hy": "Վարդանանց",
+            "en": "History of Taron",
+        }
+    }
     src = (
         js_function(js, "wordKey")
         + js_function(js, "loose")
         + js_function(js, "nameFits")
         + js_function(js, "nameHits")
-        + "const [qs, parts, names] = JSON.parse("
-        "require('fs').readFileSync(0, 'utf8'));\n"
+        + "const [qs, parts, names, titles] ="
+        " JSON.parse(require('fs')"
+        ".readFileSync(0, 'utf8'));\n"
         "console.log(JSON.stringify(qs.map((q) => {"
-        " const r = nameHits(q, parts, names);"
+        " const r = nameHits(q, parts, names, titles);"
         " return [r.authors.map((a) => [a.id,"
-        " a.also || null]), r.books.map((b) => b.key)];"
+        " a.also || null]), r.books.map((b) =>"
+        " b.also ? [b.key, b.also] : b.key)];"
         " })))"
     )
     got = subprocess.run(
         ["node", "-e", src],
-        input=json.dumps([queries, parts, names]),
+        input=json.dumps([queries, parts, names, titles]),
         capture_output=True,
         text=True,
         check=True,
@@ -257,6 +266,8 @@ def test_name_hits_in_app_js():
         # a co-author is an author in the list too
         [[["zenob-glak", "Zenob Glak"]], ["yeghishe/1-v"]],
         [[["zenob-glak", None]], ["yeghishe/1-v"]],
+        # a book by its card's title in English
+        [[], [["yeghishe/1-v", "History of Taron"]]],
     ]
 
 

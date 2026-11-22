@@ -98,6 +98,7 @@ def test_api(folder, tmp_path):
     app = App([], authors=folder, places=places)
     assert web.authors(app) == {
         "books": [],
+        "titles": {},
         "authors": ["gosh"],
         "names": {
             "gosh": {
@@ -122,6 +123,7 @@ def test_api(folder, tmp_path):
         "authors": [],
         "names": {},
         "books": [],
+        "titles": {},
     }
 
 
@@ -197,6 +199,9 @@ def test_read_books(folder):
     assert v["source"] == ""
     app = App([], authors=folder)
     assert web.authors(app)["books"] == ["gosh/1-law"]
+    # the search finds a book by its card's title
+    t = web.authors(app)["titles"]["gosh/1-law"]
+    assert set(t) == {"hy"}
     assert web.book_info(app, "gosh/1-law")["id"] == (
         "gosh/1-law"
     )
