@@ -480,6 +480,46 @@ h1 {
     overflow-x: visible;
   }
 }
+/* the language button in the top bar and the list
+   it opens (langButton() in app.js) */
+.lang-btn {
+  justify-content: center;
+  min-width: 2.9rem;
+  font-weight: 600;
+}
+.lang-btn[aria-expanded="true"] {
+  background: var(--hover);
+}
+.lang-panel {
+  position: absolute;
+  top: 100%;
+  right: 16px;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  min-width: 10rem;
+  padding: 0.4rem;
+  border: 1px solid var(--panel-rule);
+  border-radius: 14px;
+  background: var(--panel);
+  box-shadow: 0 10px 28px var(--panel-shadow);
+}
+.lang-panel[hidden] {
+  display: none;
+}
+.lang-panel a {
+  padding: 0.6rem 0.8rem;
+  border-radius: 10px;
+  color: var(--text);
+  text-decoration: none;
+}
+.lang-panel a:hover {
+  background: var(--hover);
+}
+.lang-panel a[aria-current] {
+  color: var(--accent-ink);
+  font-weight: 600;
+}
 /* the ☰ button in the top bar and the list it opens
    (headerMenu() in app.js) */
 .bar {

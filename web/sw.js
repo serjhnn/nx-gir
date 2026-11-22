@@ -17,7 +17,8 @@ const FRESH = ["sw.js", "offline.json", "download.json",
   "nxgir-site.zip"];
 // opened at once: what the first screen needs
 const SHELL = ["./", "index.html", "style.css",
-  "app.js", "theme.js", "fonts.css", "static.js",
+  "app.js", "i18n.js", "theme.js", "fonts.css",
+  "static.js",
   "icon.svg", "manifest.webmanifest"];
 
 // saving every book is switched off for now (app.js

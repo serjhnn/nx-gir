@@ -33,7 +33,8 @@ function h(tag, attrs, ...kids) {
   for (const [k, v] of Object.entries(attrs || {})) {
     if (v == null) continue;
     if (k === "class") el.className = v;
-    else if (k === "href" && String(v).startsWith("#/")) {
+    else if (k === "href" && (String(v).startsWith("#/")
+      || langOf(String(v)))) {
       setRoute(el, v);
     } else el.setAttribute(k, v);
   }
@@ -42,29 +43,48 @@ function h(tag, attrs, ...kids) {
 }
 
 // -- addresses --
-// A page is a path: /library, /read/<book>?line=3.
-// The code names a page as it did when the pages were
-// after a #: "#/library"; setRoute() turns that into
-// the path for a link, hashNow() gives the page shown
-// in that form, goTo() opens one without reloading.
+// A page is a path under its language (i18n.js):
+// /hy/library, /en/read/<book>?line=3. The code
+// names a page without the language, as it did when
+// the pages were after a #: "#/library"; setRoute()
+// turns that into the path for a link, in LANG,
+// hashNow() gives the page shown in that form,
+// goTo() opens one without reloading. A path with
+// its language (inLang()) is opened as it is.
+
+// the path of page "#/library" in language l
+function inLang(l, hash) {
+  const rest = hash.replace(/^#?\/?/, "");
+  return "/" + l + "/" + rest;
+}
 
 // the link of an <a> to a page: a path, opened by the
 // click handler below, not by the browser
 function setRoute(a, hash) {
-  a.setAttribute("href", hash.slice(1));
+  a.setAttribute("href", hash.startsWith("#")
+    ? inLang(LANG, hash) : hash);
   a.setAttribute("data-r", "");
 }
 
 // the page shown, as "#/library" (the root: "#/")
 function hashNow() {
-  const path = location.pathname.replace(/\/+$/, "");
+  const path = location.pathname
+    .replace(/^\/[a-z]{2}(?=\/|$)/, "")
+    .replace(/\/+$/, "");
   return "#" + (path || "/") + location.search;
+}
+
+// a page as a path with its language: "#/library"
+// in LANG, "/library" too, "/ru/map" as it is
+function pathOf(to) {
+  if (to.startsWith("#")) return inLang(LANG, to);
+  return langOf(to) ? to : inLang(LANG, to);
 }
 
 // open a page: "#/library" (or a path); replace: the
 // entry of history is replaced, not added to
 function goTo(to, replace) {
-  const url = to.replace(/^#/, "");
+  const url = pathOf(to);
   const now = location.pathname + location.search;
   if (url === now) return;
   if (replace) history.replaceState(null, "", url);
@@ -87,11 +107,32 @@ document.addEventListener("click", (e) => {
   goTo(a.getAttribute("href"));
 });
 
-// an old link, nxgir.am/#/library: the same page as
-// a path
-if (location.hash.startsWith("#/")) {
-  history.replaceState(null, "",
-    location.hash.slice(1));
+// An old link: nxgir.am/#/library, /library, and
+// the language at the end, /blog/<slug>/en,
+// /map/<place>/ru, /features/hy: the same page with
+// the language first
+{
+  let path = location.pathname;
+  let search = location.search;
+  if (location.hash.startsWith("#/")) {
+    const [p, q] = location.hash.slice(1).split("?");
+    path = p;
+    search = q ? "?" + q : "";
+  }
+  if (!langOf(path)) {
+    let l = LANG;
+    const m = new RegExp("^/(blog|comics|features"
+      + "|map)(/.*?)?/([a-z]{2})/?$").exec(path);
+    if (m && LANGS.includes(m[3])) {
+      l = m[3];
+      path = "/" + m[1] + (m[2] || "");
+    }
+    history.replaceState(null, "",
+      inLang(l, path) + search);
+  }
+  LANG = langOf(location.pathname);
+  saveLang(LANG);
+  document.documentElement.lang = LANG;
 }
 
 const SVG = "http://www.w3.org/2000/svg";
@@ -529,8 +570,9 @@ const NAME = "Նախագիր | nxGir";
 
 // the top page's title, as in index.html: what
 // search results show
-const TOP_TITLE =
-  NAME + " · Grabar books, word by word";
+function topTitle() {
+  return NAME + " · " + t("title.top");
+}
 
 function enc(name) {
   return name.split("/").map(encodeURIComponent)
@@ -558,44 +600,39 @@ const BY_SA = "https://creativecommons.org/"
   + "licenses/by-sa/4.0/";
 
 function siteFooter() {
-  const pages = [["#/library", "Library"],
-    ["#/reference", "Reference"], ["#/blog", "Blog"],
-    ["#/comics", "Comics"],
-    ["#/map", "Map"], ["#/features", "Features"],
-    ["#/timeline", "Timeline"],
-    ["#/stats", "Statistics"],
-    ["#/recent", "Readings"]];
+  const pages = ["library", "reference", "blog",
+    "comics", "map", "features", "timeline",
+    "stats", "recent"];
   return h("footer", { class: "site-foot" },
     h("p", { class: "foot-name" },
       h("span", { lang: "hy" }, "Նախագիր"),
       h("span", { class: "foot-sep",
         "aria-hidden": "true" }),
       named("nxGir")),
-    h("nav", { "aria-label": "Pages" },
-      pages.flatMap(([to, label], i) => [
+    h("nav", { "aria-label": t("nav.pages") },
+      pages.flatMap((p, i) => [
         i ? " · " : null,
-        h("a", { href: to }, label)])),
-    h("p", {}, "Translations ",
+        h("a", { href: "#/" + p }, t("nav." + p))])),
+    h("p", {}, t("foot.tr"),
       h("a", { href: BY_SA, rel: "license" },
         "CC BY-SA 4.0"),
-      " · Grabar texts in the public domain"),
+      t("foot.pd")),
     h("p", {},
       h("a", { href: "#/contribute" },
-        "Become a contributor"),
+        t("foot.join")),
       " · ",
-      h("a", { href: "#/news" },
-        "Announcements"),
+      h("a", { href: "#/news" }, t("nav.news")),
       " · ",
       h("a", { href: REPO }, "GitHub"),
       offlineLink()),
-    h("p", {}, "Developed by S.O. and Claude"));
+    h("p", {}, t("foot.by")));
 }
 
 // the published site only: a link to #/offline
 function offlineLink() {
   if (!hasWorker()) return null;
   return [" · ", h("a", { href: "#/offline" },
-    "Offline")];
+    t("nav.offline"))];
 }
 
 // an error, and under it what the site is: a
@@ -605,7 +642,7 @@ function showError(msg) {
   show(
     h("p", { class: "error", "data-nosnippet": "" },
       msg + ". ",
-      h("a", { href: "#/" }, "Back to the library")),
+      h("a", { href: "#/" }, t("back.library"))),
     ABOUT
   );
 }
@@ -618,7 +655,8 @@ function crumbs(path, last, above) {
     "aria-label": "Folders" });
   const parts = path ? path.split("/") : [];
   if (!last) parts.pop();
-  nav.append(h("a", { href: "#/" }, "Library"));
+  nav.append(h("a", { href: "#/" },
+    t("nav.library")));
   parts.forEach((p, i) => {
     const to = parts.slice(0, i + 1).join("/");
     const a = above && above[i];
@@ -637,8 +675,6 @@ const topBar = button.parentNode;
 
 // light, dark, black, and around again
 const THEMES = ["light", "dark", "black"];
-const THEME_NAMES = {
-  light: "Light", dark: "Dark", black: "Black" };
 const THEME_ICONS = {
   light: "sun", dark: "moon", black: "night" };
 
@@ -653,13 +689,12 @@ function nextTheme(t) {
 }
 
 function drawTheme() {
-  const t = theme();
-  const other = nextTheme(t);
+  const now = theme();
+  const other = nextTheme(now);
   button.replaceChildren(
-    icon(ICONS[THEME_ICONS[t]]));
-  button.title = "Theme: " + THEME_NAMES[t] +
-    " (click for " +
-    THEME_NAMES[other].toLowerCase() + ")";
+    icon(ICONS[THEME_ICONS[now]]));
+  button.title = t("theme.title",
+    t("theme." + now), t("theme." + other));
   button.setAttribute("aria-label", button.title);
 }
 
@@ -694,9 +729,8 @@ function drawView() {
   const on = document.documentElement.classList
     .contains("phone");
   viewBtn.replaceChildren(icon(ICONS.phone));
-  viewBtn.title = on ? "Phone view: on (click for"
-    + " the wide view)" : "Phone view";
-  viewBtn.setAttribute("aria-label", "Phone view");
+  viewBtn.title = on ? t("phone.on") : t("phone");
+  viewBtn.setAttribute("aria-label", t("phone"));
   viewBtn.setAttribute("aria-pressed", String(on));
 }
 
@@ -711,6 +745,78 @@ viewBtn.addEventListener("click", () => {
   } catch (e) {}
   drawView();
 });
+
+// -- the language --
+// The button in the top bar (Հայ, Eng, Рус) opens
+// a list of the languages: links to the page shown
+// in each. route() sees the new language in the
+// address and sends "langchange": the menus, the
+// tab bar and the buttons draw their words again,
+// then the page itself is drawn.
+
+function langButton() {
+  const bar = topBar.parentNode;
+  const btn = h("button", { class: "icon-btn lang-btn",
+    type: "button", "aria-expanded": "false",
+    "aria-controls": "lang-panel" });
+  const panel = h("nav", { class: "lang-panel",
+    id: "lang-panel", hidden: "" });
+  const open = (on) => {
+    panel.hidden = !on;
+    btn.setAttribute("aria-expanded", String(on));
+  };
+  const draw = () => {
+    btn.textContent = LANG_SHORT[LANG];
+    btn.lang = LANG;
+    btn.title = t("lang.pick");
+    btn.setAttribute("aria-label",
+      t("lang.pick") + ": " + LANG_FULL[LANG]);
+    panel.setAttribute("aria-label", t("lang.pick"));
+    panel.replaceChildren(...LANGS.map((l) => h("a",
+      { href: inLang(l, hashNow()), lang: l,
+        hreflang: l,
+        "aria-current": l === LANG ? "true" : null },
+      LANG_FULL[l])));
+  };
+  btn.addEventListener("click", () => {
+    draw();
+    open(panel.hidden);
+  });
+  panel.addEventListener("click", (e) => {
+    if (e.target.closest("a")) open(false);
+  });
+  document.addEventListener("pointerdown", (e) => {
+    if (!btn.contains(e.target)
+      && !panel.contains(e.target)) open(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !panel.hidden) {
+      open(false);
+      btn.focus();
+    }
+  });
+  window.addEventListener("navigate", () => {
+    open(false);
+    draw();
+  });
+  draw();
+  topBar.prepend(btn);
+  bar.append(panel);
+}
+langButton();
+
+// the language of the address, if it changed: kept,
+// and every part drawn once (not the page) told
+function followLang() {
+  const l = langOf(location.pathname) || LANG;
+  if (l === LANG) return;
+  LANG = l;
+  saveLang(l);
+  document.documentElement.lang = l;
+  drawTheme();
+  drawView();
+  window.dispatchEvent(new Event("langchange"));
+}
 
 // -- bookshelf --
 
@@ -756,20 +862,21 @@ const CONTACT = ["nxgir.lib", "gmail.com"];
 
 // the menu items: the row on the top page and the
 // list the ☰ button of the top bar opens
+// (labels: keys of UI in i18n.js)
 const MENU = [
-  ["#/library", "book", "Գրադարան"],
-  ["#/reference", "cards", "Տեղեկատու"],
-  ["#/blog", "pen", "Բլոգ"],
-  ["#/comics", "panels", "Կոմիքսներ"],
-  ["#/map", "map", "Քարտեզ"],
-  ["#/features", "tick", "Հնարավորություններ"],
-  ["#/contribute", "join", "Միանալ"],
-  ["#/news", "horn", "Հայտարարություններ"],
+  ["#/library", "book", "nav.library"],
+  ["#/reference", "cards", "nav.reference"],
+  ["#/blog", "pen", "nav.blog"],
+  ["#/comics", "panels", "nav.comics"],
+  ["#/map", "map", "nav.map"],
+  ["#/features", "tick", "nav.features"],
+  ["#/contribute", "join", "nav.contribute"],
+  ["#/news", "horn", "nav.news"],
 ];
 
 function menuLink([href, ic, label]) {
   return h("a", { class: "icon-btn", href },
-    icon(ICONS[ic]), label);
+    icon(ICONS[ic]), t(label));
 }
 
 // the welcome above the library, in Armenian:
@@ -861,7 +968,7 @@ async function shelf(folder) {
     ? data.title || folder.split("/").pop()
     : "Library";
   document.title = folder
-    ? title + " · " + NAME : TOP_TITLE;
+    ? title + " · " + NAME : topTitle();
   const lang = folder.split("/")[1];
   show(
     folder ? crumbs(folder, false, data.crumbs)
@@ -933,13 +1040,21 @@ function menuBar(...links) {
 function headerMenu() {
   const bar = topBar.parentNode;
   const panel = h("nav", { class: "menu-panel",
-    id: "menu-panel", lang: "hy", hidden: "",
-    "aria-label": "Ցանկ" }, ...MENU.map(menuLink));
+    id: "menu-panel", hidden: "" });
   const more = h("button", { class: "icon-btn menu-more",
-    type: "button", title: "Ցանկ",
-    "aria-label": "Ցանկ", "aria-expanded": "false",
+    type: "button", "aria-expanded": "false",
     "aria-controls": "menu-panel" },
   icon(ICONS.menu));
+  // its words, again when the language changes
+  const draw = () => {
+    panel.lang = LANG;
+    panel.setAttribute("aria-label", t("nav.menu"));
+    panel.replaceChildren(...MENU.map(menuLink));
+    more.title = t("nav.menu");
+    more.setAttribute("aria-label", t("nav.menu"));
+  };
+  draw();
+  window.addEventListener("langchange", draw);
   const open = (on) => {
     panel.hidden = !on;
     more.setAttribute("aria-expanded", String(on));
@@ -967,24 +1082,25 @@ headerMenu();
 // the tab bar at the bottom of a phone (shown by
 // style.css under 40rem; hidden in the reader):
 // the main pages, and a sheet with all the others
+// (labels: keys of UI in i18n.js)
 const TABS = [
-  ["#/", "logo", "Գլխավոր", "home"],
-  ["#/library", "book", "Գրադարան", "library"],
-  ["#/recent", "resume", "Շարունակել", "continue"],
-  ["#/search", "search", "Որոնում", "search"],
+  ["#/", "logo", "nav.home", "home"],
+  ["#/library", "book", "nav.library", "library"],
+  ["#/recent", "resume", "nav.continue", "continue"],
+  ["#/search", "search", "nav.search", "search"],
 ];
 // the pages the More tab opens
 const MORE = [
-  ["#/recent", "clock", "Ընթերցումներ"],
-  ["#/reference", "cards", "Տեղեկատու"],
-  ["#/blog", "pen", "Բլոգ"],
-  ["#/map", "map", "Քարտեզ"],
-  ["#/comics", "panels", "Կոմիքսներ"],
-  ["#/features", "tick", "Հնարավորություններ"],
-  ["#/contribute", "join", "Միանալ"],
-  ["#/news", "horn", "Հայտարարություններ"],
-  ["#/timeline", "scroll", "Ժամանակագրություն"],
-  ["#/stats", "sliders", "Վիճակագրություն"],
+  ["#/recent", "clock", "nav.recent"],
+  ["#/reference", "cards", "nav.reference"],
+  ["#/blog", "pen", "nav.blog"],
+  ["#/map", "map", "nav.map"],
+  ["#/comics", "panels", "nav.comics"],
+  ["#/features", "tick", "nav.features"],
+  ["#/contribute", "join", "nav.contribute"],
+  ["#/news", "horn", "nav.news"],
+  ["#/timeline", "scroll", "nav.timeline"],
+  ["#/stats", "sliders", "nav.stats"],
 ];
 
 // which tab a page belongs to: a TABS key, "more",
@@ -1071,18 +1187,30 @@ function tabBar() {
   const link = ([href, ic, label, key]) => h("a",
     { href, "data-tab": key },
     ic === "logo" ? logoMark() : icon(ICONS[ic]),
-    label);
+    t(label));
   const sheet = h("nav", { class: "more-sheet",
-    id: "more-sheet", lang: "hy", hidden: "",
-    "aria-label": "Ավելին" },
-  ...MORE.map(menuLink));
+    id: "more-sheet", hidden: "" });
   const more = h("button", { type: "button",
     "data-tab": "more", "aria-expanded": "false",
-    "aria-controls": "more-sheet" },
-  icon(ICONS.menu), "Ավելին");
-  const bar = h("nav", { class: "tabbar", lang: "hy",
-    "aria-label": "Հիմնական էջեր" },
-  ...TABS.map(link), more);
+    "aria-controls": "more-sheet" });
+  const bar = h("nav", { class: "tabbar" });
+  // its words and links, again when the language
+  // changes
+  const draw = () => {
+    sheet.lang = LANG;
+    sheet.setAttribute("aria-label", t("nav.more"));
+    sheet.replaceChildren(...MORE.map(menuLink));
+    more.replaceChildren(icon(ICONS.menu),
+      t("nav.more"));
+    bar.lang = LANG;
+    bar.setAttribute("aria-label", t("nav.main"));
+    bar.replaceChildren(...TABS.map(link), more);
+    if (bar.isConnected) {
+      markTab(hashNow().replace(/^#\/?/, ""));
+    }
+  };
+  draw();
+  window.addEventListener("langchange", draw);
   bar.addEventListener("click", tabClick);
   const open = (on) => {
     sheet.hidden = !on;
@@ -7107,6 +7235,7 @@ async function route() {
   E.dirty = false;
   E.save = null;
   E.hash = "";
+  followLang();
   const hash = hashNow().replace(/^#\/?/, "");
   markTab(hash);
   if (shownHash !== null) {
@@ -7188,7 +7317,7 @@ async function route() {
     visit("/" + decodeURIComponent(hash));
   } catch (e) {
     clearReading();
-    showError(e.message || "Something went wrong");
+    showError(e.message || t("error"));
   }
 }
 

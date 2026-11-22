@@ -117,6 +117,7 @@ VERSIONED = (
     "fonts.css",
     "style.css",
     "static.js",
+    "i18n.js",
     "app.js",
 )
 # GoatCounter (goatcounter.com): the site's code,
