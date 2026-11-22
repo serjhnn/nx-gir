@@ -341,7 +341,7 @@ phone's browser.
   shows the last three books you opened, newest
   first, with how far you got and when; tap one to
   go on where you stopped. **Readings** (the link
-  under it and under the library, or `#/recent`)
+  under it and under the library, or `/recent`)
   lists all of them. The × of a book takes it off
   the list (where you stopped stays; reading it
   again brings it back). `nxgir web` takes them from
@@ -349,7 +349,7 @@ phone's browser.
   are there too; on nxgir.am each browser keeps its
   own.
 - **Timeline** (the link under the library, or
-  `#/timeline`): the main steps of the project,
+  `/timeline`): the main steps of the project,
   newest first, with filters by kind and what comes
   next; the newest three are also in the welcome
   above the library, under **Ի՞նչ փոփոխություններ կան
@@ -363,7 +363,7 @@ phone's browser.
        alt="The Timeline page on a phone">
 </p>
 
-- **Map** (the link under the library, or `#/map`): a
+- **Map** (the link under the library, or `/map`): a
   painted map of the Armenian Highland with a pin on
   each place a blog post or a comic is about, under
   its ancient Armenian name. Tap a pin for a small panel
@@ -418,11 +418,16 @@ added up per browser and book, and passing 1, 5,
 so on, once each. The local `nxgir web` counts
 nothing.
 
-Search engines do not see the `#/` pages of the
-reader, so the copy also has each book as a plain
-page with its text, `read/<book>.html`, linking to
-the reader, and a `sitemap.xml` that `robots.txt`
-names. To get it into Google, add `nxgir.am` once in
+The pages are paths (`/library`, `/read/<book>`), not
+`#/` addresses; an old `nxgir.am/#/library` link is
+turned into its path. Search engines do not run the
+app, so the copy has a folder with an `index.html`
+for each page they should list (`read/<book>/`, the
+blog posts, `library/`, `map/`, ...): the app with
+its own title, description and words, and a
+`sitemap.xml` that `robots.txt` names. Any other path
+gets `404.html`, the plain app, which reads the
+address. To get it into Google, add `nxgir.am` once in
 [Google Search Console](https://search.google.com/search-console)
 (a domain property, proved with a DNS TXT record)
 and submit `https://nxgir.am/sitemap.xml` there.

@@ -2617,7 +2617,11 @@ function mapLink(s, lang) {
     h("span", { class: "ml-title" }, named(v.title))));
 }
 
-async function mapPage(want) {
+async function mapPage(path) {
+  // map/<place>, map/<lang>, map/<place>/<lang>
+  let [want, lg] = path.split("/");
+  if (want in BLOG) [want, lg] = ["", want];
+  if (lg in BLOG) setBlogLang(lg);
   const data = await api("map");
   const places = data.places;
   const by = new Map(places.map((p) => [p.id, p]));

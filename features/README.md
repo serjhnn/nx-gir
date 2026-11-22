@@ -1,7 +1,7 @@
 # The nx-gir features
 
 What the site can do, for the Features page
-(`#/features`, `/api/features`), read by
+(`/features`, `/api/features`), read by
 `scripts/nxgir_features.py`. Content, not code.
 
 - One file per language: `features.LANG.md`,

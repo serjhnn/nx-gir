@@ -1,6 +1,6 @@
 # The nx-gir blog
 
-Posts for the Blog page (`#/blog`, `/api/blog`),
+Posts for the Blog page (`/blog`, `/api/blog`),
 read by `scripts/nxgir_blog.py`. Content, not code.
 
 - One file per post and language:
@@ -9,14 +9,14 @@ read by `scripts/nxgir_blog.py`. Content, not code.
   language, `hy`, `en` or `ru`
   (`2026-11-07-welcome.hy.md`). The versions of a
   post share the date and the slug; the slug is its
-  address, `#/blog/welcome`.
+  address, `/blog/welcome`.
 - Themes: a line `theme: site`, `theme: authors` or
   `theme: books` right after the title puts the
   post in a theme; the line is not shown. One
   version of a post is enough (the others must
   not differ). The Blog page has a sub page for
-  each (`#/blog/theme/authors`) with tabs between
-  them. `#/blog` itself shows the `site` theme,
+  each (`/blog/theme/authors`) with tabs between
+  them. `/blog` itself shows the `site` theme,
   every time; nothing is remembered. A post
   without a theme is on no page. `THEMES` in `scripts/nxgir_blog.py` must
   match `BLOG_THEMES` in `web/app.js` (a test

@@ -37,20 +37,26 @@ the same functions (nxgir_web.py):
     data/lines/<book>/<k>.json      /api/lines: a book
         searched, 100 lines a file
 
-and, for search engines (searchable()), which do
-not see the #/ pages of app.js:
+and, for search engines (searchable()): the pages
+of app.js are paths (/library, /read/<book>), and
+each one that a search engine should list is also a
+file, <path>/index.html: the page of the app with
+its own title, description and canonical link, and
+its words in place of the top page's, which app.js
+draws over (route_page()). Other paths are given
+404.html, the plain app, which reads the address:
 
-    read/<book>.html   each book as a plain page,
-        its text in the HTML, linked to the reader;
+    read/<book>/   each book, its text in the HTML;
         our translations with their credit and
         license (licensed())
-    blog/<slug>.<lang>.html   each blog post in
-        each of its languages, the same way
-    features.<lang>.html   the Features page, the
-        same way
-    map.<lang>.html, map/<place>.<lang>.html   the Map
-        page, and each place that a post or comic
-        names, with those stories (map_pages())
+    blog/<slug>/<lang>/   each blog post in each of
+        its languages; comics/<slug>/<lang>/ the same
+    features/<lang>/   the Features page
+    map/<lang>/, map/<place>/<lang>/   the Map page,
+        and each place that a post or comic names,
+        with those stories (map_pages())
+    library/, b/<folder>/, blog/, comics/, timeline/
+        the lists, with links (hub_pages())
     sitemap.xml, robots.txt   where they are
 
 and, only with --zip (not built now, kept for later),
@@ -160,6 +166,7 @@ ZIP = "nxgir-site.zip"
 # left out of it: the pages for search engines
 NOT_OFFLINE = (
     "read/",
+    "404.html",
     "sitemap.xml",
     "robots.txt",
     "sw.js",
@@ -169,7 +176,12 @@ NOT_OFFLINE = (
 NOT_SAVED = NOT_OFFLINE + (
     "blog/",
     "comics/",
-    "features.",
+    "features/",
+    "map/",
+    "library/",
+    "b/",
+    "timeline/",
+    "404.html",
     "og-image.png",
     "download.json",
     ZIP,
@@ -341,7 +353,7 @@ def build(
                 )
         search_files(data, app)
         words = set()
-        searchable(out, app, files)
+        searchable(out, app, files, dirs)
         for name, _, _ in files:
             b = web.book(app, name)
             write_json(data / "book" / f"{name}.json", b)
@@ -461,14 +473,20 @@ def offline_zip(out):
 
 
 def page_path(name):
-    """Where a book's plain page is: read/<book>.html,
-    without the .txt or .md."""
-    return "read/" + name.rpartition(".")[0] + ".html"
+    """Where a book's page is: read/<book>/, the
+    name as it is, with its .txt."""
+    return "read/" + name
+
+
+def route_url(path):
+    """The full address of the page at path: with a
+    slash at the end, as GitHub Pages gives a folder.
+    Each part is %-escaped as in enc() of app.js."""
+    return f"{SITE}/{quote(path)}/" if path else SITE + "/"
 
 
 def url(path):
-    """The full address of a path of the site, each
-    part %-escaped as in enc() of app.js."""
+    """The full address of a file of the site."""
     return f"{SITE}/{quote(path)}"
 
 
@@ -483,53 +501,6 @@ def describe(lines, n=DESCRIBE):
     return text[:n].rpartition(" ")[0] + "…"
 
 
-PAGE = """<!doctype html>
-<html lang="{lang}">
-<head>
-<meta charset="utf-8">
-<meta name="viewport"
-  content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light dark">
-<base href="/">
-<title>{title} · Նախագիր | nxGir</title>
-<meta name="description" content="{desc}">
-<link rel="canonical" href="{canon}">
-{alt}<meta property="og:type" content="article">
-<meta property="og:title" content="{title}">
-<meta property="og:description" content="{desc}">
-<meta property="og:url" content="{canon}">
-<link rel="icon" href="icon.svg">
-<script src="theme.js"></script>
-<link rel="stylesheet" href="fonts.css">
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-<header class="bar">
-  <a class="brand" href="./">
-    <span class="brand-hy" lang="hy">Նախագիր</span>
-    <span class="brand-sep" aria-hidden="true"></span>
-    <span class="brand-en">nxGir</span>
-  </a>
-</header>
-<main class="plain">
-<p><a href="{reader}">{open}</a></p>
-<h1>{heading}</h1>
-{text}
-</main>
-</body>
-</html>
-"""
-
-
-# the link at the top of a plain page
-OPEN_BOOK = "Read in the reader,\nwith word lookup"
-OPEN_POST = {
-    "hy": "Բացել Նախագրում",
-    "en": "Open in nxGir",
-    "ru": "Открыть в nxGir",
-}
-
-
 def named(html):
     """Escaped HTML with each nxGir in the accent
     color, as named() in app.js."""
@@ -538,31 +509,79 @@ def named(html):
     )
 
 
-def plain_page(out, path, text, alt="", **kw):
-    """Write a plain page (PAGE) at path of out:
-    text and alt (links in the head: its other
-    languages, its license) are HTML, the rest
-    (title, desc, reader, and lang and open if not
-    the book's) plain."""
-    kw = {"lang": "hy", "open": OPEN_BOOK, **kw}
-    kw = {k: htm.escape(v) for k, v in kw.items()}
-    kw["heading"] = named(kw["title"])
-    kw["open"] = named(kw["open"])
-    page = PAGE.format(
-        canon=htm.escape(url(path)),
-        text=text,
-        alt=alt,
-        **kw,
+def sub(pattern, text, html):
+    """html with the first match of pattern (across
+    lines) replaced by text, as it is. The pattern
+    must be there."""
+    new, n = re.subn(
+        pattern, lambda m: text, html, count=1, flags=re.S
     )
-    dest = out / path
+    if not n:
+        raise SystemExit(f"index.html: no {pattern}")
+    return new
+
+
+def route_page(out, path, text, alt="", lang="hy", **kw):
+    """Write the page at path (a folder of out, with
+    index.html): index.html of out, told its own
+    title, desc, canonical link and og: lines, with
+    text (HTML, under the heading) in place of the
+    top page's own words, and alt (links in the head:
+    its other languages, its license). app.js draws
+    over the words, reading the address."""
+    esc = htm.escape
+    title, desc = esc(kw["title"]), esc(kw["desc"])
+    canon = esc(route_url(path))
+    html = (out / "index.html").read_text("utf-8")
+    html = html.replace(
+        '<html lang="en">', f'<html lang="{lang}">', 1
+    )
+    html = sub(
+        r"<title>.*?</title>",
+        f"<title>{title} · Նախագիր | nxGir</title>",
+        html,
+    )
+    html = sub(
+        r'<meta name="description" content="[^"]*">',
+        f'<meta name="description" content="{desc}">',
+        html,
+    )
+    for prop, val in (
+        ("title", title),
+        ("description", desc),
+        ("url", canon),
+        ("type", "article"),
+    ):
+        html = sub(
+            rf'<meta property="og:{prop}"\s+'
+            r'content="[^"]*">',
+            f'<meta property="og:{prop}" content="{val}">',
+            html,
+        )
+    html = html.replace(
+        "</head>",
+        f'<link rel="canonical" href="{canon}">\n'
+        + alt
+        + "</head>",
+        1,
+    )
+    html = sub(
+        r'<section class="about" id="about">.*?'
+        r"</section>",
+        '<section class="about" id="about"'
+        f' lang="{lang}">\n'
+        f"<h1>{named(title)}</h1>\n{text}\n</section>",
+        html,
+    )
+    dest = out / path / "index.html"
     dest.parent.mkdir(parents=True, exist_ok=True)
-    dest.write_text(versioned(page, out), "utf-8")
+    dest.write_text(html, "utf-8")
 
 
 def post_page(slug, lang, kind="blog"):
     """Where a blog post's (or, with kind "comics",
-    a comics series') plain page is."""
-    return f"{kind}/{slug}.{lang}.html"
+    a comics series') page is."""
+    return f"{kind}/{slug}/{lang}"
 
 
 def blog_block(block):
@@ -581,10 +600,10 @@ def blog_block(block):
 
 
 def post_pages(out, app, comics=False):
-    """Each version of each blog post as a plain
-    page, blog/<slug>.<lang>.html, which names the
-    others (hreflang); with comics, each version of
-    each comics series, comics/<slug>.<lang>.html.
+    """Each version of each blog post as a page,
+    blog/<slug>/<lang>/, which names the others
+    (hreflang); with comics, each version of each
+    comics series, comics/<slug>/<lang>/.
     Returns [(path, title, date)]."""
     links = []
     kind = "comics" if comics else "blog"
@@ -602,7 +621,7 @@ def post_pages(out, app, comics=False):
         alt = "".join(
             '<link rel="alternate" hreflang='
             f'"{v["lang"]}" href="'
-            f"{htm.escape(url(page_of(v)))}"
+            f"{htm.escape(route_url(page_of(v)))}"
             '">\n'
             for v in vs
         )
@@ -614,14 +633,12 @@ def post_pages(out, app, comics=False):
             paras = [
                 b[1] for b in v["blocks"] if b[0] == "p"
             ]
-            plain_page(
+            route_page(
                 out,
                 path,
                 lang=v["lang"],
-                open=OPEN_POST[v["lang"]],
                 title=v["title"],
                 desc=describe([""] + paras),
-                reader=f"./#/{kind}/{slug}/{v['lang']}",
                 text=text,
                 alt=alt if len(vs) > 1 else "",
             )
@@ -631,18 +648,18 @@ def post_pages(out, app, comics=False):
 
 def feature_pages(out, app):
     """The Features page in each of its languages
-    as a plain page, features.<lang>.html, naming
+    as a page, features/<lang>/, naming
     the others (hreflang). Returns [(path,
     title)]."""
     vs = web.features(app)["versions"]
 
     def page(lang):
-        return f"features.{lang}.html"
+        return f"features/{lang}"
 
     alt = "".join(
         '<link rel="alternate" hreflang='
         f'"{v["lang"]}" href="'
-        f'{htm.escape(url(page(v["lang"])))}">\n'
+        f'{htm.escape(route_url(page(v["lang"])))}">\n'
         for v in vs
     )
     links = []
@@ -654,14 +671,12 @@ def feature_pages(out, app):
             for t in ["h2" if k == "h" else "p"]
         )
         paras = [x for k, x in v["blocks"] if k == "p"]
-        plain_page(
+        route_page(
             out,
             path,
             lang=v["lang"],
-            open=OPEN_POST[v["lang"]],
             title=v["title"],
             desc=describe([""] + paras),
-            reader=f"./#/features/{v['lang']}",
             text=text,
             alt=alt if len(vs) > 1 else "",
         )
@@ -691,10 +706,10 @@ MAP_PAGE = {
 
 
 def map_pages(out, app):
-    """The Map as plain pages for search engines: for
-    each language map.<lang>.html, the places with a
+    """The Map as pages for search engines: for
+    each language map/<lang>/, the places with a
     link to their page, and for each place that a post
-    or comic names, map/<id>.<lang>.html with those
+    or comic names, map/<id>/<lang>/ with those
     stories, linked to their own plain pages. All
     name each other (hreflang). Returns (links,
     dated): [(path, title)] and [(path, title, date)]
@@ -708,7 +723,7 @@ def map_pages(out, app):
     def alt(paths):
         return "".join(
             '<link rel="alternate" hreflang='
-            f'"{lang}" href="{esc(url(path))}">\n'
+            f'"{lang}" href="{esc(route_url(path))}">\n'
             for lang, path in paths
         )
 
@@ -721,29 +736,27 @@ def map_pages(out, app):
         for p in places:
             name = esc(p["names"][lang])
             if p["stories"]:
-                href = esc(f"map/{p['id']}.{lang}.html")
+                href = esc(f"/map/{p['id']}/{lang}/")
                 name = f'<a href="{href}">{name}</a>'
             items.append(
                 f"<li>{name} · {esc(kinds[p['kind']])}</li>"
             )
-        path = f"map.{lang}.html"
-        plain_page(
+        path = f"map/{lang}"
+        route_page(
             out,
             path,
             lang=lang,
-            open=OPEN_POST[lang],
             title=title,
             desc=intro,
-            reader="./#/map",
             text=f"<p>{esc(intro)}</p>\n<ul>\n"
             + "\n".join(items)
             + "\n</ul>",
-            alt=alt([(x, f"map.{x}.html") for x in langs]),
+            alt=alt([(x, f"map/{x}") for x in langs]),
         )
         links.append((path, title))
     for p in named_:
         sibs = alt(
-            [(x, f"map/{p['id']}.{x}.html") for x in langs]
+            [(x, f"map/{p['id']}/{x}") for x in langs]
         )
         newest = max(s["date"] for s in p["stories"])
         for lang in langs:
@@ -759,9 +772,11 @@ def map_pages(out, app):
                     s["versions"][0],
                 )
                 href = esc(
-                    post_page(
+                    "/"
+                    + post_page(
                         s["slug"], v["lang"], s["type"]
                     )
+                    + "/"
                 )
                 body.append(
                     f'<h2><a href="{href}">'
@@ -772,16 +787,14 @@ def map_pages(out, app):
                     body.append(
                         f"<p>{named(esc(v['lead']))}</p>"
                     )
-            path = f"map/{p['id']}.{lang}.html"
-            plain_page(
+            path = f"map/{p['id']}/{lang}"
+            route_page(
                 out,
                 path,
                 lang=lang,
-                open=OPEN_POST[lang],
                 title=p["names"][lang],
                 desc=describe([""] + leads)
                 or p["names"][lang],
-                reader=f"./#/map/{p['id']}",
                 text="\n".join(body),
                 alt=sibs,
             )
@@ -814,16 +827,165 @@ def licensed(credit, text):
     )
 
 
-def searchable(out, app, files):
-    """What search engines need to find the books:
-    app.js shows everything at #/ addresses, and to
-    a search engine those are all the one top page.
-    So each book is also a plain page with its text
-    (read/<book>.html), listed in sitemap.xml, which
-    robots.txt names, and linked from index.html for
-    browsers without JavaScript. The blog posts
-    too (post_pages()), with their dates, and the
-    Features page (feature_pages())."""
+def part_href(part):
+    """The link to a part of a volume's page."""
+    return "/" + page_path(part["name"]) + "/"
+
+
+def volume_pages(out, app, dirs):
+    """b/<folder>/ for the folder of each book of
+    grabar/ and ashkharhabar/ (a book's page in the
+    app): its parts, linked to their pages. Returns
+    [(path, title)] and the set of folders."""
+    esc = htm.escape
+    links, folders_ = [], set()
+    for f in dirs:
+        top, _, key = f.partition("/")
+        if top not in web.PARALLEL or key.count("/") < 1:
+            continue
+        v = web.volume(app, f)
+        body = []
+        names = ", ".join(a["name"] for a in v["authors"])
+        if names:
+            body.append(f"<p>{esc(names)}</p>")
+        for g in v["groups"]:
+            if g["label"]:
+                body.append(f"<h2>{esc(g['label'])}</h2>")
+            items = "".join(
+                f'<li><a href="{esc(part_href(p))}">'
+                f"{esc(p['title'] or str(p['n']))}"
+                "</a></li>\n"
+                for p in g["parts"]
+            )
+            body.append(f"<ol>\n{items}</ol>")
+        path = f"b/{f}"
+        title = v["title"] or v["book"]
+        route_page(
+            out,
+            path,
+            title=title,
+            desc=f"{title}: " + names,
+            text="\n".join(body),
+        )
+        links.append((path, title))
+        folders_.add(f)
+    return links, folders_
+
+
+def list_page(out, path, title, desc, items, lang="hy"):
+    """A page that is a list of links: items is
+    [(href, label)]; its path is the page's."""
+    esc = htm.escape
+    li = "".join(
+        f'<li><a href="{esc(h)}">{named(esc(t))}</a></li>\n'
+        for h, t in items
+    )
+    route_page(
+        out,
+        path,
+        lang=lang,
+        title=title,
+        desc=desc,
+        text=f"<p>{esc(desc)}</p>\n<ul>\n{li}</ul>",
+    )
+    return path, title
+
+
+def hub_pages(out, app, dirs):
+    """The lists: library/ (the authors and their
+    books), b/<folder>/ (volume_pages()), blog/,
+    comics/ and timeline/. Returns [(path, title)]."""
+    esc = htm.escape
+    more, volumes = volume_pages(out, app, dirs)
+    body = []
+    for a in web.library(app)["authors"]:
+        books = []
+        for b in a["books"]:
+            f = "grabar/" + b["id"]
+            to = (
+                f"b/{f}"
+                if f in volumes
+                else page_path(b["first"])
+            )
+            books.append(
+                f'<li><a href="/{esc(to)}/">'
+                f"{esc(b['title'])}</a></li>\n"
+            )
+        body.append(
+            f"<h2>{esc(a['name'])}</h2>\n<ul>\n"
+            + "".join(books)
+            + "</ul>"
+        )
+    route_page(
+        out,
+        "library",
+        title="Գրադարան · Library of Grabar books",
+        desc="Grabar (Classical Armenian) books, by"
+        " author, with Modern Armenian translations.",
+        text="<p>Grabar (Classical Armenian) books,"
+        " by author, with Modern Armenian"
+        " translations.</p>\n" + "\n".join(body),
+    )
+    links = [("library", "Library")] + more
+    for kind, title, posts in (
+        ("blog", "Blog", web.blog(app)["posts"]),
+        ("comics", "Comics", web.comics(app)["series"]),
+    ):
+        items = []
+        for p in posts:
+            v = p["versions"][0]
+            items.append(
+                (
+                    "/"
+                    + post_page(p["slug"], v["lang"], kind)
+                    + "/",
+                    v["title"],
+                )
+            )
+        if items:
+            links.append(
+                list_page(
+                    out,
+                    kind,
+                    title,
+                    f"{title} of nxGir.",
+                    items,
+                )
+            )
+    events = web.timeline(app)["events"]
+    li = "".join(
+        f'<li><time datetime="{e["date"]}">'
+        f"{e['date']}</time> "
+        f"<b>{named(esc(e['title']))}</b>: "
+        f"{named(esc(e['text']))}</li>\n"
+        for e in events
+    )
+    route_page(
+        out,
+        "timeline",
+        lang="en",
+        title="Timeline",
+        desc="The main steps of nxGir, newest first.",
+        text=f"<ul>\n{li}</ul>",
+    )
+    links.append(("timeline", "Timeline"))
+    return links
+
+
+def searchable(out, app, files, dirs=()):
+    """What search engines need to find the pages:
+    the paths of app.js are all the one top page to
+    them, so each page that should be listed is also
+    a file of its own with its words (route_page()):
+    each book (read/<book>/) with its text, the lists
+    (hub_pages()), the blog posts (post_pages()),
+    with their dates, the Features page
+    (feature_pages()) and the Map (map_pages()). They
+    are listed in sitemap.xml, which robots.txt names,
+    and linked from index.html for browsers without
+    JavaScript. 404.html is the plain app: GitHub
+    Pages gives it for every other path, and app.js
+    reads the address."""
     esc = htm.escape
     links = []
     for name, _, _ in files:
@@ -837,20 +999,17 @@ def searchable(out, app, files):
             for x in lines[1:]
             if x.strip()
         )
-        reader = "./#/read/" + "/".join(
-            quote(x, safe="") for x in name.split("/")
-        )
         lic, text = licensed(web.credit(app, name), text)
-        plain_page(
+        route_page(
             out,
             path,
             title=title,
             desc=describe(lines),
-            reader=reader,
             text=text,
             alt=lic,
         )
         links.append((path, title))
+    links += hub_pages(out, app, dirs)
     posts = post_pages(out, app)
     posts += post_pages(out, app, comics=True)
     links += feature_pages(out, app)
@@ -858,8 +1017,8 @@ def searchable(out, app, files):
     links += more
     posts += dated
     urls = [(SITE + "/", "")]
-    urls += [(url(p), "") for p, _ in links]
-    urls += [(url(p), d) for p, _, d in posts]
+    urls += [(route_url(p), "") for p, _ in links]
+    urls += [(route_url(p), d) for p, _, d in posts]
     links += [(p, t) for p, t, _ in posts]
     (out / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -881,12 +1040,13 @@ def searchable(out, app, files):
     )
     index = out / "index.html"
     html = index.read_text("utf-8")
+    (out / "404.html").write_text(html, "utf-8")
     # the list goes in main, after its own words
     tag = "</main>"
     if html.count(tag) != 1:
         raise SystemExit("index.html: no main")
     nav = "".join(
-        f'<li><a href="{esc(p)}">{esc(t)}</a></li>\n'
+        f'<li><a href="/{esc(p)}/">{esc(t)}</a></li>\n'
         for p, t in links
     )
     html = html.replace(

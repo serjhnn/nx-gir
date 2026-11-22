@@ -38,7 +38,8 @@ const { chromium } = require("playwright");
 const [port, book, word, docs] =
   process.argv.slice(1);
 const url = "http://localhost:" + port +
-  "/#/read/" + encodeURIComponent(book);
+  "/read/" + book.split("/")
+    .map(encodeURIComponent).join("/");
 
 (async () => {
   const b = await chromium.launch();
@@ -72,7 +73,7 @@ const url = "http://localhost:" + port +
     colorScheme: "light",
   });
   await p.goto("http://localhost:" + port +
-    "/#/timeline");
+    "/timeline");
   await p.waitForSelector(".tl .ev");
   await p.screenshot({
     path: docs + "/web-timeline.png" });
@@ -83,7 +84,7 @@ const url = "http://localhost:" + port +
     colorScheme: "light",
   });
   await p.goto("http://localhost:" + port +
-    "/#/map/bjni");
+    "/map/bjni");
   await p.waitForSelector(".map-pop .map-link");
   await p.waitForTimeout(500);
   await p.screenshot({ path: docs + "/web-map.jpg",

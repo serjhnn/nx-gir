@@ -15,10 +15,27 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 
 
+class Handler(http.server.SimpleHTTPRequestHandler):
+    """Files as they are; a page of the app (a path
+    like /library, which is no file) gets index.html,
+    and app.js reads the address."""
+
+    def do_GET(self):
+        want = self.headers.get("Accept", "")
+        if (
+            "text/html" in want
+            and not Path(
+                self.translate_path(self.path.split("?")[0])
+            ).exists()
+        ):
+            self.path = "/index.html"
+        super().do_GET()
+
+
 def main(argv):
     port = int(argv[0]) if argv else 8000
     handler = functools.partial(
-        http.server.SimpleHTTPRequestHandler,
+        Handler,
         directory=str(HERE),
     )
     server = http.server.ThreadingHTTPServer(
