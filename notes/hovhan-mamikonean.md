@@ -24,10 +24,9 @@ sentence split):
 
 ## Translation
 
-Lines 1–654 (Zenob's part) are in
-`books/ashkharhabar/.../01.txt`, made 2026-11-22,
-`machine`. Hovhan's part (from line 655) is next:
-translate it into the same file, line for line.
+The whole part is in `books/ashkharhabar/.../01.txt`,
+line for line, made 2026-11-22, `machine`: Zenob's
+lines 1–654 first, then Hovhan's, 655–1704.
 
 Choices:
 
@@ -39,9 +38,12 @@ Choices:
   capitals. The footnote numbers in the [Դ] title
   (`1`, `2`) are kept.
 - `Ç…È` in the Grabar are `«…»` in the translation,
-  so the check counts 33 "extra marks": 39 of them,
-  less 3 bracketed letters (`[ց]`, `[չ]`, `[ե]`) the
-  translation leaves out.
+  so the check counts 32 "extra marks": 39 of them,
+  plus one `«` added at line 1359 (the opening mark
+  of the song is lost there; its `»` is at 1367),
+  less 3 bracketed letters (`[ց]`, `[չ]`, `[ե]`) and
+  the brackets of line 1462, which become
+  parentheses.
 - Numbers in letters: words in running text, digits
   in the list of villages (lines 454–460), where
   they are counts of households and soldiers.
@@ -71,3 +73,36 @@ Choices:
 - Line 9: `Մեգաղու` is read Մեծ (Ղևոնդիոս Մեծ).
 - Line 650: `գազպէն`, a manna that falls on the
   forests (a kind of honeydew), kept as the word.
+
+Hovhan's part:
+
+- `*` lines with no name (660, 674, 677, ...) in the
+  list of abbots: the name is lost; the translation
+  says `(Հաջորդը)`, and `(Զենոբը)` at 660, `(Թոդիկը)`
+  at 710 (the abbot of lines 711–721).
+- Line 931: Մուշեղ says he has fought `ՃԻ ամ`, 120
+  years; translated as written.
+- Line 1011: `առ Նիխոր` is unclear (a place, or
+  Միհրան's quarters); kept as a name.
+- Line 1046–1047: Վահան's words at the burning are
+  hard to follow; the translation is a best reading.
+- Line 1289: Սմբատ attacks `Վարազայ իշխանին
+  Պալունեաց` but cuts off Սուրէն's head; Վարազ is
+  his ally, so the line is probably damaged;
+  translated as written.
+- Line 1462: `[ընդ քարն, որ կոչեցաւ Հոնընկէց]` is in
+  brackets in Digilib; in parentheses in the
+  translation.
+- Line 1550: `փանդանդել` read as scattering (the
+  root of Փանդիկ).
+- Line 1594 has no verse number (between 7 and 8).
+- Line 1638: `դեմեսլեկոս`, a Byzantine title
+  (domestikos?), kept as the word.
+- Place names explained by a pun are kept with the
+  pun in modern words: Կորի (`կորեաք`), Կուրա,
+  Անկնիք (`անկանիս`), Պողկ (`պակեաւ`, froze),
+  Հայրկերտ (`ա՛ռ, հա՛յր, կե՛ր`), Առինչք (`առ
+  ի՞նչ`), Առաղս (`ա՛ռ զաղս`).
+- Numbers: ՃՌՆԾ-type counts are read as in Zenob's
+  part; Ճ մարդ at line 1252 (Սմբատ's boast, "with a
+  hundred men") is kept as 100.
