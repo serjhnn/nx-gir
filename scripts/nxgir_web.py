@@ -549,7 +549,10 @@ def book_cards(app, lang=None):
                 "id": gid,
                 "name": names.get(lang, names["en"]),
             }
-            for gid, names, _ in author_info.GROUPS
+            for gid, names, _ in sorted(
+                author_info.GROUPS,
+                key=lambda g: g[0] == "bible",
+            )
         ],
         "books": out,
     }
