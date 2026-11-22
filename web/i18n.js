@@ -194,6 +194,7 @@ const UI = {
       + " գրեք նախագծի հեղինակին՝ ",
     // the Library
     "lib.done": "թարգմանված",
+    "lib.bookpage": "Գրքի էջը →",
     "lib.none": "Գրքեր դեռ չկան։",
     "lib.part": (p) => "մաս " + p + " · ",
     "lib.noread": "Դեռ ոչինչ չեք կարդում։ Բացեք գիրքը՝ այն"
@@ -596,6 +597,7 @@ const UI = {
       + " questions, ideas or mistakes found: ",
     // the Library
     "lib.done": "translated",
+    "lib.bookpage": "Book page →",
     "lib.none": "No books yet.",
     "lib.part": (p) => "part " + p + " · ",
     "lib.noread": "Nothing being read yet. Open a book and"
@@ -1002,6 +1004,7 @@ const UI = {
       + " ошибками пишите автору проекта: ",
     // the Library
     "lib.done": "переведено",
+    "lib.bookpage": "Страница книги →",
     "lib.none": "Книг пока нет.",
     "lib.part": (p) => "часть " + p + " · ",
     "lib.noread": "Вы пока ничего не читаете. Откройте"

@@ -1804,6 +1804,57 @@ function slideIn(pane, dir) {
 // #/library: the Grabar books, by author, or the
 // starred ones, or those being read (tabs);
 // #/library/<author> scrolls to that author
+// a long book's parts open under its row, on the
+// same page (the row's click; "the book's page" is
+// a link in the list). The parts come from the
+// book's page data once, at the first opening.
+function openParts(li, b) {
+  const row = li.querySelector(".row");
+  const meta = row.querySelector(".meta");
+  const chev = icon(ICONS.fold, "chev");
+  meta.prepend(chev);
+  row.setAttribute("aria-expanded", "false");
+  let panel = null;
+  row.addEventListener("click", async (e) => {
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey
+      || e.shiftKey || e.button) return;
+    e.preventDefault();
+    const on = row.getAttribute("aria-expanded")
+      !== "true";
+    row.setAttribute("aria-expanded", String(on));
+    li.classList.toggle("open", on);
+    if (panel) {
+      panel.hidden = !on;
+      return;
+    }
+    panel = h("li", { class: "parts", lang: LANG });
+    li.after(panel);
+    try {
+      const dir = dirOf(b.first);
+      const data = await api("volume?folder="
+        + encodeURIComponent(dir));
+      const list = h("ul", { class: "shelf" });
+      for (const g of data.groups) {
+        if (g.label) {
+          list.append(h("li", { class: "group" },
+            g.label));
+        }
+        for (const p of g.parts) {
+          list.append(h("li", {}, partRow(p)));
+        }
+      }
+      panel.replaceChildren(list,
+        h("a", { class: "parts-page",
+          href: folderHref(dir) }, t("lib.bookpage")));
+    } catch (err) {
+      panel.remove();
+      panel = null;
+      row.setAttribute("aria-expanded", "false");
+      li.classList.remove("open");
+    }
+  });
+}
+
 async function libraryPage(who) {
   const [data, recent] = await Promise.all([
     api("library"),
@@ -1847,6 +1898,7 @@ async function libraryPage(who) {
     const list = h("ul", { class: "shelf" });
     // co-authors of all its books go in the
     // heading, others under a book's name
+    const page = a.page;
     const co = a.with || [];
     const shared = new Set(co.map((c) => c.id));
     const rows = a.books.map((b) => {
@@ -1855,6 +1907,7 @@ async function libraryPage(who) {
       const li = bookItem(b, libraryRow(b,
         own.length ? byLine(own, a.name) : null),
       starBtn(b));
+      if (b.parts > 1 && !page) openParts(li, b);
       list.append(li);
       return { el: li, names: [b.name, b.title,
         ...own.map((c) => c.name)],
@@ -1862,7 +1915,6 @@ async function libraryPage(who) {
     });
     // an author whose books are grouped (the Bible)
     // has a page of its own (flat_author())
-    const page = a.page;
     const head = co.length
       ? watchNames(h("h2", { class: "co-names" },
         ...authorNames(co.concat([{ id,
