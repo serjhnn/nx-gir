@@ -3915,7 +3915,8 @@ body.home .search-wrap {
     height: 20px;
     color: var(--accent-ink);
   }
-  body:not(.reading) {
+  body:not(.reading):not(:has(input:focus,
+      textarea:focus)) {
     padding-bottom: var(--tabbar);
   }
   /* the tab bar takes the place of the ☰ button */
