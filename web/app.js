@@ -1085,7 +1085,7 @@ const TABS = [
 // the pages the More tab opens
 const MORE = [
   ["#/recent", "clock", "nav.recent"],
-  ["#/reference", "cards", "nav.reference"],
+  ["#/search", "search", "nav.search"],
   ["#/blog", "pen", "nav.blog"],
   ["#/map", "map", "nav.map"],
   ["#/comics", "panels", "nav.comics"],
