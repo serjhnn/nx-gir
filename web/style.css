@@ -4335,3 +4335,16 @@ body.home .search-wrap {
   color: var(--accent-ink);
   font-size: 0.9rem;
 }
+/* a part keeps its mark and progress on the right of
+   its name, also on a phone */
+@media (max-width: 480px) {
+  .library .parts .shelf .row.part {
+    grid-template-columns: 2rem 1fr auto;
+    row-gap: 0;
+  }
+  .library .parts .shelf .row.part .meta {
+    grid-column: 3;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+  }
+}
