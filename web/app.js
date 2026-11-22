@@ -565,7 +565,7 @@ async function staticApi(path) {
     return json("data/lines/" + enc(q.get("name"))
       + "/" + Number(q.get("k")) + ".json");
   }
-  throw new Error("Not in the published copy");
+  throw new Error(t("err.static"));
 }
 
 // the end of every tab title
@@ -2528,7 +2528,7 @@ async function blogPage(path) {
   if (slug === "theme") {
     theme = want;
     if (!(theme in BLOG_THEMES)) {
-      throw new Error("No such theme");
+      throw new Error(t("err.theme"));
     }
     slug = want = "";
   }
@@ -2537,7 +2537,7 @@ async function blogPage(path) {
   const data = await api("blog");
   const one = slug
     ? data.posts.find((p) => p.slug === slug) : null;
-  if (slug && !one) throw new Error("No such post");
+  if (slug && !one) throw new Error(t("err.post"));
   const names = await placeNames(one);
   const posts = theme
     ? data.posts.filter((p) => p.theme === theme)
@@ -2664,7 +2664,7 @@ async function comicsPage(path) {
   const data = await api("comics");
   const one = slug
     ? data.series.find((s) => s.slug === slug) : null;
-  if (slug && !one) throw new Error("No such series");
+  if (slug && !one) throw new Error(t("err.series"));
   const names = await placeNames(one);
   const draw = () => {
     const have = new Set((one ? [one] : data.series)
@@ -4306,7 +4306,7 @@ function newsPage(id) {
   const one = id ? NEWS.find((a) => a.id === id)
     : null;
   if (id && !one) {
-    throw new Error("No such announcement");
+    throw new Error(t("err.news"));
   }
   const draw = () => {
     const lang = newsLang();
@@ -4788,17 +4788,21 @@ function sheet() {
     getComputedStyle(R.panel).position === "fixed";
 }
 
+// kind: what the panel shows, for the buttons that
+// open it (the title is in LANG)
 function openPanel(title, titleLang, ...body) {
   const close = btn("×", closePanel,
-    { class: "icon-btn close", "aria-label": "Close" });
+    { class: "icon-btn close",
+      "aria-label": t("close") });
   R.panel.replaceChildren(
     h("div", { class: "panel-head" },
       h("h2", { lang: titleLang }, title), close),
     h("div", { class: "panel-body" }, ...body));
   R.panel.hidden = false;
-  R.panel.dataset.kind = title;
+  R.panel.dataset.kind = title === t("r.contents")
+    ? "Contents" : title;
   document.body.classList.add("panel-open");
-  tocOpen(title === "Contents");
+  tocOpen(R.panel.dataset.kind === "Contents");
 }
 
 function closePanel() {
@@ -4848,7 +4852,7 @@ function tocOpen(open) {
 
 function langSwitch() {
   const box = h("div", { class: "seg",
-    role: "group", "aria-label": "Meanings in" });
+    role: "group", "aria-label": t("r.meanin") });
   for (const l of ["en", "hy"]) {
     box.append(btn(LANG_NAMES[l], () => {
       if (l === meaningLang()) return;
@@ -4864,15 +4868,15 @@ function placesNav() {
   const n = R.refs.length;
   const at = R.refs.indexOf(R.sel);
   const off = n < 2 ? "" : null;
-  const label = n === 1 ? "Only here"
-    : (at + 1) + " of " + n + " places";
-  return section("In this book",
+  const label = n === 1 ? t("r.only")
+    : t("r.places", at + 1, n);
+  return section(t("r.inbook"),
     h("div", { class: "places" },
       h("span", {}, label),
       btn("‹", () => step(-1), { disabled: off,
-        "aria-label": "Previous place" }),
+        "aria-label": t("r.prevplace") }),
       btn("›", () => step(1), { disabled: off,
-        "aria-label": "Next place" })));
+        "aria-label": t("r.nextplace") })));
 }
 
 function markAt(i) {
@@ -4890,15 +4894,15 @@ async function copyLink(b) {
   const link = lineLink(R.sel);
   try {
     await navigator.clipboard.writeText(link);
-    b.textContent = "✓ Copied";
+    b.textContent = t("r.copied");
   } catch (e) {
     // no clipboard: show it to copy by hand
-    prompt("Link to this line", link);
+    prompt(t("r.linkto"), link);
   }
 }
 
 function linkButton() {
-  const b = btn("🔗 Link to line", () => copyLink(b));
+  const b = btn(t("r.link"), () => copyLink(b));
   return b;
 }
 
@@ -4968,14 +4972,14 @@ function reportError() {
   const [lo, hi] = lit;
   const quote = wordsOf(lo, hi);
   const fix = h("textarea", { rows: "4",
-    "aria-label": "The correct text" });
+    "aria-label": t("r.fix") });
   const note = h("textarea", { rows: "3",
-    "aria-label": "Comment" });
+    "aria-label": t("r.comment") });
   const send = h("a", { class: "icon-btn primary",
     target: "_blank", rel: "noopener" },
-  "Send on GitHub");
+  t("r.gh"));
   const mail = h("a", { class: "icon-btn",
-    rel: "noopener" }, "Send by email");
+    rel: "noopener" }, t("r.mail"));
   const refresh = () => {
     const info = {
       name: R.name, par: R.par ? R.par.name : "",
@@ -4989,22 +4993,19 @@ function reportError() {
   fix.addEventListener("input", refresh);
   note.addEventListener("input", refresh);
   refresh();
-  const cancel = btn("Cancel", () => {
+  const cancel = btn(t("cancel"), () => {
     sentence(false);
     choose(at);
   });
-  openPanel("Report an error", "en",
+  openPanel(t("r.report"), LANG,
     h("p", { class: "item-quote", lang: "hy" },
       "«" + (quote.length > 120
         ? quote.slice(0, 119) + "…" : quote) + "»"),
     h("label", { class: "rep-label" },
-      "What it should say", fix),
+      t("r.should"), fix),
     h("label", { class: "rep-label" },
-      "Comment, source (optional)", note),
-    h("p", { class: "none" },
-      "GitHub opens a new issue for you to read"
-      + " and send (an account is needed). With no"
-      + " account, send it by email."),
+      t("r.note"), note),
+    h("p", { class: "none" }, t("r.ghhow")),
     h("div", { class: "actions" }, send, mail,
       cancel));
   reveal(spanOf(at));
@@ -5012,15 +5013,15 @@ function reportError() {
 }
 
 function reportButton() {
-  return btn("⚑ Report an error", reportError);
+  return btn("⚑ " + t("r.report"), reportError);
 }
 
 function wordActions() {
   const on = !!markAt(R.sel);
   return h("div", { class: "actions" },
-    btn(on ? "★ Bookmarked" : "☆ Bookmark",
+    btn(on ? t("r.marked") : t("r.mark"),
       toggleMark, { "aria-pressed": String(on) }),
-    btn("✎ Add note", () => editNote(-1)),
+    btn(t("r.addnote"), () => editNote(-1)),
     linkButton(), reportButton());
 }
 
@@ -5030,7 +5031,7 @@ async function drawWord() {
   if (!R.panel || at < 0) return;
   const w = wordAt(at);
   openPanel(w, "hy",
-    h("p", { class: "loading" }, "Looking up…"));
+    h("p", { class: "loading" }, t("r.looking")));
   let data;
   try {
     data = await lookup(w);
@@ -5046,16 +5047,15 @@ async function drawWord() {
     placesNav(), searchWordButton(w)];
   if (data.error) {
     parts.push(h("p", { class: "error" },
-      "Lookup failed: " + data.error));
+      t("r.failed") + data.error));
   } else {
     if (data.abbr.length) {
-      parts.push(section("Abbreviation",
+      parts.push(section(t("r.abbr"),
         helperLines(data.abbr)));
     }
-    parts.push(section("Meaning", langSwitch(),
+    parts.push(section(t("r.meaning"), langSwitch(),
       data.meaning.length ? helperLines(data.meaning)
-        : h("p", { class: "none" },
-          "Not in the vocabulary.")));
+        : h("p", { class: "none" }, t("r.noword"))));
   }
   R.panel.querySelector(".panel-body")
     .replaceChildren(...parts.filter(Boolean));
@@ -5179,8 +5179,8 @@ function decorate() {
   const count = (sign, name, n) => [sign + " ",
     h("span", { class: "long" }, name + " · "),
     String(n)];
-  const marks = "Bookmarks · " + R.marks.length;
-  const notes = "Notes · " + R.notes.length;
+  const marks = t("r.marks") + " · " + R.marks.length;
+  const notes = t("r.notes") + " · " + R.notes.length;
   // back to the folder the book is in
   const dir = dirOf(R.name || R.opening);
   R.tools.replaceChildren(...[
@@ -5189,55 +5189,53 @@ function decorate() {
     // the site's mark, once the top bar has
     // scrolled away (see stick())
     h("a", { class: "icon-btn home", href: "#/",
-      "aria-label": "Library", title: "Library" },
+      "aria-label": t("nav.home"),
+      title: t("nav.home") },
     document.querySelector(".brand-mark")
       .cloneNode(true)),
     h("a", { class: "icon-btn back",
       href: folderHref(dir),
-      "aria-label": "Back to the folder",
-      title: "Back to " + (dir || "the library") },
+      "aria-label": t("r.back"),
+      title: t("r.backto", dir || t("nav.library")) },
     icon(ICONS.back)),
     pagesBtn(),
     // a second click hides the list again
     R.contents.length ? btn(["☰ ", h("span",
-      { class: "long" }, "Contents")],
+      { class: "long" }, t("r.contents"))],
     toggleContents, { class: "icon-btn toc-btn",
-      "aria-label": "Contents",
+      "aria-label": t("r.contents"),
       "aria-expanded": String(!!R.panel &&
         !R.panel.hidden &&
         R.panel.dataset.kind === "Contents"),
-      title: "Contents: "
+      title: t("r.contents") + ": "
         + plural(R.contents.length, "heading") })
       : null,
-    STATIC ? null : btn(count("★", "Bookmarks",
+    STATIC ? null : btn(count("★", t("r.marks"),
       R.marks.length), showMarks,
     { "aria-label": marks, title: marks }),
-    STATIC ? null : btn(count("✎", "Notes",
+    STATIC ? null : btn(count("✎", t("r.notes"),
       R.notes.length), showNotes,
     { "aria-label": notes, title: notes }),
     R.editable ? h("a", { class: "icon-btn",
       href: "#/edit/" + enc(R.name || R.opening) },
-    "Edit text") : null,
+    t("r.edit")) : null,
     R.par ? btn(["⇆ ", h("span", { class: "long" },
-      "Parallel")],
+      t("r.par"))],
     () => setView({ parallel: !view.parallel }), {
       "aria-pressed": String(view.parallel),
-      "aria-label": "Show the two versions",
-      title: "Side by side with "
-        + parLabel(R.par.name) }) : null,
+      "aria-label": t("r.two"),
+      title: t("r.beside", parLabel(R.par.name)) })
+      : null,
     // on a wide screen: each line under its pair,
     // as on a phone, or beside it
     R.par && view.parallel ? btn(icon(ICONS[
       view.stacked ? "rows" : "columns"]),
     () => setView({ stacked: !view.stacked }), {
       class: "icon-btn par-layout",
-      "aria-label": "Each line under its pair",
+      "aria-label": t("r.under"),
       "aria-pressed": String(view.stacked),
-      title: view.stacked
-        ? "Lines under each other (click for"
-          + " side by side)"
-        : "Side by side (click for lines under"
-          + " each other)" }) : null,
+      title: view.stacked ? t("r.stacked")
+        : t("r.side") }) : null,
     // on a phone the text tools hide behind this
     btn(icon(ICONS.sliders), () => {
       const open = R.tools.classList.toggle("open");
@@ -5247,8 +5245,8 @@ function decorate() {
       class: "icon-btn more",
       "aria-expanded": String(
         R.tools.classList.contains("open")),
-      "aria-label": "Text settings",
-      title: "Text settings" }),
+      "aria-label": t("r.settings"),
+      title: t("r.settings") }),
     viewTools(),
     R.found ? foundStrip() : null,
   ].filter(Boolean));
@@ -5408,53 +5406,46 @@ function setView(change) {
 function viewTools() {
   const n = view.size;
   return h("div", { class: "view",
-    role: "group", "aria-label": "Text" },
+    role: "group", "aria-label": t("r.text") },
   btn("A−", () => setView({ size: n - 1 }), {
-    "aria-label": "Smaller text",
-    title: "Smaller text",
+    "aria-label": t("r.smaller"),
+    title: t("r.smaller"),
     disabled: n === 0 ? "" : null }),
   btn("A+", () => setView({ size: n + 1 }), {
-    "aria-label": "Bigger text",
-    title: "Bigger text",
+    "aria-label": t("r.bigger"),
+    title: t("r.bigger"),
     disabled: n === SIZES.length - 1 ? "" : null }),
   btn(icon(ICONS[view.center ? "center" : "left"]),
     () => setView({ center: !view.center }), {
-      "aria-label": "Center the text",
+      "aria-label": t("r.center"),
       "aria-pressed": String(view.center),
-      title: view.center ? "Text centered"
-        : "Text on the left" }),
+      title: view.center ? t("r.centered")
+        : t("r.left") }),
   btn(icon(ICONS.spacing),
     () => setView({
       line: (view.line + 1) % LINES.length }), {
-      "aria-label": "Line spacing " + (view.line + 1)
-        + " of " + LINES.length,
+      "aria-label": t("r.spacing", view.line + 1,
+        LINES.length),
       title: view.line === LINES.length - 1
-        ? "Widest lines (click for normal)"
-        : "Line spacing (click for more)" }),
+        ? t("r.widest") : t("r.more") }),
   btn("¶", () => setView({
     sentences: !view.sentences }), {
-    "aria-label": "Each sentence on its own line",
+    "aria-label": t("r.sent"),
     "aria-pressed": String(view.sentences),
-    title: view.sentences
-      ? "Sentences apart (click to join)"
-      : "Text as written (click for sentences)" }),
+    title: view.sentences ? t("r.apart")
+      : t("r.written") }),
   btn(icon(ICONS.width),
     () => setView({ full: !view.full }), {
-      "aria-label": "Text across the whole width",
+      "aria-label": t("r.width"),
       "aria-pressed": String(view.full),
-      title: view.full
-        ? "Whole width (click for a column)"
-        : "Text in a column (click for whole"
-          + " width)" }),
+      title: view.full ? t("r.whole")
+        : t("r.column") }),
   // a long part in pages: a page at a time is in
   // the browser, a few MB instead of hundreds
   btn("▤", () => setView({ paged: !paged() }), {
-    "aria-label": "Read a long part in pages",
+    "aria-label": t("r.paged"),
     "aria-pressed": String(paged()),
-    title: paged()
-      ? "In pages (click for one long text)"
-      : "One long text (click for pages: lighter"
-        + " on a phone)" }),
+    title: paged() ? t("r.inpages") : t("r.long") }),
   fontPick(),
   // the theme button joins the row while reading
   button);
@@ -5463,8 +5454,8 @@ function viewTools() {
 // the book fonts by name
 function fontPick() {
   const pick = h("select", { class: "font-pick",
-    "aria-label": "Font of the text",
-    title: "Font of the text" },
+    "aria-label": t("r.font"),
+    title: t("r.font") },
   FONTS.map((f, i) => h("option", { value: String(i),
     selected: i === view.font ? "" : null },
   FONT_NAMES[f])));
@@ -5474,7 +5465,7 @@ function fontPick() {
 }
 
 function fail(e) {
-  alert("Could not save: " + e.message);
+  alert(t("r.fail") + e.message);
 }
 
 async function toggleMark() {
@@ -5499,7 +5490,7 @@ function snippet(i, n = 70) {
 }
 
 function lineOf(i) {
-  return "line " + (R.wpos[i][0] + 1);
+  return t("r.line", R.wpos[i][0] + 1);
 }
 
 // -- pages of a part --
@@ -5517,12 +5508,12 @@ function pagesBtn() {
       class: "icon-btn part-step" + (off ? " off" : ""),
       "aria-label": label, title: label });
   return h("span", { class: "part-tools" },
-    arrow(k - 1, "‹", "Previous page", k === 0),
+    arrow(k - 1, "‹", t("r.prevpage"), k === 0),
     h("span", { class: "icon-btn",
-      "aria-label": "Page " + (k + 1) + " of " + n,
-      title: "Page " + (k + 1) + " of " + n },
+      "aria-label": t("r.page", k + 1, n),
+      title: t("r.page", k + 1, n) },
     (k + 1) + "/" + n),
-    arrow(k + 1, "›", "Next page", k === n - 1));
+    arrow(k + 1, "›", t("r.nextpage"), k === n - 1));
 }
 
 // -- the contents: the chapters and sermons --
@@ -5559,12 +5550,12 @@ function showContents() {
   });
   const list = h("ul", { class: "items toc" });
   R.contents.forEach((c, k) => {
-    const meta = c.level === 1 ? ""
-      : (c.n ? (c.kind || "Գլուխ") + " " + c.n + " · " : "");
+    const meta = c.level === 1 || !c.n ? ""
+      : (c.kind || t("r.chapter")) + " " + c.n + " · ";
     const link = h("button", { type: "button",
       class: "item-main" },
     h("span", { class: "item-meta" },
-      meta + "line " + (c.line + 1)),
+      meta + t("r.line", c.line + 1)),
     h("span", { class: "item-quote", lang: "hy" },
       c.title || (c.kind || "Գլուխ") + " " + c.n));
     link.addEventListener("click", () =>
@@ -5577,7 +5568,7 @@ function showContents() {
     }
     list.append(li);
   });
-  openPanel("Contents", "en", list);
+  openPanel(t("r.contents"), LANG, list);
   // the book's title under the heading, which
   // stays at the top while the list scrolls
   const head = R.panel.querySelector(".panel-head h2");
@@ -5592,9 +5583,8 @@ function showContents() {
 function showMarks() {
   closePanel();
   if (!R.marks.length) {
-    openPanel("Bookmarks", "en", h("p",
-      { class: "none" }, "No bookmarks yet. Tap a"
-      + " word, then ☆ Bookmark."));
+    openPanel(t("r.marks"), LANG, h("p",
+      { class: "none" }, t("r.nomarks")));
     return;
   }
   const list = h("ul", { class: "items" });
@@ -5605,7 +5595,7 @@ function showMarks() {
     h("span", { class: "item-quote", lang: "hy" },
       snippet(m.at)));
     link.addEventListener("click", () => go(m.at));
-    const del = btn("Remove", async () => {
+    const del = btn(t("remove"), async () => {
       try {
         R.marks = (await send("mark",
           { name: R.name, pos: m.pos })).marks;
@@ -5617,15 +5607,14 @@ function showMarks() {
     }, { class: "link-btn" });
     list.append(h("li", {}, link, del));
   }
-  openPanel("Bookmarks", "en", list);
+  openPanel(t("r.marks"), LANG, list);
 }
 
 function showNotes() {
   closePanel();
   if (!R.notes.length) {
-    openPanel("Notes", "en", h("p",
-      { class: "none" }, "No notes yet. Tap a word,"
-      + " then ✎ Add note."));
+    openPanel(t("r.notes"), LANG, h("p",
+      { class: "none" }, t("r.nonotes")));
     return;
   }
   const list = h("ul", { class: "items" });
@@ -5638,12 +5627,12 @@ function showNotes() {
       "«" + n.quote + "»"),
     h("span", { class: "item-text" }, n.text));
     link.addEventListener("click", () => go(n.at));
-    const edit = btn("Edit", () => {
+    const edit = btn(t("edit"), () => {
       R.sel = -1;
       editNote(i);
     }, { class: "link-btn" });
-    const del = btn("Delete", async () => {
-      if (!confirm("Delete this note?")) return;
+    const del = btn(t("delete"), async () => {
+      if (!confirm(t("r.delnote"))) return;
       try {
         R.notes = (await send("note", { name: R.name,
           i: i, delete: true })).notes;
@@ -5656,7 +5645,7 @@ function showNotes() {
     list.append(h("li", {}, link,
       h("div", { class: "item-btns" }, edit, del)));
   });
-  openPanel("Notes", "en", list);
+  openPanel(t("r.notes"), LANG, list);
 }
 
 // write a new note on the chosen word's sentence
@@ -5669,9 +5658,9 @@ function editNote(i) {
   const [lo, hi] = lit;
   const words = wordsOf(lo, hi);
   const box = h("textarea", { rows: "5",
-    "aria-label": "Note" });
+    "aria-label": t("r.notebox") });
   box.value = old ? old.text : "";
-  const save = btn("Save", async () => {
+  const save = btn(t("save"), async () => {
     const text = box.value.trim();
     if (!text) return box.focus();
     const body = old ? { name: R.name, i: i, text }
@@ -5684,11 +5673,12 @@ function editNote(i) {
     decorate();
     showNotes();
   }, { class: "icon-btn primary" });
-  const cancel = btn("Cancel", () => {
+  const cancel = btn(t("cancel"), () => {
     if (old) showNotes();
     else closePanel();
   });
-  openPanel(old ? "Edit note" : "New note", "en",
+  openPanel(old ? t("r.editnote") : t("r.newnote"),
+    LANG,
     h("p", { class: "item-quote", lang: "hy" },
       "«" + (words.length > 120
         ? words.slice(0, 119) + "…" : words) + "»"),
@@ -5892,12 +5882,12 @@ function styled(t, at, spans) {
 // the CSS puts it under its line on a phone and
 // beside it on a wide screen --
 
-const PAR_NAMES = { grabar: "Գրաբար",
-  ashkharhabar: "Աշխարհաբար" };
-
+// the name of a version (grabar, ashkharhabar) in
+// LANG
 function parLabel(name) {
   const top = name.split("/")[0];
-  return PAR_NAMES[top] || top;
+  return SHELF_LANGS.includes(top) ? t("shelf." + top)
+    : top;
 }
 
 // the names above the two columns; the other one
@@ -5996,11 +5986,11 @@ function pager(where) {
   const k = R.page;
   const to = (d) => () => turnPage(k + d);
   return h("div", { class: "pager " + where,
-    role: "navigation", "aria-label": "Pages" },
-  btn("‹ Previous", to(-1), {
+    role: "navigation", "aria-label": t("r.pages") },
+  btn(t("r.prev"), to(-1), {
     disabled: k === 0 ? "" : null }),
   h("span", {}, (k + 1) + " / " + n),
-  btn("Next ›", to(1), {
+  btn(t("r.next"), to(1), {
     disabled: k === n - 1 ? "" : null }));
 }
 
@@ -6245,14 +6235,24 @@ function syncPar() {
     ...(of ? [trCredit(R.par.credit, true)] : []));
 }
 
+// the credit line of a translation in LANG: in
+// Armenian as the server words it (TEXTS in
+// nxgir_translations.py)
+function creditText(c) {
+  if (LANG === "hy" || !c.status) return c.text;
+  const who = (c.reviewers || []).join(", ");
+  return t("tr." + c.status, c.model || "Claude",
+    who);
+}
+
 function trCredit(c, of) {
   return h("p", { class: "tr-credit"
     + (of ? " of-par" : "") },
-    c.text + " · ",
+    named(creditText(c)), " · ",
     h("a", { href: c.url, rel: "license" },
       c.license),
     " · ",
-    h("a", { href: HELP }, "Օգնել խմբագրել"));
+    h("a", { href: HELP }, t("r.help")));
 }
 
 // the end of a part of a long book (data.parts):
@@ -6268,14 +6268,14 @@ function partEnd(p) {
     : h("span");
   return h("div", { class: "part-end" },
     h("nav", { class: "part-nav",
-      "aria-label": "Parts" },
-    card(p.prev, "prev", "← Part "
-      + (p.n - 1) + " of " + p.total),
-    card(p.next, "next", "Part " + (p.n + 1)
-      + " of " + p.total + " →")),
+      "aria-label": t("r.parts") },
+    card(p.prev, "prev",
+      t("r.partprev", p.n - 1, p.total)),
+    card(p.next, "next",
+      t("r.partnext", p.n + 1, p.total))),
     h("p", { class: "part-all" },
       h("a", { href: folderHref(p.folder) },
-        "All " + p.total + " parts of ",
+        t("r.allparts", p.total),
         h("span", { lang: "hy" }, p.book))));
 }
 
@@ -6356,7 +6356,7 @@ async function book(name, line, found) {
     else choose(i);
   });
   R.panel = h("aside", { class: "panel",
-    "aria-label": "Word", "aria-live": "polite" });
+    "aria-label": t("r.word"), "aria-live": "polite" });
   R.panel.hidden = true;
   R.tools = h("div", { class: "tools" });
   // its height, for the panel beside the text
@@ -6366,7 +6366,7 @@ async function book(name, line, found) {
       "--tools", R.tools.offsetHeight + "px");
   }).observe(R.tools);
   R.prog = h("div", { class: "readbar",
-    role: "progressbar", "aria-label": "Read",
+    role: "progressbar", "aria-label": t("r.read"),
     "aria-valuemin": "0", "aria-valuemax": "100" },
   h("span", { class: "track" }, h("span")));
   document.body.classList.add("reading");
@@ -6390,8 +6390,7 @@ async function book(name, line, found) {
     ? pt.book + " · " + pt.n + "/" + pt.total
     : data.label || title),
     h("p", { class: "sub" },
-      plural(data.lines.length, "line") +
-      " · tap a word to look it up"),
+      plural(data.lines.length, "line") + t("r.tap")),
     R.tools,
     h("div", { class: "reader" }, text, R.panel,
       R.end));
@@ -6442,7 +6441,7 @@ const E = {
 
 function leaveOk() {
   return !E.dirty ||
-    confirm("Leave without saving your changes?");
+    confirm(t("ed.leave"));
 }
 
 window.addEventListener("beforeunload", (e) => {
@@ -6460,7 +6459,7 @@ document.addEventListener("keydown", (e) => {
 function textBox(value, placeholder) {
   const box = h("textarea", { class: "editor",
     spellcheck: "true", placeholder,
-    "aria-label": "Text" });
+    "aria-label": t("r.text") });
   box.value = value;
   // the size chosen with A− / A+ in the reader
   box.style.setProperty("--text-size",
@@ -6478,18 +6477,16 @@ function status() {
     role: "status" });
 }
 
-const MD_HELP = "Saved exactly as typed. Markdown:"
-  + " # title, > quote, **bold**, *italic*.";
 
 async function edit(name) {
   const src = await api("source?name=" +
     encodeURIComponent(name));
   let ver = src.version;
   const title = name.split("/").pop();
-  document.title = "Edit " + title + " · " + NAME;
+  document.title = t("ed.edit", title) + " · " + NAME;
   const box = textBox(src.text);
   const msg = status();
-  const reload = btn("Load the file again", () => {
+  const reload = btn(t("ed.reload"), () => {
     if (!leaveOk()) return;
     E.dirty = false;
     route();
@@ -6497,35 +6494,32 @@ async function edit(name) {
   reload.hidden = true;
   async function save() {
     msg.className = "status";
-    msg.textContent = "Saving…";
+    msg.textContent = t("ed.saving");
     try {
       const r = await send("save", { name,
         text: box.value, version: ver });
       ver = r.version;
       E.dirty = false;
-      msg.textContent = "Saved at " +
+      msg.textContent = t("ed.saved") +
         new Date().toLocaleTimeString([],
           { hour: "2-digit", minute: "2-digit" });
     } catch (e) {
       msg.className = "status error";
       msg.textContent = e.status === 409
-        ? "The file changed on disk since you opened"
-          + " it (a git pull?), so it was not saved."
-          + " Your text is still here: copy it, then"
-          + " load the file again."
-        : "Not saved: " + e.message;
+        ? t("ed.changed") : t("ed.not") + e.message;
       reload.hidden = e.status !== 409;
     }
   }
   E.save = save;
   show(crumbs(name, false),
-    h("h1", {}, "Edit " + title),
-    h("p", { class: "sub" }, MD_HELP),
+    h("h1", {}, t("ed.edit", title)),
+    h("p", { class: "sub" }, t("ed.md")),
     box,
     h("div", { class: "actions" },
-      btn("Save", save, { class: "icon-btn primary" }),
+      btn(t("save"), save,
+        { class: "icon-btn primary" }),
       h("a", { class: "icon-btn",
-        href: "#/read/" + enc(name) }, "Done"),
+        href: "#/read/" + enc(name) }, t("ed.done")),
       reload, msg));
   box.focus({ preventScroll: true });
 }
@@ -6538,14 +6532,14 @@ const TEXT_LANGS = {
 
 async function newText(lang) {
   if (!TEXT_LANGS[lang]) lang = "ru";
-  document.title = "New text · " + NAME;
+  document.title = t("ed.new") + " · " + NAME;
   const file = h("input", { type: "text",
     class: "field", id: "file", autocomplete: "off",
     autocapitalize: "none", spellcheck: "false",
     placeholder: "ps-118-33-37-pustota-i-put" });
   const where = h("span", { class: "item-meta" });
   const langs = h("div", { class: "seg",
-    role: "group", "aria-label": "Language" });
+    role: "group", "aria-label": t("lang.pick") });
   const msg = status();
   function draw() {
     const f = file.value.trim() || "…";
@@ -6564,11 +6558,10 @@ async function newText(lang) {
     draw();
   });
   draw();
-  const box = textBox("",
-    "# Title (Ps 118:33–37)\n\nThe text…");
+  const box = textBox("", t("ed.title"));
   async function create() {
     msg.className = "status";
-    msg.textContent = "Saving…";
+    msg.textContent = t("ed.saving");
     try {
       const r = await send("new", { lang,
         file: file.value.trim(), text: box.value });
@@ -6576,26 +6569,24 @@ async function newText(lang) {
       goTo("#/read/" + enc(r.name));
     } catch (e) {
       msg.className = "status error";
-      msg.textContent = "Not saved: " + e.message;
+      msg.textContent = t("ed.not") + e.message;
     }
   }
   E.save = create;
   // the language folder may have no texts yet
   show(crumbs("interpretations/new", false),
-    h("h1", {}, "New text"),
-    h("p", { class: "sub" }, "One text per file,"
-      + " named by its passage and a short title in"
-      + " Latin letters. " + MD_HELP),
+    h("h1", {}, t("ed.new")),
+    h("p", { class: "sub" }, t("ed.one") + t("ed.md")),
     h("div", { class: "form" },
       langs,
-      h("label", { for: "file" }, "File name"),
+      h("label", { for: "file" }, t("ed.file")),
       file, where),
     box,
     h("div", { class: "actions" },
-      btn("Create", create,
+      btn(t("ed.create"), create,
         { class: "icon-btn primary" }),
       h("a", { class: "icon-btn",
-        href: "#/f/interpretations" }, "Cancel"),
+        href: "#/f/interpretations" }, t("cancel")),
       msg));
   file.focus();
 }
