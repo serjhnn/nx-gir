@@ -76,6 +76,12 @@ const ICONS = {
   ],
   // three lines: the menu
   menu: ["M4 7h16", "M4 12h16", "M4 17h16"],
+  // an open book: continue reading
+  resume: [
+    "M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2"
+      + "c2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z",
+    "M12 6v14",
+  ],
   // a clock: the readings
   clock: [
     "M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18z",
@@ -893,11 +899,12 @@ headerMenu();
 const TABS = [
   ["#/", "logo", "Գլխավոր", "home"],
   ["#/library", "book", "Գրադարան", "library"],
-  ["#/recent", "clock", "Ընթերցումներ", "recent"],
+  ["#/recent", "resume", "Շարունակել", "continue"],
   ["#/search", "search", "Որոնում", "search"],
 ];
 // the pages the More tab opens
 const MORE = [
+  ["#/recent", "clock", "Ընթերցումներ"],
   ["#/blog", "pen", "Բլոգ"],
   ["#/map", "map", "Քարտեզ"],
   ["#/comics", "panels", "Կոմիքսներ"],
@@ -912,13 +919,74 @@ const MORE = [
 // or "" (the reader and the editor have no bar)
 function tabFor(hash) {
   const top = hash.split(/[/?]/)[0];
-  if (["read", "edit", "new"].includes(top)) return "";
+  if (top === "read") return "continue";
+  if (["edit", "new"].includes(top)) return "";
   if (top === "") return "home";
   if (["library", "b", "f"].includes(top)) {
     return "library";
   }
-  if (TABS.some((t) => t[3] === top)) return top;
+  if (top === "search") return "search";
   return "more";
+}
+
+// Each tab remembers its page and how far it was
+// scrolled (in the tab, one page deep as it goes:
+// Library, a book's page, Readings, Library again
+// returns to the book's page). The Continue tab
+// opens the book read last; the reader keeps its own
+// place. Tapping the tab shown scrolls to the top,
+// and from the top goes to the tab's first page.
+const REMEMBER = ["home", "library", "search"];
+let tabPlace = {};
+try {
+  tabPlace = JSON.parse(
+    sessionStorage.getItem("nxgir-tabs") || "{}");
+} catch (e) {
+  tabPlace = {};
+}
+let shownHash = null;
+let restoreY = 0;
+
+function rememberTab(hash, y) {
+  const key = tabFor(hash);
+  if (!REMEMBER.includes(key)) return;
+  tabPlace[key] = { hash, y };
+  try {
+    sessionStorage.setItem("nxgir-tabs",
+      JSON.stringify(tabPlace));
+  } catch (e) {
+    // no storage: the tabs forget on reload
+  }
+}
+
+async function tabClick(e) {
+  const a = e.target.closest("a[data-tab]");
+  if (!a || e.defaultPrevented) return;
+  const key = a.dataset.tab;
+  const now = tabFor(
+    location.hash.replace(/^#\/?/, ""));
+  if (key === "continue") {
+    e.preventDefault();
+    if (now === "continue") return; // already reading
+    let to = "#/recent";
+    try {
+      const data = await api("recent");
+      const last = data.items[0];
+      if (last) to = "#/read/" + enc(last.name);
+    } catch (err) {
+      // the list of readings instead
+    }
+    location.hash = to;
+  } else if (key === now) {
+    if (window.scrollY > 4) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  } else if (tabPlace[key]) {
+    e.preventDefault();
+    restoreY = tabPlace[key].y;
+    location.hash = "#/" + tabPlace[key].hash;
+  }
 }
 
 // the logo of the header, as drawn, for the home tab
@@ -943,6 +1011,7 @@ function tabBar() {
   const bar = h("nav", { class: "tabbar", lang: "hy",
     "aria-label": "Հիմնական էջեր" },
   ...TABS.map(link), more);
+  bar.addEventListener("click", tabClick);
   const open = (on) => {
     sheet.hidden = !on;
     more.setAttribute("aria-expanded", String(on));
@@ -6363,6 +6432,10 @@ async function route() {
   E.hash = "";
   const hash = location.hash.replace(/^#\/?/, "");
   markTab(hash);
+  if (shownHash !== null) {
+    rememberTab(shownHash, window.scrollY);
+  }
+  shownHash = hash;
   document.body.classList.remove("peek");
   if (R.timer) savePos(true);
   R.name = "";
@@ -6462,11 +6535,14 @@ window.addEventListener("scroll", () => {
     history.replaceState(
       { ...(history.state || {}), y: window.scrollY },
       "");
+    rememberTab(hash, window.scrollY);
   }, 150);
 }, { passive: true });
 
 function backToPlace(hash) {
-  const y = history.state && history.state.y;
+  const y = restoreY
+    || (history.state && history.state.y);
+  restoreY = 0;
   if (!reading(hash) && y) window.scrollTo(0, y);
 }
 
