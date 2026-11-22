@@ -1080,7 +1080,7 @@ const TABS = [
   ["#/", "logo", "nav.home", "home"],
   ["#/library", "book", "nav.library", "library"],
   ["#/recent", "resume", "nav.continue", "continue"],
-  ["#/search", "search", "nav.search", "search"],
+  ["#/reference", "cards", "nav.reference", "reference"],
 ];
 // the pages the More tab opens
 const MORE = [
@@ -1106,7 +1106,7 @@ function tabFor(hash) {
   if (["library", "b", "f"].includes(top)) {
     return "library";
   }
-  if (top === "search") return "search";
+  if (top === "reference") return "reference";
   return "more";
 }
 
@@ -1117,7 +1117,7 @@ function tabFor(hash) {
 // opens the book read last; the reader keeps its own
 // place. Tapping the tab shown scrolls to the top,
 // and from the top goes to the tab's first page.
-const REMEMBER = ["home", "library", "search"];
+const REMEMBER = ["home", "library", "reference"];
 let tabPlace = {};
 try {
   tabPlace = JSON.parse(

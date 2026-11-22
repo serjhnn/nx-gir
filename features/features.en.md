@@ -36,7 +36,7 @@ The site remembers where you stopped reading each book, in this browser. The hom
 
 ## Tabs at the bottom of a phone
 
-On a phone, a bar at the bottom of every page leads to the Home page, the Library, the book you read last (Continue) and the search; More opens the other pages (your Readings, the Blog, the Map, Comics, Features, Timeline and more). In the reader it steps aside, to leave the room to the text, and comes back when you scroll up. Each tab remembers where you were in it, and a second tap scrolls it to the top.
+On a phone, a bar at the bottom of every page leads to the Home page, the Library, the book you read last (Continue) and the Reference; More opens the other pages (your Readings, the Blog, the Map, Comics, Features, Timeline and more). In the reader it steps aside, to leave the room to the text, and comes back when you scroll up. Each tab remembers where you were in it, and a second tap scrolls it to the top.
 
 ## Contents
 
