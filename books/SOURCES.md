@@ -319,6 +319,26 @@ damaged in the source (the Digilib text has broken
 words) are marked with a trailing `*` (63 lines).
 Machine translation, not human-reviewed.
 
+## ashkharhabar/hovhan-mamikonean/1-patmutiun-taronoy/
+
+`01.txt`: a translation into modern Eastern Armenian
+of `grabar/hovhan-mamikonean/1-patmutiun-taronoy/01.txt`,
+line for line, made by Claude (Anthropic's AI model)
+on 2026-11-22 at the user's request, in chunks of
+80–110 lines, each checked against the Grabar
+(section 6 of `TRANSLATION_GUIDE.md`): first the part
+attributed to Zenob Glak, lines 1–654 (sections
+[Ա]–[Դ]: Grigor's letter to Caesarea and its answer,
+the letters of the Syrian bishops, and Zenob's
+answer with the first and second battles at Արձան),
+then Hovhan Mamikonean's, lines 655–1704 ([Ե]–[ԺԱ]:
+the abbots of Glak, the wars of Մուշեղ, Վահան,
+Սմբատ and Տիրան against the Persians, the Ծիծառնէ
+cross, and the colophon). It is a machine
+translation, not yet read by a person. The `Ç…È`
+quotations are `«…»` in the translation. Choices
+and doubts: `notes/hovhan-mamikonean.md`.
+
 ## ashkharhabar/smbat-sparapet/1-datastanagirk/
 
 `01.txt`: a translation into modern Eastern
@@ -727,6 +747,16 @@ as Digilib has them (page numbers and `[ ]` stay):
 
 One section of 2051 and two of 1597 are empty on
 Digilib (their titles and prefaces).
+
+`hovhan-mamikonean/1-patmutiun-taronoy/01.txt` was cut
+into sentences on 2026-11-22, before its translation
+(a line after each `։`; a blank line where a Digilib
+paragraph ended): 375 lines became 1704; only line
+breaks changed, and no `։` had a missing space after
+it. Digilib writes some quotation marks as `Ç` and
+`È` (`«` and `»` in a wrong code page) and its
+verse numbers (`1`, `2`, ...) start the lines; both
+are kept.
 
 ## grabar/grigor-magistros/, vardan-areveltsi/
 
