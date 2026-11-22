@@ -203,7 +203,7 @@ and on land where they did.
 ## In pages (2026-11-16)
 
 A part is read a page at a time (the default; the ▤
-button in the text settings turns it off): about 10,000
+button in the text settings turns it off): about 5,000
 characters of Grabar are in the page, the rest is
 only data (`showPage()` in `app.js`; plan:
 `notes/ram-plan.md`). Same part, phone screen:
@@ -254,3 +254,24 @@ three runs each (the 47 MB floor is `about:blank`):
   Android WebView will differ, but the order should
   hold.
 
+
+## Page size 5,000 (2026-11-22)
+
+`PAGE_CHARS` went from 10,000 to 5,000 for slow
+devices. Measured with the CPU throttled 8x (CDP),
+Pixel 5 screen, Datastanagirk A 01, median of 3 runs,
+a fresh state each:
+
+| Page | Pages | Nodes | 5 turns | Per turn |
+|---|---|---|---|---|
+| 10,000 | 15 | 8,763 | 1,010 ms | ~200 ms |
+| 5,000 | 29 | 4,618 | 701 ms | 140 ms |
+| 3,000 | 48 | 3,129 | 534 ms | 106 ms |
+
+Opening a part costs the same (fetch and parse, about
+1.1 s at 8x). A turn is mostly layout and style, not
+script: caching `fit()` and `setStick()` changed
+nothing (their time was the first forced layout).
+A prototype with no word spans (one text node per
+line, option 4 above) reached 121 ms a turn at 10,000
+and 105 ms at 5,000: not worth the change for now.

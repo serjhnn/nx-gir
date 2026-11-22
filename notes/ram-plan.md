@@ -63,7 +63,7 @@ through all 15 pages of a part: no leak (7,300 to
 ## Done: P (pages)
 
 The idea (option 2 of the discussion): the part is
-cut into pages of about 10,000 characters of Grabar
+cut into pages of about 5,000 characters of Grabar
 (`PAGE_CHARS` in `app.js`); only one page is in the
 DOM, with ‹ Previous / Next › above and below.
 Parallel stays: a page holds its lines and their

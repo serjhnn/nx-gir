@@ -5079,7 +5079,7 @@ function parHead(name, other) {
 // page only, at the index of the word in the part.
 
 // the characters of a page
-const PAGE_CHARS = 10000;
+const PAGE_CHARS = 5000;
 
 // Read in pages? Yes, unless the reader turned it
 // off in the text settings (the ▤ button).
