@@ -25,12 +25,13 @@ likelihood:
 | A | Build the translation only while shown | **done** |
 | B | `content-visibility: auto` on paragraphs | **done** |
 | P | Read a part in pages (option 2) | **done** |
+| P2 | Pages of 5,000 characters (was 10,000) | **done** (2026-11-22) |
 | C | Lower the opening peak | done in part (see below) |
 | D | Smaller parts (150 KB) | to do, optional |
 | E | Old browsers: fallback page | to do, next |
 | F | Old browsers: transpile / fallbacks | to do |
 | G | Low-memory mode | done as P (pages are the default) |
-| H | Fewer nodes per word | later, big |
+| H | Fewer nodes per word | **done** as plain lines (2026-11-22) |
 | I | A window of lines | later, biggest |
 
 Measured on `grabar/mkhitar-gosh/1-datastanagirk-a/01.txt`
@@ -126,8 +127,11 @@ was not opened; try `scripts/build-site.py`.
   116 MB, `fresh 5`, one column).
 - Page size: 10,000, 6,000, 4,000 and 2,500
   characters all gave 76-82 MB in the tab (the
-  browser's floor is 70 MB), so the size stays 10,000
-  (fewest "Next" taps). Not worth tuning.
+  browser's floor is 70 MB), so the size stayed 10,000
+  (fewest "Next" taps). Memory did not tell them
+  apart, but speed does: on a slow CPU a turn is
+  quicker with smaller pages (see P2 and "Done: H"
+  below); `PAGE_CHARS` is 5,000 since 2026-11-22.
 - Building a page in chunks: not done; the peak when
   opening is 128 MB (249 before pages), and a page is
   small. Look again only if a real phone still dies
@@ -135,6 +139,79 @@ was not opened; try `scripts/build-site.py`.
 - Left: the book files are about 500 KB of JSON for
   300 KB of text (a compact format would halve the
   download); not measured on the published site.
+
+## Done: H, plain lines (2026-11-22)
+
+Why: on a slow CPU (a Fire tablet) a page turn cost
+about 200 ms at 10,000 characters (measured with the
+CPU 8x slower), mostly building about 8,700 nodes and
+the layout and style of them, not the script. Smaller
+pages (P2) took it to 140 ms; plain lines to about
+120 ms.
+
+What changed in `web/app.js` (numbers:
+`notes/browser-memory.md`, "Plain lines"):
+
+- `showPage()` builds each line as plain text
+  (`plainLine()`, class `pl`; sentence cuts are kept
+  as empty `.cut` spans). Lines with bold or italic
+  parts, and so `R.format[line].spans`, still get
+  word spans (`fillLine()`).
+- `expandLine(line)` turns a plain line into its words
+  (`fillLine()`); `spanOf(i)` gives the element of
+  word i, making it if needed; `wordRect(i)` gives the
+  screen box of word i from a range over its letters,
+  without making the element.
+- A tap on a plain line (`text` click handler)
+  expands that line and then asks
+  `document.elementFromPoint()` which word is under
+  the finger: no caret API, so no new browser
+  requirement. A tap while text is selected does
+  nothing, so selecting and the search button for the
+  selection are as before.
+- Everything that needed a word's element uses
+  `spanOf()` (marks, the chosen word, the sentence,
+  bookmarks, notes, `go()`, reveal); everything that
+  only needed its place uses `wordRect()`
+  (`topWord()`, `lastWord()`, keeping the place when
+  the text size changes, the first word of the part).
+  Removing a mark only touches `R.spans`: a line that
+  is still plain has none.
+- The cost moved to the first tap in a line (about
+  30-50 ms more). A tap on a common word marks it in
+  every line of the page, so it makes most of the
+  page's words once.
+
+Result (8x slower CPU): per page turn 173 to 123 ms at
+10,000 characters, 141 to about 120 ms at 5,000;
+nodes 8,764 to 4,210 and 4,619 to 2,375. Plain pages
+of 10,000 turn as fast as word pages of 5,000.
+
+### Still to do for this (small)
+
+1. **Try it on the real Fire tablet** (the 8x CPU
+   number is a model, not the device), at 5,000 and
+   at 10,000 characters. If the tablet is fine at
+   10,000, set `PAGE_CHARS` back to 10,000 (half the
+   pages, the same speed).
+2. **A test.** The checks were one-off Playwright
+   scripts. Put a short one in `tests/` (skipped when
+   Playwright is missing): open a part, expect no
+   `.w` at first, tap a word and expect the panel and
+   `R.sel`, `topWord()` equal with plain lines and
+   with all lines expanded.
+3. **Side by side toggled changes the top word** by
+   a few words (5 in one check). Compare with the
+   build before this change to see if it is new.
+4. **The home page can replace the reader** when a
+   part is opened while the home page is still
+   loading (a hash change before it finished
+   drawing). Found by the measuring script; it is
+   older than this change. Find who draws last and
+   make the route win.
+5. Measure memory again (`why`, `fresh 5`): fewer
+   nodes should lower the tab a little; it was not
+   measured.
 
 ## Done: A and B
 
@@ -280,15 +357,14 @@ is the two banner images (about 4 MB by resizing
 the next announcement's `face`, `NEWS` in `app.js`),
 and nothing else worth a change.
 
-### H. Fewer nodes per word (later, big)
+### H. Fewer nodes per word: done, see "Done: H"
 
-One text node per line, the tapped word found with
-`caretPositionFromPoint()` / `caretRangeFromPoint()`,
-bookmarks and the chosen word with the CSS Custom
-Highlight API (Chrome 105+; fall back to spans below
-that). About two thirds of the nodes go. Every place
-that uses `R.spans` changes. Only after C-G if phones
-still fail.
+What is left of the original idea (CSS Custom
+Highlight API for the chosen word, bookmarks and
+notes) is not needed: marks still use classes on
+the word's span, made on demand. Look at it again
+only if the first tap in a line proves too slow on a
+real tablet.
 
 ### I. A window of lines (last resort)
 
