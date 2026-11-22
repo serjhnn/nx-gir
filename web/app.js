@@ -294,7 +294,10 @@ function size(n) {
   return (n / 1024).toFixed(1) + " MB";
 }
 
+// "3 books" in LANG: a count of a word that has a
+// key "n.<word>" in i18n.js, else in English
 function plural(n, word) {
+  if (UI.en["n." + word]) return t("n." + word, n);
   return n + " " + word + (n === 1 ? "" : "s");
 }
 
@@ -834,7 +837,8 @@ function bookRow(item) {
     const fill = h("span");
     fill.style.width = pct + "%";
     meta.append(h("span", { class: "progress",
-      role: "img", "aria-label": pct + "% read" },
+      role: "img",
+      "aria-label": t("pct.read", pct) },
     fill));
   }
   return h("a", { class: "row",
@@ -879,46 +883,35 @@ function menuLink([href, ic, label]) {
     icon(ICONS[ic]), t(label));
 }
 
-// the welcome above the library, in Armenian:
-// questions a first-time visitor may ask
+// the welcome above the library: questions a
+// first-time visitor may ask
 function intro(news) {
-  const qa = (q, ...a) => [h("h3", {}, q),
+  const qa = (q, ...a) => [h("h3", {}, t(q)),
     h("p", {}, ...a)];
-  return h("section", { class: "intro", lang: "hy" },
-    h("h2", {}, "Ողջույն"),
-    qa("Ինչի՞ համար է կայքը։",
-      "Այստեղ կարող եք կարդալ գրաբարով՝ դասական "
-      + "հայերենով գրված գրքեր։"),
-    qa("Ինչպե՞ս իմանալ բառի իմաստը։",
-      "Սեղմեք բառի վրա, և կտեսնեք դրա իմաստը, "
-      + "բառարանային ձևը և այն մյուս տեղերը, "
-      + "որտեղ բառը հանդիպում է գրքում։"),
+  return h("section", { class: "intro" },
+    h("h2", {}, t("intro.hi")),
+    qa("intro.q1", t("intro.a1")),
+    qa("intro.q2", t("intro.a2")),
     news && news.length ? [
-      h("h3", {},
-        "Ի՞նչ փոփոխություններ կան կայքում։"),
+      h("h3", {}, t("intro.q3")),
       newsList(news),
       h("p", { class: "more" },
         h("a", { href: "#/timeline" },
-          "All events → Timeline"))] : null,
-    qa("Ո՞վ է թարգմանել։",
-      "Թարգմանությունը մեքենայական է և դեռ "
-      + "ստուգված չէ մասնագետի կողմից։"),
-    qa("Ինչպե՞ս կապվել։",
-      "Հարցերի, առաջարկների կամ սխալների մասին "
-      + "գրեք նախագծի հեղինակին՝ ", mail(), "։"));
+          t("intro.all")))] : null,
+    qa("intro.q4", t("intro.a4")),
+    qa("intro.q5", t("intro.a5"), mail(), t("dot")));
 }
 
 // the newest steps of the timeline, in English
 // for now (timeline.tsv)
 function newsList(news) {
-  const list = h("ul", { class: "news",
-    lang: "en" });
+  const list = h("ul", { class: "news" });
   for (const e of news) {
     const to = eventHref(e);
     list.append(h("li", {},
       h("time", { datetime: e.date },
         day(e.date)),
-      h("div", {},
+      h("div", { lang: "en" },
         to ? h("a", { href: to }, named(e.title))
           : h("b", {}, named(e.title)),
         e.text ? h("span", {}, named(e.text))
@@ -947,7 +940,7 @@ function shelfList(data) {
       ? folderRow(item) : bookRow(item)));
   }
   return data.items.length ? list
-    : h("p", { class: "empty" }, "No books here.");
+    : h("p", { class: "empty" }, t("no.books"));
 }
 
 async function shelf(folder) {
@@ -966,7 +959,7 @@ async function shelf(folder) {
   document.body.classList.toggle("home", !folder);
   const title = folder
     ? data.title || folder.split("/").pop()
-    : "Library";
+    : t("nav.library");
   document.title = folder
     ? title + " · " + NAME : topTitle();
   const lang = folder.split("/")[1];
@@ -1002,7 +995,7 @@ async function shelf(folder) {
       { class: "actions" },
       h("a", { class: "icon-btn",
         href: "#/new/" + (lang || "ru") },
-      "+ New text")) : null,
+      t("new.text"))) : null,
     folder ? shelfList(data) : null
   );
 }
@@ -1288,56 +1281,51 @@ function topBanner() {
 // opens the timeline; and the contact address
 function devBanner() {
   return h("div", { class: "dev-banner",
-    role: "note", lang: "en" },
+    role: "note", lang: LANG },
   h("span", { class: "dev-dot", "aria-hidden": "true" }),
   h("span", { class: "dev-text" },
     h("a", { class: "dev-go", href: "#/timeline" },
-      h("b", {}, "Under active development"),
-      h("span", {}, "New features are added every"
-        + " day. Come back often to see what is"
-        + " new."),
+      h("b", {}, t("dev.title")),
+      h("span", {}, t("dev.text")),
       h("span", { class: "dev-more" },
-        "See what is new on the timeline →")),
+        t("dev.more"))),
     h("span", { class: "dev-mail" },
-      "Questions or ideas? Write to ", mail(), ".")));
+      t("dev.mail"), mail(), t("dot"))));
 }
 
 // a narrow banner on the top page, with the
 // picture of #/contribute, leading there
 function joinBanner() {
   return h("a", { class: "join-banner",
-    href: "#/contribute", lang: "hy" },
+    href: "#/contribute", lang: LANG },
   h("img", { src: "contribute.jpg", alt: "",
     width: "1200", height: "675" }),
   h("span", { class: "join-text" },
-    h("b", {}, "Միացեք Նախագրին"),
-    h("span", {}, "Օգնեք թարգմանել և խմբագրել"
-      + " առկա թարգմանությունները"),
-    h("span", { class: "join-go" },
-      "Ինչպես միանալ →")));
+    h("b", {}, named(t("join.title"))),
+    h("span", {}, t("join.text")),
+    h("span", { class: "join-go" }, t("join.go"))));
 }
 
 // a narrow banner on the top page, with the
 // painted map, leading to #/map
 function mapBanner() {
   return h("a", { class: "join-banner map-banner",
-    href: "#/map", lang: "hy" },
+    href: "#/map", lang: LANG },
   h("img", { src: "img/map/base.webp", alt: "",
     width: "1536", height: "1024",
     loading: "lazy" }),
   h("span", { class: "join-text" },
-    h("b", {}, "Քարտեզ"),
-    h("span", {}, "Պատմական դեպքերի վայրերը"
-      + " քարտեզի վրա"),
-    h("span", { class: "join-go" },
-      "Բացել քարտեզը →")));
+    h("b", {}, t("nav.map")),
+    h("span", {}, t("mapb.text")),
+    h("span", { class: "join-go" }, t("mapb.go"))));
 }
 
 // a narrow banner on the top page, with the
 // picture of the newest announcement, leading to
 // #/news
-function newsBanner(a = NEWS[0], lang = "hy") {
-  const en = lang === "en" && a.banner_en;
+function newsBanner(a = NEWS[0],
+  lang = newsLang()) {
+  const en = lang !== "hy" && a["banner_" + lang];
   return h("a", { class: "join-banner news-banner",
     href: "#/news/" + a.id, lang },
   h("img", { src: a.face, alt: "",
@@ -1355,23 +1343,22 @@ function newsBanner(a = NEWS[0], lang = "hy") {
 // shows; #/recent shows them all
 const RECENT = 3;
 
-// "seen" (seconds) as Armenian "how long ago"
+// "seen" (seconds) as "how long ago", in LANG
 function ago(seen) {
   if (!seen) return "";
   const s = Date.now() / 1000 - seen;
   const n = (k) => Math.max(1, Math.floor(s / k));
-  if (s < 60) return "հենց նոր";
-  if (s < 3600) return n(60) + " րոպե առաջ";
-  if (s < 86400) return n(3600) + " ժամ առաջ";
-  if (s < 2 * 86400) return "երեկ";
-  if (s < 30 * 86400) return n(86400) + " օր առաջ";
+  if (s < 60) return t("ago.now");
+  if (s < 3600) return t("ago.min", n(60));
+  if (s < 86400) return t("ago.hour", n(3600));
+  if (s < 2 * 86400) return t("ago.yesterday");
+  if (s < 30 * 86400) return t("ago.days", n(86400));
   const d = new Date(seen * 1000);
   return day(d.toISOString().slice(0, 10), true);
 }
 
 // the language of a book, from its top folder
-const SHELF_LANGS = { grabar: "Գրաբար",
-  ashkharhabar: "Աշխարհաբար" };
+const SHELF_LANGS = ["grabar", "ashkharhabar"];
 
 // a styled question before a reading is taken off
 // the list: true when answered yes
@@ -1384,20 +1371,17 @@ function askForget(title) {
       done(yes);
     };
     const no = h("button", { type: "button",
-      class: "icon-btn" }, "Չեղարկել");
+      class: "icon-btn" }, t("cancel"));
     const yes = h("button", { type: "button",
       class: "icon-btn danger" },
-    icon(ICONS.bin), "Հեռացնել");
+    icon(ICONS.bin), t("remove"));
     no.addEventListener("click", () => end(false));
     yes.addEventListener("click", () => end(true));
     box.append(h("div", { class: "ask-card",
-      lang: "hy" },
-    h("h2", {}, "Հեռացնե՞լ ցանկից"),
-    h("p", { class: "ask-book" }, title),
-    h("p", { class: "ask-note" },
-      "Գիրքը չի ջնջվի։ Որտեղ կանգ եք առել՝"
-        + " կմնա, և նորից բացելիս այն կվերադառնա"
-        + " ցանկ։"),
+      lang: LANG },
+    h("h2", {}, t("forget.q")),
+    h("p", { class: "ask-book", lang: "hy" }, title),
+    h("p", { class: "ask-note" }, t("forget.note")),
     h("div", { class: "ask-btns" }, no, yes)));
     box.addEventListener("click", (e) => {
       if (e.target === box) end(false);
@@ -1436,12 +1420,14 @@ function readingList(items) {
     const pct = r.progress || 0;
     const fill = h("span");
     fill.style.width = pct + "%";
-    const lang = SHELF_LANGS[r.name.split("/")[0]];
+    const top = r.name.split("/")[0];
+    const lang = SHELF_LANGS.includes(top)
+      ? t("shelf." + top) : "";
     const when = ago(r.seen);
     const x = h("button", { type: "button",
       class: "forget",
-      "aria-label": "Հեռացնել ցանկից",
-      title: "Հեռացնել ցանկից" },
+      "aria-label": t("forget.title"),
+      title: t("forget.title") },
     icon(ICONS.bin));
     x.addEventListener("click", async () => {
       if (!await askForget(r.title)) return;
@@ -1456,8 +1442,8 @@ function readingList(items) {
     });
     list.append(h("li", {},
       x,
-      h("a", { href: "#/read/" + enc(r.name) },
-        r.title),
+      h("a", { href: "#/read/" + enc(r.name),
+        lang: "hy" }, r.title),
       h("div", { class: "meta" },
         lang ? h("span", { class: "tag" }, lang)
           : null,
@@ -1472,30 +1458,27 @@ function readingList(items) {
 // the top of the home page: the books read last
 function recentCard(items) {
   return h("section", { class: "recent",
-    lang: "hy" },
-    h("h2", {}, "Շարունակել կարդալ"),
+    lang: LANG },
+    h("h2", {}, t("recent.go")),
     readingList(items),
     h("p", { class: "more" },
-      h("a", { href: "#/recent" },
-        "Բոլոր ընթերցումները →")));
+      h("a", { href: "#/recent" }, t("recent.all"))));
 }
 
 async function recentPage() {
   const data = await api("recent");
-  document.title = "Readings · " + NAME;
+  document.title = t("nav.recent") + " · " + NAME;
   show(
     h("p", { class: "crumbs" },
-      h("a", { href: "#/" }, "← Home")),
-    h("h1", { lang: "hy" }, "Իմ ընթերցումները"),
-    h("p", { class: "sub", lang: "hy" },
-      STATIC ? "Պահված է միայն այս դիտարկիչում"
-        : "Այս համակարգչում"),
+      h("a", { href: "#/" }, t("home"))),
+    h("h1", {}, t("recent.h1")),
+    h("p", { class: "sub" },
+      STATIC ? t("recent.static") : t("recent.local")),
     data.items.length
-      ? h("section", { class: "recent all",
-        lang: "hy" }, readingList(data.items))
-      : h("p", { class: "empty", lang: "hy" },
-        "Դեռ ոչինչ չեք կարդացել։ ",
-        h("a", { href: "#/" }, "Գրադարան")));
+      ? h("section", { class: "recent all" },
+        readingList(data.items))
+      : h("p", { class: "empty" }, t("recent.none"),
+        h("a", { href: "#/" }, t("nav.library"))));
 }
 
 // -- a book's page --
@@ -1519,13 +1502,22 @@ function folderHref(dir) {
   return dir ? "#/f/" + enc(dir) : "#/";
 }
 
+// the name of a link up: the Library in LANG, the
+// authors and books in Armenian
+function upLabel(u) {
+  return u.to === "#/library" ? t("nav.library")
+    : u.label;
+}
+
 // links up: [{label, to}] as volume() gives them
 function upLinks(up) {
-  const nav = h("nav", { class: "crumbs", lang: "hy",
-    "aria-label": "Library" });
+  const nav = h("nav", { class: "crumbs",
+    "aria-label": t("nav.library") });
   up.forEach((u, i) => {
     if (i) nav.append(h("span", { class: "sep" }, "/"));
-    nav.append(h("a", { href: u.to }, u.label));
+    nav.append(h("a", { href: u.to,
+      lang: u.to === "#/library" ? null : "hy" },
+    upLabel(u)));
   });
   return nav;
 }
@@ -1542,13 +1534,15 @@ function partRow(p, here) {
     fill.style.width = p.progress + "%";
     meta.append(p.progress + "%",
       h("span", { class: "progress", role: "img",
-        "aria-label": p.progress + "% read" }, fill));
+        "aria-label": t("pct.read", p.progress) },
+      fill));
   }
   const a = h("a", { class: "row part",
     href: "#/read/" + enc(p.name) },
   h("span", { class: "num" }, String(p.n)),
-  h("span", { class: "name", lang: "hy" },
-    p.title || "Մաս " + p.n),
+  p.title ? h("span", { class: "name", lang: "hy" },
+    p.title)
+    : h("span", { class: "name" }, t("part.n", p.n)),
   meta);
   if (here) a.setAttribute("aria-current", "true");
   return a;
@@ -1594,22 +1588,26 @@ async function bookPage(folder) {
   }
   show(
     h("p", { class: "crumbs" },
-      h("a", { href: up.to, lang: "hy" },
-        "← " + up.label)),
-    h("div", { class: "volume", lang: "hy" },
-      h("h1", {}, data.book, own ? authorInfoBtn(
-        folder.split("/")[1], data.book) : null),
+      h("a", { href: up.to, lang: up.to
+        === "#/library" ? null : "hy" },
+      "← " + upLabel(up))),
+    h("div", { class: "volume" },
+      h("h1", { lang: "hy" }, data.book,
+        own ? authorInfoBtn(folder.split("/")[1],
+          data.book) : null),
       own ? null : by,
       data.title !== data.book
-        ? h("p", { class: "sub" }, data.title) : null,
-      h("p", { class: "sub" }, data.total + " մաս"
-        + (data.done ? " · թարգմանված "
-          + data.done + "/" + data.total : "")),
+        ? h("p", { class: "sub", lang: "hy" },
+          data.title) : null,
+      h("p", { class: "sub" }, plural(data.total,
+        "part") + (data.done ? t("vol.done",
+        data.done, data.total) : "")),
       h("p", { class: "intro-btn" },
         h("a", { class: "icon-btn primary",
           href: "#/read/" + enc(go.name) },
-        last ? "Շարունակել → " + (go.title
-          || "մաս " + go.n) : "Սկսել կարդալ →")),
+        last ? [t("vol.go"), go.title
+          ? h("span", { lang: "hy" }, go.title)
+          : t("part.n", go.n)] : t("vol.start"))),
       groups));
 }
 
@@ -1756,12 +1754,14 @@ function watchNames(el) {
 }
 
 function libraryRow(b, by) {
-  const meta = h("span", { class: "meta" });
-  if (b.parts > 1) meta.append(b.parts + " մաս");
+  const meta = h("span", { class: "meta",
+    lang: LANG });
+  if (b.parts > 1) meta.append(plural(b.parts, "part"));
   if (b.done) {
     meta.append(h("span", { class: "done" },
-      b.done === b.parts ? "թարգմանված"
-        : "թարգմանված " + b.done + "/" + b.parts));
+      b.done === b.parts ? t("lib.done")
+        : t("lib.done") + " " + b.done + "/"
+          + b.parts));
   }
   // a long book opens on its page, a short one in
   // the reader
@@ -1806,7 +1806,7 @@ async function libraryPage(who) {
     api("library"),
     api("recent?n=0").catch(() => ({ items: [] })),
   ]);
-  document.title = "Գրադարան · " + NAME;
+  document.title = t("nav.library") + " · " + NAME;
   let stars = data.stars || [];
   // first file -> the book and its author
   const books = new Map();
@@ -1833,7 +1833,8 @@ async function libraryPage(who) {
     buttons.push(btn);
     return btn;
   };
-  const empty = (t) => h("p", { class: "empty" }, t);
+  const empty = (msg) => h("p", { class: "empty",
+    lang: LANG }, msg);
   // what the find box finds: authors and books, in
   // the order shown (libraryFind())
   const finds = [];
@@ -1875,7 +1876,7 @@ async function libraryPage(who) {
   });
   const panes = {
     all: h("div", {}, groups.length ? groups
-      : empty("Գրքեր դեռ չկան։")),
+      : empty(t("lib.none"))),
     starred: h("div"),
     reading: h("div"),
   };
@@ -1888,15 +1889,16 @@ async function libraryPage(who) {
     const meta = row.querySelector(".meta");
     const fill = h("span");
     fill.style.width = r.progress + "%";
+    meta.lang = LANG;
     meta.replaceChildren(
-      (r.part ? "մաս " + r.part + " · " : "")
+      (r.part ? t("lib.part", r.part) : "")
         + r.progress + "%",
       h("span", { class: "progress", role: "img",
         "aria-label": r.progress + "%" }, fill));
     const x = h("button", { type: "button",
       class: "forget",
-      "aria-label": "Հեռացնել ցանկից",
-      title: "Հեռացնել ցանկից" },
+      "aria-label": t("forget.title"),
+      title: t("forget.title") },
     icon(ICONS.bin));
     x.addEventListener("click", async () => {
       if (!await askForget(r.b.name)) return;
@@ -1913,8 +1915,7 @@ async function libraryPage(who) {
       bookItem(r.b, row, starBtn(r.b), x));
   }
   panes.reading.append(reading.length ? readList
-    : empty("Դեռ ոչինչ չեք կարդում։ Բացեք գիրքը՝"
-      + " այն կհայտնվի այստեղ։"));
+    : empty(t("lib.noread")));
   // the tabs
   const n = data.authors.reduce(
     (k, a) => k + a.books.length, 0);
@@ -1922,13 +1923,13 @@ async function libraryPage(who) {
     String(k));
   const starCount = count(0);
   const labels = {
-    all: ["Բոլոր գրքերը", count(n)],
-    starred: ["★ Ընտրված", starCount],
-    reading: ["Ընթերցվող", reading.length
+    all: [t("lib.all"), count(n)],
+    starred: [t("lib.starred"), starCount],
+    reading: [t("lib.reading"), reading.length
       ? count(reading.length) : null],
   };
   const tabs = h("div", { class: "lib-tabs",
-    role: "tablist", "aria-label": "Գրադարան" },
+    role: "tablist", "aria-label": t("nav.library") },
   h("span", { class: "thumb",
     "aria-hidden": "true" }));
   const tabBtn = {};
@@ -1957,8 +1958,7 @@ async function libraryPage(who) {
     }
     const k = list.children.length;
     panes.starred.replaceChildren(k ? list
-      : empty("Ընտրված գրքեր դեռ չկան։ Գրքի կողքի"
-        + " ☆-ով ավելացրեք այստեղ։"));
+      : empty(t("lib.nostars")));
     starCount.textContent = String(k);
     starCount.hidden = !k;
     buttons = buttons.filter((x) => x.isConnected);
@@ -1966,7 +1966,7 @@ async function libraryPage(who) {
       const on = stars.includes(x.dataset.name);
       x.textContent = on ? "★" : "☆";
       x.setAttribute("aria-pressed", String(on));
-      x.title = on ? "Հանել աստղը" : "Աստղանշել";
+      x.title = on ? t("star.off") : t("star.on");
     }
   };
   const pick = (tab, keep, slide) => {
@@ -2005,7 +2005,9 @@ async function libraryPage(who) {
   // a swipe left or right on the page moves to the
   // next tab or the one before (not past the ends);
   // the new list slides in from that side
-  const body = h("div", { class: "lib-panes" },
+  // the names of authors and books: Armenian
+  const body = h("div", { class: "lib-panes",
+    lang: "hy" },
     panes.all, panes.starred, panes.reading);
   let touch = null;
   // the whole page, so a short list is no smaller
@@ -2073,12 +2075,12 @@ async function libraryPage(who) {
   });
   showBare(find,
     h("p", { class: "crumbs" },
-      h("a", { href: "#/" }, "← Home")),
-    h("div", { class: "library", lang: "hy" },
-      h("h1", {}, "Գրադարան"),
-      h("p", { class: "sub" },
-        "Գրաբար գրքեր · " + n + " · ",
-        h("a", { href: "#/reference" }, "Տեղեկատու →")),
+      h("a", { href: "#/" }, t("home"))),
+    h("div", { class: "library" },
+      h("h1", {}, t("nav.library")),
+      h("p", { class: "sub" }, t("lib.sub", n),
+        h("a", { href: "#/reference" },
+          t("nav.reference") + " →")),
       tabs, body));
   drawStars();
   // the lists at least a screen high: a short one
@@ -2107,8 +2109,8 @@ async function libraryPage(who) {
 function libraryFind(items, show, all) {
   const input = h("input", { type: "search",
     name: "find",
-    placeholder: "Գտնել հեղինակ կամ գիրք…",
-    "aria-label": "Գտնել հեղինակ կամ գիրք",
+    placeholder: t("lib.find") + "…",
+    "aria-label": t("lib.find"),
     enterkeyhint: "search", autocomplete: "off",
     autocapitalize: "off", spellcheck: "false" });
   const count = h("span", { class: "lf-count",
@@ -2120,14 +2122,14 @@ function libraryFind(items, show, all) {
     b.hidden = true;
     return b;
   };
-  const prev = step(ICONS.up, "Նախորդը", -1);
-  const next = step(ICONS.down, "Հաջորդը", 1);
+  const prev = step(ICONS.up, t("prev"), -1);
+  const next = step(ICONS.down, t("next"), 1);
   // the count and the steps in one chip
   const chip = h("span", { class: "lf-chip" },
     count, prev, next);
   const clear = h("button", { type: "button",
-    class: "sbox-x", "aria-label": "Մաքրել",
-    title: "Մաքրել" }, "✕");
+    class: "sbox-x", "aria-label": t("clear"),
+    title: t("clear") }, "✕");
   clear.hidden = true;
   chip.hidden = true;
   let names = {};
@@ -2142,7 +2144,7 @@ function libraryFind(items, show, all) {
   const mark = () => {
     found.forEach((x, i) => x.el.classList
       .toggle("lf-now", i === at));
-    count.textContent = !found.length ? "Չկա"
+    count.textContent = !found.length ? t("none")
       : found.length === 1 ? "1"
         : at + 1 + " / " + found.length;
     if (found.length) show(found[at].el);
@@ -2195,7 +2197,7 @@ function libraryFind(items, show, all) {
     input.focus();
   });
   const form = h("form", { class: "sbox lib-find",
-    role: "search", lang: "hy" },
+    role: "search" },
   icon(ICONS.search), input, chip, clear);
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -2213,8 +2215,8 @@ function libraryFind(items, show, all) {
 // page
 function withHome(wrap) {
   const home = h("a", { class: "box-home",
-    href: "#/", "aria-label": "Գլխավոր",
-    title: "Գլխավոր" },
+    href: "#/", "aria-label": t("nav.home"),
+    title: t("nav.home") },
   document.querySelector(".brand-mark")
     .cloneNode(true));
   wrap.classList.add("home-wrap");
@@ -2237,8 +2239,6 @@ function withHome(wrap) {
 const KINDS = ["Start", "Books", "Translation",
   "Reader", "Dictionary", "Texts", "Site"];
 
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May",
-  "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 // "2026-11-07" as a date at noon UTC, so the day
 // is the same in every time zone
@@ -2246,11 +2246,12 @@ function isoDate(iso) {
   return new Date(iso + "T12:00:00Z");
 }
 
-// "2026-11-07": "7 Nov", or "7 Nov 2026"
+// "2026-11-07": "7 Nov", or "7 Nov 2026" (the
+// month in LANG)
 function day(iso, year) {
   const d = isoDate(iso);
   return d.getUTCDate() + " " +
-    MONTHS[d.getUTCMonth()] +
+    t("months")[d.getUTCMonth()] +
     (year ? " " + d.getUTCFullYear() : "");
 }
 
@@ -2277,7 +2278,7 @@ function eventLink(e) {
   const label = e.to === "url"
     ? e.link.replace(/^https:\/\//, "")
       .replace(/\/$/, "")
-    : e.to === "read" ? "Read →" : "Open →";
+    : e.to === "read" ? t("read.go") : t("open.go");
   return h("p", { class: "links" },
     h("a", { href: to }, label));
 }
@@ -2286,9 +2287,11 @@ function eventItem(e) {
   return h("li", { class: "ev" +
       (e.big ? " big" : ""), "data-kind": e.kind },
     h("h3", {},
-      h("span", { class: "chip" }, e.kind),
-      named(e.title)),
-    e.text ? h("p", {}, named(e.text)) : null,
+      h("span", { class: "chip" },
+        t("kind." + e.kind)),
+      h("span", { lang: "en" }, named(e.title))),
+    e.text ? h("p", { lang: "en" }, named(e.text))
+      : null,
     eventLink(e));
 }
 
@@ -2303,7 +2306,7 @@ function eventList(data, kind) {
       last = e.date;
       list.append(h("li", { class: "day" },
         h("b", {}, day(e.date, true)),
-        " · day " + dayNo(data.start, e.date)));
+        t("tl.day", dayNo(data.start, e.date))));
     }
     list.append(eventItem(e));
   }
@@ -2312,7 +2315,7 @@ function eventList(data, kind) {
 
 async function timelinePage() {
   const data = await api("timeline");
-  document.title = "Timeline · " + NAME;
+  document.title = t("nav.timeline") + " · " + NAME;
   const stat = (n, label) => h("div", {},
     h("b", {}, String(n)), h("span", {}, label));
   // a filter for each kind with more than one
@@ -2321,10 +2324,11 @@ async function timelinePage() {
     .filter((e) => e.kind === k).length > 1);
   let list = eventList(data, "");
   const filters = h("div", { class: "filters",
-    role: "group", "aria-label": "Show" });
+    role: "group", "aria-label": t("show") });
   for (const k of ["", ...kinds]) {
     const b = h("button", { type: "button",
-      "aria-pressed": String(!k) }, k || "All");
+      "aria-pressed": String(!k) },
+    k ? t("kind." + k) : t("all"));
     b.addEventListener("click", () => {
       for (const o of filters.children) {
         o.setAttribute("aria-pressed",
@@ -2338,25 +2342,24 @@ async function timelinePage() {
   }
   show(
     h("p", { class: "crumbs" },
-      h("a", { href: "#/" }, "← Home")),
-    h("h1", {}, "Timeline"),
-    h("p", { class: "sub" },
-      named("How nxGir grew, from the first"
-        + " line to today")),
+      h("a", { href: "#/" }, t("home"))),
+    h("h1", {}, t("nav.timeline")),
+    h("p", { class: "sub" }, named(t("tl.sub"))),
+    t("tl.en") ? h("p", { class: "sub" }, t("tl.en"))
+      : null,
     data.start ? h("div", { class: "stats" },
-      stat(dayNo(data.start), "days"),
-      stat(data.books, "Grabar books"),
-      stat(data.parts, "parts translated"))
+      stat(dayNo(data.start), t("tl.days")),
+      stat(data.books, t("tl.books")),
+      stat(data.parts, t("tl.parts")))
       : null,
     kinds.length > 1 ? filters : null,
     list,
     data.next.length ? h("section", {},
-      h("h2", { class: "tl-next" }, "Next"),
+      h("h2", { class: "tl-next" }, t("tl.next")),
       h("ol", { class: "tl next" },
         data.next.map(eventItem))) : null,
     h("p", { class: "more-link" },
-      h("a", { href: "#/stats" },
-        "How close we are to the limits → Statistics"))
+      h("a", { href: "#/stats" }, t("tl.limits")))
   );
 }
 
@@ -2388,7 +2391,6 @@ const BLOG_THEMES = {
   books: { hy: "Գրքերի մասին", en: "About books",
     ru: "О книгах" },
 };
-const BLOG_LANG = "nxgir-blog-lang";
 
 const MONTHS_HY = ["հունվարի", "փետրվարի",
   "մարտի", "ապրիլի", "մայիսի", "հունիսի",
@@ -2413,19 +2415,35 @@ function longDay(iso, lang) {
   return day(iso, true);
 }
 
-// the language the reader picked, or Armenian
+// The pages with a language picker of their own
+// (the blog, comics, map and Features; the author
+// cards and Reference; the announcements; the
+// meanings of words) show the language of the
+// address; one picked there is kept for that kind
+// of page until the language of the site changes.
+const pagePick = {};
+window.addEventListener("langchange", () => {
+  for (const k of Object.keys(pagePick)) {
+    delete pagePick[k];
+  }
+});
+// the pickers' own languages once kept in the
+// browser: the address says it now
+try {
+  for (const k of ["nxgir-blog-lang",
+    "nxgir-author-lang", "nxgir-lang"]) {
+    localStorage.removeItem(k);
+  }
+} catch (e) {}
+
+// the language of the blog's pages: the one picked
+// there, else the site's
 function blogLang() {
-  try {
-    const l = localStorage.getItem(BLOG_LANG);
-    if (l in BLOG) return l;
-  } catch (e) {}
-  return "hy";
+  return pagePick.blog || LANG;
 }
 
 function setBlogLang(lang) {
-  try {
-    localStorage.setItem(BLOG_LANG, lang);
-  } catch (e) {}
+  pagePick.blog = lang;
 }
 
 // a post's version in lang, or its first one
@@ -2516,7 +2534,6 @@ async function blogPage(path) {
   }
   const home = !slug && !theme;
   if (home) theme = "site";
-  if (want in BLOG) setBlogLang(want);
   const data = await api("blog");
   const one = slug
     ? data.posts.find((p) => p.slug === slug) : null;
@@ -2643,8 +2660,7 @@ function comicItem(s, lang) {
 // one series; #/comics/<slug>/<lang> in lang (the
 // language is the blog's choice)
 async function comicsPage(path) {
-  const [slug, want] = path.split("/");
-  if (want in BLOG) setBlogLang(want);
+  const [slug] = path.split("/");
   const data = await api("comics");
   const one = slug
     ? data.series.find((s) => s.slug === slug) : null;
@@ -2773,10 +2789,9 @@ function mapLink(s, lang) {
 }
 
 async function mapPage(path) {
-  // map/<place>, map/<lang>, map/<place>/<lang>
-  let [want, lg] = path.split("/");
-  if (want in BLOG) [want, lg] = ["", want];
-  if (lg in BLOG) setBlogLang(lg);
+  // map/<place>
+  let [want] = path.split("/");
+  if (want in BLOG) want = "";
   const data = await api("map");
   const places = data.places;
   const by = new Map(places.map((p) => [p.id, p]));
@@ -2917,14 +2932,15 @@ async function mapPage(path) {
     };
     function closePop() {
       st.sel = "";
-      history.replaceState(history.state, "", "/map");
+      history.replaceState(history.state, "",
+        pathOf("#/map"));
       drawPop();
     }
     // move: bring the place to the middle of the view
     function pick(id, zoomIn, move) {
       st.sel = id;
       history.replaceState(history.state, "",
-        "/map/" + id);
+        pathOf("#/map/" + id));
       drawPop();
       if (move) center(zoomIn);
     }
@@ -3123,7 +3139,6 @@ function featureCards(blocks) {
 // language picked for the blog; #/features/<lang>
 // in lang
 async function featuresPage(want) {
-  if (want in BLOG) setBlogLang(want);
   const data = await api("features");
   const draw = () => {
     const langs = data.versions.map((v) => v.lang);
@@ -3154,8 +3169,7 @@ async function featuresPage(want) {
       h("div", { lang }, intro),
       langs.length > 1 ? pick : null,
       v ? h("div", { lang }, list)
-        : h("p", { class: "empty" },
-          "Nothing here yet."));
+        : h("p", { class: "empty" }, t("nothing")));
   };
   draw();
 }
@@ -3168,72 +3182,103 @@ async function featuresPage(want) {
 // who read the drafts beside the Grabar
 const HOWTO = REPO + "/blob/main/CONTRIBUTING.md";
 
-const WAYS = [
-  ["Read and review",
-    "Every translation starts as a machine draft."
-    + " It becomes a book only when someone who"
-    + " knows Grabar reads it beside the original,"
-    + " line by line, and corrects it.",
-    "Open a part, press ⇆ Parallel, and read."
-    + " Your name is shown above every part you"
-    + " review."],
-  ["Translate with AI",
-    "Many parts have no translation yet. Make a"
-    + " first draft into modern Armenian with an"
-    + " AI model, one line for each Grabar line,"
-    + " keeping the chapter lines as they are.",
-    "A draft goes in as machine, and waits for"
-    + " its first reader."],
-  ["Bring texts and words",
-    "Grabar books that are not here yet, words"
-    + " missing from the glossary, abbreviations"
-    + " from a printed source, and scans of old"
-    + " prints to test with."],
-];
+// in each language
+const WAYS = {
+  en: [
+    ["Read and review",
+      "Every translation starts as a machine draft."
+      + " It becomes a book only when someone who"
+      + " knows Grabar reads it beside the original,"
+      + " line by line, and corrects it.",
+      "Open a part, press ⇆ Parallel, and read."
+      + " Your name is shown above every part you"
+      + " review."],
+    ["Translate with AI",
+      "Many parts have no translation yet. Make a"
+      + " first draft into modern Armenian with an"
+      + " AI model, one line for each Grabar line,"
+      + " keeping the chapter lines as they are.",
+      "A draft goes in as machine, and waits for"
+      + " its first reader."],
+    ["Bring texts and words",
+      "Grabar books that are not here yet, words"
+      + " missing from the glossary, abbreviations"
+      + " from a printed source, and scans of old"
+      + " prints to test with."],
+  ],
+  hy: [
+    ["Կարդալ և ստուգել",
+      "Յուրաքանչյուր թարգմանություն սկսվում է"
+      + " մեքենայական սևագրից։ Այն գիրք է դառնում միայն"
+      + " այն ժամանակ, երբ գրաբար իմացող մեկը կարդում է"
+      + " այն բնագրի կողքին՝ տող առ տող, և ուղղում։",
+      "Բացեք մի մաս, սեղմեք ⇆ Զուգահեռ և կարդացեք։ Ձեր"
+      + " անունը կերևա ձեր ստուգած յուրաքանչյուր մասի"
+      + " վերևում։"],
+    ["Թարգմանել արհեստական բանականությամբ",
+      "Շատ մասեր դեռ թարգմանություն չունեն։ Արհեստական"
+      + " բանականության օգնությամբ պատրաստեք աշխարհաբար"
+      + " առաջին սևագիրը՝ գրաբարի յուրաքանչյուր տողի"
+      + " դիմաց մեկ տող, գլուխների տողերը թողնելով"
+      + " անփոփոխ։",
+      "Սևագիրը մտնում է որպես մեքենայական և սպասում է"
+      + " իր առաջին ընթերցողին։"],
+    ["Բերել տեքստեր և բառեր",
+      "Գրաբար գրքեր, որոնք դեռ այստեղ չկան, բառարանում"
+      + " պակասող բառեր, տպագիր աղբյուրից հապավումներ և"
+      + " հին տպագրությունների պատկերներ՝ փորձարկելու"
+      + " համար։"],
+  ],
+  ru: [
+    ["Читать и проверять",
+      "Каждый перевод начинается с машинного"
+      + " черновика. Книгой он становится, только когда"
+      + " человек, знающий грабар, прочтёт его рядом с"
+      + " оригиналом, строка за строкой, и исправит.",
+      "Откройте часть, нажмите ⇆ Параллельно и"
+      + " читайте. Ваше имя будет указано над каждой"
+      + " частью, которую вы проверите."],
+    ["Переводить с ИИ",
+      "У многих частей ещё нет перевода. Сделайте с"
+      + " помощью модели ИИ первый черновик на"
+      + " современный армянский — по строке на каждую"
+      + " строку грабара, оставляя строки глав как есть.",
+      "Черновик добавляется как машинный и ждёт своего"
+      + " первого читателя."],
+    ["Приносить тексты и слова",
+      "Книги на грабаре, которых здесь ещё нет, слова,"
+      + " которых не хватает в словаре, сокращения из"
+      + " печатного источника и сканы старых изданий для"
+      + " проверки."],
+  ],
+};
 
 function contributePage() {
-  document.title = "Become a contributor"
-    + " · " + NAME;
+  document.title = t("co.title") + " · " + NAME;
   const list = h("ul", { class: "features" },
-    WAYS.map(([title, ...text]) => h("li", {},
-      h("h2", {}, title),
-      text.map((t) => h("p", {}, t)))));
+    (WAYS[LANG] || WAYS.en).map(([title, ...text]) =>
+      h("li", {}, h("h2", {}, title),
+        text.map((x) => h("p", {}, x)))));
   show(
     h("p", { class: "crumbs" },
-      h("a", { href: "#/" }, "Home")),
+      h("a", { href: "#/" }, t("home"))),
     h("figure", { class: "hero" },
       h("img", { src: "contribute.jpg",
         width: "1200", height: "675",
-        alt: "A reader under a tree with a laptop,"
-          + " a monastery and a mountain behind" }),
+        alt: t("co.alt") }),
       h("figcaption", { class: "mission" },
-        h("p", {}, "Our mission: to open the old"
-          + " Armenian books to every reader, word"
-          + " by word, in the language we speak"
-          + " today."),
-        h("p", { class: "aside" }, "Think of it as"
-          + " a scriptorium with a new apprentice:"
-          + " the AI copies fast and never asks for"
-          + " candles, but a monk still has to"
-          + " check every line."))),
-    h("h1", {}, "Become a contributor"),
-    h("p", { class: "sub" }, named("Նախագիր"
-      + " (nxGir) is an open project: old Armenian"
-      + " books, word by word, and their"
-      + " translations into modern Armenian, free"
-      + " for anyone to read. It grows with the"
-      + " people who help.")),
+        h("p", {}, t("co.mission")),
+        h("p", { class: "aside" }, t("co.aside")))),
+    h("h1", {}, t("co.title")),
+    h("p", { class: "sub" }, named(t("co.sub"))),
     list,
     h("p", { class: "cta" },
       h("a", { class: "cta-main", href: HOWTO },
-        "How to start"),
-      h("a", { href: REPO }, "The project on"
-        + " GitHub")),
-    h("p", { class: "sub" }, "Translations are"
-      + " under ", h("a", { href: BY_SA,
-      rel: "license" }, "CC BY-SA 4.0"), "; by"
-      + " sending one you agree to publish it"
-      + " under this license."));
+        t("co.start")),
+      h("a", { href: REPO }, t("co.gh"))),
+    h("p", { class: "sub" }, t("co.lic1"),
+      h("a", { href: BY_SA, rel: "license" },
+        "CC BY-SA 4.0"), t("co.lic2")));
 }
 
 // -- announcements --
@@ -3254,6 +3299,8 @@ const NEWS_UI = {
     read: "Կարդալ →" },
   en: { home: "Home", title: "Announcements",
     read: "Read →" },
+  ru: { home: "Главная", title: "Объявления",
+    read: "Читать →" },
 };
 
 const NEWS = [{
@@ -3279,6 +3326,8 @@ const NEWS = [{
   banner_en: ["Zenob Glak",
     "The History of Taron, from the 4th century:"
     + " the book is in the Library"],
+  banner_ru: ["Зеноб Глак",
+    "История Тарона, с IV века: книга в библиотеке"],
   sections: [
     ["Who he was",
       "By tradition Zenob was a disciple of"
@@ -3370,6 +3419,58 @@ const NEWS = [{
     ask: "Բարձրավանդակի էլ ո՞ր երկրների "
       + "պատմությունն է դեռ սպասում ընթերցողին։",
   },
+  ru: {
+    alt:
+      "Зеноб Глак, История Тарона, IV век:"
+      + " нарисованная карта Тарона среди гор, на ней"
+      + " крепость, а на скале всадник",
+    title:
+      "История Тарона в библиотеке",
+    lead:
+      "«История Тарона» (Պատմութիւն Տարաւնոյ)"
+      + " рассказывает, как страна в самом сердце"
+      + " Армянского нагорья приняла новую веру и"
+      + " боролась за неё. Первая часть приписывается"
+      + " Зенобу Глаку (Զենոբ Գլակ), вторая принадлежит"
+      + " Ованесу Мамиконяну. Вся книга теперь в"
+      + " библиотеке nxGir, на грабаре и на современном"
+      + " армянском, бок о бок.",
+    sections: [
+      ["Кем он был",
+        "По преданию, Зеноб был учеником Григория"
+        + " Просветителя и пришёл с ним из Кесарии;"
+        + " некоторые источники называют его сирийцем."
+        + " Он стал первым настоятелем монастыря Сурб"
+        + " Карапет в Тароне, который по его имени"
+        + " назвали Глакаванком."],
+      ["Первая часть",
+        "Разделы Ա–Դ, 654 строки: по велению Григория"
+        + " Зеноб пишет сирийским епископам о том, как"
+        + " новая вера утвердилась в Тароне. Здесь"
+        + " письма Григория и епископов и две битвы при"
+        + " Арцане."],
+      ["Часть Ованеса Мамиконяна",
+        "Ованес, позднейший настоятель Глака,"
+        + " продолжил книгу (разделы Ե–ԺԱ): настоятели"
+        + " Глака и войны Мамиконянов Тарона с персами."
+        + " Учёные сомневаются, что первую часть написал"
+        + " сам Зеноб, и датируют всю книгу VII–X веками."],
+      ["Читайте",
+        "Книга, 1704 строки, есть в библиотеке: рядом"
+        + " с каждой строкой на грабаре её перевод на"
+        + " современный армянский, и каждое слово можно"
+        + " посмотреть в словаре. Переводы — первые"
+        + " черновики, сделанные с помощью ИИ: они ждут"
+        + " читателей, знающих грабар, чтобы те их"
+        + " проверили."],
+    ],
+    links: ["Читать Историю Тарона",
+      "Тарон на карте",
+      "Помочь проверить переводы"],
+    ask:
+      "Какие ещё земли нагорья хранят историю, которую"
+      + " пока никто не прочёл?",
+  },
 }, {
   id: "smbat-sparapet",
   date: "2026-11-16",
@@ -3392,6 +3493,9 @@ const NEWS = [{
   banner_en: ["Smbat Sparapet",
     "Commander, diplomat and historian: his"
     + " books are in the Library"],
+  banner_ru: ["Смбат Спарапет",
+    "Полководец, дипломат и историк: его книги в"
+    + " библиотеке"],
   sections: [
     ["Who he was",
       "Smbat was born in 1208 in the Armenian"
@@ -3592,6 +3696,100 @@ const NEWS = [{
       "Հայոց պատմության դեռ քանի՞ ուշագրավ պատմություն "
       + "է սպասում իր վերահայտնագործողներին։",
   },
+  ru: {
+    alt:
+      "Смбат Спарапет в красном плаще, с пером и"
+      + " книгой в руках; позади крепость под снежной"
+      + " горой и монгольский хан, принимающий посла",
+    title:
+      "Смбат Спарапет в библиотеке",
+    lead:
+      "Смбат Спарапет (Սմբատ Սպարապետ, 1208–1276) был"
+      + " не только воином: он был дипломатом,"
+      + " законодателем и историком. Обе его книги"
+      + " теперь в библиотеке nxGir, на грабаре и на"
+      + " современном армянском, бок о бок.",
+    sections: [
+      ["Кем он был",
+        "Смбат родился в 1208 году в Армянском царстве"
+        + " Киликии, на берегу Средиземного моря, в"
+        + " семье Константина Баберонского, регента"
+        + " царства. Когда в 1226 году его младший брат"
+        + " Хетум I был коронован, Смбат стал его"
+        + " спарапетом — главнокомандующим войска.",
+        "Он занимал эту должность полвека. Он водил"
+        + " войско против сельджукских султанов Рума и"
+        + " египетских мамлюков и пал в бою в 1276 году"
+        + " при Сарвандикаре — уже старым, но всё ещё в"
+        + " седле."],
+      ["Путешествие к великому хану",
+        "В 1247 году, когда монголы стали величайшей"
+        + " силой Азии, Хетум отправил Смбата к их двору"
+        + " в Каракорум. Он пересёк Персию и Среднюю"
+        + " Азию, встретился с Гуюк-ханом и в 1250 году"
+        + " вернулся с соглашением, которое на годы"
+        + " обезопасило Киликию — как союзника, а не"
+        + " покорённую страну.",
+        "В пути, из Самарканда, он написал своему"
+        + " зятю, королю Кипра, о землях и народах,"
+        + " которые видел. Письмо переписали по-латыни и"
+        + " читали в Европе: это одно из первых"
+        + " свидетельств очевидца о Монгольской империи,"
+        + " дошедших туда."],
+      ["Переводчик законов",
+        "Киликия соседствовала с государствами"
+        + " крестоносцев, и Смбат знал их французский."
+        + " Он перевёл на армянский Антиохийские ассизы"
+        + " — законы франкского княжества. Французский"
+        + " оригинал утрачен: законы сохранились только"
+        + " в его переводе."],
+      ["«Судебник», его книга законов",
+        "В 1265 году он составил для царства судебник,"
+        + " переработав «Судебник» Мхитара Гоша,"
+        + " написанный веком раньше. По его словам, он"
+        + " перенёс законы из старых трудных книг в"
+        + " повседневную речь; поэтому книга написана на"
+        + " среднеармянском языке Киликии, с"
+        + " французскими, греческими и арабскими словами.",
+        "Её 211 статей охватывают всю жизнь царства:"
+        + " права царя, монету и крепости; войну и"
+        + " добычу; церковь и её чины; брак и развод;"
+        + " наследство; торговлю, мельницы и сады; рабов"
+        + " и наёмный труд; займы и ростовщичество;"
+        + " ущерб от пожаров, наводнений и животных;"
+        + " убийства и ранения, умышленные и"
+        + " неумышленные."],
+      ["«Летопись», его хроника",
+        "Его хроника рассказывает историю Армении год"
+        + " за годом, с 951 года до его собственного"
+        + " времени: цари Багратиды в Ани и императоры"
+        + " Византии; взятие Ани Алп-Арсланом в 1064"
+        + " году; смерть последнего царя Гагика II;"
+        + " князья Рубениды в Киликии и коронация"
+        + " Левона, её первого царя, в 1198 году.",
+        "Затем она доходит до событий, которые он"
+        + " пережил сам, и до осад Тарса, о которых он"
+        + " рассказывает лично. Другие продолжили её до"
+        + " 1331 года и добавили списки князей и царей"
+        + " Киликии, её спарапетов и императоров Рима и"
+        + " Византии. Каждая часть начинается с"
+        + " оглавления по годам."],
+      ["Читайте",
+        "Обе книги есть в библиотеке: рядом с каждой"
+        + " строкой на грабаре её перевод на современный"
+        + " армянский, и каждое слово можно посмотреть в"
+        + " словаре. Переводы — первые черновики,"
+        + " сделанные с помощью ИИ: они ждут читателей,"
+        + " знающих грабар, чтобы те проверили их строка"
+        + " за строкой."],
+    ],
+    links: ["Читать Летопись",
+      "Читать Судебник",
+      "Помочь проверить переводы"],
+    ask:
+      "Сколько ещё удивительных историй армянской"
+      + " истории ждут, чтобы их открыли заново?",
+  },
 }];
 
 // the picture, a button: it opens the whole
@@ -3640,7 +3838,6 @@ const AUTHOR_UI = {
     source: "Источник: ",
     machine: "Написано Claude, ещё не проверено" },
 };
-const AUTHOR_LANG = "nxgir-author-lang";
 const LANG_LABEL = { hy: "Հայ", en: "Eng", ru: "Рус" };
 
 // the authors written about, asked once: their ids
@@ -3713,13 +3910,13 @@ function bookItem(b, row, ...more) {
   return li;
 }
 
+// the language of an author's or book's card: the
+// one picked on a card, else the site's, else
+// English, else the first it has
 function authorLang(a) {
-  let l = "";
-  try {
-    l = localStorage.getItem(AUTHOR_LANG) || "";
-  } catch (e) {}
   const has = a.versions.map((v) => v.lang);
-  return has.includes(l) ? l : has[0];
+  return [pagePick.author || LANG, "en"]
+    .find((l) => has.includes(l)) || has[0];
 }
 
 // the card about an author (a dialog: ×, Esc, a
@@ -3772,7 +3969,7 @@ function infoCard(a) {
         LANG_LABEL[x.lang] || x.lang);
         b.addEventListener("click", () => {
           try {
-            localStorage.setItem(AUTHOR_LANG, x.lang);
+            pagePick.author = x.lang;
           } catch (e) {}
           draw(x.lang);
         });
@@ -3937,15 +4134,12 @@ function chipRow(name, items, now, pick) {
 // #/reference: every book written about (authors/),
 // a card each, in the Library's order; the language
 // of the cards is the one of the author cards
-// (AUTHOR_LANG). The chips keep the books of one
+// (pagePick.author). The chips keep the books of one
 // kind (GROUPS in nxgir_authors.py) or century, and
 // the find box those whose name, authors, kind or
 // time have its words.
 async function referencePage() {
-  let lang = "hy";
-  try {
-    lang = localStorage.getItem(AUTHOR_LANG) || lang;
-  } catch (e) {}
+  let lang = pagePick.author || LANG;
   if (!(lang in CARDS_UI)) lang = "hy";
   let data = await api("book-cards?lang=" + lang);
   let q = "";
@@ -4026,9 +4220,7 @@ async function referencePage() {
           return;
         }
         lang = l;
-        try {
-          localStorage.setItem(AUTHOR_LANG, l);
-        } catch (e) {}
+        pagePick.author = l;
         draw();
       });
       return b;
@@ -4068,13 +4260,14 @@ async function referencePage() {
 }
 
 // the languages an announcement has: English, and
-// Armenian in its hy (the same fields; links are
-// the labels only)
+// Armenian in its hy, Russian in its ru (the same
+// fields; links are the labels only)
 function newsText(a, lang) {
-  if (lang !== "hy" || !a.hy) return a;
-  return { ...a, ...a.hy,
+  const x = lang !== "en" && a[lang];
+  if (!x) return a;
+  return { ...a, ...x,
     links: a.links.map(([, to], i) =>
-      [a.hy.links[i], to]) };
+      [x.links[i], to]) };
 }
 
 // one announcement, whole: #/news/<id>
@@ -4085,8 +4278,7 @@ function newsItem(a0, lang) {
     zoomable(a),
     h("p", { class: "sub" },
       h("time", { datetime: a.date },
-        lang === "hy" ? longDay(a.date, "hy")
-          : day(a.date, true))),
+        longDay(a.date, lang))),
     h("h2", { class: "news-title" }, a.title),
     h("p", { class: "lead" }, named(a.lead)),
     h("ul", { class: "features" },
@@ -4104,11 +4296,11 @@ function newsItem(a0, lang) {
 
 // #/news: narrow banners, newest first; #/news/<id>
 // one announcement
-// the language of the announcements: Armenian on
-// every visit, English only when picked here (not
-// the blog's choice; it is kept until the page is
-// closed, for the post a banner opens)
-let newsLang = "hy";
+// the language of the announcements: the one
+// picked here, else the site's
+function newsLang() {
+  return pagePick.news || LANG;
+}
 
 function newsPage(id) {
   const one = id ? NEWS.find((a) => a.id === id)
@@ -4117,16 +4309,16 @@ function newsPage(id) {
     throw new Error("No such announcement");
   }
   const draw = () => {
-    const lang = newsLang;
+    const lang = newsLang();
     const t = NEWS_UI[lang];
     const pick = h("div", { class: "filters outline news-lang",
       role: "group", "aria-label": "Language" },
-    ["hy", "en"].map((l) => {
+    LANGS.map((l) => {
       const b = h("button", { type: "button",
         lang: l, "aria-pressed": String(l === lang) },
       BLOG[l].name);
       b.addEventListener("click", () => {
-        newsLang = l;
+        pagePick.news = l;
         draw();
       });
       return b;
@@ -4170,8 +4362,6 @@ const NOTES = "https://github.com/serjhnn/nx-gir/"
 
 // the levels of LIMITS in nxgir_limits.py, shown
 // with a word, never by color alone
-const LEVELS = { ok: "Fine", watch: "Watch",
-  near: "Near the limit" };
 
 function amount(x, n) {
   return x.unit === "s" ? secs(n) : size(n);
@@ -4190,20 +4380,21 @@ function limitRow(x, closest) {
       Math.max(pct, 0.8) + "%" }));
   const notes = [x.by];
   if (x.where) notes.push(x.where);
-  if (x.since) notes.push("measured " + day(x.since));
+  if (x.since) notes.push(t("st.measured") + day(x.since));
   return h("li", { class: "limit" +
       (x.key === closest ? " closest" : ""),
       "data-level": x.level },
     h("div", { class: "limit-head" },
-      h("b", {}, x.label),
+      h("b", { lang: "en" }, x.label),
       h("span", { class: "pct" }, shown)),
     bar,
     h("div", { class: "limit-foot" },
-      h("span", {}, amount(x, x.value) + " of " +
+      h("span", {}, amount(x, x.value) + t("st.of") +
         amount(x, x.limit)),
       h("span", { class: "level" },
-        LEVELS[x.level])),
-    h("p", { class: "limit-by" }, notes.join(" · ")));
+        t("lv." + x.level))),
+    h("p", { class: "limit-by", lang: "en" },
+      notes.join(" · ")));
 }
 
 // the recorded measures, newest first, as a table
@@ -4213,8 +4404,7 @@ function historyTable(rows) {
   return h("div", { class: "table-wrap" },
     h("table", { class: "history" },
       h("thead", {}, h("tr", {},
-        ["Date", "Commit", "Text", "Site", "Git",
-          "Build"].map((t) => h("th", {}, t)))),
+        t("st.cols").map((x) => h("th", {}, x)))),
       h("tbody", {}, rows.map((r) => h("tr", {},
         h("td", {}, day(r.date, true)),
         h("td", {}, h("code", {}, r.commit)),
@@ -4224,15 +4414,15 @@ function historyTable(rows) {
 
 async function statsPage() {
   const data = await api("stats");
-  document.title = "Statistics · " + NAME;
+  document.title = t("nav.stats") + " · " + NAME;
   const head = [
     h("p", { class: "crumbs" },
-      h("a", { href: "#/" }, "← Home")),
-    h("h1", {}, "Statistics"),
+      h("a", { href: "#/" }, t("home"))),
+    h("h1", {}, t("nav.stats")),
   ];
   if (data.error) {
     show(...head, h("p", { class: "empty" },
-      "No statistics here: " + data.error + "."));
+      t("st.none") + data.error + t("dot")));
     return;
   }
   const stat = (n, label) => h("div", {},
@@ -4247,35 +4437,32 @@ async function statsPage() {
   show(
     ...head,
     h("p", { class: "sub" },
-      "How much the library holds, and how close it"
-      + " is to the limits of GitHub and of a phone."
-      + " Measured " + day(data.date, true)
-      + " at commit ", h("code", {}, data.commit),
-      "."),
+      t("st.sub", day(data.date, true)),
+      h("code", {}, data.commit), t("dot")),
     h("div", { class: "stats" },
-      stat(data.books, "book files"),
-      stat(size(data.text), "of text"),
+      stat(data.books, t("st.files")),
+      stat(size(data.text), t("st.text")),
       data.words ? stat(data.words.toLocaleString(
-        "en"), "different words")
+        "en"), t("st.words"))
         : stat(size(f.ashkharhabar || 0),
-          "translated")),
+          t("st.tr"))),
     near ? h("p", { class: "verdict",
         "data-level": near.level },
-      "Closest: ", h("b", {}, near.label),
-      " at " + Math.round(near.share) + "% of its"
-      + " limit.") : null,
-    h("h2", { class: "tl-next" }, "Limits"),
+      t("st.closest"), h("b", { lang: "en" },
+        near.label),
+      t("st.at", Math.round(near.share))) : null,
+    h("h2", { class: "tl-next" }, t("st.limits")),
     h("ul", { class: "limits" },
       data.limits.map((x) =>
         limitRow(x, data.closest))),
     data.history.length ? h("section", {},
-      h("h2", { class: "tl-next" }, "History"),
+      h("h2", { class: "tl-next" }, t("st.history")),
       historyTable(data.history)) : null,
     h("p", { class: "more-link" },
-      "What each limit means: ",
+      t("st.what"),
       h("a", { href: NOTES }, "notes/limits.md")),
     top ? h("section", {},
-      h("h2", { class: "tl-next" }, "Folders"),
+      h("h2", { class: "tl-next" }, t("st.folders")),
       h("p", { class: "sub" }, plural(top.count,
         top.unit)),
       shelfList(top)) : null
@@ -4350,29 +4537,28 @@ const OFFLINE_SAVE = false;
 // #/offline: install the app, save every book in
 // this browser, or download the site as a file
 async function offlinePage() {
-  document.title = "Offline · " + NAME;
+  document.title = t("nav.offline") + " · " + NAME;
   const head = [
     h("p", { class: "crumbs" },
-      h("a", { href: "#/" }, "← Home")),
-    h("h1", {}, "Read offline"),
+      h("a", { href: "#/" }, t("home"))),
+    h("h1", {}, t("off.h1")),
   ];
   if (!hasWorker()) {
     show(...head, h("p", { class: "sub" },
-      "This copy already runs on this device: no"
-      + " network is needed."));
+      t("off.here")));
     return;
   }
   const info = await json("offline.json")
     .catch(() => null);
   const mb = info ? size(info.files.reduce(
-    (n, f) => n + f[1], 0)) : "about 80 MB";
+    (n, f) => n + f[1], 0)) : t("off.about");
   // the zip is not built now (build-site.py --zip)
   const zip = window.NXGIR_DOWNLOAD
     ? await json("download.json").catch(() => null)
     : null;
   const status = h("p", { class: "sub", role: "status" });
   const btn = h("button", { type: "button",
-    class: "icon-btn primary" }, "Save for offline");
+    class: "icon-btn primary" }, t("off.save"));
   let now = { want: false };
   let poll = 0;
   btn.addEventListener("click", () => {
@@ -4399,41 +4585,34 @@ async function offlinePage() {
       poll = setTimeout(() => tellWorker("status"), 2000);
     }
     if (st.busy && !st.total) {
-      status.textContent = "Saving: getting the list of"
-        + " files…";
-      btn.textContent = "Saving…";
+      status.textContent = t("off.list");
+      btn.textContent = t("off.saving");
     } else if (st.busy) {
-      status.textContent = "Saving: " + st.done + " of "
-        + st.total + " files (" + pct + "%). You can"
-        + " keep reading.";
-      btn.textContent = "Saving…";
+      status.textContent = t("off.busy", st.done,
+        st.total, pct);
+      btn.textContent = t("off.saving");
     } else if (st.complete) {
-      status.textContent = "Saved: all " + st.total
-        + " files are on this device. It updates"
-        + " itself when you are online.";
-      btn.textContent = "Remove the saved copy";
+      status.textContent = t("off.done", st.total);
+      btn.textContent = t("off.remove");
     } else if (st.want) {
-      status.textContent = "Partly saved: " + st.done
-        + " of " + st.total + " files. Press to go on.";
-      btn.textContent = "Continue saving";
+      status.textContent = t("off.part", st.done,
+        st.total);
+      btn.textContent = t("off.go");
     } else {
-      status.textContent = "Nothing saved yet.";
-      btn.textContent = "Save for offline";
+      status.textContent = t("off.nothing");
+      btn.textContent = t("off.save");
     }
   };
   if (!OFFLINE_SAVE) {
-    status.textContent = "Saving the books is switched"
-      + " off for now.";
+    status.textContent = t("off.offnow");
     btn.disabled = true;
   } else {
     tellWorker("status");
   }
   const how = installPrompt
     ? h("button", { type: "button",
-      class: "icon-btn primary" }, "Install app")
-    : h("p", {}, "In Chrome: the ⋮ menu, then Install"
-      + " app (or Add to Home screen). On an iPhone, in"
-      + " Safari: Share, then Add to Home Screen.");
+      class: "icon-btn primary" }, t("off.install"))
+    : h("p", {}, t("off.how"));
   if (installPrompt) {
     how.addEventListener("click", async () => {
       installPrompt.prompt();
@@ -4444,32 +4623,22 @@ async function offlinePage() {
   }
   show(
     ...head,
-    h("p", { class: "sub" },
-      (zip ? "Three" : "Two")
-      + " ways to read with no network."),
-    h("h2", { class: "tl-next" }, "1. Install the app"),
-    h("p", {}, "The site gets its own icon and opens in"
-      + " its own window, like an app."),
+    h("p", { class: "sub" }, t("off.ways", zip ? 3 : 2)),
+    h("h2", { class: "tl-next" }, t("off.h_app")),
+    h("p", {}, t("off.app")),
     how,
-    h("h2", { class: "tl-next" },
-      "2. Save the books in this browser"),
-    h("p", {}, "All the books, translations and word"
-      + " meanings: " + mb + ". They stay in the browser"
-      + " on this device, and are replaced by the new"
-      + " ones when the site changes."),
+    h("h2", { class: "tl-next" }, t("off.h_save")),
+    h("p", {}, t("off.books", mb)),
     status,
     h("p", {}, btn),
     zip ? [
-      h("h2", { class: "tl-next" },
-        "3. Download the site as a file"),
-      h("p", {}, "One zip file (" + size(zip.bytes)
-        + "). Unpack it and run ", h("code", {},
-        "python3 serve.py"), " (Python 3 is needed; it"
-        + " is in Termux too). It does not update"
-        + " itself."),
+      h("h2", { class: "tl-next" }, t("off.h_zip")),
+      h("p", {}, t("off.zip1", size(zip.bytes)),
+        h("code", {}, "python3 serve.py"),
+        t("off.zip2")),
       h("p", {}, h("a", { class: "icon-btn",
         href: window.NXGIR_DOWNLOAD, download: "" },
-      "Download the zip"))] : null
+      t("off.dl")))] : null
   );
 }
 
@@ -4498,12 +4667,14 @@ function loose(w) {
 
 const LANG_NAMES = { en: "English", hy: "Հայերեն" };
 const cache = new Map();
-let lang = "en";
-try {
-  if (localStorage.getItem("nxgir-lang") === "hy") {
-    lang = "hy";
-  }
-} catch (e) {}
+
+// the language of the meanings of words: English
+// or Armenian (no Russian yet: English); the one
+// picked in the word panel, else the site's
+function meaningLang() {
+  return pagePick.meaning
+    || (LANG === "hy" ? "hy" : "en");
+}
 
 // state of the open book
 const R = {
@@ -4557,6 +4728,7 @@ async function send(path, body, keepalive) {
 }
 
 async function lookup(w) {
+  const lang = meaningLang();
   const k = lang + "\n" + w;
   if (!cache.has(k)) {
     cache.set(k, api("word?w=" + encodeURIComponent(w)
@@ -4679,14 +4851,11 @@ function langSwitch() {
     role: "group", "aria-label": "Meanings in" });
   for (const l of ["en", "hy"]) {
     box.append(btn(LANG_NAMES[l], () => {
-      if (l === lang) return;
-      lang = l;
-      try {
-        localStorage.setItem("nxgir-lang", l);
-      } catch (e) {}
+      if (l === meaningLang()) return;
+      pagePick.meaning = l;
       drawWord();
     }, { class: null, lang: l,
-      "aria-pressed": String(l === lang) }));
+      "aria-pressed": String(l === meaningLang()) }));
   }
   return box;
 }
@@ -4713,7 +4882,7 @@ function markAt(i) {
 // the address of the line of word i, to share
 function lineLink(i) {
   return location.origin +
-    "/read/" + enc(R.name) +
+    pathOf("#/read/" + enc(R.name)) +
     "?line=" + (R.wpos[i][0] + 1);
 }
 
@@ -6451,8 +6620,10 @@ function clearReading() {
 const SEARCH_WORD = /\p{L}+(?:[՛՜՞՟'’]\p{L}*)*/gu;
 // the texts a search shows: Grabar first
 const SEARCH_IN = ["all", "grabar", "ashkharhabar"];
-const SEARCH_IN_NAMES = { all: "Բոլորը",
-  grabar: "Գրաբար", ashkharhabar: "Աշխարհաբար" };
+// their names, in LANG
+function searchInName(w) {
+  return w === "all" ? t("s.all") : t("shelf." + w);
+}
 // lines a book shows before "all its lines"
 const SEARCH_FIRST = 2;
 // lines a part's file holds (CHUNK in Python)
@@ -6481,14 +6652,14 @@ function nf(n) {
 // in view on scrolling (style.css)
 function searchBox(value) {
   const input = h("input", { type: "search", name: "q",
-    placeholder: "Որոնել գրքերում…",
-    "aria-label": "Որոնել գրքերում",
+    placeholder: t("s.box") + "…",
+    "aria-label": t("s.box"),
     enterkeyhint: "search", autocomplete: "off",
     autocapitalize: "off", spellcheck: "false" });
   input.value = value || "";
   const clear = h("button", { type: "button",
-    class: "sbox-x", "aria-label": "Մաքրել",
-    title: "Մաքրել" }, "✕");
+    class: "sbox-x", "aria-label": t("clear"),
+    title: t("clear") }, "✕");
   const showClear = () => {
     clear.hidden = !input.value;
   };
@@ -6500,7 +6671,7 @@ function searchBox(value) {
     input.focus();
   });
   const form = h("form", { class: "sbox",
-    role: "search", lang: "hy" },
+    role: "search" },
   icon(ICONS.search), input, clear);
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -6771,8 +6942,8 @@ function hitHref(q, name, line, r) {
 // one line found: where it is and its text
 function hitItem(x, i, ctx) {
   const parts = ctx.parts.books[x.b][3] > 1;
-  const where = (parts ? "մաս " + x.n + " · " : "")
-    + "տող " + x.line;
+  const where = t("s.where", parts ? x.n : 0,
+    x.line);
   const line = (name, cls) => {
     const snip = h("span", { class: cls,
       lang: "hy" }, "…");
@@ -6790,7 +6961,7 @@ function hitItem(x, i, ctx) {
     href: hitHref(ctx.q, x.name, x.line, i) },
   h("span", { class: "where" },
     tag ? h("span", { class: "chip" },
-      SEARCH_IN_NAMES[x.top]) : null, where),
+      searchInName(x.top)) : null, where),
   line(x.name, "snip"),
   x.pair ? line(x.pair, "snip tr") : null));
 }
@@ -6814,15 +6985,15 @@ function authorBooks(a, ctx) {
     };
     shown(SEARCH_FIRST);
     const all = bk.hits.length > SEARCH_FIRST
-      ? btn("Բոլոր " + nf(bk.hits.length)
-        + " տողերը →", () => {
+      ? btn(t("s.alllines", bk.hits.length), () => {
         shown(bk.hits.length);
         all.remove();
       }, { class: "s-all" }) : null;
     box.append(h("a", { class: "s-book",
-      href: bookHref(key) }, title,
+      href: bookHref(key) },
+    h("span", { lang: "hy" }, title),
     h("span", { class: "meta" },
-      nf(bk.hits.length) + " տող")), list);
+      t("s.lines", bk.hits.length))), list);
     // append() would show a null as "null"
     if (all) box.append(all);
   }
@@ -6911,17 +7082,17 @@ function nameList(q, parts, names, titles) {
     list.append(h("li", {}, h("a", { class: "row",
       href: to },
     icon(ICONS.person, "ico"),
-    h("span", { class: "name" }, a.name,
+    h("span", { class: "name", lang: "hy" }, a.name,
       a.also ? h("span", { class: "by" }, a.also)
         : null),
     h("span", { class: "meta" },
-      (a.co ? a.n : n(a.i)) + " գիրք")),
+      t("s.books", a.co ? a.n : n(a.i)))),
     authorInfoBtn(a.id, a.name)));
   }
   const rows = books.map((b) => h("li", {},
     h("a", { class: "row", href: bookHref(b.key) },
       icon(ICONS.book, "ico"),
-      h("span", { class: "name" }, b.name,
+      h("span", { class: "name", lang: "hy" }, b.name,
         h("span", { class: "by" },
           (b.also ? [b.also] : []).concat(
             b.co.map((c) => c[1]),
@@ -6930,14 +7101,14 @@ function nameList(q, parts, names, titles) {
   // few, and a button for the rest
   const FEW = 5;
   list.append(...rows.slice(0, FEW));
-  const more = rows.length > FEW ? btn("Բոլոր "
-    + rows.length + " գրքերը →", () => {
+  const more = rows.length > FEW ? btn(
+    t("s.allbooks", rows.length), () => {
     list.append(...rows.slice(FEW));
     more.remove();
   }, { class: "link-btn s-names-more" }) : null;
-  return h("section", { lang: "hy" },
-    h("h2", { class: "s-head2" },
-      "Հեղինակներ և գրքեր"), list, more);
+  return h("section", {},
+    h("h2", { class: "s-head2" }, t("s.names")),
+    list, more);
 }
 
 async function searchPage(query) {
@@ -6948,24 +7119,22 @@ async function searchPage(query) {
   const open = new Set((p.get("open") || "")
     .split(",").filter(Boolean));
   document.title = (q ? q + " · " : "")
-    + "Որոնում · " + NAME;
+    + t("nav.search") + " · " + NAME;
   const head = [
     h("p", { class: "crumbs" },
-      h("a", { href: "#/" }, "← Գլխավոր")),
-    h("h1", { lang: "hy" }, "Որոնում"),
+      h("a", { href: "#/" }, t("home"))),
+    h("h1", {}, t("nav.search")),
     withHome(searchBox(q)),
   ];
-  const say = (...t) => show(...head,
-    h("p", { class: "sub", lang: "hy" }, ...t));
+  const say = (...x) => show(...head,
+    h("p", { class: "sub" }, ...x));
   if (!q.match(SEARCH_WORD)) {
-    say("Գրեք բառը գրաբար կամ աշխարհաբար"
-      + " ուղղագրությամբ․ թագավոր-ը կգտնի նաև"
-      + " թագաւոր-ը։");
+    say(t("s.hint"));
     return;
   }
   // the first search of `nxgir web` waits for its
   // index
-  say("Որոնվում է…");
+  say(t("s.wait"));
   const at = hashNow();
   const [parts, f, about] = await Promise.all([
     partsOf(), findLines(q), authorsAbout()]);
@@ -6999,23 +7168,22 @@ async function searchPage(query) {
   const names = nameList(q, parts, about.names,
     about.titles);
   const common = f.common.length ? h("p",
-    { class: "hint", lang: "hy" },
-    f.common.map(([w, n]) => w + " (" + nf(n)
-      + " տող)").join(", "),
-    f.spelled.length
-      ? "․ շատ հաճախ է, որոնվում են մյուս բառերը։"
-      : "․ շատ հաճախ է․ ավելացրեք ևս մի բառ։") : null;
+    { class: "hint" },
+    f.common.map(([w, n]) => w + " ("
+      + t("s.lines", n) + ")").join(", "),
+    f.spelled.length ? t("s.common")
+      : t("s.common1")) : null;
   // a name found and no line: the names alone
   const none = SEARCH_IN.every((w) => !counts[w]);
   if (!f.spelled.length || (names && none)) {
     show(...head, names, common);
     return;
   }
-  const filters = h("div", { class: "filters",
-    lang: "hy" }, ...SEARCH_IN.map((w) =>
-    h("a", { href: searchHref(q, w),
-      "aria-current": w === where ? "page" : null },
-    SEARCH_IN_NAMES[w] + " · " + nf(counts[w]))));
+  const filters = h("div", { class: "filters" },
+    ...SEARCH_IN.map((w) =>
+      h("a", { href: searchHref(q, w),
+        "aria-current": w === where ? "page" : null },
+      searchInName(w) + " · " + nf(counts[w]))));
   // each spelling found, and in how many lines; for
   // the words found in more than one
   const spells = new Map();
@@ -7033,15 +7201,15 @@ async function searchPage(query) {
     }
   }
   const spelling = spells.size ? h("p",
-    { class: "s-opts", lang: "hy" },
-    h("span", {}, "Գրված է՝"),
+    { class: "s-opts" },
+    h("span", {}, t("s.spelled")),
     ...[...spells].sort((x, y) => y[1] - x[1])
       .map(([s, n]) => h("span", { class: "chip" },
         h("b", {}, s), " " + nf(n)))) : null;
   const nb = g.authors.reduce((n, a) =>
     n + a.books.length, 0);
   const all = g.authors.length > 1 && btn(
-    "Բացել բոլորը", () => {
+    t("s.open"), () => {
       const on = open.size < g.authors.length;
       for (const a of g.authors) {
         const id = parts.authors[a.a][0];
@@ -7050,17 +7218,16 @@ async function searchPage(query) {
       }
       draw();
     }, { class: "link-btn s-open" });
-  const list = h("ul", { class: "s-authors",
-    lang: "hy" });
+  const list = h("ul", { class: "s-authors" });
   // an author folded or not, in the address too, so
   // that back from the reader finds it the same
   const draw = () => {
     history.replaceState(history.state, "",
-      searchHref(q, where, open).slice(1));
+      pathOf(searchHref(q, where, open)));
     remember();
     if (all) {
       all.textContent = open.size >= g.authors.length
-        ? "Փակել բոլորը" : "Բացել բոլորը";
+        ? t("s.close") : t("s.open");
     }
     list.replaceChildren(...g.authors.map((a) => {
       const [id, name] = parts.authors[a.a];
@@ -7068,10 +7235,11 @@ async function searchPage(query) {
       const row = h("button", { type: "button",
         class: "s-auth", "aria-expanded": String(on) },
       icon(ICONS.fold, "chev"),
-      h("span", { class: "s-name" }, name),
-      h("span", { class: "meta" }, nf(a.lines) + " տող"
+      h("span", { class: "s-name", lang: "hy" },
+        name),
+      h("span", { class: "meta" }, t("s.lines", a.lines)
         + (a.books.length > 1 ? " · "
-          + a.books.length + " գիրք" : "")));
+          + t("s.books", a.books.length) : "")));
       row.addEventListener("click", () => {
         if (open.has(id)) open.delete(id);
         else open.add(id);
@@ -7086,16 +7254,14 @@ async function searchPage(query) {
   draw();
   show(...head, names,
     names ? h("h2", { class: "s-head2" },
-      "Տողեր") : null,
-    h("p", { class: "s-sum", lang: "hy" },
-      h("span", {}, nf(g.hits.length) + " տող · "
-        + g.authors.length + " հեղինակ · " + nb
-        + " գիրք"), all || null),
+      t("s.found")) : null,
+    h("p", { class: "s-sum" },
+      h("span", {}, t("s.lines", g.hits.length)
+        + " · " + t("s.authors", g.authors.length)
+        + " · " + t("s.books", nb)), all || null),
     filters, spelling, common,
-    g.hits.length ? list : h("p", { class: "sub",
-      lang: "hy" }, f.lines.length
-      ? "Այստեղ չկա․ նայեք մյուս ֆիլտրերը։"
-      : "Չգտնվեց։"));
+    g.hits.length ? list : h("p", { class: "sub" },
+      f.lines.length ? t("s.notin") : t("s.none")));
 }
 
 // -- searching the library from the reader --
@@ -7104,9 +7270,9 @@ async function searchPage(query) {
 // with how many Grabar lines have it
 function searchWordButton(w) {
   const n = h("span", { class: "n" });
-  const a = h("a", { class: "s-btn", lang: "hy",
+  const a = h("a", { class: "s-btn",
     href: searchHref(w) }, icon(ICONS.search),
-  "Որոնել ամբողջ գրադարանում", n);
+  t("s.library"), n);
   Promise.all([partsOf(), searchEntry(w)])
     .then(([parts, f]) => {
       if (!f.entry || f.entry["*"]) return;
@@ -7124,7 +7290,7 @@ function searchWordButton(w) {
 // drag over the words): a button at the bottom of
 // the screen searches its words in the library
 const selSearch = h("a", { class: "sel-search",
-  lang: "hy", hidden: "" });
+  hidden: "" });
 document.body.append(selSearch);
 // at most this many words: a few words, not a page
 const SEL_WORDS = 6;
@@ -7148,8 +7314,8 @@ document.addEventListener("selectionchange", () => {
     const q = words.join(" ");
     setRoute(selSearch, searchHref(q));
     selSearch.replaceChildren(icon(ICONS.search),
-      h("span", {}, "Որոնել գրադարանում՝ ",
-        h("b", {}, q)));
+      h("span", {}, t("s.sel"),
+        h("b", { lang: "hy" }, q)));
     selSearch.hidden = false;
   }, 250);
 });
@@ -7206,16 +7372,15 @@ function foundStrip() {
       : h("span", { class: "icon-btn off",
         "aria-hidden": "true" }, sign);
   };
-  return h("div", { class: "found", lang: "hy" },
+  return h("div", { class: "found" },
     h("a", { class: "icon-btn", href: f.back,
-      "aria-label": "Արդյունքներին",
-      title: "Արդյունքներին" }, icon(ICONS.back)),
-    h("span", { class: "t" }, "Որոնում՝ ",
-      h("b", {}, f.q), n ? h("br") : null,
-      n ? "արդյունք " + nf(f.r + 1) + " / " + nf(n)
-        : null),
-    n ? to(f.r - 1, "‹", "Նախորդը") : null,
-    n ? to(f.r + 1, "›", "Հաջորդը") : null);
+      "aria-label": t("s.back"),
+      title: t("s.back") }, icon(ICONS.back)),
+    h("span", { class: "t" }, t("s.q"),
+      h("b", { lang: "hy" }, f.q), n ? h("br") : null,
+      n ? t("s.nth", f.r + 1, n) : null),
+    n ? to(f.r - 1, "‹", t("prev")) : null,
+    n ? to(f.r + 1, "›", t("next")) : null);
 }
 
 async function route() {
