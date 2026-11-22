@@ -218,11 +218,11 @@ def test_searchable(tmp_path, files):
     # the app with its own words, in the sitemap
     out = tmp_path / "site"
     bs.build(out, files)
-    page = out / "read/grabar/john.txt/index.html"
+    page = out / "hy/read/grabar/john.txt/index.html"
     html = page.read_text("utf-8")
     assert "<p>Ի սկզբանէ էր Բանն, ած։</p>" not in html
     assert "<h1>Ի սկզբանէ էր Բանն, ած։</h1>" in html
-    canon = bs.SITE + "/read/grabar/john.txt/"
+    canon = bs.SITE + "/hy/read/grabar/john.txt/"
     assert f'rel="canonical" href="{canon}"' in html
     assert f'property="og:url" content="{canon}"' in html
     assert "Ի սկզբանէ էր Բանն, ած։ · Նախագիր" in html
@@ -237,7 +237,7 @@ def test_searchable(tmp_path, files):
     robots = (out / "robots.txt").read_text("utf-8")
     assert f"Sitemap: {bs.SITE}/sitemap.xml" in robots
     index = (out / "index.html").read_text("utf-8")
-    assert '<a href="/read/grabar/john.txt/">' in index
+    assert '<a href="/hy/read/grabar/john.txt/">' in index
     # its own words, which app.js replaces, and
     # the list among them
     about = index.index('id="about"')
@@ -251,12 +251,21 @@ def test_searchable(tmp_path, files):
     assert "canonical" not in nf
     assert 'src="app.js?v=' in nf
     # the lists: the library, with the books
-    lib = (out / "library/index.html").read_text("utf-8")
+    lib = (out / "hy/library/index.html").read_text("utf-8")
     assert "<h1>Գրադարան · Library" in lib
-    assert f"{bs.SITE}/library/" in sm
+    assert f"{bs.SITE}/hy/library/" in sm
+    # the top page in each language, naming the
+    # others; the root opens the browser's
+    for lang in bs.LANGS:
+        home = out / lang / "index.html"
+        top = home.read_text("utf-8")
+        assert f'<html lang="{lang}">' in top
+        assert 'hreflang="x-default"' in top
+        assert f"<loc>{bs.SITE}/{lang}/</loc>" in sm
+    assert 'hreflang="ru"' in index
     # the blog posts, each language on its own
     # page, with their dates
-    post = out / "blog/welcome/en/index.html"
+    post = out / "en/blog/welcome/index.html"
     html = post.read_text("utf-8")
     assert '<html lang="en">' in html
     assert (
@@ -268,57 +277,60 @@ def test_searchable(tmp_path, files):
     assert 'hreflang="hy"' in html
     assert 'hreflang="en"' in html
     assert (
-        f'hreflang="hy" href="{bs.SITE}/blog/welcome/hy/"'
+        f'hreflang="hy" href="{bs.SITE}/hy/blog/welcome/"'
     ) in html
-    canon = bs.SITE + "/blog/welcome/en/"
+    canon = bs.SITE + "/en/blog/welcome/"
     assert (
         f"<url><loc>{canon}</loc>"
         "<lastmod>2026-11-07</lastmod></url>"
     ) in sm
-    assert '<a href="/blog/welcome/en/">' in index
-    assert (out / "blog/welcome/hy/index.html").exists()
+    assert '<a href="/en/blog/welcome/">' in index
+    assert (out / "hy/blog/welcome/index.html").exists()
     # the blog's list
-    bl = (out / "blog/index.html").read_text("utf-8")
-    assert '<a href="/blog/welcome/' in bl
+    bl = (out / "en/blog/index.html").read_text("utf-8")
+    assert '<a href="/en/blog/welcome/' in bl
+    assert (out / "ru/blog/index.html").exists()
     # a comics series as a page too, in comics/, and
     # in the sitemap
-    cpage = out / "comics/vasak-seven-wolves/en/index.html"
+    cpage = out / "en/comics/vasak-seven-wolves/index.html"
     chtml = cpage.read_text("utf-8")
     assert "<h1>Vasak and the Seven Wolves</h1>" in chtml
     assert (
-        f"{bs.SITE}/comics/vasak-seven-wolves/en/"
+        f"{bs.SITE}/en/comics/vasak-seven-wolves/"
     ) in sm
     # the Features page as a page too
-    feat = out / "features/en/index.html"
+    feat = out / "en/features/index.html"
     assert "<h1>Features</h1>" in feat.read_text("utf-8")
-    assert f"{bs.SITE}/features/en/" in sm
-    assert '<a href="/features/en/">' in index
+    assert f"{bs.SITE}/en/features/" in sm
+    assert '<a href="/en/features/">' in index
     # the Map: a page of the places, and a page for
     # each place that a post or comic names
-    mp = (out / "map/en/index.html").read_text("utf-8")
+    mp = (out / "en/map/index.html").read_text("utf-8")
     assert "<h1>Map</h1>" in mp
-    assert '<a href="/map/bjni/en/">Bjni</a>' in mp
+    assert '<a href="/en/map/bjni/">Bjni</a>' in mp
     assert "<li>Ani · City</li>" in mp
-    bj = (out / "map/bjni/en/index.html").read_text("utf-8")
+    bj = (out / "en/map/bjni/index.html").read_text("utf-8")
     assert "<h1>Bjni</h1>" in bj
     assert "<p>Fortress</p>" in bj
-    assert 'href="/comics/vasak-seven-wolves/en/"' in bj
+    assert 'href="/en/comics/vasak-seven-wolves/"' in bj
     assert 'hreflang="ru"' in bj
-    ru = (out / "map/bjni/ru/index.html").read_text("utf-8")
+    ru = (out / "ru/map/bjni/index.html").read_text("utf-8")
     assert "<h1>Бджни</h1>" in ru
     assert "<p>Крепость</p>" in ru
     # no page for a place nobody wrote about
-    assert not (out / "map/ani/en").exists()
-    assert f"{bs.SITE}/map/bjni/en/" in sm
-    assert f"{bs.SITE}/map/hy/" in sm
-    assert '<a href="/map/en/">' in index
+    assert not (out / "en/map/ani").exists()
+    assert f"{bs.SITE}/en/map/bjni/" in sm
+    assert f"{bs.SITE}/hy/map/" in sm
+    assert '<a href="/en/map/">' in index
     # the timeline
-    tl = (out / "timeline/index.html").read_text("utf-8")
+    tl = (out / "en/timeline/index.html").read_text("utf-8")
     assert "<h1>Timeline</h1>" in tl
+    tl = (out / "ru/timeline/index.html").read_text("utf-8")
+    assert "<h1>Хронология</h1>" in tl
     # none of these are saved for offline
     off = json.loads((out / "offline.json").read_text())
     saved = [f[0] for f in off["files"]]
-    for lead in ("read/", "blog/", "map/", "library/"):
+    for lead in ("hy/", "en/", "ru/"):
         assert not [x for x in saved if x.startswith(lead)]
     assert "404.html" not in saved
 
@@ -369,20 +381,20 @@ def test_build_volumes(tmp_path):
     assert not (data / "volume/grabar.json").exists()
     # the book's page for search engines, linking
     # its part's page
-    page = out / "b/grabar/ann/1-book/index.html"
+    page = out / "hy/b/grabar/ann/1-book/index.html"
     html = page.read_text("utf-8")
-    link = '<a href="/read/grabar/ann/1-book/01.txt/">'
+    link = '<a href="/hy/read/grabar/ann/1-book/01.txt/">'
     assert link in html
-    assert not (out / "b/grabar/index.html").exists()
+    assert not (out / "hy/b/grabar/index.html").exists()
     # the author's page too, listing the book
-    ann = (out / "library/ann/index.html").read_text(
+    ann = (out / "hy/library/ann/index.html").read_text(
         "utf-8"
     )
-    assert 'href="/b/grabar/ann/1-book/"' in ann
-    assert "/library/ann/" in (
+    assert 'href="/hy/b/grabar/ann/1-book/"' in ann
+    assert "/hy/library/ann/" in (
         out / "sitemap.xml"
     ).read_text("utf-8")
-    assert "/b/grabar/ann/1-book/" in (
+    assert "/hy/b/grabar/ann/1-book/" in (
         out / "sitemap.xml"
     ).read_text("utf-8")
 

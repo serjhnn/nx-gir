@@ -1301,7 +1301,7 @@ function joinBanner() {
   h("img", { src: "contribute.jpg", alt: "",
     width: "1200", height: "675" }),
   h("span", { class: "join-text" },
-    h("b", {}, named(t("join.title"))),
+    h("b", {}, t("join.title")),
     h("span", {}, t("join.text")),
     h("span", { class: "join-go" }, t("join.go"))));
 }
