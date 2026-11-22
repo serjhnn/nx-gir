@@ -807,7 +807,8 @@ async function shelf(folder) {
     // welcome
     folder ? null : topBanner(),
     folder ? null : menuBar(...MENU.map(menuLink)),
-    folder ? null : newsBanner(),
+    ...(folder ? [] : NEWS.slice(0, 2).map(
+      (a) => newsBanner(a))),
     folder ? null : joinBanner(),
     folder ? null : mapBanner(),
     last && last.items.length
@@ -3011,6 +3012,8 @@ function contributePage() {
 // face, a crop of the picture
 const SMBAT = "#/b/grabar/smbat-sparapet/";
 
+const ZENOB = "#/b/grabar/hovhan-mamikonean/";
+
 // the words of the page itself, by language
 const NEWS_UI = {
   hy: { home: "Գլխավոր", title: "Հայտարարություններ",
@@ -3020,6 +3023,120 @@ const NEWS_UI = {
 };
 
 const NEWS = [{
+  id: "zenob-glak",
+  date: "2026-11-22",
+  img: "zenob-glak.jpg",
+  face: "zenob-glak-face.jpg",
+  alt: "Zenob Glak, History of Taron, 4th century:"
+    + " a painted map of Taron among mountains,"
+    + " a castle on it, and a rider on a cliff",
+  title: "The History of Taron on the shelf",
+  lead: "The History of Taron (Պատմութիւն"
+    + " Տարաւնոյ) tells how a land in the heart of"
+    + " the Armenian Highland took a new faith and"
+    + " fought for it. Its first part is"
+    + " attributed to Zenob Glak (Զենոբ Գլակ), the"
+    + " second is by Hovhan Mamikonean. The whole"
+    + " book is now in the nxGir Library, in Grabar"
+    + " and in modern Armenian, side by side.",
+  banner: ["Զենոբ Գլակ",
+    "Տարոնի պատմությունը՝ IV դարից. գիրքը"
+    + " գրադարանում է"],
+  banner_en: ["Zenob Glak",
+    "The History of Taron, from the 4th century:"
+    + " the book is in the Library"],
+  sections: [
+    ["Who he was",
+      "By tradition Zenob was a disciple of"
+      + " Gregory the Illuminator, who came with him"
+      + " from Caesarea; some sources call him a"
+      + " Syrian. He was the first abbot of the"
+      + " monastery of Surb Karapet in Taron, which"
+      + " was called Glakavank after him."],
+    ["The first part",
+      "Sections Ա–Դ, 654 lines: at Gregory's"
+      + " command Zenob writes to the Syrian bishops"
+      + " how the new faith took hold in Taron. It"
+      + " holds the letters of Gregory and the"
+      + " bishops, and the two battles at Ardzan."],
+    ["Hovhan Mamikonean's part",
+      "Hovhan, a later abbot of Glak, carried the"
+      + " book on (sections Ե–ԺԱ): the abbots of"
+      + " Glak, and the wars of the Mamikonians of"
+      + " Taron against the Persians. Scholars doubt"
+      + " that Zenob wrote the first part himself,"
+      + " and date the whole book to the 7th to"
+      + " 10th centuries."],
+    ["Read it",
+      "The book, 1704 lines, is in the Library with"
+      + " every Grabar line beside its modern"
+      + " Armenian translation and every word open"
+      + " to look up. The translations are first"
+      + " drafts, made with AI: they wait for"
+      + " readers who know Grabar to check them."],
+  ],
+  links: [
+    ["Read the History of Taron", ZENOB
+      + "1-patmutiun-taronoy"],
+    ["Taron on the map", "#/map"],
+    ["Help review the translations",
+      "#/contribute"],
+  ],
+  ask: "Which other lands of the Highland have"
+    + " a story that is still unread?",
+  hy: {
+    alt: "Զենոբ Գլակ, Տարոնի պատմություն, IV դար․ "
+      + "Տարոնի նկարված քարտեզը լեռների մեջ, "
+      + "նրա վրա ամրոց, իսկ ժայռի վրա՝ ձիավոր",
+    title: "Տարոնի պատմությունը՝ գրադարանում",
+    lead: "«Տարոնի պատմությունը» (Պատմութիւն "
+      + "Տարաւնոյ) պատմում է, թե Հայկական "
+      + "բարձրավանդակի սրտում գտնվող երկիրն ինչպես "
+      + "ընդունեց նոր հավատը և պայքարեց դրա "
+      + "համար։ Առաջին մասը վերագրվում է Զենոբ "
+      + "Գլակին, երկրորդը Հովհան Մամիկոնյանինն է։ "
+      + "Ամբողջ գիրքն այժմ nxGir գրադարանում է՝ "
+      + "գրաբարով և աշխարհաբարով, կողք կողքի։",
+    sections: [
+      ["Ո՞վ էր նա",
+        "Ավանդաբար Զենոբը Գրիգոր Լուսավորչի "
+        + "աշակերտն էր և նրա հետ եկել էր Կեսարիայից․ "
+        + "որոշ աղբյուրներ նրան ասորի են համարում։ "
+        + "Նա Տարոնի Սուրբ Կարապետ վանքի առաջին "
+        + "առաջնորդն էր, և վանքը նրա անունով կոչվեց "
+        + "Գլակավանք։"],
+      ["Առաջին մասը",
+        "Ա–Դ հատվածները՝ 654 տող։ Գրիգորի "
+        + "հրամանով Զենոբը ասորի եպիսկոպոսներին "
+        + "գրում է, թե ինչպես նոր հավատը հաստատվեց "
+        + "Տարոնում։ Այստեղ են Գրիգորի և "
+        + "եպիսկոպոսների նամակները, ինչպես նաև "
+        + "Արծանի երկու ճակատամարտերը։"],
+      ["Հովհան Մամիկոնյանի մասը",
+        "Գլակի հետագա առաջնորդ Հովհանը շարունակեց "
+        + "գիրքը (Ե–ԺԱ հատվածներ)․ Գլակի "
+        + "առաջնորդները և Տարոնի Մամիկոնյանների "
+        + "պատերազմները պարսիկների դեմ։ Գիտնականները "
+        + "կասկածում են, թե առաջին մասը Զենոբն է "
+        + "գրել, և ամբողջ գիրքը թվագրում են "
+        + "VII–X դարերով։"],
+      ["Կարդացե՛ք",
+        "Գիրքը՝ 1704 տող, գրադարանում է․ "
+        + "գրաբարի յուրաքանչյուր տողի կողքին՝ "
+        + "աշխարհաբար թարգմանությունը, և "
+        + "յուրաքանչյուր բառ կարելի է որոնել։ "
+        + "Թարգմանությունները նախնական "
+        + "տարբերակներ են՝ պատրաստված արհեստական "
+        + "բանականությամբ, և սպասում են գրաբար "
+        + "իմացող ընթերցողների ստուգմանը։"],
+    ],
+    links: ["Կարդալ Տարոնի պատմությունը",
+      "Տարոնը քարտեզի վրա",
+      "Օգնել թարգմանությունների ստուգմանը"],
+    ask: "Բարձրավանդակի էլ ո՞ր երկրների "
+      + "պատմությունն է դեռ սպասում ընթերցողին։",
+  },
+}, {
   id: "smbat-sparapet",
   date: "2026-11-16",
   img: "smbat-sparapet.jpg",
