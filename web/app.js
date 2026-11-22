@@ -802,6 +802,9 @@ function langButton() {
     open(false);
     draw();
   });
+  // the language changes after "navigate": its name
+  // and the links in each language, drawn again
+  window.addEventListener("langchange", draw);
   draw();
   topBar.prepend(btn);
   bar.append(panel);
