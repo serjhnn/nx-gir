@@ -35,6 +35,7 @@ SHELVES = (
 # notes about a shelf, not books: left off the list
 NOT_BOOKS = {
     "SOURCES.md",
+    "SOURCE.md",
     "README.md",
     "LIBRARY.tsv",
     "TRANSLATIONS.tsv",

@@ -555,6 +555,19 @@ Translation of part 1 (`01.txt`) was made by ChatGPT
 (964 lines). It remains a machine draft, not yet
 human-reviewed; see `notes/grigor-narekatsi.md`.
 
+
+## grabar/grigor-narekatsi/2-gandzer-tagher/
+
+Գանձեր եւ Տաղեր, the odes and songs of Grigor
+Narekatsi, from Digilib
+(<https://www.digilib.am/book/3052/>; book 3052),
+typed Grabar fetched with `scripts/fetch-digilib.py`.
+Digilib attributes the collection to Grigor
+Narekatsi; this records the source's attribution, not
+an independent check of every text in it. (This note
+was `SOURCE.md` in the book's folder, where the
+Library took it for a part of the book.)
+
 ## grabar/anania-shirakatsi/
 
 Nineteen works of Anania Shirakatsi (Անանիա Շիրակացի,
