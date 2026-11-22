@@ -891,12 +891,53 @@ def list_page(out, path, title, desc, items, lang="hy"):
     return path, title
 
 
+def author_page(out, app, author, books, ids):
+    """library/<id>/: an author with the card about
+    them (authors/), in each language it has, and
+    their books (HTML list items). Returns (path,
+    title)."""
+    esc = htm.escape
+    aid = author["folder"].rpartition("/")[2]
+    body, title = [], author["name"]
+    if aid in ids:
+        card = web.author(app, aid)["versions"]
+        for v in card:
+            if v["lang"] == "en":
+                title += f" ({v['name']})"
+            head = " · ".join(
+                esc(x) for x in (v["years"], v["role"]) if x
+            )
+            body.append(
+                f'<div lang="{v["lang"]}">\n'
+                f"<p><b>{esc(v['name'])}</b>"
+                f"{' · ' + head if head else ''}</p>\n"
+                + "\n".join(
+                    f"<p>{esc(t)}</p>" for t in v["text"]
+                )
+                + "\n</div>"
+            )
+    body.append("<ul>\n" + "".join(books) + "</ul>")
+    path = f"library/{aid}"
+    route_page(
+        out,
+        path,
+        title=title,
+        desc=describe(
+            [""] + (card[0]["text"] if aid in ids else [])
+        )
+        or title,
+        text="\n".join(body),
+    )
+    return path, title
+
+
 def hub_pages(out, app, dirs):
     """The lists: library/ (the authors and their
     books), b/<folder>/ (volume_pages()), blog/,
     comics/ and timeline/. Returns [(path, title)]."""
     esc = htm.escape
     more, volumes = volume_pages(out, app, dirs)
+    ids = web.authors(app)["authors"]
     body = []
     for a in web.library(app)["authors"]:
         books = []
@@ -916,6 +957,7 @@ def hub_pages(out, app, dirs):
             + "".join(books)
             + "</ul>"
         )
+        more.append(author_page(out, app, a, books, ids))
     route_page(
         out,
         "library",

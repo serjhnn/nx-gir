@@ -374,6 +374,14 @@ def test_build_volumes(tmp_path):
     link = '<a href="/read/grabar/ann/1-book/01.txt/">'
     assert link in html
     assert not (out / "b/grabar/index.html").exists()
+    # the author's page too, listing the book
+    ann = (out / "library/ann/index.html").read_text(
+        "utf-8"
+    )
+    assert 'href="/b/grabar/ann/1-book/"' in ann
+    assert "/library/ann/" in (
+        out / "sitemap.xml"
+    ).read_text("utf-8")
     assert "/b/grabar/ann/1-book/" in (
         out / "sitemap.xml"
     ).read_text("utf-8")
