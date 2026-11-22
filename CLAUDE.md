@@ -399,21 +399,52 @@
   reason. Add the book's Library name
   (`books/LIBRARY.tsv`), a Timeline line and a
   limits record in the same change
-- Routing: a page is a path (`/library`,
-  `/read/<book>?line=3`), opened with `pushState`
-  (`goTo()`, `hashNow()`, `setRoute()` in `app.js`;
-  the code still names a page `"#/library"`, and
-  `h()` turns an `href` of that form into the path
-  and marks it `data-r`, which one click handler
-  opens). `index.html` has `<base href="/">`, so files
-  are found from any path. An old `#/` link is
-  replaced by its path at start. `nxgir web` gives
-  `index.html` for a path that is no file (a browser
-  asking for a page). On the site, `build-site.py`
-  writes `<path>/index.html` for each page a search
-  engine should list (`route_page()`), and `404.html`
-  for the rest; a new page of that kind goes in
-  `searchable()`. Never write `location.hash`.
+- Routing: a page is a path under its language
+  (`/hy/library`, `/en/read/<book>?line=3`), opened
+  with `pushState` (`goTo()`, `hashNow()`,
+  `setRoute()`, `inLang()` in `app.js`; the code
+  still names a page `"#/library"`, without the
+  language, and `h()` turns an `href` of that form
+  into the path in `LANG` and marks it `data-r`,
+  which one click handler opens; a path with its
+  language, `inLang("ru", "#/map")`, is kept as it
+  is). `index.html` has `<base href="/">`, so files
+  are found from any path. An old link (`#/library`,
+  `/library`, `/blog/<slug>/en`) is replaced by its
+  path with the language first at start. `nxgir web`
+  gives `index.html` for a path that is no file (a
+  browser asking for a page). On the site,
+  `build-site.py` writes `<lang>/<path>/index.html`
+  for each page a search engine should list
+  (`route_page()`; the pages of Armenian text, books,
+  authors, the Library, under `hy/` only), and
+  `404.html` for the rest; a new page of that kind
+  goes in `searchable()`. Never write
+  `location.hash`.
+- **Languages** (`notes/i18n.md`, read it first):
+  every page is in Armenian, English and Russian.
+  `web/i18n.js` (loaded before `app.js`) has `LANGS`,
+  `LANG` (from the address; a first visit takes the
+  browser's; kept as `nxgir-ui-lang`) and `UI`, the
+  words of the pages, one table per language with
+  the same keys; `t("key", ...)` gives one in
+  `LANG` (else English, else Armenian). **Never
+  write words of the interface in `app.js`**: add a
+  key to all three languages of `UI`
+  (`tests/test_i18n.py` checks the keys, and that
+  every `t("...")` is there). `<html lang>` is
+  `LANG`; text of the books, authors' and books'
+  names keep `lang: "hy"`. The language button
+  (`langButton()`) links the page in each language;
+  `route()` calls `followLang()`, which sends
+  `langchange` for what is drawn once (menus, tab
+  bar). The per-page pickers (blog, comics, map,
+  Features, cards and Reference, announcements,
+  word meanings) start from `LANG`; a pick holds
+  until the language changes (`pagePick`). Word
+  meanings: Armenian for hy, English for en and ru
+  (no Russian yet). The Timeline's events and the
+  limits on Statistics stay in English.
 - `web/`: the web pages (plain HTML, CSS, JS, no
   build step, nothing loaded from other sites); the
   60-character limit applies here too. `wordKey()`
@@ -456,10 +487,12 @@
   `.github/workflows/pages.yml`): the answers of the
   API as files, read by `app.js` when `static.js`
   sets `NXGIR_STATIC`; for search engines, a page of
-  its own for each book (`read/<book>/`), author
-  (`library/<id>/`, named in Armenian, English and
-  Russian: `all_names()`), book (`b/<folder>/`) and
-  blog post (`blog/<slug>/<lang>/`), `sitemap.xml`
+  its own for the top page in each language
+  (`<lang>/`, `home_pages()`), each book
+  (`hy/read/<book>/`), author (`hy/library/<id>/`,
+  named in Armenian, English and Russian:
+  `all_names()`), book (`hy/b/<folder>/`) and blog
+  post (`<lang>/blog/<slug>/`), `sitemap.xml`
   and `robots.txt`; tested in
   `tests/test_site.py`. `bucket()` and `BUCKETS` must
   match `app.js` (a test checks it). It also writes

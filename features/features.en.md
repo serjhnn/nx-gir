@@ -24,7 +24,7 @@ The word you tapped is marked everywhere in the part. The arrows ‹ › take yo
 
 ## Search the library
 
-Type a word in the search box at the top of any page; in the reader, tap a word and press Որոնել ամբողջ գրադարանում, or select a few words and press the button that appears. It is found in every book, in either spelling: թագավոր also finds թագաւոր. The results open on the Grabar books, by author in the Library's order: tap an author to see its lines, and Աշխարհաբար or Բոլորը to see the translations too; under Բոլորը each Grabar line comes with its translation under it, as one result. A line opens in the reader with the word marked, and the arrows ‹ › take you to the next result. A very common word (եւ, ի) needs a second word with it. The search also finds authors and books by name: Գոշ finds Mkhitar Gosh and Դատաստանագիրք the books of that name, and an author can be found by the English or Russian name too (Gosh, Гош). They are shown above the lines.
+Type a word in the search box at the top of any page; in the reader, tap a word and press Search the whole library, or select a few words and press the button that appears. It is found in every book, in either spelling: թագավոր also finds թագաւոր. The results open on the Grabar books, by author in the Library's order: tap an author to see its lines, and Modern Armenian or All to see the translations too; under All each Grabar line comes with its translation under it, as one result. A line opens in the reader with the word marked, and the arrows ‹ › take you to the next result. A very common word (եւ, ի) needs a second word with it. The search also finds authors and books by name: Գոշ finds Mkhitar Gosh and Դատաստանագիրք the books of that name, and an author can be found by the English or Russian name too (Gosh, Гош). They are shown above the lines.
 
 ## The sentence of a word
 
@@ -36,7 +36,7 @@ The site remembers where you stopped reading each book, in this browser. The hom
 
 ## Tabs at the bottom of a phone
 
-On a phone, a bar at the bottom of every page leads to the Home page, the Library, the book you read last (Շարունակել) and the search; Ավելին opens the other pages (your Readings, the Blog, the Map, Comics, Features, Timeline and more). In the reader it steps aside, to leave the room to the text, and comes back when you scroll up. Each tab remembers where you were in it, and a second tap scrolls it to the top.
+On a phone, a bar at the bottom of every page leads to the Home page, the Library, the book you read last (Continue) and the search; More opens the other pages (your Readings, the Blog, the Map, Comics, Features, Timeline and more). In the reader it steps aside, to leave the room to the text, and comes back when you scroll up. Each tab remembers where you were in it, and a second tap scrolls it to the top.
 
 ## Contents
 
@@ -96,7 +96,7 @@ The Blog tells what is new, in themes: about the site, about authors and about b
 
 ## Offline copy
 
-"Offline" at the bottom of every page leads to two ways to read with no network: install the site as an app on the phone, and save all the books in the browser (about 75 MB; it updates itself when the site changes).
+Offline at the bottom of every page leads to two ways to read with no network: install the site as an app on the phone, and save all the books in the browser (about 75 MB; it updates itself when the site changes).
 
 ## Become a contributor
 
@@ -105,3 +105,7 @@ The Blog tells what is new, in themes: about the site, about authors and about b
 ## Announcements
 
 Հայտարարություններ on the home page, and the banner with Smbat Sparapet below it, open a page on what is new on the shelf, with a picture, a story and links to the books; the first is on Smbat Sparapet and his two books, the Datastanagirk and the Taregirk.
+
+## Armenian, English or Russian
+
+The whole site speaks the language you choose: press Հայ, Eng or Рус at the top of any page. On a first visit it takes your browser's language. The language is part of every address (nxgir.am/en/library, nxgir.am/ru/blog), so a link opens the page in the language it was shared in. The books stay as they are; word meanings come in English or Armenian (in Russian, for now, in English).
