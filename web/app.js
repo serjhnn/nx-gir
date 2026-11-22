@@ -4340,6 +4340,7 @@ function decorate() {
   // back to the folder the book is in
   const dir = dirOf(R.name || R.opening);
   R.tools.replaceChildren(...[
+    R.who,
     R.prog,
     // the site's mark, once the top bar has
     // scrolled away (see stick())
@@ -5439,6 +5440,13 @@ async function book(name, line, found) {
   h("span", { class: "pct" }, "0%"));
   document.body.classList.add("reading");
   const pt = data.parts;
+  // author and book, in small type above the bar
+  const trail = pt
+    ? pt.up.slice(1).map((u) => u.label).concat(pt.book)
+    : (data.crumbs || []).slice(1).map((c) => c.label)
+      .concat(data.label || title);
+  R.who = h("div", { class: "readwho", lang: "hy" },
+    trail.join(" · "));
   R.end = partEnd(pt);
   if (R.end && R.page < R.pages.length - 1) {
     R.end.style.display = "none";

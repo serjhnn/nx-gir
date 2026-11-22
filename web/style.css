@@ -2042,6 +2042,15 @@ body.reading .bar {
   gap: 0.5rem;
 }
 
+.tools .readwho {
+  flex-basis: 100%;
+  overflow: hidden;
+  font-size: 0.7rem;
+  color: var(--muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 .readbar .track {
   flex: 1;
   height: 4px;
