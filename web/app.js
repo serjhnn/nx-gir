@@ -891,9 +891,10 @@ headerMenu();
 // style.css under 40rem; hidden in the reader):
 // the main pages, and a sheet with all the others
 const TABS = [
+  ["#/", "logo", "Գլխավոր", "home"],
   ["#/library", "book", "Գրադարան", "library"],
   ["#/blog", "pen", "Բլոգ", "blog"],
-  ["#/recent", "clock", "Ընթերցումներ", "recent"],
+  ["#/recent", "clock", "Ընթերցում", "recent"],
   ["#/search", "search", "Որոնում", "search"],
 ];
 // the pages the More tab opens
@@ -912,7 +913,8 @@ const MORE = [
 function tabFor(hash) {
   const top = hash.split(/[/?]/)[0];
   if (["read", "edit", "new"].includes(top)) return "";
-  if (["", "library", "b", "f"].includes(top)) {
+  if (top === "") return "home";
+  if (["library", "b", "f"].includes(top)) {
     return "library";
   }
   if (top === "comics") return "blog";
@@ -920,10 +922,17 @@ function tabFor(hash) {
   return "more";
 }
 
+// the logo of the header, as drawn, for the home tab
+function logoMark() {
+  const mark = document.querySelector(".brand-mark");
+  return mark.cloneNode(true);
+}
+
 function tabBar() {
   const link = ([href, ic, label, key]) => h("a",
     { href, "data-tab": key },
-    icon(ICONS[ic]), label);
+    ic === "logo" ? logoMark() : icon(ICONS[ic]),
+    label);
   const sheet = h("nav", { class: "more-sheet",
     id: "more-sheet", lang: "hy", hidden: "",
     "aria-label": "Ավելին" },

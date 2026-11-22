@@ -3861,19 +3861,30 @@ body.home .search-wrap {
     background: none;
     color: var(--muted);
     font: inherit;
-    font-size: 0.68rem;
+    font-size: 0.64rem;
     text-decoration: none;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .tabbar svg {
     width: 22px;
     height: 22px;
   }
+  /* the logo keeps its colour, dimmed when not here */
+  .tabbar .brand-mark {
+    width: 22px;
+    height: 24px;
+    opacity: 0.65;
+  }
+  .tabbar [aria-current="page"] .brand-mark {
+    opacity: 1;
+  }
   .tabbar [aria-current="page"],
   .tabbar [aria-expanded="true"] {
     color: var(--accent-ink);
   }
-  .tabbar [aria-current="page"] svg {
+  .tabbar [aria-current="page"] svg:not(.brand-mark) {
     stroke-width: 2.1;
   }
   .more-sheet:not([hidden]) {
@@ -3916,5 +3927,11 @@ body.home .search-wrap {
   body.reading .more-sheet,
   body:has(input:focus, textarea:focus) .tabbar {
     display: none;
+  }
+}
+@media (max-width: 340px) {
+  .tabbar a,
+  .tabbar button {
+    font-size: 0.56rem;
   }
 }
