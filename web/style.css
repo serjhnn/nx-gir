@@ -4040,7 +4040,7 @@ body.home .search-wrap {
   }
 }
 
-/* -- the book cards (#/books) -- */
+/* -- the Reference: the book cards (#/reference) -- */
 
 /* a grid of cards, two across where they fit; each
    has an edge in its author's color (--hue) */
@@ -4154,4 +4154,94 @@ body.home .search-wrap {
 }
 .bc-read:hover {
   background: var(--accent-ink);
+}
+/* the kind and century chips, each with how many */
+.bc-filters {
+  margin: 0 0 1.25rem;
+}
+.bc-chips {
+  margin: 0 0 0.5rem;
+}
+.bc-chips button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.bc-chips .count {
+  margin-left: 0.35em;
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+/* on a phone: each row of chips is one line to
+   swipe, and the cards are low banners, the edge
+   on the left */
+@media (max-width: 40rem) {
+  .bc-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-right: -16px;
+    padding-right: 16px;
+    scrollbar-width: none;
+  }
+  .bc-chips::-webkit-scrollbar {
+    display: none;
+  }
+  .bc-chips button {
+    flex: none;
+  }
+  .bcards {
+    gap: 8px;
+  }
+  .bcard {
+    gap: 0.2rem;
+    padding: 0.55rem 0.75rem 0.5rem;
+    border-top: 1px solid var(--rule);
+    border-left: 4px solid var(--edge);
+    border-radius: 8px;
+  }
+  .bc-top {
+    flex-wrap: nowrap;
+    font-size: 0.68rem;
+  }
+  .bc-kind,
+  .bc-when {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .bc-when {
+    flex: none;
+    max-width: 45%;
+  }
+  .bcard h2 {
+    font-size: 1.05rem;
+  }
+  .bc-hy {
+    margin-top: -0.2rem;
+    font-size: 0.8rem;
+  }
+  .bc-by {
+    font-size: 0.78rem;
+  }
+  .bc-lead {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+  .bc-foot {
+    padding-top: 0.25rem;
+    border-top: 0;
+  }
+  .bc-meta .done {
+    display: inline;
+  }
+  .bc-meta .done:not(:first-child)::before {
+    content: " · ";
+    color: var(--muted);
+  }
+  .bc-foot .bc-more,
+  .bc-read {
+    padding: 0.2rem 0.65rem;
+    font-size: 0.75rem;
+  }
 }

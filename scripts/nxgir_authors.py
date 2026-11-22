@@ -218,3 +218,142 @@ def gather(files, own, shared_keys):
             key=lambda v: LANGS.index(v["lang"])
         )
     return out
+
+
+# the kinds of book the Reference page (/reference)
+# filters by: (id, names, words); a book is of the
+# first whose word is in its English "kind"
+GROUPS = (
+    (
+        "law",
+        {"hy": "Իրավունք", "en": "Law", "ru": "Право"},
+        ("code of law", "canon"),
+    ),
+    (
+        "bible",
+        {
+            "hy": "Աստվածաշունչ",
+            "en": "Bible",
+            "ru": "Библия",
+        },
+        ("gospels", "psalm"),
+    ),
+    (
+        "history",
+        {
+            "hy": "Պատմություն",
+            "en": "History",
+            "ru": "История",
+        },
+        (
+            "histor",
+            "chronicle",
+            "rulers",
+            "genealog",
+            "life of",
+            "autobiograph",
+            "monasteries",
+            "colophon",
+        ),
+    ),
+    (
+        "poetry",
+        {"hy": "Պոեզիա", "en": "Poetry", "ru": "Поэзия"},
+        (
+            "poem",
+            "song",
+            "hymn",
+            "verse",
+            "riddle",
+            "fable",
+        ),
+    ),
+    (
+        "letters",
+        {"hy": "Թղթեր", "en": "Letters", "ru": "Послания"},
+        ("letter",),
+    ),
+    (
+        "sermons",
+        {"hy": "Ճառեր", "en": "Sermons", "ru": "Проповеди"},
+        ("homil", "sermon"),
+    ),
+    (
+        "philosophy",
+        {
+            "hy": "Փիլիսոփայություն",
+            "en": "Philosophy",
+            "ru": "Философия",
+        },
+        ("philosoph", "aristotle", "porphyry", "grammar"),
+    ),
+    (
+        "science",
+        {
+            "hy": "Գիտություն",
+            "en": "Science",
+            "ru": "Наука",
+        },
+        (
+            "calendar",
+            "star",
+            "sky",
+            "weather",
+            "number",
+            "arithmetic",
+            "measure",
+            "weight",
+            "gem",
+            "distance",
+            "eclipse",
+            "moon",
+            "geograph",
+            "medicine",
+        ),
+    ),
+    (
+        "theology",
+        {
+            "hy": "Աստվածաբանություն",
+            "en": "Theology",
+            "ru": "Богословие",
+        },
+        (
+            "commentary",
+            "treatise",
+            "creed",
+            "confession",
+            "florilegium",
+            "summa",
+            "polemic",
+            "collected",
+        ),
+    ),
+)
+
+
+def group_of(kind):
+    """The id of the kind (GROUPS) of a book whose
+    English "kind" is kind, or None."""
+    k = kind.lower()
+    for gid, _, words in GROUPS:
+        if any(w in k for w in words):
+            return gid
+    return None
+
+
+CENTURY_RE = re.compile(r"(\d{1,2})(?:st|nd|rd|th) centur")
+YEAR_RE = re.compile(r"(?<!\d)(\d{3,4})(?!\d)")
+
+
+def century_of(written):
+    """The century of an English "written" field:
+    the first "5th century", else the first year
+    ("1184", "the 570s"); None for none."""
+    m = CENTURY_RE.search(written)
+    if m:
+        return int(m.group(1))
+    m = YEAR_RE.search(written)
+    if m:
+        return int(m.group(1)) // 100 + 1
+    return None

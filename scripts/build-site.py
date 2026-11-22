@@ -19,7 +19,8 @@ the same functions (nxgir_web.py):
     data/authors.json               /api/authors
     data/author/<id>.json           /api/author
     data/book/<author>/<book>.json  /api/book-info
-    data/book-cards/<lang>.json     /api/book-cards
+    data/book-cards/<lang>.json     /api/book-cards,
+        the Reference page
     data/comics.json                /api/comics
     data/map.json                   /api/map
     data/titles.json                each book's title,
@@ -914,7 +915,7 @@ def list_page(out, path, title, desc, items, lang="hy"):
 
 
 def cards_page(out, app):
-    """books/: the Book cards page, each book with
+    """reference/: the Reference page, each book with
     its name, author, time of writing and first
     paragraph, in Armenian. Returns (path, title)."""
     esc = htm.escape
@@ -929,16 +930,16 @@ def cards_page(out, app):
             f" · {esc(c['kind'])}</p>\n"
             f"<p>{esc(c['lead'])}</p>"
         )
-    title = "Գրքերի քարտեր · Book cards"
+    title = "Տեղեկատու · Reference"
     route_page(
         out,
-        "books",
+        "reference",
         title=title,
         desc="Every Grabar book of nxGir on a card:"
         " what it is, who wrote it and when.",
         text="\n".join(body),
     )
-    return "books", title
+    return "reference", title
 
 
 def author_page(out, app, author, books, ids, names):

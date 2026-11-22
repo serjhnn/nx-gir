@@ -279,3 +279,21 @@ def test_book_cards():
     block = block.split("\n};", 1)[0]
     keys = re.findall(r"^  (\w+): \{", block, re.M)
     assert tuple(keys) == au.LANGS
+
+
+def test_groups_and_centuries():
+    """Every book card has a kind of GROUPS (else add
+    a word to it); its century, when it has one, is
+    read from the English card."""
+    assert au.group_of("A Chronicle") == "history"
+    assert au.group_of("a poem on the sky") == "poetry"
+    assert au.group_of("nothing like it") is None
+    assert au.century_of("late 12th century") == 12
+    assert au.century_of("finished in 1407") == 15
+    assert au.century_of("the 570s") == 6
+    assert au.century_of("unknown") is None
+    for bid, b in au.read_books().items():
+        (en,) = [
+            v for v in b["versions"] if v["lang"] == "en"
+        ]
+        assert au.group_of(en["kind"]), (bid, en["kind"])

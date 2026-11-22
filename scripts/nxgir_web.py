@@ -458,12 +458,14 @@ def book_info(app, bid):
 
 
 def book_cards(app, lang=None):
-    """The Book cards page: every book written about
+    """The Reference page: every book written about
     (authors/<author>/<book>), in the Library's
     order, in lang (else its first language): name,
     time of writing, kind, first paragraph, its
     authors, where it opens ("to"), its parts and
-    how many are translated. A group (the Bible's
+    how many are translated, its kind ("group",
+    GROUPS in nxgir_authors.py) and century, both
+    from its English card. A group (the Bible's
     Testaments) counts the books in it."""
     cards = (
         author_info.read_books(app.authors)
@@ -499,6 +501,14 @@ def book_cards(app, lang=None):
                 ),
                 card["versions"][0],
             )
+            en = next(
+                (
+                    x
+                    for x in card["versions"]
+                    if x["lang"] == "en"
+                ),
+                v,
+            )
             if cid != b["id"]:
                 to = "#/" + a["folder"].join(["b/", ""])
             elif b["parts"] > 1:
@@ -524,9 +534,25 @@ def book_cards(app, lang=None):
                     "parts": b["parts"],
                     "done": b["done"],
                     "status": card["status"],
+                    "group": author_info.group_of(
+                        en["kind"]
+                    ),
+                    "century": author_info.century_of(
+                        en["written"]
+                    ),
                 }
             )
-    return {"langs": list(author_info.LANGS), "books": out}
+    return {
+        "langs": list(author_info.LANGS),
+        "groups": [
+            {
+                "id": gid,
+                "name": names.get(lang, names["en"]),
+            }
+            for gid, names, _ in author_info.GROUPS
+        ],
+        "books": out,
+    }
 
 
 def linked(app, card):

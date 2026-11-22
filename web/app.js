@@ -1,7 +1,7 @@
 // nx-gir web: the bookshelf and the theme button.
 // Pages are #/ (top), #/f/<folder>, #/b/<book>
 // (a book's parts), #/read/<book>,
-// #/library, #/books (the book cards),
+// #/library, #/reference (the book cards),
 // #/timeline, #/blog, #/comics,
 // #/features,
 // #/contribute, #/news and #/stats; the
@@ -559,7 +559,7 @@ const BY_SA = "https://creativecommons.org/"
 
 function siteFooter() {
   const pages = [["#/library", "Library"],
-    ["#/books", "Book cards"], ["#/blog", "Blog"],
+    ["#/reference", "Reference"], ["#/blog", "Blog"],
     ["#/comics", "Comics"],
     ["#/map", "Map"], ["#/features", "Features"],
     ["#/timeline", "Timeline"],
@@ -758,7 +758,7 @@ const CONTACT = ["nxgir.lib", "gmail.com"];
 // list the ☰ button of the top bar opens
 const MENU = [
   ["#/library", "book", "Գրադարան"],
-  ["#/books", "cards", "Գրքեր"],
+  ["#/reference", "cards", "Տեղեկատու"],
   ["#/blog", "pen", "Բլոգ"],
   ["#/comics", "panels", "Կոմիքսներ"],
   ["#/map", "map", "Քարտեզ"],
@@ -976,7 +976,7 @@ const TABS = [
 // the pages the More tab opens
 const MORE = [
   ["#/recent", "clock", "Ընթերցումներ"],
-  ["#/books", "cards", "Գրքերի քարտեր"],
+  ["#/reference", "cards", "Տեղեկատու"],
   ["#/blog", "pen", "Բլոգ"],
   ["#/map", "map", "Քարտեզ"],
   ["#/comics", "panels", "Կոմիքսներ"],
@@ -1950,7 +1950,7 @@ async function libraryPage(who) {
       h("h1", {}, "Գրադարան"),
       h("p", { class: "sub" },
         "Գրաբար գրքեր · " + n + " · ",
-        h("a", { href: "#/books" }, "Քարտերով →")),
+        h("a", { href: "#/reference" }, "Տեղեկատու →")),
       tabs, body));
   drawStars();
   // the lists at least a screen high: a short one
@@ -3695,33 +3695,53 @@ function infoCard(a) {
   box.showModal();
 }
 
-// -- book cards --
+// -- the Reference: the book cards --
 
-// the words of #/books, in the language of the
-// cards
+// the words of #/reference, in the language of the
+// cards; age(n): a century, in Roman numerals
 const CARDS_UI = {
-  hy: { title: "Գրքերի քարտեր", home: "← Գլխավոր",
+  hy: { title: "Տեղեկատու", home: "← Գլխավոր",
     count: (b, a) => b + " գիրք · " + a + " հեղինակ",
     find: "Գտնել գիրք, հեղինակ կամ տեսակ…",
     read: "Կարդալ", more: "Ավելին",
     parts: (n) => n + " մաս", done: "թարգմանված",
     none: "Ոչինչ չգտնվեց։",
-    library: "Ցանկով՝ Գրադարան →" },
-  en: { title: "Book cards", home: "← Home",
+    library: "Ցանկով՝ Գրադարան →",
+    all: "Բոլորը", kind: "Տեսակ", ages: "Դար",
+    age: (r) => r + " դ." },
+  en: { title: "Reference", home: "← Home",
     count: (b, a) => b + " books · " + a + " authors",
     find: "Find a book, an author or a kind…",
     read: "Read", more: "More",
     parts: (n) => plural(n, "part"),
     done: "translated", none: "Nothing found.",
-    library: "As a list: Library →" },
-  ru: { title: "Карточки книг", home: "← Главная",
+    library: "As a list: Library →",
+    all: "All", kind: "Kind", ages: "Century",
+    age: (r) => r + " c." },
+  ru: { title: "Справочник", home: "← Главная",
     count: (b, a) => "Книг: " + b + " · авторов: " + a,
     find: "Найти книгу, автора или жанр…",
     read: "Читать", more: "Подробнее",
     parts: (n) => n + " ч.", done: "переведено",
     none: "Ничего не найдено.",
-    library: "Списком: Библиотека →" },
+    library: "Списком: Библиотека →",
+    all: "Все", kind: "Жанр", ages: "Век",
+    age: (r) => r + " в." },
 };
+
+// 5 -> V
+function roman(n) {
+  const R = [[10, "X"], [9, "IX"], [5, "V"],
+    [4, "IV"], [1, "I"]];
+  let out = "";
+  for (const [k, s] of R) {
+    while (n >= k) {
+      out += s;
+      n -= k;
+    }
+  }
+  return out;
+}
 
 // a hue for each author, the same on every visit:
 // the colored edge of its books' cards
@@ -3731,14 +3751,17 @@ function authorHue(id) {
   return k;
 }
 
-// one card of #/books: what the book is and when it
-// was written, its name (opens it), its authors,
-// the first paragraph about it, its parts and how
-// much is translated; More opens the whole card
+// one card of #/reference: what the book is and
+// when it was written, its name (opens it), its
+// authors, the first paragraph about it, its parts
+// and how much is translated; More opens the whole
+// card. On a phone it is a low banner (style.css).
 function bookCard(c, ui) {
   const who = c.authors[c.authors.length - 1];
   const meta = h("span", { class: "bc-meta" });
-  if (c.parts > 1) meta.append(ui.parts(c.parts));
+  if (c.parts > 1) {
+    meta.append(h("span", {}, ui.parts(c.parts)));
+  }
   if (c.done) {
     meta.append(h("span", { class: "done" },
       c.done === c.parts ? ui.done
@@ -3766,12 +3789,31 @@ function bookCard(c, ui) {
   return el;
 }
 
-// #/books: every book written about (authors/), a
-// card each, in the Library's order; the language
+// a row of filter chips: [[value, label, count]],
+// the one picked pressed, one with a count of 0
+// off (null: no count); pick(value) on a click
+function chipRow(name, items, now, pick) {
+  return h("div", { class: "filters outline bc-chips",
+    role: "group", "aria-label": name },
+  items.map(([v, label, n]) => {
+    const b = h("button", { type: "button",
+      "aria-pressed": String(v === now),
+      disabled: n === 0 && v !== now ? "" : null },
+    label, n != null ? h("span", { class: "count" },
+      String(n)) : null);
+    b.addEventListener("click", () => pick(v));
+    return b;
+  }));
+}
+
+// #/reference: every book written about (authors/),
+// a card each, in the Library's order; the language
 // of the cards is the one of the author cards
-// (AUTHOR_LANG), and a find box keeps the cards
-// whose name, authors, kind or time have its words
-async function booksPage() {
+// (AUTHOR_LANG). The chips keep the books of one
+// kind (GROUPS in nxgir_authors.py) or century, and
+// the find box those whose name, authors, kind or
+// time have its words.
+async function referencePage() {
   let lang = "hy";
   try {
     lang = localStorage.getItem(AUTHOR_LANG) || lang;
@@ -3779,6 +3821,8 @@ async function booksPage() {
   if (!(lang in CARDS_UI)) lang = "hy";
   let data = await api("book-cards?lang=" + lang);
   let q = "";
+  let kind = "";
+  let age = 0;
   const grid = h("ul", { class: "bcards" });
   const none = h("p", { class: "empty", hidden: "" });
   const input = h("input", { type: "search",
@@ -3786,17 +3830,51 @@ async function booksPage() {
     autocomplete: "off", autocapitalize: "off",
     spellcheck: "false" });
   const head = h("div", { class: "bc-head" });
+  const chips = h("div", { class: "bc-filters" });
   const filter = () => {
     const fits = q ? nameFits(q) : null;
     let n = 0;
     data.books.forEach((c, i) => {
       const words = [c.name, c.short, c.kind,
         c.written, ...c.authors.map((p) => p.name)];
-      const on = !fits || words.some(fits);
+      const on = (!kind || c.group === kind)
+        && (!age || c.century === age)
+        && (!fits || words.some(fits));
       grid.children[i].hidden = !on;
       if (on) n += 1;
     });
     none.hidden = n > 0;
+  };
+  // the chips: the kinds and centuries the books
+  // have, each with how many there are of it in the
+  // century picked (or of the kind picked)
+  const drawChips = () => {
+    const ui = CARDS_UI[lang];
+    const count = (f) => data.books.filter(f).length;
+    const inAge = (c) => !age || c.century === age;
+    const ofKind = (c) => !kind || c.group === kind;
+    const kinds = data.groups
+      .filter((g) => count((c) => c.group === g.id))
+      .map((g) => [g.id, g.name,
+        count((c) => c.group === g.id && inAge(c))]);
+    const ages = [...new Set(data.books
+      .map((c) => c.century).filter(Boolean))]
+      .sort((a, b) => a - b)
+      .map((k) => [k, ui.age(roman(k)),
+        count((c) => c.century === k && ofKind(c))]);
+    chips.replaceChildren(
+      chipRow(ui.kind, [["", ui.all, null], ...kinds],
+        kind, (v) => {
+          kind = v;
+          drawChips();
+          filter();
+        }),
+      chipRow(ui.ages, [[0, ui.all, null], ...ages],
+        age, (v) => {
+          age = v;
+          drawChips();
+          filter();
+        }));
   };
   const draw = () => {
     const ui = CARDS_UI[lang];
@@ -3828,6 +3906,7 @@ async function booksPage() {
       return b;
     }));
     head.setAttribute("lang", lang);
+    chips.setAttribute("lang", lang);
     head.replaceChildren(
       h("p", { class: "crumbs" },
         h("a", { href: "#/" }, ui.home)),
@@ -3836,6 +3915,7 @@ async function booksPage() {
         ui.count(data.books.length, n), " · ",
         h("a", { href: "#/library" }, ui.library)),
       pick);
+    drawChips();
     grid.replaceChildren(
       ...data.books.map((c) => bookCard(c, ui)));
     for (const el of grid.querySelectorAll(
@@ -3856,7 +3936,7 @@ async function booksPage() {
   });
   draw();
   show(h("div", { class: "search-wrap" }, form),
-    head, grid, none);
+    head, chips, grid, none);
 }
 
 // the languages an announcement has: English, and
@@ -7080,8 +7160,8 @@ async function route() {
     } else if (hash === "features"
       || hash.startsWith("features/")) {
       await featuresPage(hash.slice(9));
-    } else if (hash === "books") {
-      await booksPage();
+    } else if (hash === "reference") {
+      await referencePage();
     } else if (hash === "contribute") {
       contributePage();
     } else if (hash === "news"
