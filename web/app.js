@@ -1634,7 +1634,8 @@ async function libraryPage(who) {
       starBtn(b));
       list.append(li);
       return { el: li, names: [b.name, b.title,
-        ...own.map((c) => c.name)] };
+        ...own.map((c) => c.name)],
+      ids: own.map((c) => c.id) };
     });
     // an author whose books are grouped (the Bible)
     // has a page of its own (flat_author())
@@ -1647,8 +1648,9 @@ async function libraryPage(who) {
         ? h("a", { href: "#/b/" + enc(a.folder) },
           a.name)
         : a.name, authorInfoBtn(id, a.name));
-    finds.push({ el: head, id, names: [a.name,
-      ...co.map((c) => c.name)] }, ...rows);
+    finds.push({ el: head, names: [a.name,
+      ...co.map((c) => c.name)],
+    ids: [id, ...co.map((c) => c.id)] }, ...rows);
     return h("section", { class: "author",
       id: "author-" + id }, head, list);
   });
@@ -1877,8 +1879,10 @@ async function libraryPage(who) {
 // name has the words (nameFits()), an author also
 // by its English or Russian name; each found one in
 // turn (Enter, ▼; Shift+Enter, ▲), scrolled into
-// view by show. items: { el, names, id? } in the
-// order shown; all() opens the tab of all books.
+// view by show. items: { el, names, ids } in the
+// order shown, ids the authors and co-authors
+// whose other names count; all() opens the tab of
+// all books.
 function libraryFind(items, show, all) {
   const input = h("input", { type: "search",
     name: "find",
@@ -1930,9 +1934,11 @@ function libraryFind(items, show, all) {
     at = 0;
     if (q) {
       const fits = nameFits(q);
+      const other = (id) => Object.entries(
+        names[id] || {}).some(([l, n]) => l !== "hy"
+        && fits(n));
       found = items.filter((x) => x.names.some(fits)
-        || Object.entries(names[x.id] || {})
-          .some(([l, n]) => l !== "hy" && fits(n)));
+        || x.ids.some(other));
       all();
     }
     for (const x of found) x.el.classList.add("lf-hit");
