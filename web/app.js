@@ -805,6 +805,7 @@ async function shelf(folder) {
     // at the top: the picture, the Library and the
     // other pages, what was read last, then the
     // welcome
+    folder ? null : devBanner(),
     folder ? null : topBanner(),
     folder ? null : menuBar(...MENU.map(menuLink)),
     ...(folder ? [] : NEWS.slice(0, 2).map(
@@ -1082,6 +1083,20 @@ function topBanner() {
       fetchpriority: "high" }),
     h("p", { class: "top-text", lang: "hy" },
       "… ժամանակ ժողովելոյ քարինս"));
+}
+
+// a note at the top of the top page: the site is
+// being built, with something new every day. The
+// look is one of four (a, b, c, d: .dev-a ...)
+const DEV_LOOK = "a";
+function devBanner(look = DEV_LOOK) {
+  return h("div", { class: "dev-banner dev-" + look,
+    role: "note", lang: "en" },
+  h("span", { class: "dev-dot", "aria-hidden": "true" }),
+  h("span", { class: "dev-text" },
+    h("b", {}, "Under active development"),
+    h("span", {}, "New features are added every day."
+      + " Come back often to see what is new.")));
 }
 
 // a narrow banner on the top page, with the
