@@ -60,6 +60,12 @@ function icon(paths, cls) {
 }
 
 const ICONS = {
+  // a bin: take off the list
+  bin: [
+    "M4 7h16M10 11v6M14 11v6",
+    "M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12",
+    "M9 7V4h6v3",
+  ],
   folder: [
     "M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8" +
       "a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
@@ -70,6 +76,17 @@ const ICONS = {
   ],
   // three lines: the menu
   menu: ["M4 7h16", "M4 12h16", "M4 17h16"],
+  // an open book: continue reading
+  resume: [
+    "M12 6c-2-1.5-5-2-8-2v14c3 0 6 .5 8 2"
+      + "c2-1.5 5-2 8-2V4c-3 0-6 .5-8 2z",
+    "M12 6v14",
+  ],
+  // a clock: the readings
+  clock: [
+    "M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18z",
+    "M12 7v5l3 2",
+  ],
   // a pen: the blog
   pen: [
     "M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z",
@@ -876,6 +893,178 @@ function headerMenu() {
 }
 headerMenu();
 
+// the tab bar at the bottom of a phone (shown by
+// style.css under 40rem; hidden in the reader):
+// the main pages, and a sheet with all the others
+const TABS = [
+  ["#/", "logo", "Գլխավոր", "home"],
+  ["#/library", "book", "Գրադարան", "library"],
+  ["#/recent", "resume", "Շարունակել", "continue"],
+  ["#/search", "search", "Որոնում", "search"],
+];
+// the pages the More tab opens
+const MORE = [
+  ["#/recent", "clock", "Ընթերցումներ"],
+  ["#/blog", "pen", "Բլոգ"],
+  ["#/map", "map", "Քարտեզ"],
+  ["#/comics", "panels", "Կոմիքսներ"],
+  ["#/features", "tick", "Հնարավորություններ"],
+  ["#/contribute", "join", "Միանալ"],
+  ["#/news", "horn", "Հայտարարություններ"],
+  ["#/timeline", "scroll", "Ժամանակագրություն"],
+  ["#/stats", "sliders", "Վիճակագրություն"],
+];
+
+// which tab a page belongs to: a TABS key, "more",
+// or "" (the reader and the editor have no bar)
+function tabFor(hash) {
+  const top = hash.split(/[/?]/)[0];
+  if (top === "read") return "continue";
+  if (["edit", "new"].includes(top)) return "";
+  if (top === "") return "home";
+  if (["library", "b", "f"].includes(top)) {
+    return "library";
+  }
+  if (top === "search") return "search";
+  return "more";
+}
+
+// Each tab remembers its page and how far it was
+// scrolled (in the tab, one page deep as it goes:
+// Library, a book's page, Readings, Library again
+// returns to the book's page). The Continue tab
+// opens the book read last; the reader keeps its own
+// place. Tapping the tab shown scrolls to the top,
+// and from the top goes to the tab's first page.
+const REMEMBER = ["home", "library", "search"];
+let tabPlace = {};
+try {
+  tabPlace = JSON.parse(
+    sessionStorage.getItem("nxgir-tabs") || "{}");
+} catch (e) {
+  tabPlace = {};
+}
+let shownHash = null;
+let restoreY = 0;
+
+function rememberTab(hash, y) {
+  const key = tabFor(hash);
+  if (!REMEMBER.includes(key)) return;
+  tabPlace[key] = { hash, y };
+  try {
+    sessionStorage.setItem("nxgir-tabs",
+      JSON.stringify(tabPlace));
+  } catch (e) {
+    // no storage: the tabs forget on reload
+  }
+}
+
+async function tabClick(e) {
+  const a = e.target.closest("a[data-tab]");
+  if (!a || e.defaultPrevented) return;
+  const key = a.dataset.tab;
+  const now = tabFor(
+    location.hash.replace(/^#\/?/, ""));
+  if (key === "continue") {
+    e.preventDefault();
+    if (now === "continue") return; // already reading
+    let to = "#/recent";
+    try {
+      const data = await api("recent");
+      const last = data.items[0];
+      if (last) to = "#/read/" + enc(last.name);
+    } catch (err) {
+      // the list of readings instead
+    }
+    location.hash = to;
+  } else if (key === now) {
+    if (window.scrollY > 4) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  } else if (tabPlace[key]) {
+    e.preventDefault();
+    restoreY = tabPlace[key].y;
+    location.hash = "#/" + tabPlace[key].hash;
+  }
+}
+
+// the logo of the header, as drawn, for the home tab
+function logoMark() {
+  const mark = document.querySelector(".brand-mark");
+  return mark.cloneNode(true);
+}
+
+function tabBar() {
+  const link = ([href, ic, label, key]) => h("a",
+    { href, "data-tab": key },
+    ic === "logo" ? logoMark() : icon(ICONS[ic]),
+    label);
+  const sheet = h("nav", { class: "more-sheet",
+    id: "more-sheet", lang: "hy", hidden: "",
+    "aria-label": "Ավելին" },
+  ...MORE.map(menuLink));
+  const more = h("button", { type: "button",
+    "data-tab": "more", "aria-expanded": "false",
+    "aria-controls": "more-sheet" },
+  icon(ICONS.menu), "Ավելին");
+  const bar = h("nav", { class: "tabbar", lang: "hy",
+    "aria-label": "Հիմնական էջեր" },
+  ...TABS.map(link), more);
+  bar.addEventListener("click", tabClick);
+  const open = (on) => {
+    sheet.hidden = !on;
+    more.setAttribute("aria-expanded", String(on));
+  };
+  more.addEventListener("click",
+    () => open(sheet.hidden));
+  document.addEventListener("pointerdown", (e) => {
+    if (!bar.contains(e.target)
+      && !sheet.contains(e.target)) open(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !sheet.hidden) {
+      open(false);
+      more.focus();
+    }
+  });
+  window.addEventListener("hashchange",
+    () => open(false));
+  document.body.append(sheet, bar);
+  return bar;
+}
+const tabs = tabBar();
+
+// in the reader the bar shows on scrolling up, and
+// goes again on scrolling down (.peek, style.css)
+let lastY = 0;
+window.addEventListener("scroll", () => {
+  const y = window.scrollY;
+  const body = document.body;
+  if (!body.classList.contains("reading")) {
+    body.classList.remove("peek");
+  } else if (y < lastY - 8) {
+    body.classList.add("peek");
+  } else if (y > lastY + 8 || y < 50) {
+    body.classList.remove("peek");
+  } else {
+    return;
+  }
+  lastY = y;
+}, { passive: true });
+
+// mark the tab of the page shown
+function markTab(hash) {
+  const now = tabFor(hash);
+  for (const el of tabs.children) {
+    if (el.dataset.tab === now) {
+      el.setAttribute("aria-current", "page");
+    } else {
+      el.removeAttribute("aria-current");
+    }
+  }
+}
+
 // on scrolling, the top bar of the top page stays
 // at the top, with a line under it (.scrolled)
 window.addEventListener("scroll", () => {
@@ -965,6 +1154,45 @@ function ago(seen) {
 const SHELF_LANGS = { grabar: "Գրաբար",
   ashkharhabar: "Աշխարհաբար" };
 
+// a styled question before a reading is taken off
+// the list: true when answered yes
+function askForget(title) {
+  return new Promise((done) => {
+    const box = h("dialog", { class: "ask" });
+    const end = (yes) => {
+      box.close();
+      box.remove();
+      done(yes);
+    };
+    const no = h("button", { type: "button",
+      class: "icon-btn" }, "Չեղարկել");
+    const yes = h("button", { type: "button",
+      class: "icon-btn danger" },
+    icon(ICONS.bin), "Հեռացնել");
+    no.addEventListener("click", () => end(false));
+    yes.addEventListener("click", () => end(true));
+    box.append(h("div", { class: "ask-card",
+      lang: "hy" },
+    h("h2", {}, "Հեռացնե՞լ ցանկից"),
+    h("p", { class: "ask-book" }, title),
+    h("p", { class: "ask-note" },
+      "Գիրքը չի ջնջվի։ Որտեղ կանգ եք առել՝"
+        + " կմնա, և նորից բացելիս այն կվերադառնա"
+        + " ցանկ։"),
+    h("div", { class: "ask-btns" }, no, yes)));
+    box.addEventListener("click", (e) => {
+      if (e.target === box) end(false);
+    });
+    box.addEventListener("cancel", (e) => {
+      e.preventDefault();
+      end(false);
+    });
+    document.body.append(box);
+    box.showModal();
+    no.focus();
+  });
+}
+
 // take a book off the list of readings: where it
 // was left stays, and reading it again brings it
 // back
@@ -994,8 +1222,10 @@ function readingList(items) {
     const x = h("button", { type: "button",
       class: "forget",
       "aria-label": "Հեռացնել ցանկից",
-      title: "Հեռացնել ցանկից" }, "×");
+      title: "Հեռացնել ցանկից" },
+    icon(ICONS.bin));
     x.addEventListener("click", async () => {
+      if (!await askForget(r.title)) return;
       x.disabled = true;
       try {
         await forget(r.name);
@@ -1216,9 +1446,19 @@ function readingBooks(data, items) {
     if (!x || out.has(x.b.first)) continue;
     const m = /· (\d+\/\d+)$/.exec(r.title || "");
     out.set(x.b.first, { ...x, at: r.name,
+      names: [],
       progress: r.progress || 0,
       part: x.b.parts > 1 && m ? m[1] : "",
       seen: r.seen });
+  }
+  // every part read of a book, to take it off
+  for (const r of items) {
+    const name = r.name.replace(
+      /^ashkharhabar\//, "grabar/");
+    const x = of.get(name) || of.get(dirOf(name));
+    if (x && out.has(x.b.first)) {
+      out.get(x.b.first).names.push(r.name);
+    }
   }
   return [...out.values()];
 }
@@ -1432,7 +1672,24 @@ async function libraryPage(who) {
         + r.progress + "%",
       h("span", { class: "progress", role: "img",
         "aria-label": r.progress + "%" }, fill));
-    readList.append(bookItem(r.b, row, starBtn(r.b)));
+    const x = h("button", { type: "button",
+      class: "forget",
+      "aria-label": "Հեռացնել ցանկից",
+      title: "Հեռացնել ցանկից" },
+    icon(ICONS.bin));
+    x.addEventListener("click", async () => {
+      if (!await askForget(r.b.name)) return;
+      x.disabled = true;
+      try {
+        for (const n of r.names) await forget(n);
+      } catch (e) {
+        x.disabled = false;
+        return;
+      }
+      route();
+    });
+    readList.append(
+      bookItem(r.b, row, starBtn(r.b), x));
   }
   panes.reading.append(reading.length ? readList
     : empty("Դեռ ոչինչ չեք կարդում։ Բացեք գիրքը՝"
@@ -4155,6 +4412,7 @@ function decorate() {
   // back to the folder the book is in
   const dir = dirOf(R.name || R.opening);
   R.tools.replaceChildren(...[
+    R.who,
     R.prog,
     // the site's mark, once the top bar has
     // scrolled away (see stick())
@@ -4799,7 +5057,6 @@ function progress() {
   const pct = Math.round(all * 100);
   R.prog.firstChild.firstChild.style.width =
     pct + "%";
-  R.prog.lastChild.textContent = pct + "%";
   R.prog.setAttribute("aria-valuenow", pct);
 }
 
@@ -5250,10 +5507,16 @@ async function book(name, line, found) {
   R.prog = h("div", { class: "readbar",
     role: "progressbar", "aria-label": "Read",
     "aria-valuemin": "0", "aria-valuemax": "100" },
-  h("span", { class: "track" }, h("span")),
-  h("span", { class: "pct" }, "0%"));
+  h("span", { class: "track" }, h("span")));
   document.body.classList.add("reading");
   const pt = data.parts;
+  // author and book, in small type above the bar
+  const trail = pt
+    ? pt.up.slice(1).map((u) => u.label).concat(pt.book)
+    : (data.crumbs || []).slice(1).map((c) => c.label)
+      .concat(data.label || title);
+  R.who = h("div", { class: "readwho", lang: "hy" },
+    trail.join(" · "));
   R.end = partEnd(pt);
   if (R.end && R.page < R.pages.length - 1) {
     R.end.style.display = "none";
@@ -6252,6 +6515,12 @@ async function route() {
   E.save = null;
   E.hash = "";
   const hash = location.hash.replace(/^#\/?/, "");
+  markTab(hash);
+  if (shownHash !== null) {
+    rememberTab(shownHash, window.scrollY);
+  }
+  shownHash = hash;
+  document.body.classList.remove("peek");
   if (R.timer) savePos(true);
   R.name = "";
   closePanel();
@@ -6350,11 +6619,14 @@ window.addEventListener("scroll", () => {
     history.replaceState(
       { ...(history.state || {}), y: window.scrollY },
       "");
+    rememberTab(hash, window.scrollY);
   }, 150);
 }, { passive: true });
 
 function backToPlace(hash) {
-  const y = history.state && history.state.y;
+  const y = restoreY
+    || (history.state && history.state.y);
+  restoreY = 0;
   if (!reading(hash) && y) window.scrollTo(0, y);
 }
 
