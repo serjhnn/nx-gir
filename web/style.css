@@ -3629,6 +3629,19 @@ body.home .search-wrap {
   font-size: 1.05rem;
   color: var(--accent-ink);
 }
+/* a book's co-authors and its author (authorNames()
+   in app.js); when they do not fit on one line, the
+   last goes on its own, smaller */
+.co-names .co-name {
+  white-space: nowrap;
+}
+.co-names.wrapped .co-sep {
+  display: none;
+}
+.co-names.wrapped .co-last {
+  display: block;
+  font-size: 0.85em;
+}
 .s-head {
   display: flex;
   align-items: center;

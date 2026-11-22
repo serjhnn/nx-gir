@@ -792,6 +792,7 @@ def test_library(tmp_path):
             "first": d + "01.txt",
             "parts": 2,
             "done": 1,
+            "with": [],
         },
         # no short name: its first line
         {
@@ -801,6 +802,7 @@ def test_library(tmp_path):
             "first": "grabar/ann/2-poem.txt",
             "parts": 1,
             "done": 0,
+            "with": [],
         },
     ]
     assert got[1]["books"][0]["name"] == "Աւետարան"
@@ -830,12 +832,79 @@ def test_library_names_are_on_the_shelf():
     file in books/grabar/, and every author there has
     a name."""
     grabar = web.ROOT / "books" / "grabar"
-    names = web.read_names(web.LIBRARY)
+    names, co = web.read_library(web.LIBRARY)
+    # co-authors have a name and no folder
+    others = {x for ids in co.values() for x in ids}
     for key in names:
+        if key in others:
+            assert not (grabar / key).exists(), key
+            continue
         assert (grabar / key).exists(), key
     for d in grabar.iterdir():
         if d.is_dir():
             assert d.name in names, d.name
+
+
+def test_coauthors(tmp_path):
+    """A book's co-authors (the third field of
+    LIBRARY.tsv) come before its author: on the
+    Library, the book's page, its links up and the
+    status of translations."""
+    files = []
+
+    def add(name, text):
+        p = tmp_path / name
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text, encoding="utf-8")
+        files.append((name, 9, p))
+
+    d = "grabar/hov/1-tar/"
+    add(d + "01.txt", "Պատմութիւն · 1/2\n")
+    add(d + "02.txt", "Պատմութիւն · 2/2\n")
+    add("ashkharhabar/hov/1-tar/01.txt", "Պ · 1/2\n")
+    add("grabar/ann/1-a.txt", "Ա\n")
+    add("grabar/ann/2-b.txt", "Բ\n")
+    lib = tmp_path / "LIBRARY.tsv"
+    lib.write_text(
+        "zen\tԶենոբ\nhov\tՅովհան\n"
+        "hov/1-tar\tՏարօն\tzen\n"
+        "ann\tԱննա\nann/2-b\tԲ\tzen, hov\n",
+        "utf-8",
+    )
+    app = App(files, tmp_path / "s.json", library=lib)
+    zen = {"id": "zen", "name": "Զենոբ"}
+    hov = {"id": "hov", "name": "Յովհան"}
+    got = web.library(app)["authors"]
+    # a co-author with no folder is no author of
+    # its own on the Library
+    assert [a["name"] for a in got] == ["Յովհան", "Աննա"]
+    # all the books of Յովհան have Զենոբ: so has he
+    assert got[0]["with"] == [zen]
+    assert got[0]["books"][0]["with"] == [zen]
+    # one book of Աննա only: not the author
+    assert got[1]["with"] == []
+    assert [b["with"] for b in got[1]["books"]] == [
+        [],
+        [zen, hov],
+    ]
+    vol = web.volume(app, "grabar/hov/1-tar")
+    assert vol["authors"] == [zen, hov]
+    assert vol["up"][-1]["label"] == "Զենոբ · Յովհան"
+    # a translation too
+    vol = web.volume(app, "ashkharhabar/hov/1-tar")
+    assert vol["authors"] == [zen, hov]
+    assert web.status(app)[0]["name"] == (
+        "Զենոբ · Յովհան • Տարօն"
+    )
+    # a co-author with no name line, or of an author
+    for bad in (
+        "hov/1-tar\tՏ\tzen\n",
+        "zen\tԶ\nhov\tՅ\tzen\n",
+        "zen/x\tԶ\nhov/1-tar\tՏ\tzen/x\n",
+    ):
+        lib.write_text(bad, "utf-8")
+        with pytest.raises(ValueError):
+            web.read_library(lib)
 
 
 def test_library_last_authors():

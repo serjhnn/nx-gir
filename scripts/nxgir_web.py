@@ -545,43 +545,95 @@ def status(app):
             continue
         folder = name.rpartition("/")[0]
         key = folder[len(top) :]
-        who = key.partition("/")[0]
-        short = names.get(key) or m.group(1)
-        b = books.setdefault(
-            folder,
-            {
+        if folder not in books:
+            short = names.get(key) or m.group(1)
+            who = author_label(coauthors(app, key))
+            books[folder] = {
                 "title": m.group(1),
-                "name": names.get(who, who) + " • " + short,
+                "name": who + " • " + short,
                 "folder": folder,
                 "parts": int(m.group(3)),
                 "done": 0,
                 "first": "",
-            },
-        )
+            }
+        b = books[folder]
         if app.parallel(name):
             b["done"] += 1
             b["first"] = b["first"] or name
     return [b for b in books.values() if b["done"]]
 
 
-def read_names(path):
-    """LIBRARY.tsv as {path: name}, in its order;
-    lines starting with # are comments."""
-    names = {}
+def read_library(path):
+    """LIBRARY.tsv as ({path: name}, {book: [co-author
+    ids]}), names in its order; lines starting with #
+    are comments. A book's line may end with a third
+    field, its co-authors by commas, each with a
+    name line of its own (zenob-glak)."""
+    names, co = {}, {}
     if not path:
-        return names
+        return names, co
     with open(path, encoding="utf-8") as f:
         for n, line in enumerate(f, 1):
             line = line.rstrip("\n")
             if not line.strip() or line[0] == "#":
                 continue
-            key, tab, name = line.partition("\t")
+            key, tab, rest = line.partition("\t")
+            name, _, more = rest.partition("\t")
             if not tab or not key or not name.strip():
                 raise ValueError(
                     f"{path}:{n}: not path<TAB>name"
                 )
-            names[key.strip("/")] = name.strip()
-    return names
+            key = key.strip("/")
+            names[key] = name.strip()
+            ids = [
+                x.strip()
+                for x in more.split(",")
+                if x.strip()
+            ]
+            if ids and "/" not in key:
+                raise ValueError(
+                    f"{path}:{n}: co-authors of a book only"
+                )
+            if ids:
+                co[key] = ids
+    for key, ids in co.items():
+        for x in ids:
+            if x not in names or "/" in x:
+                raise ValueError(
+                    f"{path}: {key}: no name for {x!r}"
+                )
+    return names, co
+
+
+def read_names(path):
+    """LIBRARY.tsv as {path: name}, in its order
+    (read_library())."""
+    return read_library(path)[0]
+
+
+def coauthors(app, key):
+    """The co-authors of a book (<author>/<book>, or
+    a path below it) and its author, as [{id, name}]:
+    the co-authors first, as LIBRARY.tsv names them,
+    then the author. [] for a key with no author."""
+    names, co = read_library(app.library)
+    who = key.partition("/")[0]
+    if not who:
+        return []
+    parts = key.split("/")
+    ids = []
+    for i in range(2, len(parts) + 1):
+        ids = co.get("/".join(parts[:i]), ids)
+    return [
+        {"id": x, "name": names.get(x, x)}
+        for x in ids + [who]
+    ]
+
+
+def author_label(people):
+    """How a book's authors read in one line:
+    their names joined by " · "."""
+    return " · ".join(p["name"] for p in people)
 
 
 def library(app):
@@ -636,6 +688,22 @@ def library(app):
     for who in sorted(authors, key=place):
         a = authors[who]
         a["books"] = list(a["books"].values())
+        # co-authors (LIBRARY.tsv): a book's own, and
+        # the author's when all its books have them
+        common = None
+        for b in a["books"]:
+            b["with"] = coauthors(app, b["id"])[:-1]
+            ids = [c["id"] for c in b["with"]]
+            common = (
+                ids
+                if common is None
+                else [x for x in common if x in ids]
+            )
+        a["with"] = [
+            c
+            for c in a["books"][0]["with"]
+            if c["id"] in (common or [])
+        ]
         # a page of its own, as the Bible's
         a["page"] = flat_author(app, PARALLEL[0], who)
         out.append(a)
@@ -695,10 +763,11 @@ def up_links(app, folder):
     up = [{"label": "Գրադարան", "to": "#/library"}]
     if "/" not in key:
         return up
-    names = read_names(app.library)
     flat = flat_author(app, top, who)
     to = f"#/b/{top}/{who}" if flat else f"#/library/{who}"
-    up.append({"label": names.get(who, who), "to": to})
+    # a book's co-authors before its author
+    people = coauthors(app, key)
+    up.append({"label": author_label(people), "to": to})
     return up
 
 
@@ -767,6 +836,8 @@ def volume(app, folder):
         or folder.rpartition("/")[2],
         "title": book_name or names.get(key) or key,
         "up": up,
+        # its co-authors, then its author
+        "authors": coauthors(app, key),
         "total": len(rows),
         "done": sum(r["translated"] for r in rows),
         "groups": out,
@@ -1183,7 +1254,7 @@ def search_index(app):
                 for n in index.parts
             }
             parts = srch.parts(
-                index, first, read_names(app.library)
+                index, first, *read_library(app.library)
             )
             app.found = (index, parts)
         return app.found

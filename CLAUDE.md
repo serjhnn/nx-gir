@@ -136,6 +136,11 @@
   Շնորհալի (`nerses-shnorhali`), Շիրակացի
   (`anania-shirakatsi`), Աստվածաշունչ (`bible`): put a
   new author above them (a test checks it)
+  A book's line may end with its co-authors
+  (`zenob-glak`), each with a name line and no
+  folder: shown before the author everywhere
+  (`coauthors()` in `nxgir_web.py`,
+  `authorNames()` in `app.js`)
 - A book's page (`#/b/<folder>`, `/api/volume`,
   `volume()` in `nxgir_web.py`; on the site
   `data/volume/<folder>.json`): the parts of a book
