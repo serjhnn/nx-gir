@@ -4388,3 +4388,16 @@ body.home .search-wrap {
     transform: none;
   }
 }
+
+/* the orange progress line grows to its length */
+@media (prefers-reduced-motion: no-preference) {
+  .progress span {
+    transform-origin: left;
+    animation: progress-grow 0.7s ease-out 0.15s backwards;
+  }
+}
+@keyframes progress-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
