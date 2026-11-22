@@ -4312,6 +4312,15 @@ body.home .search-wrap {
   border-radius: 10px 10px 0 0;
   background: var(--hover);
 }
+/* the row and the icon button inside the card take
+   its inner corner, so their hover background does
+   not cover the curve of the border */
+.library .shelf li.open > .row {
+  border-radius: 9px 9px 0 0;
+}
+.library .shelf li.open > .book-info {
+  border-top-left-radius: 9px;
+}
 .library .shelf li.parts {
   display: block;
   margin: 0 0 1rem;
