@@ -4375,13 +4375,13 @@ body.home .search-wrap {
 /* a part opening: the text fades in and rises */
 @media (prefers-reduced-motion: no-preference) {
   .reader {
-    animation: part-open 0.4s ease-out;
+    animation: part-open 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
 }
 @keyframes part-open {
   from {
     opacity: 0;
-    transform: translateY(0.6rem);
+    transform: translateY(2rem);
   }
   to {
     opacity: 1;
