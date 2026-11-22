@@ -2033,17 +2033,9 @@ body.reading .bar {
   border-bottom: 1px solid var(--rule);
 }
 
-/* how much of the book is scrolled past, above
-   the reader's buttons */
-.tools .readbar {
-  display: flex;
-  flex-basis: 100%;
-  align-items: center;
-  gap: 0.5rem;
-}
-
 .tools .readwho {
-  flex-basis: 100%;
+  flex: 1 1 100%;
+  min-width: 0;
   overflow: hidden;
   font-size: 0.7rem;
   color: var(--muted);
@@ -2051,12 +2043,20 @@ body.reading .bar {
   text-overflow: ellipsis;
 }
 
+/* how much of the book is scrolled past: a thin
+   line on the bottom border of the top panel */
+.tools .readbar {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 3px;
+}
+
 .readbar .track {
-  flex: 1;
-  height: 4px;
-  overflow: hidden;
-  background: var(--surface);
-  border-radius: 999px;
+  display: block;
+  height: 100%;
+  background: transparent;
 }
 
 .readbar .track span {
@@ -2064,15 +2064,6 @@ body.reading .bar {
   width: 0;
   height: 100%;
   background: var(--accent);
-  border-radius: 999px;
-}
-
-.readbar .pct {
-  min-width: 3.2em;
-  font-size: 0.8rem;
-  color: var(--muted);
-  text-align: right;
-  font-variant-numeric: tabular-nums;
 }
 
 .actions {

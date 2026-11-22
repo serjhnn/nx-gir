@@ -4985,7 +4985,6 @@ function progress() {
   const pct = Math.round(all * 100);
   R.prog.firstChild.firstChild.style.width =
     pct + "%";
-  R.prog.lastChild.textContent = pct + "%";
   R.prog.setAttribute("aria-valuenow", pct);
 }
 
@@ -5436,8 +5435,7 @@ async function book(name, line, found) {
   R.prog = h("div", { class: "readbar",
     role: "progressbar", "aria-label": "Read",
     "aria-valuemin": "0", "aria-valuemax": "100" },
-  h("span", { class: "track" }, h("span")),
-  h("span", { class: "pct" }, "0%"));
+  h("span", { class: "track" }, h("span")));
   document.body.classList.add("reading");
   const pt = data.parts;
   // author and book, in small type above the bar
