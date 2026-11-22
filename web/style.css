@@ -4307,7 +4307,7 @@ body.home .search-wrap {
 /* the open book and its parts are one card, with
    an accent border and a soft shadow */
 .library .shelf li.open {
-  margin-top: 0.6rem;
+  margin: 0.6rem 0.4rem 0;
   border: 1px solid var(--accent);
   border-bottom: 0;
   border-radius: 10px 10px 0 0;
@@ -4316,7 +4316,7 @@ body.home .search-wrap {
 }
 .library .shelf li.parts {
   display: block;
-  margin: 0 0 1rem;
+  margin: 0 0.4rem 1rem;
   padding: 0 0.5rem 0.6rem;
   border: 1px solid var(--accent);
   border-top: 0;
