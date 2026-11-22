@@ -129,7 +129,7 @@
   side in the web reader (`PARALLEL` in
   `nxgir_web.py`); keep their lines one for one
 - `books/LIBRARY.tsv`: the Library page
-  (`#/library`, `/api/library`): author names and
+  (`/library`, `/api/library`): author names and
   short book names for `books/grabar/` (content; a
   test checks every path and author). Authors are
   shown in its order. **Always last, in this order:**
@@ -141,7 +141,7 @@
   folder: shown before the author everywhere
   (`coauthors()` in `nxgir_web.py`,
   `authorNames()` in `app.js`)
-- A book's page (`#/b/<folder>`, `/api/volume`,
+- A book's page (`/b/<folder>`, `/api/volume`,
   `volume()` in `nxgir_web.py`; on the site
   `data/volume/<folder>.json`): the parts of a book
   under `grabar/` or `ashkharhabar/` in order, with
@@ -152,7 +152,7 @@
   `app.js` lead there; `up`
   gives the links above it; the shelf's and the
   reader's breadcrumbs use the same names
-  (`shelf_crumbs()`), and an old `#/f/` link to a
+  (`shelf_crumbs()`), and an old `/f/` link to a
   book's folder redirects there. Keep `PAGED` in
   `app.js` equal to `PARALLEL`
 - `books/TRANSLATIONS.tsv`: our translations in
@@ -177,8 +177,8 @@
   tower or peak; lat and lon are the true place, and
   `project()` only gives a rough fallback. A post or a
   comic names its places on a `place:` line after the
-  title (`blog/README.md`). The Map page (`#/map`,
-  `#/map/<place>`, `mapPage()` in `app.js`; `/api/map`,
+  title (`blog/README.md`). The Map page (`/map`,
+  `/map/<place>`, `mapPage()` in `app.js`; `/api/map`,
   `map_data()` in `nxgir_web.py`; on the site
   `data/map.json`): pins on the picture, zoom and
   drag, a small panel over the map (`map-pop`, beside
@@ -190,14 +190,14 @@
   pins' position is set with `el.style`, never a style
   attribute (the CSP forbids it). A post page links
   its places (`placeChips()`). For search engines
-  `build-site.py` writes `map.<lang>.html` and a page
+  `build-site.py` writes `map/<lang>/` and a page
   for each place that a post names,
-  `map/<id>.<lang>.html` (`map_pages()`; the kind
+  `map/<id>/<lang>/` (`map_pages()`; the kind
   names are `KIND_NAMES` in `nxgir_map.py`). The
   README picture `docs/web-map.jpg` is made by
   `scripts/render-web.py`. How it works, the pitfalls
   and the to-do list: `notes/map.md` (read it first)
-- `blog/`: the Blog page (`#/blog`, `#/blog/<slug>`,
+- `blog/`: the Blog page (`/blog`, `/blog/<slug>`,
   `/api/blog`): one `YYYY-MM-DD-slug.LANG.md` per
   post and language (hy, en, ru; Armenian first),
   read by `scripts/nxgir_blog.py` (tested in
@@ -229,7 +229,7 @@
   path in `books/grabar/`, read by `read_books()`
   (`written` and `kind` in place of `years` and
   `role`)
-- `features/`: the Features page (`#/features`,
+- `features/`: the Features page (`/features`,
   `/api/features`): what the site can do, one
   `features.LANG.md` per language (drafts in
   `features/drafts/`), in the blog's format, read
@@ -237,7 +237,7 @@
   `tests/test_features.py`; see
   `features/README.md`); on the site as
   `data/features.json` and
-  `features.<lang>.html`. Add a feature there
+  `features/<lang>/`. Add a feature there
   with every new one on the site
 - `notes/`: working notes, e.g. what each part of a
   book covers (`notes/3-amaran-hator.md`,
@@ -263,7 +263,7 @@
   repository is to the limits of GitHub and of a
   phone (tested in `tests/test_limits.py`), shown by
   `scripts/check-limits.py` and on the Statistics
-  page (`#/stats`: `/api/stats`, and
+  page (`/stats`: `/api/stats`, and
   `data/stats.json` written by `build-site.py`
   with the site's size and build time; the git
   size there is the last in `notes/limits.tsv`). The
@@ -388,6 +388,21 @@
   reason. Add the book's Library name
   (`books/LIBRARY.tsv`), a Timeline line and a
   limits record in the same change
+- Routing: a page is a path (`/library`,
+  `/read/<book>?line=3`), opened with `pushState`
+  (`goTo()`, `hashNow()`, `setRoute()` in `app.js`;
+  the code still names a page `"#/library"`, and
+  `h()` turns an `href` of that form into the path
+  and marks it `data-r`, which one click handler
+  opens). `index.html` has `<base href="/">`, so files
+  are found from any path. An old `#/` link is
+  replaced by its path at start. `nxgir web` gives
+  `index.html` for a path that is no file (a browser
+  asking for a page). On the site, `build-site.py`
+  writes `<path>/index.html` for each page a search
+  engine should list (`route_page()`), and `404.html`
+  for the rest; a new page of that kind goes in
+  `searchable()`. Never write `location.hash`.
 - `web/`: the web pages (plain HTML, CSS, JS, no
   build step, nothing loaded from other sites); the
   60-character limit applies here too. `wordKey()`
@@ -398,12 +413,12 @@
   explains the fields), read by
   `scripts/nxgir_timeline.py` (tested in
   `tests/test_timeline.py`); shown on the Timeline
-  page (`#/timeline`) and, the newest three, in the
+  page (`/timeline`) and, the newest three, in the
   welcome. Add a line with every milestone, in
   English for now. `KINDS` must match `app.js` (a
   test checks it)
 - `scripts/nxgir_search.py`: search across the
-  library (`#/search`; the search box at the top of
+  library (`/search`; the search box at the top of
   every page but the reader, kept in view on
   scrolling: `searchBox()`, `searchPage()` in
   `app.js`; in the reader the word panel's button,
@@ -429,10 +444,12 @@
   web reader for GitHub Pages (`site/`, published by
   `.github/workflows/pages.yml`): the answers of the
   API as files, read by `app.js` when `static.js`
-  sets `NXGIR_STATIC`; for search engines, each
-  book also as plain HTML (`read/<book>.html`)
-  and each blog post (`blog/<slug>.<lang>.html`),
-  `sitemap.xml` and `robots.txt`; tested in
+  sets `NXGIR_STATIC`; for search engines, a page of
+  its own for each book (`read/<book>/`), author
+  (`library/<id>/`, named in Armenian, English and
+  Russian: `all_names()`), book (`b/<folder>/`) and
+  blog post (`blog/<slug>/<lang>/`), `sitemap.xml`
+  and `robots.txt`; tested in
   `tests/test_site.py`. `bucket()` and `BUCKETS` must
   match `app.js` (a test checks it). It also writes
   `nxgir-site.zip` only with `--zip` (not built now,
@@ -440,7 +457,7 @@
   the pages for search engines and the visit counter,
   with `scripts/offline/`: `serve.py` and `README.txt`;
   the Offline page shows it when `static.js` has
-  `NXGIR_DOWNLOAD`). The Offline page (`#/offline`,
+  `NXGIR_DOWNLOAD`). The Offline page (`/offline`,
   footer link `offlineLink()`, `offlinePage()` in
   `app.js`) offers the install and the saved copy. The
   site is also an installable app: `manifest.webmanifest`

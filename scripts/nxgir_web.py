@@ -1363,6 +1363,13 @@ def static_file(route, web_dir=WEB_DIR):
     return path if path.is_file() else None
 
 
+def page_request(accept):
+    """True when a browser asks for a page (Accept
+    has text/html): an address that is no file gets
+    index.html then, not 404."""
+    return "text/html" in (accept or "")
+
+
 def local_host(host):
     """True for a Host header naming this computer.
     Stops other sites reaching the server through a
@@ -1425,6 +1432,12 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(403, {"error": "not local"})
             return
         path = static_file(url.path, self.web_dir)
+        if path is None and page_request(
+            self.headers.get("Accept")
+        ):
+            # a page of the app (/library, /read/...):
+            # app.js reads the address
+            path = static_file("/", self.web_dir)
         if path is None:
             self.send(
                 404,

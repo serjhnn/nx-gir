@@ -204,8 +204,11 @@ def test_name_hits_in_app_js():
             ],
             ["yeghishe/1-v", "Վասն Վարդանայ", 1],
         ],
+        # a co-author, with no folder, of book 1
+        "with": {"1": [["zenob-glak", "Զենոբ Գլակ"]]},
     }
     names = {
+        "zenob-glak": {"en": "Zenob Glak"},
         "mkhitar-gosh": {
             "en": "Mkhitar Gosh",
             "ru": "Мхитар Гош",
@@ -220,6 +223,8 @@ def test_name_hits_in_app_js():
         "դատաստանագիրք ա",
         "վարդանա",
         "իշխան",
+        "glak",
+        "Գլակ",
     ]
     src = (
         js_function(js, "wordKey")
@@ -249,6 +254,9 @@ def test_name_hits_in_app_js():
         [[], ["mkhitar-gosh/1-a"]],
         [[], ["yeghishe/1-v"]],
         [[], []],
+        # a co-author is an author in the list too
+        [[["zenob-glak", "Zenob Glak"]], ["yeghishe/1-v"]],
+        [[["zenob-glak", None]], ["yeghishe/1-v"]],
     ]
 
 

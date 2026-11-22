@@ -32,10 +32,65 @@ function h(tag, attrs, ...kids) {
   for (const [k, v] of Object.entries(attrs || {})) {
     if (v == null) continue;
     if (k === "class") el.className = v;
-    else el.setAttribute(k, v);
+    else if (k === "href" && String(v).startsWith("#/")) {
+      setRoute(el, v);
+    } else el.setAttribute(k, v);
   }
   el.append(...kids.flat().filter((k) => k != null));
   return el;
+}
+
+// -- addresses --
+// A page is a path: /library, /read/<book>?line=3.
+// The code names a page as it did when the pages were
+// after a #: "#/library"; setRoute() turns that into
+// the path for a link, hashNow() gives the page shown
+// in that form, goTo() opens one without reloading.
+
+// the link of an <a> to a page: a path, opened by the
+// click handler below, not by the browser
+function setRoute(a, hash) {
+  a.setAttribute("href", hash.slice(1));
+  a.setAttribute("data-r", "");
+}
+
+// the page shown, as "#/library" (the root: "#/")
+function hashNow() {
+  const path = location.pathname.replace(/\/+$/, "");
+  return "#" + (path || "/") + location.search;
+}
+
+// open a page: "#/library" (or a path); replace: the
+// entry of history is replaced, not added to
+function goTo(to, replace) {
+  const url = to.replace(/^#/, "");
+  const now = location.pathname + location.search;
+  if (url === now) return;
+  if (replace) history.replaceState(null, "", url);
+  else history.pushState(null, "", url);
+  window.dispatchEvent(new Event("navigate"));
+}
+
+// back and forward
+window.addEventListener("popstate", () => {
+  window.dispatchEvent(new Event("navigate"));
+});
+
+// a link to a page: no reload
+document.addEventListener("click", (e) => {
+  const a = e.target.closest("a[data-r]");
+  if (!a || e.defaultPrevented || e.button
+    || e.metaKey || e.ctrlKey || e.shiftKey
+    || e.altKey || a.target) return;
+  e.preventDefault();
+  goTo(a.getAttribute("href"));
+});
+
+// an old link, nxgir.am/#/library: the same page as
+// a path
+if (location.hash.startsWith("#/")) {
+  history.replaceState(null, "",
+    location.hash.slice(1));
 }
 
 const SVG = "http://www.w3.org/2000/svg";
@@ -778,7 +833,7 @@ async function shelf(folder) {
   // an old link to a book's folder: its page
   const page = folderHref(folder);
   if (page.startsWith("#/b/")) {
-    location.replace(page);
+    goTo(page, true);
     return;
   }
   const q = encodeURIComponent(folder);
@@ -805,9 +860,11 @@ async function shelf(folder) {
     // at the top: the picture, the Library and the
     // other pages, what was read last, then the
     // welcome
+    folder ? null : devBanner(),
     folder ? null : topBanner(),
     folder ? null : menuBar(...MENU.map(menuLink)),
-    folder ? null : newsBanner(),
+    ...(folder ? [] : NEWS.slice(0, 2).map(
+      (a) => newsBanner(a))),
     folder ? null : joinBanner(),
     folder ? null : mapBanner(),
     last && last.items.length
@@ -886,7 +943,7 @@ function headerMenu() {
       more.focus();
     }
   });
-  window.addEventListener("hashchange",
+  window.addEventListener("navigate",
     () => open(false));
   topBar.append(more);
   bar.append(panel);
@@ -964,7 +1021,7 @@ async function tabClick(e) {
   if (!a || e.defaultPrevented) return;
   const key = a.dataset.tab;
   const now = tabFor(
-    location.hash.replace(/^#\/?/, ""));
+    hashNow().replace(/^#\/?/, ""));
   if (key === "continue") {
     e.preventDefault();
     if (now === "continue") return; // already reading
@@ -976,7 +1033,7 @@ async function tabClick(e) {
     } catch (err) {
       // the list of readings instead
     }
-    location.hash = to;
+    goTo(to);
   } else if (key === now) {
     if (window.scrollY > 4) {
       e.preventDefault();
@@ -985,7 +1042,7 @@ async function tabClick(e) {
   } else if (tabPlace[key]) {
     e.preventDefault();
     restoreY = tabPlace[key].y;
-    location.hash = "#/" + tabPlace[key].hash;
+    goTo("#/" + tabPlace[key].hash);
   }
 }
 
@@ -1028,7 +1085,7 @@ function tabBar() {
       more.focus();
     }
   });
-  window.addEventListener("hashchange",
+  window.addEventListener("navigate",
     () => open(false));
   document.body.append(sheet, bar);
   return bar;
@@ -1081,6 +1138,25 @@ function topBanner() {
       fetchpriority: "high" }),
     h("p", { class: "top-text", lang: "hy" },
       "… ժամանակ ժողովելոյ քարինս"));
+}
+
+// a note at the top of the top page: the site is
+// being built, with something new every day; it
+// opens the timeline; and the contact address
+function devBanner() {
+  return h("div", { class: "dev-banner",
+    role: "note", lang: "en" },
+  h("span", { class: "dev-dot", "aria-hidden": "true" }),
+  h("span", { class: "dev-text" },
+    h("a", { class: "dev-go", href: "#/timeline" },
+      h("b", {}, "Under active development"),
+      h("span", {}, "New features are added every"
+        + " day. Come back often to see what is"
+        + " new."),
+      h("span", { class: "dev-more" },
+        "See what is new on the timeline →")),
+    h("span", { class: "dev-mail" },
+      "Questions or ideas? Write to ", mail(), ".")));
 }
 
 // a narrow banner on the top page, with the
@@ -1665,7 +1741,7 @@ async function libraryPage(who) {
   const readList = h("ul", { class: "shelf" });
   for (const r of reading) {
     const row = libraryRow(r.b, r.by);
-    row.href = "#/read/" + enc(r.at);
+    setRoute(row, "#/read/" + enc(r.at));
     const meta = row.querySelector(".meta");
     const fill = h("span");
     fill.style.width = r.progress + "%";
@@ -2547,7 +2623,11 @@ function mapLink(s, lang) {
     h("span", { class: "ml-title" }, named(v.title))));
 }
 
-async function mapPage(want) {
+async function mapPage(path) {
+  // map/<place>, map/<lang>, map/<place>/<lang>
+  let [want, lg] = path.split("/");
+  if (want in BLOG) [want, lg] = ["", want];
+  if (lg in BLOG) setBlogLang(lg);
   const data = await api("map");
   const places = data.places;
   const by = new Map(places.map((p) => [p.id, p]));
@@ -2688,14 +2768,14 @@ async function mapPage(want) {
     };
     function closePop() {
       st.sel = "";
-      history.replaceState(history.state, "", "#/map");
+      history.replaceState(history.state, "", "/map");
       drawPop();
     }
     // move: bring the place to the middle of the view
     function pick(id, zoomIn, move) {
       st.sel = id;
       history.replaceState(history.state, "",
-        "#/map/" + id);
+        "/map/" + id);
       drawPop();
       if (move) center(zoomIn);
     }
@@ -3017,6 +3097,8 @@ function contributePage() {
 // face, a crop of the picture
 const SMBAT = "#/b/grabar/smbat-sparapet/";
 
+const ZENOB = "#/b/grabar/hovhan-mamikonean/";
+
 // the words of the page itself, by language
 const NEWS_UI = {
   hy: { home: "Գլխավոր", title: "Հայտարարություններ",
@@ -3026,6 +3108,120 @@ const NEWS_UI = {
 };
 
 const NEWS = [{
+  id: "zenob-glak",
+  date: "2026-11-22",
+  img: "zenob-glak.jpg",
+  face: "zenob-glak-face.jpg",
+  alt: "Zenob Glak, History of Taron, 4th century:"
+    + " a painted map of Taron among mountains,"
+    + " a castle on it, and a rider on a cliff",
+  title: "The History of Taron on the shelf",
+  lead: "The History of Taron (Պատմութիւն"
+    + " Տարաւնոյ) tells how a land in the heart of"
+    + " the Armenian Highland took a new faith and"
+    + " fought for it. Its first part is"
+    + " attributed to Zenob Glak (Զենոբ Գլակ), the"
+    + " second is by Hovhan Mamikonean. The whole"
+    + " book is now in the nxGir Library, in Grabar"
+    + " and in modern Armenian, side by side.",
+  banner: ["Զենոբ Գլակ",
+    "Տարոնի պատմությունը՝ IV դարից. գիրքը"
+    + " գրադարանում է"],
+  banner_en: ["Zenob Glak",
+    "The History of Taron, from the 4th century:"
+    + " the book is in the Library"],
+  sections: [
+    ["Who he was",
+      "By tradition Zenob was a disciple of"
+      + " Gregory the Illuminator, who came with him"
+      + " from Caesarea; some sources call him a"
+      + " Syrian. He was the first abbot of the"
+      + " monastery of Surb Karapet in Taron, which"
+      + " was called Glakavank after him."],
+    ["The first part",
+      "Sections Ա–Դ, 654 lines: at Gregory's"
+      + " command Zenob writes to the Syrian bishops"
+      + " how the new faith took hold in Taron. It"
+      + " holds the letters of Gregory and the"
+      + " bishops, and the two battles at Ardzan."],
+    ["Hovhan Mamikonean's part",
+      "Hovhan, a later abbot of Glak, carried the"
+      + " book on (sections Ե–ԺԱ): the abbots of"
+      + " Glak, and the wars of the Mamikonians of"
+      + " Taron against the Persians. Scholars doubt"
+      + " that Zenob wrote the first part himself,"
+      + " and date the whole book to the 7th to"
+      + " 10th centuries."],
+    ["Read it",
+      "The book, 1704 lines, is in the Library with"
+      + " every Grabar line beside its modern"
+      + " Armenian translation and every word open"
+      + " to look up. The translations are first"
+      + " drafts, made with AI: they wait for"
+      + " readers who know Grabar to check them."],
+  ],
+  links: [
+    ["Read the History of Taron", ZENOB
+      + "1-patmutiun-taronoy"],
+    ["Taron on the map", "#/map"],
+    ["Help review the translations",
+      "#/contribute"],
+  ],
+  ask: "Which other lands of the Highland have"
+    + " a story that is still unread?",
+  hy: {
+    alt: "Զենոբ Գլակ, Տարոնի պատմություն, IV դար․ "
+      + "Տարոնի նկարված քարտեզը լեռների մեջ, "
+      + "նրա վրա ամրոց, իսկ ժայռի վրա՝ ձիավոր",
+    title: "Տարոնի պատմությունը՝ գրադարանում",
+    lead: "«Տարոնի պատմությունը» (Պատմութիւն "
+      + "Տարաւնոյ) պատմում է, թե Հայկական "
+      + "բարձրավանդակի սրտում գտնվող երկիրն ինչպես "
+      + "ընդունեց նոր հավատը և պայքարեց դրա "
+      + "համար։ Առաջին մասը վերագրվում է Զենոբ "
+      + "Գլակին, երկրորդը Հովհան Մամիկոնյանինն է։ "
+      + "Ամբողջ գիրքն այժմ nxGir գրադարանում է՝ "
+      + "գրաբարով և աշխարհաբարով, կողք կողքի։",
+    sections: [
+      ["Ո՞վ էր նա",
+        "Ավանդաբար Զենոբը Գրիգոր Լուսավորչի "
+        + "աշակերտն էր և նրա հետ եկել էր Կեսարիայից․ "
+        + "որոշ աղբյուրներ նրան ասորի են համարում։ "
+        + "Նա Տարոնի Սուրբ Կարապետ վանքի առաջին "
+        + "առաջնորդն էր, և վանքը նրա անունով կոչվեց "
+        + "Գլակավանք։"],
+      ["Առաջին մասը",
+        "Ա–Դ հատվածները՝ 654 տող։ Գրիգորի "
+        + "հրամանով Զենոբը ասորի եպիսկոպոսներին "
+        + "գրում է, թե ինչպես նոր հավատը հաստատվեց "
+        + "Տարոնում։ Այստեղ են Գրիգորի և "
+        + "եպիսկոպոսների նամակները, ինչպես նաև "
+        + "Արծանի երկու ճակատամարտերը։"],
+      ["Հովհան Մամիկոնյանի մասը",
+        "Գլակի հետագա առաջնորդ Հովհանը շարունակեց "
+        + "գիրքը (Ե–ԺԱ հատվածներ)․ Գլակի "
+        + "առաջնորդները և Տարոնի Մամիկոնյանների "
+        + "պատերազմները պարսիկների դեմ։ Գիտնականները "
+        + "կասկածում են, թե առաջին մասը Զենոբն է "
+        + "գրել, և ամբողջ գիրքը թվագրում են "
+        + "VII–X դարերով։"],
+      ["Կարդացե՛ք",
+        "Գիրքը՝ 1704 տող, գրադարանում է․ "
+        + "գրաբարի յուրաքանչյուր տողի կողքին՝ "
+        + "աշխարհաբար թարգմանությունը, և "
+        + "յուրաքանչյուր բառ կարելի է որոնել։ "
+        + "Թարգմանությունները նախնական "
+        + "տարբերակներ են՝ պատրաստված արհեստական "
+        + "բանականությամբ, և սպասում են գրաբար "
+        + "իմացող ընթերցողների ստուգմանը։"],
+    ],
+    links: ["Կարդալ Տարոնի պատմությունը",
+      "Տարոնը քարտեզի վրա",
+      "Օգնել թարգմանությունների ստուգմանը"],
+    ask: "Բարձրավանդակի էլ ո՞ր երկրների "
+      + "պատմությունն է դեռ սպասում ընթերցողին։",
+  },
+}, {
   id: "smbat-sparapet",
   date: "2026-11-16",
   img: "smbat-sparapet.jpg",
@@ -4117,8 +4313,8 @@ function markAt(i) {
 
 // the address of the line of word i, to share
 function lineLink(i) {
-  return location.origin + location.pathname +
-    "#/read/" + enc(R.name) +
+  return location.origin +
+    "/read/" + enc(R.name) +
     "?line=" + (R.wpos[i][0] + 1);
 }
 
@@ -4243,7 +4439,7 @@ function reportError() {
       + " account, send it by email."),
     h("div", { class: "actions" }, send, mail,
       cancel));
-  reveal(R.spans[at]);
+  reveal(spanOf(at));
   fix.focus({ preventScroll: true });
 }
 
@@ -4300,10 +4496,12 @@ async function drawWord() {
 function mark(on) {
   // only the words of the page in the page
   for (const i of R.refs) {
-    R.spans[i]?.classList.toggle("ref", on);
+    (on ? spanOf(i) : R.spans[i])
+      ?.classList.toggle("ref", on);
   }
   if (R.sel >= 0) {
-    R.spans[R.sel]?.classList.toggle("sel", on);
+    (on ? spanOf(R.sel) : R.spans[R.sel])
+      ?.classList.toggle("sel", on);
   }
 }
 
@@ -4328,7 +4526,7 @@ function sentence(on, i) {
   if (!on) return;
   lit = sentenceOf(i);
   for (let j = lit[0]; j < lit[1]; j++) {
-    R.spans[j]?.classList.add("sent");
+    spanOf(j)?.classList.add("sent");
   }
 }
 
@@ -4372,7 +4570,7 @@ function choose(i) {
   ensure(i);
   R.sel = i;
   mark(true);
-  drawWord().then(() => reveal(R.spans[i]));
+  drawWord().then(() => reveal(spanOf(i)));
 }
 
 function step(d) {
@@ -4385,7 +4583,7 @@ function step(d) {
 // scroll to word i and make it blink once
 function go(i) {
   ensure(i);
-  const s = R.spans[i];
+  const s = spanOf(i);
   if (!s) return;
   if (sheet()) closePanel();
   const top = s.getBoundingClientRect().top;
@@ -4404,10 +4602,10 @@ function decorate() {
     s.classList.remove("bm", "noted");
   }
   for (const m of R.marks) {
-    R.spans[m.at]?.classList.add("bm");
+    spanOf(m.at)?.classList.add("bm");
   }
   for (const n of R.notes) {
-    R.spans[n.at]?.classList.add("noted");
+    spanOf(n.at)?.classList.add("noted");
   }
   // on a phone the names hide, the counts stay
   const count = (sign, name, n) => [sign + " ",
@@ -4612,9 +4810,8 @@ function setView(change) {
     return;
   }
   // keep the word at the top of the screen there
-  const i = R.spans[R.lo] ? topWord() : -1;
-  const before = i >= 0
-    ? R.spans[i].getBoundingClientRect().top : 0;
+  const i = R.ready && R.hi > R.lo ? topWord() : -1;
+  const before = i >= 0 ? wordRect(i).top : 0;
   Object.assign(view, change);
   try {
     localStorage.setItem("nxgir-view",
@@ -4634,8 +4831,8 @@ function setView(change) {
     showPage(pageOfWord(Math.max(i, 0)), false);
   }
   if (i >= 0) {
-    const after = R.spans[i].getBoundingClientRect().top;
-    window.scrollBy(0, after - before);
+    const r = wordRect(i);
+    if (r) window.scrollBy(0, r.top - before);
   }
   decorate();
 }
@@ -4928,7 +5125,7 @@ function editNote(i) {
       "«" + (words.length > 120
         ? words.slice(0, 119) + "…" : words) + "»"),
     box, h("div", { class: "actions" }, save, cancel));
-  reveal(R.spans[at]);
+  reveal(spanOf(at));
   box.focus({ preventScroll: true });
 }
 
@@ -4942,7 +5139,7 @@ function topWord() {
   let hi = Math.max(lo, R.hi - 1);
   while (lo < hi) {
     const mid = (lo + hi) >> 1;
-    const r = R.spans[mid].getBoundingClientRect();
+    const r = wordRect(mid);
     if (r.bottom > edge) hi = mid;
     else lo = mid + 1;
   }
@@ -5003,7 +5200,7 @@ function lastWord() {
   let hi = Math.max(lo, R.hi - 1);
   while (lo < hi) {
     const mid = (lo + hi + 1) >> 1;
-    const r = R.spans[mid].getBoundingClientRect();
+    const r = wordRect(mid);
     if (r.top < edge) lo = mid;
     else hi = mid - 1;
   }
@@ -5263,34 +5460,18 @@ function showPage(k, fresh) {
     frag.append(trCredit(R.credit, false));
   }
   frag.append(pager("top") || "");
-  let at = R.lo;
   for (let line = a; line < b; line++) {
     const parts = R.src[line];
     const p = document.createElement("p");
     const f = R.format[line];
     if (f && f.h) p.className = "md-h md-h" + f.h;
     if (f && f.q) p.classList.add("md-q");
+    p.dataset.l = line;
     p.style.setProperty("--rows",
       rows(parts.join("").length));
-    const spans = f ? f.spans : [];
-    let chars = 0; // characters before this part
-    parts.forEach((t, j) => {
-      const nodes = styled(t, chars, spans);
-      chars += Array.from(t).length;
-      if (j % 2 === 0) {
-        if (t) p.append(...nodes);
-        return;
-      }
-      if (j > 1 && R.startSet.has(at)) {
-        p.append(cut());
-      }
-      const s = document.createElement("span");
-      s.className = "w";
-      s.dataset.i = at;
-      s.append(...nodes);
-      R.spans[at++] = s;
-      p.append(s);
-    });
+    // plain text, unless the line has bold or italic
+    if (f && f.spans.length) fillLine(p, line);
+    else plainLine(p, line);
     frag.append(p);
     R.lineEls[line] = p;
   }
@@ -5307,6 +5488,102 @@ function showPage(k, fresh) {
   if (fresh) return;
   decorate();
   mark(true);
+}
+
+// A line as plain text, with no element for each
+// word: about half the nodes of a page, so a page
+// turn is quicker on a slow device. The words are
+// made when one is needed (expandLine): a tap, a
+// mark, a note, a jump to a word.
+function plainLine(p, line) {
+  let at = R.first[line];
+  let text = "";
+  R.src[line].forEach((t, j) => {
+    if (j % 2) {
+      if (j > 1 && R.startSet.has(at)) {
+        if (text) p.append(text);
+        p.append(cut());
+        text = "";
+      }
+      at++;
+    }
+    text += t;
+  });
+  if (text) p.append(text);
+  p.classList.add("pl");
+}
+
+// The line with an element for each word: R.spans
+function fillLine(p, line) {
+  const f = R.format[line];
+  const spans = f ? f.spans : [];
+  let at = R.first[line];
+  let chars = 0; // characters before this part
+  R.src[line].forEach((t, j) => {
+    const nodes = styled(t, chars, spans);
+    chars += Array.from(t).length;
+    if (j % 2 === 0) {
+      if (t) p.append(...nodes);
+      return;
+    }
+    if (j > 1 && R.startSet.has(at)) {
+      p.append(cut());
+    }
+    const s = document.createElement("span");
+    s.className = "w";
+    s.dataset.i = at;
+    s.append(...nodes);
+    R.spans[at++] = s;
+    p.append(s);
+  });
+}
+
+// a plain line of the page becomes its words; the
+// text and its place stay the same
+function expandLine(line) {
+  const p = R.lineEls[line];
+  if (!p || !p.classList.contains("pl")) return;
+  p.classList.remove("pl");
+  p.replaceChildren();
+  fillLine(p, line);
+}
+
+// the element of word i (of the page), made if the
+// line is still plain
+function spanOf(i) {
+  if (!R.spans[i] && i >= R.lo && i < R.hi) {
+    expandLine(R.wpos[i][0]);
+  }
+  return R.spans[i];
+}
+
+// where word i is on the screen, without making
+// its element: the range of its letters in a plain
+// line; null when it is not on the page
+function wordRect(i) {
+  const s = R.spans[i];
+  if (s) return s.getBoundingClientRect();
+  if (i < R.lo || i >= R.hi) return null;
+  const [line, k] = R.wpos[i];
+  const p = R.lineEls[line];
+  const parts = R.src[line];
+  let from = 0;
+  for (let j = 0; j < 2 * k + 1; j++) {
+    from += parts[j].length;
+  }
+  const to = from + parts[2 * k + 1].length;
+  let base = 0;
+  for (const n of p.childNodes) {
+    if (n.nodeType !== 3) continue;
+    if (from < base + n.length) {
+      const r = document.createRange();
+      r.setStart(n, from - base);
+      r.setEnd(n, Math.min(to, base + n.length) - base);
+      return r.getBoundingClientRect();
+    }
+    base += n.length;
+  }
+  return p.getBoundingClientRect();
 }
 
 // Rows a paragraph of n characters takes, for the
@@ -5494,7 +5771,17 @@ async function book(name, line, found) {
     : Math.max(0, data.at || 0);
   showPage(pageOfWord(first), true);
   text.addEventListener("click", (e) => {
-    const s = e.target.closest(".w");
+    let s = e.target.closest(".w");
+    const p = !s && e.target.closest("p.pl");
+    if (p && text.contains(p) && e.detail > 0) {
+      // a plain line: make its words, then see which
+      // one is under the finger
+      const sel = document.getSelection();
+      if (sel && !sel.isCollapsed) return;
+      expandLine(Number(p.dataset.l));
+      s = document.elementFromPoint(e.clientX,
+        e.clientY)?.closest(".w");
+    }
     if (!s) return;
     const i = Number(s.dataset.i);
     if (i === R.sel) closePanel();
@@ -5550,10 +5837,9 @@ async function book(name, line, found) {
     mark(true);
   } else if (want >= 0) {
     go(wordOfLine(want));
-  } else if (data.at > 0 && R.spans[data.at]) {
+  } else if (data.at > 0 && wordRect(data.at)) {
     // the first word: stay at the top, title shown
-    const top = R.spans[data.at]
-      .getBoundingClientRect().top + window.scrollY;
+    const top = wordRect(data.at).top + window.scrollY;
     window.scrollTo(0, top - bar() - 16);
   }
   stick();
@@ -5719,7 +6005,7 @@ async function newText(lang) {
       const r = await send("new", { lang,
         file: file.value.trim(), text: box.value });
       E.dirty = false;
-      location.hash = "#/read/" + enc(r.name);
+      goTo("#/read/" + enc(r.name));
     } catch (e) {
       msg.className = "status error";
       msg.textContent = "Not saved: " + e.message;
@@ -5822,7 +6108,7 @@ function searchBox(value) {
     const q = input.value.trim();
     if (!q) return;
     input.blur();
-    location.hash = searchHref(q);
+    goTo(searchHref(q));
   });
   const wrap = h("div", { class: "search-wrap" }, form);
   stickBelow(wrap);
@@ -6180,6 +6466,22 @@ function nameHits(q, parts, names) {
   const coFits = ([id, name]) => fits(name)
     || Object.values(names[id] || {}).some(fits);
   const co = parts.with || {};
+  // a co-author has no folder: a row of its own, to
+  // its first book (bi), with the books it is in
+  const seen = new Set(authors.map((a) => a.id));
+  for (const [bi, list] of Object.entries(co)) {
+    for (const c of list) {
+      if (seen.has(c[0]) || !coFits(c)) continue;
+      seen.add(c[0]);
+      const also = Object.entries(names[c[0]] || {})
+        .find(([l, n]) => l !== "hy" && fits(n));
+      authors.push({ id: c[0], name: c[1],
+        bi: Number(bi), co: true,
+        also: also && !fits(c[1]) ? also[1] : "",
+        n: Object.values(co).filter((l) =>
+          l.some((x) => x[0] === c[0])).length });
+    }
+  }
   const books = parts.books
     .map(([key, name, ai], i) => ({ key, name, ai,
       co: co[i] || [] }))
@@ -6196,13 +6498,16 @@ function nameList(q, parts, names) {
     .filter((b) => b[2] === ai).length;
   const list = h("ul", { class: "shelf s-names" });
   for (const a of authors) {
+    const to = a.co ? bookHref(parts.books[a.bi][0])
+      : "#/library/" + enc(a.id);
     list.append(h("li", {}, h("a", { class: "row",
-      href: "#/library/" + enc(a.id) },
+      href: to },
     icon(ICONS.person, "ico"),
     h("span", { class: "name" }, a.name,
       a.also ? h("span", { class: "by" }, a.also)
         : null),
-    h("span", { class: "meta" }, n(a.i) + " գիրք")),
+    h("span", { class: "meta" },
+      (a.co ? a.n : n(a.i)) + " գիրք")),
     authorInfoBtn(a.id, a.name)));
   }
   const rows = books.map((b) => h("li", {},
@@ -6252,11 +6557,11 @@ async function searchPage(query) {
   // the first search of `nxgir web` waits for its
   // index
   say("Որոնվում է…");
-  const at = location.hash;
+  const at = hashNow();
   const [parts, f, about] = await Promise.all([
     partsOf(), findLines(q), authorsAbout()]);
   // gone to another page meanwhile
-  if (location.hash !== at) return;
+  if (hashNow() !== at) return;
   // how many parts each book has, for "մաս n"
   for (const b of parts.books) b[3] = 0;
   const seen = new Set();
@@ -6341,7 +6646,7 @@ async function searchPage(query) {
   // that back from the reader finds it the same
   const draw = () => {
     history.replaceState(history.state, "",
-      searchHref(q, where, open));
+      searchHref(q, where, open).slice(1));
     remember();
     if (all) {
       all.textContent = open.size >= g.authors.length
@@ -6431,7 +6736,7 @@ document.addEventListener("selectionchange", () => {
       return;
     }
     const q = words.join(" ");
-    selSearch.href = searchHref(q);
+    setRoute(selSearch, searchHref(q));
     selSearch.replaceChildren(icon(ICONS.search),
       h("span", {}, "Որոնել գրադարանում՝ ",
         h("b", {}, q)));
@@ -6441,7 +6746,7 @@ document.addEventListener("selectionchange", () => {
 selSearch.addEventListener("click", () => {
   selSearch.hidden = true;
 });
-window.addEventListener("hashchange", () => {
+window.addEventListener("navigate", () => {
   selSearch.hidden = true;
 });
 
@@ -6510,17 +6815,17 @@ async function route() {
     E.back = false;
     return;
   }
-  if (E.hash && location.hash !== E.hash) {
+  if (E.hash && hashNow() !== E.hash) {
     if (!leaveOk()) {
       E.back = true;
-      location.hash = E.hash;
+      goTo(E.hash);
       return;
     }
   }
   E.dirty = false;
   E.save = null;
   E.hash = "";
-  const hash = location.hash.replace(/^#\/?/, "");
+  const hash = hashNow().replace(/^#\/?/, "");
   markTab(hash);
   if (shownHash !== null) {
     rememberTab(shownHash, window.scrollY);
@@ -6549,10 +6854,10 @@ async function route() {
       await book(name, line, foundOf(p.get("q"),
         Number(p.get("r")), name, line));
     } else if (hash.startsWith("edit/")) {
-      E.hash = location.hash;
+      E.hash = hashNow();
       await edit(decodeURIComponent(hash.slice(5)));
     } else if (hash.startsWith("new/")) {
-      E.hash = location.hash;
+      E.hash = hashNow();
       await newText(hash.slice(4));
     } else if (hash === "search"
       || hash.startsWith("search?")) {
@@ -6620,7 +6925,7 @@ let placeTimer = 0;
 window.addEventListener("scroll", () => {
   clearTimeout(placeTimer);
   placeTimer = setTimeout(() => {
-    const hash = location.hash.replace(/^#\/?/, "");
+    const hash = hashNow().replace(/^#\/?/, "");
     if (reading(hash)) return;
     history.replaceState(
       { ...(history.state || {}), y: window.scrollY },
@@ -6636,7 +6941,7 @@ function backToPlace(hash) {
   if (!reading(hash) && y) window.scrollTo(0, y);
 }
 
-window.addEventListener("hashchange", route);
+window.addEventListener("navigate", route);
 drawTheme();
 drawView();
 route();

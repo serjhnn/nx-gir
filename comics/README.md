@@ -1,7 +1,7 @@
 # The nx-gir comics
 
-Series for the Comics page (`#/comics`,
-`#/comics/<slug>`, `/api/comics`), read by
+Series for the Comics page (`/comics`,
+`/comics/<slug>`, `/api/comics`), read by
 `scripts/nxgir_comics.py`. Content, not code.
 
 - The format is the blog's (`blog/README.md`): one
