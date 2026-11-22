@@ -1973,6 +1973,13 @@ body.reading .bar {
   cursor: pointer;
 }
 
+/* no blue flash on a tap anywhere in the text (the
+   lines, not only the words) */
+.text,
+.text * {
+  -webkit-tap-highlight-color: transparent;
+}
+
 .w:hover {
   color: var(--accent-ink);
 }
