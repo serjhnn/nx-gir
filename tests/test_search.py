@@ -129,6 +129,11 @@ def test_parts_in_library_order():
         ["grabar/abc/one.txt", 1, 1],
         ["ashkharhabar/zed/b/01.txt", 0, 1],
     ]
+    # a book's co-authors (LIBRARY.tsv), so that their
+    # names find it
+    names["ann"] = "Աննա"
+    got = srch.parts(idx, first, names, {"zed/b": ["ann"]})
+    assert got["with"] == {"0": [["ann", "Աննա"]]}
 
 
 def js_function(js, name):
@@ -307,6 +312,7 @@ def test_api_search_parts(app):
         ],
         "books": [["smbat/b", "Տարեգիրք", 0]],
         "authors": [["smbat", "Սմբատ"]],
+        "with": {},
     }
 
 

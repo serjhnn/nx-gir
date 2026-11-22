@@ -1130,13 +1130,18 @@ async function bookPage(folder) {
   });
   // back up one level, as the Library's ← Home
   const up = data.up[data.up.length - 1];
-  // the author under the title, when written about
-  const by = h("p", { class: "by", hidden: "" },
-    up.label);
+  // the author under the title, when written
+  // about; co-authors (LIBRARY.tsv) before it
+  const people = data.authors || [];
+  const by = h("p", { class: "by", hidden: "" });
   const own = folder.split("/").length === 2;
-  if (!own) {
-    by.append(authorInfoBtn(folder.split("/")[1],
-      up.label, by));
+  if (!own && people.length > 1) {
+    by.classList.add("co-names");
+    by.append(...authorNames(people, by));
+    watchNames(by);
+  } else if (!own) {
+    by.append(up.label, authorInfoBtn(
+      folder.split("/")[1], up.label, by));
   }
   show(
     h("p", { class: "crumbs" },
@@ -1237,6 +1242,60 @@ async function toggleStar(name) {
 // one book of #/library: its short name, how many
 // parts and how much is translated; by: its
 // author, in the starred list
+// a book's authors in one line: its co-authors
+// first (LIBRARY.tsv), then its author
+function byLine(co, name) {
+  return (co || []).map((c) => c.name)
+    .concat([name]).join(" · ");
+}
+
+// the names of authors [{id, name}] as elements,
+// each with its scroll button; show is shown with
+// the first known. When they do not fit on one
+// line, the last goes on its own, smaller
+// (fitNames()).
+function authorNames(people, show) {
+  const out = [];
+  people.forEach((p, i) => {
+    if (i) {
+      out.push(h("span", { class: "co-sep" },
+        " · "));
+    }
+    const last = i > 0 && i === people.length - 1;
+    out.push(h("span", { class: last
+      ? "co-name co-last" : "co-name" }, p.name,
+    authorInfoBtn(p.id, p.name, show)));
+  });
+  return out;
+}
+
+// el holds authorNames(): "wrapped" when its
+// names do not fit on one line
+const namesFit = typeof ResizeObserver === "undefined"
+  ? null : new ResizeObserver((all) => {
+    for (const e of all) fitNames(e.target);
+  });
+function fitNames(el) {
+  if (!el.isConnected) {
+    if (namesFit) namesFit.unobserve(el);
+    return;
+  }
+  const names = el.querySelectorAll(".co-name");
+  if (names.length < 2) return;
+  el.classList.remove("wrapped");
+  const first = names[0].getBoundingClientRect();
+  const last = names[names.length - 1]
+    .getBoundingClientRect();
+  if (last.top >= first.bottom - 1) {
+    el.classList.add("wrapped");
+  }
+}
+function watchNames(el) {
+  if (namesFit) namesFit.observe(el);
+  else requestAnimationFrame(() => fitNames(el));
+  return el;
+}
+
 function libraryRow(b, by) {
   const meta = h("span", { class: "meta" });
   if (b.parts > 1) meta.append(b.parts + " մաս");
@@ -1294,7 +1353,8 @@ async function libraryPage(who) {
   const books = new Map();
   for (const a of data.authors) {
     for (const b of a.books) {
-      books.set(b.first, { b, by: a.name });
+      books.set(b.first,
+        { b, by: byLine(b.with, a.name) });
     }
   }
   let buttons = [];
@@ -1322,21 +1382,33 @@ async function libraryPage(who) {
   const groups = data.authors.map((a) => {
     const id = a.folder.split("/").pop();
     const list = h("ul", { class: "shelf" });
+    // co-authors of all its books go in the
+    // heading, others under a book's name
+    const co = a.with || [];
+    const shared = new Set(co.map((c) => c.id));
     const rows = a.books.map((b) => {
-      const li = bookItem(b, libraryRow(b),
-        starBtn(b));
+      const own = (b.with || []).filter(
+        (c) => !shared.has(c.id));
+      const li = bookItem(b, libraryRow(b,
+        own.length ? byLine(own, a.name) : null),
+      starBtn(b));
       list.append(li);
-      return { el: li, names: [b.name, b.title] };
+      return { el: li, names: [b.name, b.title,
+        ...own.map((c) => c.name)] };
     });
     // an author whose books are grouped (the Bible)
     // has a page of its own (flat_author())
     const page = a.page;
-    const head = h("h2", {}, page
-      ? h("a", { href: "#/b/" + enc(a.folder) },
-        a.name)
-      : a.name, authorInfoBtn(id, a.name));
-    finds.push({ el: head, id, names: [a.name] },
-      ...rows);
+    const head = co.length
+      ? watchNames(h("h2", { class: "co-names" },
+        ...authorNames(co.concat([{ id,
+          name: a.name }]))))
+      : h("h2", {}, page
+        ? h("a", { href: "#/b/" + enc(a.folder) },
+          a.name)
+        : a.name, authorInfoBtn(id, a.name));
+    finds.push({ el: head, id, names: [a.name,
+      ...co.map((c) => c.name)] }, ...rows);
     return h("section", { class: "author",
       id: "author-" + id }, head, list);
   });
@@ -5835,9 +5907,14 @@ function nameHits(q, parts, names) {
       authors.push({ id, name, i, also: other[1] });
     }
   });
+  // a book also by its co-authors' names
+  const coFits = ([id, name]) => fits(name)
+    || Object.values(names[id] || {}).some(fits);
+  const co = parts.with || {};
   const books = parts.books
-    .map(([key, name, ai]) => ({ key, name, ai }))
-    .filter((b) => fits(b.name));
+    .map(([key, name, ai], i) => ({ key, name, ai,
+      co: co[i] || [] }))
+    .filter((b) => fits(b.name) || b.co.some(coFits));
   return { authors, books };
 }
 
@@ -5864,7 +5941,8 @@ function nameList(q, parts, names) {
       icon(ICONS.book, "ico"),
       h("span", { class: "name" }, b.name,
         h("span", { class: "by" },
-          parts.authors[b.ai][1])))));
+          b.co.map((c) => c[1]).concat(
+            [parts.authors[b.ai][1]]).join(" · "))))));
   // a common title (Պատմութիւն Հայոց): the first
   // few, and a button for the rest
   const FEW = 5;

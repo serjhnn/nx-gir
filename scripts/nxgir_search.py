@@ -188,7 +188,7 @@ def part_place(name, first):
     return rest, 1
 
 
-def parts(index, first_lines, names):
+def parts(index, first_lines, names, co=None):
     """The parts of the index and their books and
     authors, for the results: {"parts": [[name, book,
     n]], "books": [[key, name, author]], "authors":
@@ -196,7 +196,10 @@ def parts(index, first_lines, names):
     number in their list. Authors and books are in
     the order of LIBRARY.tsv (names, {path: name}),
     then the others by name. first_lines: {part
-    name: its first line}."""
+    name: its first line}. co: {book: [co-author
+    ids]} (LIBRARY.tsv), given as "with": {book
+    number: [[id, name]]}."""
+    co = co or {}
     order = {k: i for i, k in enumerate(names)}
     places = {}
     titles = {}
@@ -240,5 +243,13 @@ def parts(index, first_lines, names):
             ]
             for b in books
         ],
+        # co-authors by book number
+        "with": {
+            str(b_num[b]): [
+                [x, names.get(x, x)] for x in co[b]
+            ]
+            for b in books
+            if b in co
+        },
         "authors": [[a, names.get(a, a)] for a in authors],
     }
