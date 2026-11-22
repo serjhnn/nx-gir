@@ -4237,7 +4237,7 @@ function reportError() {
       + " account, send it by email."),
     h("div", { class: "actions" }, send, mail,
       cancel));
-  reveal(R.spans[at]);
+  reveal(spanOf(at));
   fix.focus({ preventScroll: true });
 }
 
@@ -4294,10 +4294,12 @@ async function drawWord() {
 function mark(on) {
   // only the words of the page in the page
   for (const i of R.refs) {
-    R.spans[i]?.classList.toggle("ref", on);
+    (on ? spanOf(i) : R.spans[i])
+      ?.classList.toggle("ref", on);
   }
   if (R.sel >= 0) {
-    R.spans[R.sel]?.classList.toggle("sel", on);
+    (on ? spanOf(R.sel) : R.spans[R.sel])
+      ?.classList.toggle("sel", on);
   }
 }
 
@@ -4322,7 +4324,7 @@ function sentence(on, i) {
   if (!on) return;
   lit = sentenceOf(i);
   for (let j = lit[0]; j < lit[1]; j++) {
-    R.spans[j]?.classList.add("sent");
+    spanOf(j)?.classList.add("sent");
   }
 }
 
@@ -4366,7 +4368,7 @@ function choose(i) {
   ensure(i);
   R.sel = i;
   mark(true);
-  drawWord().then(() => reveal(R.spans[i]));
+  drawWord().then(() => reveal(spanOf(i)));
 }
 
 function step(d) {
@@ -4379,7 +4381,7 @@ function step(d) {
 // scroll to word i and make it blink once
 function go(i) {
   ensure(i);
-  const s = R.spans[i];
+  const s = spanOf(i);
   if (!s) return;
   if (sheet()) closePanel();
   const top = s.getBoundingClientRect().top;
@@ -4398,10 +4400,10 @@ function decorate() {
     s.classList.remove("bm", "noted");
   }
   for (const m of R.marks) {
-    R.spans[m.at]?.classList.add("bm");
+    spanOf(m.at)?.classList.add("bm");
   }
   for (const n of R.notes) {
-    R.spans[n.at]?.classList.add("noted");
+    spanOf(n.at)?.classList.add("noted");
   }
   // on a phone the names hide, the counts stay
   const count = (sign, name, n) => [sign + " ",
@@ -4606,9 +4608,8 @@ function setView(change) {
     return;
   }
   // keep the word at the top of the screen there
-  const i = R.spans[R.lo] ? topWord() : -1;
-  const before = i >= 0
-    ? R.spans[i].getBoundingClientRect().top : 0;
+  const i = R.ready && R.hi > R.lo ? topWord() : -1;
+  const before = i >= 0 ? wordRect(i).top : 0;
   Object.assign(view, change);
   try {
     localStorage.setItem("nxgir-view",
@@ -4628,8 +4629,8 @@ function setView(change) {
     showPage(pageOfWord(Math.max(i, 0)), false);
   }
   if (i >= 0) {
-    const after = R.spans[i].getBoundingClientRect().top;
-    window.scrollBy(0, after - before);
+    const r = wordRect(i);
+    if (r) window.scrollBy(0, r.top - before);
   }
   decorate();
 }
@@ -4922,7 +4923,7 @@ function editNote(i) {
       "«" + (words.length > 120
         ? words.slice(0, 119) + "…" : words) + "»"),
     box, h("div", { class: "actions" }, save, cancel));
-  reveal(R.spans[at]);
+  reveal(spanOf(at));
   box.focus({ preventScroll: true });
 }
 
@@ -4936,7 +4937,7 @@ function topWord() {
   let hi = Math.max(lo, R.hi - 1);
   while (lo < hi) {
     const mid = (lo + hi) >> 1;
-    const r = R.spans[mid].getBoundingClientRect();
+    const r = wordRect(mid);
     if (r.bottom > edge) hi = mid;
     else lo = mid + 1;
   }
@@ -4997,7 +4998,7 @@ function lastWord() {
   let hi = Math.max(lo, R.hi - 1);
   while (lo < hi) {
     const mid = (lo + hi + 1) >> 1;
-    const r = R.spans[mid].getBoundingClientRect();
+    const r = wordRect(mid);
     if (r.top < edge) lo = mid;
     else hi = mid - 1;
   }
@@ -5257,34 +5258,18 @@ function showPage(k, fresh) {
     frag.append(trCredit(R.credit, false));
   }
   frag.append(pager("top") || "");
-  let at = R.lo;
   for (let line = a; line < b; line++) {
     const parts = R.src[line];
     const p = document.createElement("p");
     const f = R.format[line];
     if (f && f.h) p.className = "md-h md-h" + f.h;
     if (f && f.q) p.classList.add("md-q");
+    p.dataset.l = line;
     p.style.setProperty("--rows",
       rows(parts.join("").length));
-    const spans = f ? f.spans : [];
-    let chars = 0; // characters before this part
-    parts.forEach((t, j) => {
-      const nodes = styled(t, chars, spans);
-      chars += Array.from(t).length;
-      if (j % 2 === 0) {
-        if (t) p.append(...nodes);
-        return;
-      }
-      if (j > 1 && R.startSet.has(at)) {
-        p.append(cut());
-      }
-      const s = document.createElement("span");
-      s.className = "w";
-      s.dataset.i = at;
-      s.append(...nodes);
-      R.spans[at++] = s;
-      p.append(s);
-    });
+    // plain text, unless the line has bold or italic
+    if (f && f.spans.length) fillLine(p, line);
+    else plainLine(p, line);
     frag.append(p);
     R.lineEls[line] = p;
   }
@@ -5301,6 +5286,102 @@ function showPage(k, fresh) {
   if (fresh) return;
   decorate();
   mark(true);
+}
+
+// A line as plain text, with no element for each
+// word: about half the nodes of a page, so a page
+// turn is quicker on a slow device. The words are
+// made when one is needed (expandLine): a tap, a
+// mark, a note, a jump to a word.
+function plainLine(p, line) {
+  let at = R.first[line];
+  let text = "";
+  R.src[line].forEach((t, j) => {
+    if (j % 2) {
+      if (j > 1 && R.startSet.has(at)) {
+        if (text) p.append(text);
+        p.append(cut());
+        text = "";
+      }
+      at++;
+    }
+    text += t;
+  });
+  if (text) p.append(text);
+  p.classList.add("pl");
+}
+
+// The line with an element for each word: R.spans
+function fillLine(p, line) {
+  const f = R.format[line];
+  const spans = f ? f.spans : [];
+  let at = R.first[line];
+  let chars = 0; // characters before this part
+  R.src[line].forEach((t, j) => {
+    const nodes = styled(t, chars, spans);
+    chars += Array.from(t).length;
+    if (j % 2 === 0) {
+      if (t) p.append(...nodes);
+      return;
+    }
+    if (j > 1 && R.startSet.has(at)) {
+      p.append(cut());
+    }
+    const s = document.createElement("span");
+    s.className = "w";
+    s.dataset.i = at;
+    s.append(...nodes);
+    R.spans[at++] = s;
+    p.append(s);
+  });
+}
+
+// a plain line of the page becomes its words; the
+// text and its place stay the same
+function expandLine(line) {
+  const p = R.lineEls[line];
+  if (!p || !p.classList.contains("pl")) return;
+  p.classList.remove("pl");
+  p.replaceChildren();
+  fillLine(p, line);
+}
+
+// the element of word i (of the page), made if the
+// line is still plain
+function spanOf(i) {
+  if (!R.spans[i] && i >= R.lo && i < R.hi) {
+    expandLine(R.wpos[i][0]);
+  }
+  return R.spans[i];
+}
+
+// where word i is on the screen, without making
+// its element: the range of its letters in a plain
+// line; null when it is not on the page
+function wordRect(i) {
+  const s = R.spans[i];
+  if (s) return s.getBoundingClientRect();
+  if (i < R.lo || i >= R.hi) return null;
+  const [line, k] = R.wpos[i];
+  const p = R.lineEls[line];
+  const parts = R.src[line];
+  let from = 0;
+  for (let j = 0; j < 2 * k + 1; j++) {
+    from += parts[j].length;
+  }
+  const to = from + parts[2 * k + 1].length;
+  let base = 0;
+  for (const n of p.childNodes) {
+    if (n.nodeType !== 3) continue;
+    if (from < base + n.length) {
+      const r = document.createRange();
+      r.setStart(n, from - base);
+      r.setEnd(n, Math.min(to, base + n.length) - base);
+      return r.getBoundingClientRect();
+    }
+    base += n.length;
+  }
+  return p.getBoundingClientRect();
 }
 
 // Rows a paragraph of n characters takes, for the
@@ -5488,7 +5569,17 @@ async function book(name, line, found) {
     : Math.max(0, data.at || 0);
   showPage(pageOfWord(first), true);
   text.addEventListener("click", (e) => {
-    const s = e.target.closest(".w");
+    let s = e.target.closest(".w");
+    const p = !s && e.target.closest("p.pl");
+    if (p && text.contains(p) && e.detail > 0) {
+      // a plain line: make its words, then see which
+      // one is under the finger
+      const sel = document.getSelection();
+      if (sel && !sel.isCollapsed) return;
+      expandLine(Number(p.dataset.l));
+      s = document.elementFromPoint(e.clientX,
+        e.clientY)?.closest(".w");
+    }
     if (!s) return;
     const i = Number(s.dataset.i);
     if (i === R.sel) closePanel();
@@ -5544,10 +5635,9 @@ async function book(name, line, found) {
     mark(true);
   } else if (want >= 0) {
     go(wordOfLine(want));
-  } else if (data.at > 0 && R.spans[data.at]) {
+  } else if (data.at > 0 && wordRect(data.at)) {
     // the first word: stay at the top, title shown
-    const top = R.spans[data.at]
-      .getBoundingClientRect().top + window.scrollY;
+    const top = wordRect(data.at).top + window.scrollY;
     window.scrollTo(0, top - bar() - 16);
   }
   stick();

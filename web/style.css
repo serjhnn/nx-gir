@@ -1969,6 +1969,10 @@ body.reading .bar {
   -webkit-tap-highlight-color: transparent;
 }
 
+.text p.pl {
+  cursor: pointer;
+}
+
 .w:hover {
   color: var(--accent-ink);
 }

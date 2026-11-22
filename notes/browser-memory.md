@@ -275,3 +275,43 @@ nothing (their time was the first forced layout).
 A prototype with no word spans (one text node per
 line, option 4 above) reached 121 ms a turn at 10,000
 and 105 ms at 5,000: not worth the change for now.
+
+## Plain lines, words on demand (2026-11-22)
+
+A line of the page is built as plain text (class `pl`,
+`plainLine()` in `app.js`), with no `<span class="w">`
+for each word. A word's element is made only when
+something needs it: a tap (`expandLine()`, then
+`elementFromPoint()` finds the word under the finger,
+so no caret API is needed), a mark, a note, the
+sentence highlight, a jump (`spanOf()`). Where a word
+is on the screen (the reading position, keeping the
+place when the text size changes) comes from a range
+over its letters (`wordRect()`). Lines with bold or
+italic parts are built with words as before.
+
+Same setup as above (CPU 8x slower, Pixel 5 screen,
+Datastanagirk A 01, median of 3 runs):
+
+| Page | Build | Nodes | Per turn | Tap, rare word | Tap, common word |
+|---|---|---|---|---|---|
+| 10,000 | words | 8,764 | 173 ms | 208 ms | 70 ms |
+| 10,000 | plain | 4,210 | 123 ms | 237 ms | 70 ms |
+| 5,000 | words | 4,619 | 141 ms | 163-184 ms | 112-127 ms |
+| 5,000 | plain | 2,375 | 113-130 ms | 213 ms | 129-159 ms |
+
+- A turn is 15-30% quicker; script time halves (385 to
+  199 ms for 5 turns at 10,000).
+- The first tap in a line costs 30-50 ms more (the
+  line is made into words). A common word marks
+  itself in every line of the page, so that tap
+  makes most of the page's words, once.
+- Plain pages of 10,000 turn as fast as word pages of
+  5,000, with half the pages.
+- The reading position is the same with plain and
+  with word lines (checked at three scroll places);
+  taps found the right word 28 of 28 times.
+- The measuring harness must wait for the home page
+  to finish before opening a part: a hash change
+  while the home page is still drawing can leave the
+  home page on the screen.
