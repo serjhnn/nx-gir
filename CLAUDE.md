@@ -523,7 +523,9 @@
   the video tutorial of the web reader (Playwright for
   Node, ffmpeg; a throwaway state, a fake cursor and
   captions); change the steps in `record.js` after the
-  pages change. The video is not kept in git
+  pages change. The video is not kept in git. How to
+  run it and the pitfalls: `notes/video.md` (read it
+  first)
 - `scripts/render-og.py`: regenerates
   `web/og-image.png`, the link preview image
   (`og:image` in `web/index.html`, for LinkedIn
