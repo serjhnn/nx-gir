@@ -331,8 +331,10 @@ const BUILD = window.NXGIR_BUILD || "";
 
 // Visits to the published copy are counted by
 // GoatCounter (NXGIR_COUNT, set by static.js when
-// build-site.py has a code): the page and its title,
-// where the visitor came from and the screen width;
+// build-site.py has a code): the page (its path
+// starts with the language, /en/library) and its
+// title, where the visitor came from and the screen
+// width;
 // no cookies, nothing about the visitor. Sent as an
 // image, as GoatCounter allows, so no script of
 // theirs is loaded. Not when a program drives the
@@ -7546,7 +7548,7 @@ async function route() {
       await shelf("");
     }
     backToPlace(hash);
-    visit("/" + decodeURIComponent(hash));
+    visit("/" + LANG + "/" + decodeURIComponent(hash));
   } catch (e) {
     clearReading();
     showError(e.message || t("error"));
