@@ -1279,12 +1279,18 @@ const tabs = tabBar();
 // in the reader the bar shows on scrolling up, and
 // goes again on scrolling down (.peek, style.css)
 let lastY = 0;
+// the very bottom of the page also shows the bar
+function atEnd() {
+  const de = document.documentElement;
+  return window.scrollY > 50 && window.innerHeight
+    + window.scrollY >= de.scrollHeight - 4;
+}
 window.addEventListener("scroll", () => {
   const y = window.scrollY;
   const body = document.body;
   if (!body.classList.contains("reading")) {
     body.classList.remove("peek");
-  } else if (y < lastY - 8) {
+  } else if (y < lastY - 8 || atEnd()) {
     body.classList.add("peek");
   } else if (y > lastY + 8 || y < 50) {
     body.classList.remove("peek");
