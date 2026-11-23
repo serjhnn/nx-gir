@@ -519,6 +519,11 @@
   `scripts/render-web.py`: regenerate the README
   images in `docs/` after changing the logo, the
   screens or the web pages
+- `scripts/record-web.py`, `scripts/record.js`: record
+  the video tutorial of the web reader (Playwright for
+  Node, ffmpeg; a throwaway state, a fake cursor and
+  captions); change the steps in `record.js` after the
+  pages change. The video is not kept in git
 - `scripts/render-og.py`: regenerates
   `web/og-image.png`, the link preview image
   (`og:image` in `web/index.html`, for LinkedIn
