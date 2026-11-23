@@ -1371,7 +1371,8 @@ function mapBanner() {
 // a narrow banner on the top page, with the
 // picture of the newest announcement. A click on it
 // leads to #/news; its two links, under the words,
-// to the announcement and to the book(s) itself
+// to the announcement and to the book itself (its
+// own words in bookText, else "Read the book")
 function newsBanner(a = NEWS[0],
   lang = newsLang()) {
   const en = lang !== "hy" && a["banner_" + lang];
@@ -1391,7 +1392,8 @@ function newsBanner(a = NEWS[0],
     h("span", { class: "join-go" },
       h("a", { href: to }, ui.read),
       a.book ? h("a", { href: a.book },
-        a.books ? ui.books : ui.book) : null)));
+        a.bookText ? a.bookText[lang] : ui.book)
+        : null)));
 }
 
 // -- readings --
@@ -3405,14 +3407,11 @@ const ZENOB = "#/b/grabar/hovhan-mamikonean/";
 // the words of the page itself, by language
 const NEWS_UI = {
   hy: { home: "Գլխավոր", title: "Հայտարարություններ",
-    read: "Կարդալ →", book: "Կարդալ գիրքը →",
-    books: "Կարդալ գրքերը →" },
+    read: "Կարդալ →", book: "Կարդալ գիրքը →" },
   en: { home: "Home", title: "Announcements",
-    read: "Read →", book: "Read the book →",
-    books: "Read the books →" },
+    read: "Read →", book: "Read the book →" },
   ru: { home: "Главная", title: "Объявления",
-    read: "Читать →", book: "Читать книгу →",
-    books: "Читать книги →" },
+    read: "Читать →", book: "Читать книгу →" },
 };
 
 const NEWS = [{
@@ -3587,8 +3586,13 @@ const NEWS = [{
   },
 }, {
   id: "smbat-sparapet",
-  book: "#/library/smbat-sparapet",
-  books: true,
+  book: "#/read/grabar/smbat-sparapet/"
+    + "2-taregirk/01.txt",
+  bookText: {
+    hy: "Կարդալ Տարեգիրքը →",
+    en: "Read the Taregirk →",
+    ru: "Читать Летопись →",
+  },
   date: "2026-11-16",
   img: "smbat-sparapet.jpg",
   face: "smbat-sparapet-face.jpg",
