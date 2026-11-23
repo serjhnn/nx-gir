@@ -7476,7 +7476,11 @@ async function route() {
   if (!hash.startsWith("read/")) clearReading();
   document.body.classList.remove("home");
   // back to the top bar from the reading tools
-  if (button.parentNode !== topBar) topBar.append(button);
+  // (in its place: before the language globe)
+  if (button.parentNode !== topBar) {
+    topBar.insertBefore(button,
+      topBar.querySelector(".lang-globe"));
+  }
   try {
     if (hash.startsWith("read/")) {
       // #/read/<book>?line=N opens at line N; with
