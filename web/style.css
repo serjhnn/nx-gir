@@ -480,45 +480,90 @@ h1 {
     overflow-x: visible;
   }
 }
-/* the language button in the top bar and the list
-   it opens (langButton() in app.js) */
-.lang-btn {
-  justify-content: center;
-  min-width: 2.9rem;
-  font-weight: 600;
+/* the language slider in the top bar (langButton() in
+   app.js): three links, a tinted thumb with an accent
+   outline slides under the current one (--i, 0 to 2) */
+.lang-slider {
+  --i: 0;
+  --n: 3;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--n), 1fr);
+  flex: none;
+  width: 8.6rem;
+  padding: 2px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-size: 0.8rem;
 }
-.lang-btn[aria-expanded="true"] {
-  background: var(--hover);
-}
-.lang-panel {
+.lang-slider::before {
+  content: "";
   position: absolute;
-  top: 100%;
-  right: 16px;
-  z-index: 30;
-  display: flex;
-  flex-direction: column;
-  min-width: 10rem;
-  padding: 0.4rem;
-  border: 1px solid var(--panel-rule);
-  border-radius: 14px;
-  background: var(--panel);
-  box-shadow: 0 10px 28px var(--panel-shadow);
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  width: calc((100% - 4px) / var(--n));
+  box-sizing: border-box;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--mark);
+  transform: translateX(calc(var(--i) * 100%));
+  transition: transform 0.3s cubic-bezier(0.3, 0.9, 0.3, 1);
 }
-.lang-panel[hidden] {
-  display: none;
-}
-.lang-panel a {
-  padding: 0.6rem 0.8rem;
-  border-radius: 10px;
-  color: var(--text);
+.lang-slider a {
+  position: relative;
+  padding: 6px 0;
+  text-align: center;
+  color: var(--muted);
   text-decoration: none;
+  transition: color 0.25s;
 }
-.lang-panel a:hover {
-  background: var(--hover);
+.lang-slider a:hover {
+  color: var(--text);
 }
-.lang-panel a[aria-current] {
+.lang-slider a[aria-current] {
   color: var(--accent-ink);
   font-weight: 600;
+}
+.lang-slider a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-radius: 999px;
+}
+.lang-slider .lf {
+  display: none;
+}
+/* a phone: the brand and the theme button do not leave
+   room, so the slider takes a row of its own, with the
+   full names */
+@media (max-width: 30rem) {
+  .bar {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+  .bar .top-btns {
+    display: contents;
+  }
+  .top-btns > #theme {
+    order: 2;
+  }
+  .lang-slider {
+    order: 3;
+    flex: 1 0 100%;
+    width: auto;
+  }
+  .lang-slider .ls {
+    display: none;
+  }
+  .lang-slider .lf {
+    display: inline;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lang-slider::before,
+  .lang-slider a {
+    transition: none;
+  }
 }
 /* the ☰ button in the top bar and the list it opens
    (headerMenu() in app.js) */

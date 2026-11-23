@@ -750,64 +750,45 @@ viewBtn.addEventListener("click", () => {
 });
 
 // -- the language --
-// The button in the top bar (Հայ, Eng, Рус) opens
-// a list of the languages: links to the page shown
-// in each. route() sees the new language in the
-// address and sends "langchange": the menus, the
-// tab bar and the buttons draw their words again,
-// then the page itself is drawn.
+// A slider in the top bar (Հայ, Eng, Рус): the three
+// languages always in view, each a link to the page
+// shown in it, the thumb under the current one. The
+// names are short; the full name is the title and the
+// aria-label. route() sees the new language in the
+// address and sends "langchange": the thumb slides,
+// the menus, the tab bar and the buttons draw their
+// words again, then the page itself is drawn.
 
 function langButton() {
-  const bar = topBar.parentNode;
-  const btn = h("button", { class: "icon-btn lang-btn",
-    type: "button", "aria-expanded": "false",
-    "aria-controls": "lang-panel" });
-  const panel = h("nav", { class: "lang-panel",
-    id: "lang-panel", hidden: "" });
-  const open = (on) => {
-    panel.hidden = !on;
-    btn.setAttribute("aria-expanded", String(on));
-  };
+  const nav = h("nav", { class: "lang-slider",
+    role: "group" });
+  // short in the bar, the full name on a phone, where
+  // the slider has a row of its own (style.css)
+  const links = LANGS.map((l) => h("a",
+    { lang: l, hreflang: l },
+    h("span", { class: "ls" }, LANG_SHORT[l]),
+    h("span", { class: "lf" }, LANG_FULL[l])));
+  nav.append(...links);
   const draw = () => {
-    btn.textContent = LANG_SHORT[LANG];
-    btn.lang = LANG;
-    btn.title = t("lang.pick");
-    btn.setAttribute("aria-label",
-      t("lang.pick") + ": " + LANG_FULL[LANG]);
-    panel.setAttribute("aria-label", t("lang.pick"));
-    panel.replaceChildren(...LANGS.map((l) => h("a",
-      { href: inLang(l, hashNow()), lang: l,
-        hreflang: l,
-        "aria-current": l === LANG ? "true" : null },
-      LANG_FULL[l])));
+    nav.setAttribute("aria-label", t("lang.pick"));
+    nav.title = t("lang.pick");
+    nav.style.setProperty("--i", LANGS.indexOf(LANG));
+    links.forEach((a, i) => {
+      const l = LANGS[i];
+      setRoute(a, inLang(l, hashNow()));
+      a.title = LANG_FULL[l];
+      a.setAttribute("aria-label", LANG_FULL[l]);
+      if (l === LANG) {
+        a.setAttribute("aria-current", "true");
+      } else a.removeAttribute("aria-current");
+    });
   };
-  btn.addEventListener("click", () => {
-    draw();
-    open(panel.hidden);
-  });
-  panel.addEventListener("click", (e) => {
-    if (e.target.closest("a")) open(false);
-  });
-  document.addEventListener("pointerdown", (e) => {
-    if (!btn.contains(e.target)
-      && !panel.contains(e.target)) open(false);
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !panel.hidden) {
-      open(false);
-      btn.focus();
-    }
-  });
-  window.addEventListener("navigate", () => {
-    open(false);
-    draw();
-  });
-  // the language changes after "navigate": its name
-  // and the links in each language, drawn again
+  window.addEventListener("navigate", draw);
+  // the language changes after "navigate": the links
+  // in each language and the thumb, drawn again
   window.addEventListener("langchange", draw);
   draw();
-  topBar.prepend(btn);
-  bar.append(panel);
+  topBar.prepend(nav);
 }
 langButton();
 

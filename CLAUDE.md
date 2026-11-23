@@ -434,8 +434,11 @@
   (`tests/test_i18n.py` checks the keys, and that
   every `t("...")` is there). `<html lang>` is
   `LANG`; text of the books, authors' and books'
-  names keep `lang: "hy"`. The language button
-  (`langButton()`) links the page in each language;
+  names keep `lang: "hy"`. The language slider
+  (`langButton()`: Հայ · Eng · Рус, the thumb slides
+  under the current one; on a phone a row of its own
+  with the full names) links the page in each
+  language;
   `route()` calls `followLang()`, which sends
   `langchange` for what is drawn once (menus, tab
   bar). The per-page pickers (blog, comics, map,
