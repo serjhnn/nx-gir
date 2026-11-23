@@ -242,6 +242,13 @@ const ICONS = {
       "a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z",
     "M8 12l3 3l5-6",
   ],
+  // a globe: the language slider shows or hides
+  globe: [
+    "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z",
+    "M3 12h18",
+    "M12 3c3 2.5 3 15.5 0 18",
+    "M12 3c-3 2.5-3 15.5 0 18",
+  ],
   sun: [
     "M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8z",
     "M12 2v2M12 20v2M2 12h2M20 12h2" +
@@ -761,7 +768,27 @@ viewBtn.addEventListener("click", () => {
 
 function langButton() {
   const nav = h("nav", { class: "lang-slider",
-    role: "group" });
+    id: "lang-slider", role: "group" });
+  // the globe hides the slider and brings it back; the
+  // choice is kept (shown at first)
+  const globe = h("button", {
+    class: "icon-btn lang-globe", type: "button",
+    "aria-controls": "lang-slider" }, icon(ICONS.globe));
+  const show = (on, keep) => {
+    nav.hidden = !on;
+    globe.setAttribute("aria-expanded", String(on));
+    if (!keep) return;
+    try {
+      localStorage.setItem("nxgir-lang-bar",
+        on ? "1" : "0");
+    } catch (e) {}
+  };
+  let shown = true;
+  try {
+    shown = localStorage.getItem("nxgir-lang-bar") !== "0";
+  } catch (e) {}
+  globe.addEventListener("click",
+    () => show(nav.hidden, true));
   // short in the bar, the full name on a phone, where
   // the slider has a row of its own (style.css)
   const links = LANGS.map((l) => h("a",
@@ -772,6 +799,8 @@ function langButton() {
   const draw = () => {
     nav.setAttribute("aria-label", t("lang.pick"));
     nav.title = t("lang.pick");
+    globe.title = t("lang.pick");
+    globe.setAttribute("aria-label", t("lang.pick"));
     nav.style.setProperty("--i", LANGS.indexOf(LANG));
     links.forEach((a, i) => {
       const l = LANGS[i];
@@ -788,7 +817,8 @@ function langButton() {
   // in each language and the thumb, drawn again
   window.addEventListener("langchange", draw);
   draw();
-  topBar.prepend(nav);
+  show(shown, false);
+  topBar.prepend(nav, globe);
 }
 langButton();
 

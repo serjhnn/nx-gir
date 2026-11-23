@@ -438,7 +438,9 @@
   (`langButton()`: Հայ · Eng · Рус, the thumb slides
   under the current one; on a phone a row of its own
   with the full names) links the page in each
-  language;
+  language; the globe button beside it hides and
+  shows it (kept as `nxgir-lang-bar`, shown at
+  first);
   `route()` calls `followLang()`, which sends
   `langchange` for what is drawn once (menus, tab
   bar). The per-page pickers (blog, comics, map,
