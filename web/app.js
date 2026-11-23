@@ -1226,6 +1226,11 @@ function tabBar() {
   };
   more.addEventListener("click",
     () => open(sheet.hidden));
+  // a link to the page already open does not navigate,
+  // so the sheet is shut by the click itself
+  sheet.addEventListener("click", (e) => {
+    if (e.target.closest("a")) open(false);
+  });
   document.addEventListener("pointerdown", (e) => {
     if (!bar.contains(e.target)
       && !sheet.contains(e.target)) open(false);
