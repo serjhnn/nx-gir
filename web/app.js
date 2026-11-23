@@ -3417,7 +3417,8 @@ const NEWS_UI = {
 
 const NEWS = [{
   id: "zenob-glak",
-  book: ZENOB + "1-patmutiun-taronoy",
+  book: "#/read/grabar/hovhan-mamikonean/"
+    + "1-patmutiun-taronoy/01.txt",
   date: "2026-11-22",
   img: "zenob-glak.jpg",
   face: "zenob-glak-face.jpg",
