@@ -192,6 +192,11 @@ const UI = {
     "intro.q5": "Ինչպե՞ս կապվել։",
     "intro.a5": "Հարցերի, առաջարկների կամ սխալների մասին"
       + " գրեք նախագծի հեղինակին՝ ",
+    "tip.label": "Հուշում",
+    "tip.lib.a": "Գրադարանում սեղմեք",
+    "tip.lib.b": "հեղինակի անվան կողքին՝ նրա մասին"
+      + " կարդալու, կամ",
+    "tip.lib.c": "գրքի կողքին՝ գրքի մասին կարդալու։",
     // the Library
     "lib.done": "թարգմանված",
     "lib.bookpage": "Գրքի էջը →",
@@ -595,6 +600,11 @@ const UI = {
     "intro.q5": "How can I get in touch?",
     "intro.a5": "Write to the author of the project with"
       + " questions, ideas or mistakes found: ",
+    "tip.label": "Tip",
+    "tip.lib.a": "In the Library, tap",
+    "tip.lib.b": "beside an author's name to read about"
+      + " the author, and",
+    "tip.lib.c": "beside a book to read about the book.",
     // the Library
     "lib.done": "translated",
     "lib.bookpage": "Book page →",
@@ -1002,6 +1012,11 @@ const UI = {
     "intro.q5": "Как связаться?",
     "intro.a5": "С вопросами, предложениями или найденными"
       + " ошибками пишите автору проекта: ",
+    "tip.label": "Совет",
+    "tip.lib.a": "В Библиотеке нажмите",
+    "tip.lib.b": "рядом с именем автора, чтобы прочитать"
+      + " об авторе, или",
+    "tip.lib.c": "рядом с книгой, чтобы прочитать о книге.",
     // the Library
     "lib.done": "переведено",
     "lib.bookpage": "Страница книги →",

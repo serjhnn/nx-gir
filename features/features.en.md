@@ -82,6 +82,8 @@ The Library page lists the Grabar books by author, with how many parts each has 
 
 The scroll beside an author's name opens a short card about them: when and where they lived, what they wrote, their places on the map and a blog post about them. The card is in Armenian, English and Russian. The scroll is in the Library, on a book's page and in the search. Claude wrote the cards, and a card says so until a person has reviewed it.
 
+On the home page, a framed Tip under the menu says what the scroll and the book icon do in the Library: tap them to read about an author or a book.
+
 ## About the books
 
 Every book in the Library has a card of its own: its icon is in the accent color, and tapping it opens the card. It tells when the book was written, what it is and what is in it, in the same three languages. The rest of the row still opens the book. A book written by two authors shows both names, the earlier first, each with its own card: «Պատմութիւն Տարաւնոյ» is by Զենոբ Գլակ and Յովհան Մամիկոնեան, and its card tells which sections each wrote.

@@ -919,6 +919,31 @@ function intro(news) {
     qa("intro.q5", t("intro.a5"), mail(), t("dot")));
 }
 
+// a tip: a framed note with its label in a pill on
+// the top line (.tip); kids are its words and icons
+function tip(...kids) {
+  return h("aside", { class: "tip" },
+    h("span", { class: "tip-tag" },
+      h("i", { class: "tip-dot" }), t("tip.label"),
+      h("i", { class: "tip-dot" })),
+    h("p", {}, ...kids),
+    h("i", { class: "tip-dot tip-end" }));
+}
+
+// an icon inside a tip's sentence
+function tipIcon(name) {
+  return h("span", { class: "tip-ic" },
+    icon(ICONS[name]));
+}
+
+// the tip under the menu of the top page: what the
+// scroll and the book icon of the Library open
+function libraryTip() {
+  return tip(t("tip.lib.a") + " ", tipIcon("scroll"),
+    " " + t("tip.lib.b") + " ", tipIcon("book"),
+    " " + t("tip.lib.c"));
+}
+
 // the newest steps of the timeline, in English
 // for now (timeline.tsv)
 function newsList(news) {
@@ -994,6 +1019,7 @@ async function shelf(folder) {
     folder ? null : devBanner(),
     folder ? null : topBanner(),
     folder ? null : menuBar(...MENU.map(menuLink)),
+    folder ? null : libraryTip(),
     ...(folder ? [] : NEWS.slice(0, 2).map(
       (a) => newsBanner(a))),
     folder ? null : joinBanner(),

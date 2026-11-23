@@ -339,6 +339,75 @@ h1 {
   line-height: 1.6;
 }
 
+/* a tip (tip() in app.js): a double frame, its label
+   in a pill on the top line, a diamond on the bottom */
+.tip {
+  position: relative;
+  margin: 1.5rem 0 1.25rem;
+  padding: 1.15rem 1.2rem 0.95rem;
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--accent) 9%, transparent),
+    transparent);
+  text-align: center;
+}
+.tip::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid
+    color-mix(in srgb, var(--accent) 35%, transparent);
+  border-radius: 9px;
+  pointer-events: none;
+}
+.tip p {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+.tip-tag {
+  position: absolute;
+  top: -0.95em;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.12rem 0.85rem;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--accent-ink);
+  font: italic 1rem/1.4 var(--serif);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.tip-dot {
+  flex: none;
+  width: 0.42rem;
+  height: 0.42rem;
+  background: var(--accent);
+  transform: rotate(45deg);
+}
+.tip-end {
+  position: absolute;
+  bottom: -0.25rem;
+  left: 50%;
+  margin-left: -0.21rem;
+}
+.tip-ic {
+  display: inline-block;
+  width: 1.15em;
+  height: 1.15em;
+  vertical-align: -0.2em;
+  color: var(--accent-ink);
+}
+.tip-ic svg {
+  width: 100%;
+  height: 100%;
+}
+
 /* how much of each book is translated */
 .intro .status {
   margin: 0.3rem 0 0;
