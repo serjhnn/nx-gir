@@ -818,7 +818,8 @@ function langButton() {
   window.addEventListener("langchange", draw);
   draw();
   show(shown, false);
-  topBar.prepend(nav, globe);
+  topBar.prepend(nav);
+  topBar.append(globe);
 }
 langButton();
 

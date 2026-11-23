@@ -546,7 +546,7 @@ h1 {
 @media (max-width: 30rem) {
   .bar {
     flex-wrap: wrap;
-    row-gap: 10px;
+    gap: 10px 0.5rem;
   }
   .bar .top-btns {
     display: contents;
@@ -554,6 +554,10 @@ h1 {
   .top-btns > #theme,
   .top-btns > .lang-globe {
     order: 2;
+  }
+  /* the two buttons together, at the right */
+  .top-btns > #theme {
+    margin-left: auto;
   }
   .lang-slider {
     order: 3;
