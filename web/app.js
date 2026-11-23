@@ -1369,20 +1369,29 @@ function mapBanner() {
 }
 
 // a narrow banner on the top page, with the
-// picture of the newest announcement, leading to
-// #/news
+// picture of the newest announcement. A click on it
+// leads to #/news; its two links, under the words,
+// to the announcement and to the book(s) itself
 function newsBanner(a = NEWS[0],
   lang = newsLang()) {
   const en = lang !== "hy" && a["banner_" + lang];
-  return h("a", { class: "join-banner news-banner",
-    href: "#/news/" + a.id, lang },
+  const ui = NEWS_UI[lang];
+  const to = "#/news/" + a.id;
+  return h("div", { class: "join-banner news-banner",
+    lang },
   h("img", { src: a.face, alt: "",
     width: "600", height: "400" }),
+  // the whole banner, for a mouse or a finger; the
+  // links below are for a keyboard
+  h("a", { class: "banner-all", href: to,
+    tabindex: "-1", "aria-hidden": "true" }),
   h("span", { class: "join-text" },
     h("b", {}, (en || a.banner)[0]),
     h("span", {}, (en || a.banner)[1]),
     h("span", { class: "join-go" },
-      NEWS_UI[lang].read)));
+      h("a", { href: to }, ui.read),
+      a.book ? h("a", { href: a.book },
+        a.books ? ui.books : ui.book) : null)));
 }
 
 // -- readings --
@@ -3396,15 +3405,19 @@ const ZENOB = "#/b/grabar/hovhan-mamikonean/";
 // the words of the page itself, by language
 const NEWS_UI = {
   hy: { home: "Գլխավոր", title: "Հայտարարություններ",
-    read: "Կարդալ →" },
+    read: "Կարդալ →", book: "Կարդալ գիրքը →",
+    books: "Կարդալ գրքերը →" },
   en: { home: "Home", title: "Announcements",
-    read: "Read →" },
+    read: "Read →", book: "Read the book →",
+    books: "Read the books →" },
   ru: { home: "Главная", title: "Объявления",
-    read: "Читать →" },
+    read: "Читать →", book: "Читать книгу →",
+    books: "Читать книги →" },
 };
 
 const NEWS = [{
   id: "zenob-glak",
+  book: ZENOB + "1-patmutiun-taronoy",
   date: "2026-11-22",
   img: "zenob-glak.jpg",
   face: "zenob-glak-face.jpg",
@@ -3573,6 +3586,8 @@ const NEWS = [{
   },
 }, {
   id: "smbat-sparapet",
+  book: "#/library/smbat-sparapet",
+  books: true,
   date: "2026-11-16",
   img: "smbat-sparapet.jpg",
   face: "smbat-sparapet-face.jpg",

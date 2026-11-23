@@ -1182,6 +1182,26 @@ body.home .bar {
   font-weight: 500;
   text-decoration: underline;
 }
+/* the announcement's banner: the whole of it is a
+   link (.banner-all, under the words), and the two
+   links in the words are on top of it */
+.news-banner .banner-all {
+  position: absolute;
+  inset: 0;
+}
+.news-banner .join-text {
+  pointer-events: none;
+}
+.news-banner .join-go {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.1rem;
+  max-width: none;
+}
+.news-banner .join-go a {
+  color: inherit;
+  pointer-events: auto;
+}
 
 /* #/library: the Grabar books, by author */
 .library .author {
