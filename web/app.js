@@ -298,8 +298,6 @@ const ICONS = {
   // an arrow into a tray: save for offline
   save: ["M12 4v11M7 10l5 5l5-5",
     "M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"],
-  // angle brackets: the source code
-  code: ["M8 7l-5 5l5 5M16 7l5 5l-5 5M14 4l-4 16"],
 };
 
 // 512 B, 3.4 KB: like human_size() in Python.
@@ -1317,15 +1315,13 @@ function logoMark() {
 }
 
 // the end of the More sheet: what the footer
-// says, which phones do not show (style.css)
+// says, which phones do not show (style.css);
+// GitHub is on the About page
 function sheetLinks() {
-  return [
-    hasWorker() ? h("a", { class: "icon-btn",
-      href: "#/offline" }, icon(ICONS.save),
-    t("nav.offline")) : null,
-    h("a", { class: "icon-btn", href: REPO },
-      icon(ICONS.code), "GitHub"),
-  ];
+  if (!hasWorker()) return null;
+  return h("a", { class: "icon-btn",
+    href: "#/offline" }, icon(ICONS.save),
+  t("nav.offline"));
 }
 
 function sheetFoot() {
