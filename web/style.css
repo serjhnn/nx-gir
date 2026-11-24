@@ -2961,6 +2961,17 @@ body.reading.full .bar {
   display: inline-flex;
 }
 
+/* not on a phone: the bottom bar has Home */
+.phone .tools.stuck .home {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .tools.stuck .home {
+    display: none;
+  }
+}
+
 .tools .home svg {
   width: 18px;
   height: 20px;
