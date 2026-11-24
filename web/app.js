@@ -157,12 +157,8 @@ function icon(paths, cls) {
 }
 
 const ICONS = {
-  // a bin: take off the list
-  bin: [
-    "M4 7h16M10 11v6M14 11v6",
-    "M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12",
-    "M9 7V4h6v3",
-  ],
+  // a cross: take off the list
+  close: ["M6 6l12 12M18 6L6 18"],
   folder: [
     "M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8" +
       "a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
@@ -1462,7 +1458,7 @@ function askForget(title) {
       class: "icon-btn" }, t("cancel"));
     const yes = h("button", { type: "button",
       class: "icon-btn danger" },
-    icon(ICONS.bin), t("remove"));
+    t("remove"));
     no.addEventListener("click", () => end(false));
     yes.addEventListener("click", () => end(true));
     box.append(h("div", { class: "ask-card",
@@ -1516,7 +1512,7 @@ function readingList(items) {
       class: "forget",
       "aria-label": t("forget.title"),
       title: t("forget.title") },
-    icon(ICONS.bin));
+    icon(ICONS.close));
     x.addEventListener("click", async () => {
       if (!await askForget(r.title)) return;
       x.disabled = true;
@@ -2039,7 +2035,7 @@ async function libraryPage(who) {
       class: "forget",
       "aria-label": t("forget.title"),
       title: t("forget.title") },
-    icon(ICONS.bin));
+    icon(ICONS.close));
     x.addEventListener("click", async () => {
       if (!await askForget(r.b.name)) return;
       x.disabled = true;
