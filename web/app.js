@@ -157,8 +157,10 @@ function icon(paths, cls) {
 }
 
 const ICONS = {
-  // a cross: take off the list
-  close: ["M6 6l12 12M18 6L6 18"],
+  // a soft cross, drawn like a pen stroke: take off
+  // the list
+  close: ["M6.5 6c3.5 3 7 7 11 12",
+    "M17.5 6c-3.5 3-7 7-11 12"],
   folder: [
     "M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8" +
       "a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
