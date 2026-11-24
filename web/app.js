@@ -573,6 +573,9 @@ async function staticApi(path) {
   if (route === "search-parts") {
     return json("data/search/parts.json");
   }
+  if (route === "search-lemmas") {
+    return json("data/search/lemmas.json");
+  }
   if (route === "lines") {
     return json("data/lines/" + enc(q.get("name"))
       + "/" + Number(q.get("k")) + ".json");
@@ -6911,6 +6914,47 @@ async function searchEntry(w) {
   return searchCache.get(k);
 }
 
+// the lemma table: key -> the groups of keys (forms
+// of one word) it is in; none if it cannot be read
+let searchLemmas = null;
+async function lemmaMap() {
+  if (!searchLemmas) {
+    searchLemmas = api("search-lemmas").then((d) => {
+      const by = new Map();
+      for (const g of d.groups) {
+        for (const k of g) {
+          if (!by.has(k)) by.set(k, []);
+          by.get(k).push(g);
+        }
+      }
+      return by;
+    }).catch(() => new Map());
+  }
+  return searchLemmas;
+}
+
+// a word's entry with the entries of all the forms
+// of its word (lemma table), spellings together
+async function formsEntry(w) {
+  const f = await searchEntry(w);
+  if (!f.entry || f.entry["*"]) return f;
+  const by = await lemmaMap();
+  const others = new Set();
+  for (const g of by.get(f.key) || []) {
+    for (const k of g) if (k !== f.key) others.add(k);
+  }
+  if (!others.size) return f;
+  const more = await Promise.all(
+    [...others].map(searchEntry));
+  const entry = { ...f.entry };
+  for (const m of more) {
+    if (m.entry && !m.entry["*"]) {
+      Object.assign(entry, m.entry);
+    }
+  }
+  return { key: f.key, entry };
+}
+
 async function partsOf() {
   if (!searchParts) {
     searchParts = api("search-parts").catch((e) => {
@@ -6961,7 +7005,7 @@ async function findLines(q) {
   const words = [...new Set(q.match(SEARCH_WORD)
     || [])];
   const found = await Promise.all(
-    words.map(searchEntry));
+    words.map(formsEntry));
   const common = [];
   const used = [];
   found.forEach((f, i) => {

@@ -428,8 +428,9 @@ def test_build_search(tmp_path):
     found = read(f"search/{bs.bucket(key)}.json")
     assert found[key] == {"թագաւոր": [[0, 122]]}
     assert len(list((data / "search").glob("*.json"))) == (
-        bs.BUCKETS + 1
+        bs.BUCKETS + 2
     )
+    assert read("search/lemmas.json") == {"groups": []}
     lines = "lines/grabar/ann/1-book/01.txt"
     assert read(f"{lines}/0.json")["lines"][0] == (
         "Գիրք · 1/1"

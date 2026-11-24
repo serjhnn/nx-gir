@@ -49,7 +49,14 @@ Decided (2026-11-21):
      and `յ` before a vowel at the start → `հ`.
    The results show each spelling found and how
    often (`թագաւոր 1071 · թագավոր 195`).
-2. **All forms of a word** (a switch): the forms
+2. **All forms of a word** (built 2026-11-24, always
+   on, no switch yet: the forms found show as spelling
+   chips). The lemma table `lemmas()` groups the
+   index keys that are forms of one headword
+   (`forms.tsv`); `data/search/lemmas.json`,
+   `/api/search-lemmas`; `formsEntry()` in `app.js`
+   joins the entries of a word's group. So `հույս`
+   finds `յոյս` and `յուսով`. Planned as: the forms
    of the word in `grabar/forms.tsv`, the same
    table the word lookup uses. `թագավոր`: 1,074
    lines; with all forms (`թագաւորի`,

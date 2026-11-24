@@ -399,6 +399,10 @@ def search_files(data, app):
     loose key, and the lines of each part."""
     index, parts = web.search_index(app)
     write_json(data / "search" / "parts.json", parts)
+    write_json(
+        data / "search" / "lemmas.json",
+        web.search_lemmas(app),
+    )
     found = [{} for _ in range(BUCKETS)]
     for key in index.keys():
         found[bucket(key)][key] = index.entry(key)

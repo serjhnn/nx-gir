@@ -14,6 +14,8 @@ for `nxgir web` (/api/search, /api/search-parts,
 same answers as files (build-site.py):
 
     data/search/parts.json      parts()
+    data/search/lemmas.json     lemmas(): groups of keys
+        that are forms of one word (grabar/forms.tsv)
     data/search/<n>.json        the entries of the
         keys in bucket n (bucket() of build-site.py)
     data/lines/<part>/<k>.json  chunk(): 100 lines
@@ -69,6 +71,26 @@ def loose(word):
     k = k.replace("է", "ե").replace("օ", "ո")
     k = k.replace("ույ", "ոյ")
     return Y_RE.sub("հ", k)
+
+
+def lemmas(keys, pairs):
+    """The lemma table: groups of loose keys that are
+    forms of one headword. pairs: (form, headword),
+    as in grabar/forms.tsv; keys: the keys of the
+    index (a key not in it is left out, and a group
+    of one key). A key in two groups is in both."""
+    keys = set(keys)
+    groups = {}
+    for form, head in pairs:
+        g = groups.setdefault(loose(head), set())
+        g.add(loose(form))
+    out = []
+    for head, g in groups.items():
+        g.add(head)
+        g &= keys
+        if len(g) > 1:
+            out.append(sorted(g))
+    return sorted(out)
 
 
 def searched(name):
