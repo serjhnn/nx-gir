@@ -194,6 +194,11 @@ const ICONS = {
     "M12 11a3.5 3.5 0 1 0 0-7a3.5 3.5 0 0 0 0 7z",
     "M5 20c0-4 3-6.5 7-6.5s7 2.5 7 6.5",
   ],
+  // a circle with an i: about the project
+  info: [
+    "M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18z",
+    "M12 11v5M12 8h.01",
+  ],
   // a rolled sheet with lines: about an author
   scroll: [
     "M7 4h11a2 2 0 0 1 0 4H7",
@@ -1126,18 +1131,26 @@ const TABS = [
   ["#/recent", "resume", "nav.continue", "continue"],
   ["#/reference", "cards", "nav.reference", "reference"],
 ];
-// the pages the More tab opens
+// the pages the More tab opens, in groups: what to
+// read, what is new, the project and its people
 const MORE = [
-  ["#/recent", "clock", "nav.recent"],
-  ["#/search", "search", "nav.search"],
-  ["#/blog", "pen", "nav.blog"],
-  ["#/map", "map", "nav.map"],
-  ["#/comics", "panels", "nav.comics"],
-  ["#/features", "tick", "nav.features"],
-  ["#/contribute", "join", "nav.contribute"],
-  ["#/news", "horn", "nav.news"],
-  ["#/timeline", "scroll", "nav.timeline"],
-  ["#/stats", "sliders", "nav.stats"],
+  [
+    ["#/recent", "clock", "nav.recent"],
+    ["#/search", "search", "nav.search"],
+    ["#/blog", "pen", "nav.blog"],
+    ["#/comics", "panels", "nav.comics"],
+    ["#/map", "map", "nav.map"],
+  ],
+  [
+    ["#/news", "horn", "nav.news"],
+    ["#/timeline", "scroll", "nav.timeline"],
+    ["#/features", "tick", "nav.features"],
+    ["#/stats", "sliders", "nav.stats"],
+  ],
+  [
+    ["#/about", "info", "nav.about"],
+    ["#/contribute", "join", "nav.contribute"],
+  ],
 ];
 
 // which tab a page belongs to: a TABS key, "more",
@@ -1236,7 +1249,9 @@ function tabBar() {
   const draw = () => {
     sheet.lang = LANG;
     sheet.setAttribute("aria-label", t("nav.more"));
-    sheet.replaceChildren(...MORE.map(menuLink));
+    sheet.replaceChildren(...MORE.map((g) =>
+      h("div", { class: "more-group",
+        role: "group" }, g.map(menuLink))));
     more.replaceChildren(icon(ICONS.menu),
       t("nav.more"));
     bar.lang = LANG;
