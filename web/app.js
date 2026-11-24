@@ -159,6 +159,7 @@ function icon(paths, cls) {
 const ICONS = {
   // a soft cross, drawn like a pen stroke: take off
   // the list
+  tick: ["M5 12.5l4.5 4.5L19 7.5"],
   close: ["M6.5 6c3.5 3 7 7 11 12",
     "M17.5 6c-3.5 3-7 7-11 12"],
   folder: [
@@ -7399,14 +7400,13 @@ async function searchPage(query) {
       h("a", { href: searchHref(q, w, null, forms),
         "aria-current": w === where ? "page" : null },
       searchInName(w) + " · " + nf(counts[w]))));
-  // one form or all the forms of the word
-  const formBar = h("div", { class: "filters forms" },
-    h("span", { class: "meta" }, t("s.forms")),
-    ...[[true, "s.allforms"], [false, "s.oneform"]]
-      .map(([on, key]) =>
-        h("a", { href: searchHref(q, where, null, on),
-          "aria-current": on === forms ? "page" : null },
-        t(key))));
+  // search the forms of the word too: a tick box
+  const formBar = h("div", { class: "s-forms" },
+    h("a", { href: searchHref(q, where, null, !forms),
+      role: "checkbox", "aria-checked": String(forms),
+      class: "tickbox" },
+    h("span", { class: "box" }, icon(ICONS.tick)),
+    t("s.forms")));
   // each spelling found, and in how many lines; for
   // the words found in more than one
   const spells = new Map();
