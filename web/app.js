@@ -1896,6 +1896,23 @@ function readingBooks(data, items) {
   return [...out.values()];
 }
 
+// the book of the Library a part belongs to (a
+// translation counts for its book), or null
+function bookOfPart(data, part) {
+  const name = part.replace(
+    /^ashkharhabar\//, "grabar/");
+  for (const a of data.authors) {
+    for (const b of a.books) {
+      const key = b.parts > 1 ? dirOf(b.first)
+        : b.first;
+      if (key === name || key === dirOf(name)) {
+        return b;
+      }
+    }
+  }
+  return null;
+}
+
 // star a book (named by its first file), or take
 // the star off; the stars after it
 async function toggleStar(name) {
@@ -2197,7 +2214,9 @@ async function libraryPage(who) {
       h("span", { class: "by" },
         t("r.line", x.line) + (x.text
           ? " · " + x.text : ""))));
-    markList.append(h("li", {}, row));
+    const b = bookOfPart(data, x.name);
+    markList.append(b ? bookItem(b, row)
+      : h("li", {}, row));
   }
   panes.bookmarks.append(marked.items.length
     ? markList : empty(t("lib.nomarks")));
