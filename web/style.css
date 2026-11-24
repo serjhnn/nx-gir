@@ -1067,7 +1067,7 @@ body.home .bar {
 }
 .top-about {
   pointer-events: auto;
-  color: #f3dfae;
+  color: rgb(243 223 174 / 0.72);
   font-family: var(--sans);
   font-size: 0.78rem;
   line-height: 1;
@@ -1076,6 +1076,7 @@ body.home .bar {
 }
 .top-about:hover,
 .top-about:focus-visible {
+  color: #f3dfae;
   text-decoration: underline;
 }
 
