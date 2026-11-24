@@ -711,7 +711,7 @@ function siteFooter() {
       pages.flatMap((p, i) => [
         i ? " · " : null,
         h("a", { href: "#/" + p }, t("nav." + p))])),
-    h("p", {}, t("foot.tr"),
+    h("p", { class: "foot-keep" }, t("foot.tr"),
       h("a", { href: BY_SA, rel: "license" },
         "CC BY-SA 4.0"),
       t("foot.pd")),
@@ -723,7 +723,7 @@ function siteFooter() {
       " · ",
       h("a", { href: REPO }, "GitHub"),
       offlineLink()),
-    h("p", {}, t("foot.by1"),
+    h("p", { class: "foot-keep" }, t("foot.by1"),
       h("a", { href: "#/about" }, t("foot.name")),
       t("foot.by2")));
 }
@@ -1314,24 +1314,14 @@ function logoMark() {
   return mark.cloneNode(true);
 }
 
-// the end of the More sheet: what the footer
-// says, which phones do not show (style.css);
-// GitHub is on the About page
+// the end of the More sheet: Offline, the
+// footer's link, which phones do not show
+// (style.css; the license and credits stay)
 function sheetLinks() {
   if (!hasWorker()) return null;
   return h("a", { class: "icon-btn",
     href: "#/offline" }, icon(ICONS.save),
   t("nav.offline"));
-}
-
-function sheetFoot() {
-  return h("p", { class: "sheet-foot" },
-    t("foot.tr"),
-    h("a", { href: BY_SA, rel: "license" },
-      "CC BY-SA 4.0"),
-    t("foot.pd"), h("br"), t("foot.by1"),
-    h("a", { href: "#/about" }, t("foot.name")),
-    t("foot.by2"));
 }
 
 function tabBar() {
@@ -1354,7 +1344,7 @@ function tabBar() {
       h("div", { class: "more-group",
         role: "group" }, g.map(menuLink),
       i === MORE.length - 1 ? sheetLinks()
-        : null)), sheetFoot());
+        : null)));
     more.replaceChildren(icon(ICONS.menu),
       t("nav.more"));
     bar.lang = LANG;

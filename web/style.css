@@ -4246,22 +4246,14 @@ body.home .search-wrap {
     color: var(--text);
     font-size: 0.85rem;
   }
-  .more-sheet .sheet-foot {
-    max-width: 14rem;
-    margin: 0.3rem 0 0 auto;
-    padding: 0.5rem 0.7rem 0.3rem;
-    border-top: 1px solid var(--panel-rule);
-    color: var(--muted);
-    font-size: 0.72rem;
-    line-height: 1.5;
-    text-align: right;
-  }
-  .more-sheet .sheet-foot a {
-    color: inherit;
-    white-space: nowrap;
-  }
-  /* the More sheet has what it says */
+  /* the footer: only the license and the credits;
+     the More sheet has the links */
   .site-foot {
+    margin-top: 2rem;
+    font-size: 0.75rem;
+    line-height: 1.6;
+  }
+  .site-foot > :not(.foot-keep) {
     display: none;
   }
   .more-sheet .icon-btn svg {
