@@ -284,6 +284,11 @@ const ICONS = {
   // up and down: the found one before, after
   up: ["M6 15l6-6l6 6"],
   down: ["M6 9l6 6l6-6"],
+  // an arrow into a tray: save for offline
+  save: ["M12 4v11M7 10l5 5l5-5",
+    "M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"],
+  // angle brackets: the source code
+  code: ["M8 7l-5 5l5 5M16 7l5 5l-5 5M14 4l-4 16"],
 };
 
 // 512 B, 3.4 KB: like human_size() in Python.
@@ -1176,6 +1181,25 @@ function logoMark() {
   return mark.cloneNode(true);
 }
 
+// the end of the More sheet: what the footer
+// says, which phones do not show (style.css)
+function sheetEnd() {
+  const links = [
+    hasWorker() ? ["#/offline", "save",
+      "nav.offline"] : null,
+    [REPO, "code", "GitHub"],
+  ].filter(Boolean).map(([href, ic, label]) =>
+    h("a", { class: "icon-btn", href },
+      icon(ICONS[ic]),
+      label === "GitHub" ? label : t(label)));
+  return [...links,
+    h("p", { class: "sheet-foot" },
+      t("foot.tr"),
+      h("a", { href: BY_SA, rel: "license" },
+        "CC BY-SA 4.0"),
+      t("foot.pd"), h("br"), t("foot.by"))];
+}
+
 function tabBar() {
   const link = ([href, ic, label, key]) => h("a",
     { href, "data-tab": key },
@@ -1192,7 +1216,8 @@ function tabBar() {
   const draw = () => {
     sheet.lang = LANG;
     sheet.setAttribute("aria-label", t("nav.more"));
-    sheet.replaceChildren(...MORE.map(menuLink));
+    sheet.replaceChildren(...MORE.map(menuLink),
+      ...sheetEnd());
     more.replaceChildren(icon(ICONS.menu),
       t("nav.more"));
     bar.lang = LANG;
