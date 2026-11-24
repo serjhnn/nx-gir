@@ -1051,6 +1051,34 @@ body.home .bar {
 .wide .top-banner img {
   object-position: 50% 46%;
 }
+/* the whole banner leads to the About page; the
+   words in the corner say so */
+.top-banner .banner-all {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+}
+.top-about {
+  position: absolute;
+  z-index: 2;
+  left: 0.9rem;
+  bottom: 0.7rem;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid #d4a23c;
+  border-radius: 999px;
+  background: rgb(12 7 3 / 0.55);
+  color: #f3dfae;
+  font-family: var(--sans);
+  font-size: 0.78rem;
+  text-decoration: none;
+}
+.top-about:hover,
+.top-about:focus-visible {
+  background: rgb(12 7 3 / 0.85);
+}
+.top-text {
+  pointer-events: none;
+}
 
 /* the top page: the note that the site is being
    built, an outline with the accent on the left */

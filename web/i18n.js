@@ -192,6 +192,7 @@ const UI = {
     "join.go": "Ինչպես միանալ →",
     "mapb.text": "Պատմական դեպքերի վայրերը քարտեզի վրա",
     "mapb.go": "Բացել քարտեզը →",
+    "top.about": "Նախագծի մասին →",
     // readings
     "ago.now": "հենց նոր",
     "ago.min": (n) => n + " րոպե առաջ",
@@ -646,6 +647,7 @@ const UI = {
     "join.go": "How to join →",
     "mapb.text": "The places of history on the map",
     "mapb.go": "Open the map →",
+    "top.about": "About the project →",
     // readings
     "ago.now": "just now",
     "ago.min": (n) => n + " min ago",
@@ -1105,6 +1107,7 @@ const UI = {
     "join.go": "Как присоединиться →",
     "mapb.text": "Места исторических событий на карте",
     "mapb.go": "Открыть карту →",
+    "top.about": "О проекте →",
     // readings
     "ago.now": "только что",
     "ago.min": (n) => n + " мин. назад",

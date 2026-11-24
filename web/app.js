@@ -1322,12 +1322,18 @@ window.addEventListener("scroll", () => {
 }, { passive: true });
 
 // the picture at the very top of the top page,
-// with a short line in its corner
+// with a short line in its corner; a click on it
+// leads to #/about, the link in the other corner
+// is for a keyboard
 function topBanner() {
   return h("div", { class: "top-banner" },
     h("img", { src: "banner.jpg", alt: "",
       width: "1600", height: "550",
       fetchpriority: "high" }),
+    h("a", { class: "banner-all", href: "#/about",
+      tabindex: "-1", "aria-hidden": "true" }),
+    h("a", { class: "top-about", href: "#/about" },
+      t("top.about")),
     h("p", { class: "top-text", lang: "hy" },
       "… ժամանակ ժողովելոյ քարինս"));
 }
