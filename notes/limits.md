@@ -78,6 +78,12 @@ shows (`data/lines/`) about 51 MB; git 42.9 MB (4%);
 the build 68 s (11%), about 15 s of it for search. The closest
 limit is still the largest part (35%).
 
+On 2026-11-24 (after the second part of Narekatsi's
+Matean in translation, 3,933 lines, 0.3 MB): 281 book
+files, 52.1 MB of text; the site 275.0 MB (27%); git
+63.8 MB (6%); the build 57 s (9%). The closest limit
+is still the largest part (35%).
+
 Since 29dc9cf (2026-11-14): the site fell from 116 MB
 to 104 MB because the zip of the site is no longer
 built (it was 18 MB; `build-site.py --zip` makes it),

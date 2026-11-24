@@ -555,6 +555,15 @@ Translation of part 1 (`01.txt`) was made by ChatGPT
 (964 lines). It remains a machine draft, not yet
 human-reviewed; see `notes/grigor-narekatsi.md`.
 
+Translation of part 2 (`02.txt`) was made by Claude on
+2026-11-24 in modern Eastern Armenian, line for line
+(3,933 lines, chapters `[ԼԷ]` to `[ՀԴ]`). It remains a
+machine draft, not yet human-reviewed. The Grabar lines
+of this part are verse lines, not whole sentences, so
+the translation keeps one fragment on each line. Source
+oddities (a repeated or missing chapter letter, a stray
+character) are listed in `notes/grigor-narekatsi.md`.
+
 
 ## grabar/grigor-narekatsi/2-gandzer-tagher/
 
