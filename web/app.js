@@ -4838,7 +4838,7 @@ function loose(w) {
   return wordKey(w).replace(/իւ/g, "յու")
     .replace(/եա/g, "յա").replace(/եօ/g, "յո")
     .replace(/(?<!ո)ւ/g, "վ").replace(/է/g, "ե")
-    .replace(/օ/g, "ո")
+    .replace(/օ/g, "ո").replace(/ույ/g, "ոյ")
     .replace(/^յ(?=[աեէըիոօ])/, "հ");
 }
 

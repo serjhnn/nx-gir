@@ -26,6 +26,7 @@ def test_loose_folds_the_two_spellings():
     assert srch.loose("Եղիշէ") == "եղիշե"
     assert srch.loose("օր") == "որ"
     assert srch.loose("յորժամ") == "հորժամ"
+    assert srch.loose("հույս") == srch.loose("յոյս")
     # յ inside a word stays
     assert srch.loose("Հայոց") == "հայոց"
 

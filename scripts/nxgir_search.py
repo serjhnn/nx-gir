@@ -59,13 +59,15 @@ def loose(word):
     """Key of a word for search: normalize(), then
     the classical spelling folded into the reformed
     one: ւ → վ (not in ու), իւ → յու, եա → յա,
-    եօ → յո, է → ե, օ → ո, and յ at the start before
+    եօ → յո, է → ե, օ → ո, ույ → ոյ
+    (հույս, յոյս), and յ at the start before
     a vowel → հ. As loose() in web/app.js."""
     k = normalize(word)
     for a, b in FOLDS:
         k = k.replace(a, b)
     k = YW_RE.sub("վ", k)
     k = k.replace("է", "ե").replace("օ", "ո")
+    k = k.replace("ույ", "ոյ")
     return Y_RE.sub("հ", k)
 
 
