@@ -4282,10 +4282,6 @@ body.home .search-wrap {
     transform: none;
     transition: transform 0.2s;
   }
-  /* no site footer in the reader on a phone */
-  body.reading .site-foot {
-    display: none;
-  }
   body.reading:not(.peek) .more-sheet {
     display: none;
   }
