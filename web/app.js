@@ -5423,11 +5423,15 @@ function go(i) {
 // the marks on the words, and the counts above
 function decorate() {
   for (const s of main.querySelectorAll(
-    ".w.bm, .w.noted")) {
-    s.classList.remove("bm", "noted");
+    ".w.noted")) {
+    s.classList.remove("noted");
   }
+  for (const p of main.querySelectorAll("p.bm")) {
+    p.classList.remove("bm");
+  }
+  // a bookmark belongs to its line: the whole line
   for (const m of R.marks) {
-    spanOf(m.at)?.classList.add("bm");
+    R.lineEls[R.wpos[m.at][0]]?.classList.add("bm");
   }
   for (const n of R.notes) {
     spanOf(n.at)?.classList.add("noted");
@@ -5839,7 +5843,7 @@ function showContents() {
 
 // on the published copy: they stay in this browser
 function localHint() {
-  return STATIC ? h("p", { class: "hint" },
+  return STATIC ? h("p", { class: "local-hint" },
     t("r.local")) : null;
 }
 
