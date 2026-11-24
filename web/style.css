@@ -4208,7 +4208,7 @@ body.home .search-wrap {
     position: fixed;
     left: auto;
     right: 8px;
-    min-width: min(15rem, calc(100vw - 16px));
+    min-width: min(12.5rem, calc(100vw - 16px));
     bottom: calc(var(--tabbar) + 8px);
     z-index: 24;
     display: block;
