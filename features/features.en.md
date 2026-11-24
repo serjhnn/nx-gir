@@ -111,3 +111,7 @@ Offline at the bottom of every page leads to two ways to read with no network: i
 ## Armenian, English or Russian
 
 The whole site speaks the language you choose: press Հայ, Eng or Рус at the top of any page. On a first visit it takes your browser's language. The language is part of every address (nxgir.am/en/library, nxgir.am/ru/blog), so a link opens the page in the language it was shared in. The books stay as they are; word meanings come in English or Armenian (in Russian, for now, in English).
+
+## About the project
+
+The About page, linked from the footer and from the author's name there, says what nxGir is, what you can do with it and who makes it.

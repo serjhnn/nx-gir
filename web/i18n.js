@@ -107,7 +107,54 @@ const UI = {
     "foot.pd": " · Գրաբար բնագրերը հանրային"
       + " սեփականություն են",
     "foot.join": "Դառնալ մասնակից",
-    "foot.by": "Մշակել են Սերգեյ Օհանյանը և Claude-ը",
+    "nav.about": "Մասին",
+    "foot.by1": "Մշակել են ",
+    "foot.name": "Սերգեյ Օհանյանը",
+    "foot.by2": " և Claude-ը",
+    "ab.title": "Նախագծի մասին",
+    "ab.sub":
+      "Նախագիրը (nxGir) գրաբար՝ հին հայերեն գրքերի "
+      + "անվճար գրադարան և ընթերցարան է։ "
+      + "Յուրաքանչյուր բառի իմաստը կարելի է տեսնել, "
+      + "իսկ պատրաստ թարգմանությունները կարդացվում "
+      + "են բնագրի կողքին։",
+    "ab.what.h": "Հին գրքերի ընթերցարան",
+    "ab.what.t":
+      "Նախագիրը հավաքում է գրաբարով գրված գրքեր՝ "
+      + "առաջին պատմիչներից մինչև ավելի ուշ "
+      + "ժամանակագրություններ ու մեկնություններ։ "
+      + "Դրանք կարելի է կարդալ դիտարկիչում, "
+      + "հեռախոսով կամ տերմինալում. տեքստը պարզ "
+      + "յունիկոդ է, ոչինչ տեղադրել պետք չէ։",
+    "ab.name.h": "Անունը",
+    "ab.name.t":
+      "Նախագիր՝ «նախ» (առաջին) և «գիր» (տառ, "
+      + "գրություն) բառերից։ Անգլերեն նախագիծը "
+      + "կոչվում է nxGir։",
+    "ab.do.h": "Ինչ կարելի է անել",
+    "ab.do.t":
+      "Բացեք գիրքը և սեղմեք բառի վրա՝ նրա իմաստն "
+      + "ու ձևերը տեսնելու համար։ Կարդացեք գրաբարը "
+      + "ժամանակակից հայերենի կողքին։ Որոնեք ամբողջ "
+      + "գրադարանում։ Քարտեզի վրա հետևեք գրքերի "
+      + "վայրերին։ Կարդացեք բլոգը և կոմիքսները։",
+    "ab.open.h": "Ազատ և բաց",
+    "ab.open.t":
+      "Գրաբար բնագրերը հանրային սեփականություն են։ "
+      + "Մեր թարգմանությունները տարածվում են CC "
+      + "BY-SA 4.0 լիցենզիայով և սկսվում են որպես "
+      + "մեքենայական սևագրեր. դրանք նշված են, մինչև "
+      + "մարդը վերանայի։ Կոդը և տեքստերը GitHub-ում "
+      + "են, և ցանկացողը կարող է օգնել։",
+    "ab.author.h": "Հեղինակը",
+    "ab.author.t":
+      "Նախագիրը ստեղծում են Սերգեյ Օհանյանը և "
+      + "Claude-ը՝ Anthropic-ի արհեստական "
+      + "բանականության օգնականը, որն օգնում է գրել "
+      + "կոդը և թարգմանությունների առաջին սևագրերը։ "
+      + "Հարցերը, ուղղումներն ու գաղափարները "
+      + "ողջունվում են GitHub-ում։",
+    "ab.contact": "Գրել հեղինակին GitHub-ում",
     "home": "← Գլխավոր",
     "back.library": "Վերադառնալ գրադարան",
     "error": "Ինչ-որ բան այն չէ",
@@ -515,7 +562,55 @@ const UI = {
     "foot.tr": "Translations ",
     "foot.pd": " · Grabar texts in the public domain",
     "foot.join": "Become a contributor",
-    "foot.by": "Developed by Sergey Ohanyan and Claude",
+    "nav.about": "About",
+    "foot.by1": "Developed by ",
+    "foot.name": "Sergey Ohanyan",
+    "foot.by2": " and Claude",
+    "ab.title": "About the project",
+    "ab.sub":
+      "Նախագիր (nxGir) is a free library and "
+      + "reader of books in Grabar, Classical "
+      + "Armenian. Every word can be looked up, and "
+      + "ready translations are read beside the "
+      + "original.",
+    "ab.what.h": "A reader for old Armenian books",
+    "ab.what.t":
+      "nxGir collects books written in Grabar, "
+      + "from the first historians to later "
+      + "chronicles and commentaries. You can read "
+      + "them in a browser, on a phone or in the "
+      + "terminal; the text is plain Unicode, and "
+      + "there is nothing to install.",
+    "ab.name.h": "The name",
+    "ab.name.t":
+      "Նախագիր is made of նախ, “first”, and գիր, "
+      + "“letter, script”. In English the project is "
+      + "called nxGir.",
+    "ab.do.h": "What you can do",
+    "ab.do.t":
+      "Open a book and click a word to see its "
+      + "meaning and forms. Read Grabar beside a "
+      + "Modern Armenian translation. Search the "
+      + "whole Library. Follow the places of the "
+      + "books on the map. Read the blog and the "
+      + "comics.",
+    "ab.open.h": "Free and open",
+    "ab.open.t":
+      "The Grabar texts are in the public domain. "
+      + "Our translations are under CC BY-SA 4.0 and "
+      + "begin as machine drafts; they are marked as "
+      + "such until a person reviews them. The code "
+      + "and the texts are on GitHub, and anyone can "
+      + "help.",
+    "ab.author.h": "The author",
+    "ab.author.t":
+      "nxGir is made by Sergey Ohanyan together "
+      + "with Claude, an AI assistant made by "
+      + "Anthropic, which helps write the code and "
+      + "the first drafts of the translations. "
+      + "Questions, corrections and ideas are "
+      + "welcome on GitHub.",
+    "ab.contact": "Write to the author on GitHub",
     "home": "← Home",
     "back.library": "Back to the library",
     "error": "Something went wrong",
@@ -921,7 +1016,54 @@ const UI = {
     "foot.pd": " · Тексты на грабаре в общественном"
       + " достоянии",
     "foot.join": "Стать участником",
-    "foot.by": "Разработали Сергей Оганян и Claude",
+    "nav.about": "О проекте",
+    "foot.by1": "Разработали ",
+    "foot.name": "Сергей Оганян",
+    "foot.by2": " и Claude",
+    "ab.title": "О проекте",
+    "ab.sub":
+      "Նախագիր (nxGir) — бесплатная библиотека и "
+      + "читалка книг на грабаре, древнеармянском "
+      + "языке. Можно узнать значение каждого слова, "
+      + "а готовые переводы читаются рядом с "
+      + "оригиналом.",
+    "ab.what.h": "Читалка старых армянских книг",
+    "ab.what.t":
+      "nxGir собирает книги, написанные на "
+      + "грабаре: от первых историков до поздних "
+      + "хроник и толкований. Их можно читать в "
+      + "браузере, на телефоне или в терминале; "
+      + "текст — обычный Unicode, ничего "
+      + "устанавливать не нужно.",
+    "ab.name.h": "Название",
+    "ab.name.t":
+      "Նախագիր составлено из слов նախ — «первый» и "
+      + "գիր — «буква, письмо». По-английски проект "
+      + "называется nxGir.",
+    "ab.do.h": "Что можно делать",
+    "ab.do.t":
+      "Откройте книгу и нажмите на слово, чтобы "
+      + "увидеть его значение и формы. Читайте "
+      + "грабар рядом с переводом на современный "
+      + "армянский. Ищите по всей библиотеке. "
+      + "Следите за местами из книг на карте. "
+      + "Читайте блог и комиксы.",
+    "ab.open.h": "Свободно и открыто",
+    "ab.open.t":
+      "Тексты на грабаре — общественное достояние. "
+      + "Наши переводы распространяются по лицензии "
+      + "CC BY-SA 4.0 и начинаются как машинные "
+      + "черновики; они помечены, пока их не "
+      + "проверит человек. Код и тексты лежат на "
+      + "GitHub, помочь может каждый.",
+    "ab.author.h": "Автор",
+    "ab.author.t":
+      "nxGir делают Сергей Оганян и Claude — "
+      + "ИИ-помощник от Anthropic, который помогает "
+      + "писать код и первые черновики переводов. "
+      + "Вопросы, исправления и идеи приветствуются "
+      + "на GitHub.",
+    "ab.contact": "Написать автору на GitHub",
     "home": "← Главная",
     "back.library": "Вернуться в библиотеку",
     "error": "Что-то пошло не так",

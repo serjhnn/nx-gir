@@ -327,6 +327,12 @@ def test_searchable(tmp_path, files):
     assert "<h1>Timeline</h1>" in tl
     tl = (out / "ru/timeline/index.html").read_text("utf-8")
     assert "<h1>Хронология</h1>" in tl
+    # the About page
+    ab = (out / "en/about/index.html").read_text("utf-8")
+    assert "Sergey Ohanyan" in ab
+    ab = (out / "ru/about/index.html").read_text("utf-8")
+    assert "Сергей Оганян" in ab
+    assert f"{bs.SITE}/en/about/" in sm
     # none of these are saved for offline
     off = json.loads((out / "offline.json").read_text())
     saved = [f[0] for f in off["files"]]

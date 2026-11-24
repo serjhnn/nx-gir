@@ -568,6 +568,26 @@ LISTS = {
             "Главные шаги nxGir, от новых к старым.",
         ),
     },
+    "about": {
+        "hy": (
+            "Նախագծի մասին",
+            "Նախագիրը (nxGir)՝ գրաբար գրքերի անվճար"
+            " գրադարան և ընթերցարան։ Հեղինակ՝ Սերգեյ"
+            " Օհանյան։",
+        ),
+        "en": (
+            "About the project",
+            "nxGir is a free library and reader of"
+            " Grabar books. Made by Sergey Ohanyan"
+            " with Claude.",
+        ),
+        "ru": (
+            "О проекте",
+            "nxGir — бесплатная библиотека и читалка"
+            " книг на грабаре. Автор — Сергей Оганян"
+            " вместе с Claude.",
+        ),
+    },
 }
 
 # the top page in each language: its title (as
@@ -1088,8 +1108,9 @@ def author_page(out, app, author, books, ids, names):
 def hub_pages(out, app, dirs):
     """The lists: hy/library/ (the authors and their
     books), hy/b/<folder>/ (volume_pages()), and in
-    each language <lang>/blog/, <lang>/comics/ and
-    <lang>/timeline/. Returns [(path, title)]."""
+    each language <lang>/blog/, <lang>/comics/,
+    <lang>/timeline/ and <lang>/about/. Returns
+    [(path, title)]."""
     esc = htm.escape
     info = web.authors(app)
     ids, names = info["authors"], info["names"]
@@ -1193,6 +1214,17 @@ def hub_pages(out, app, dirs):
             text=f'<ul lang="en">\n{li}</ul>',
         )
         links.append((f"{lang}/timeline", title))
+    for lang in LANGS:
+        title, desc = LISTS["about"][lang]
+        route_page(
+            out,
+            f"{lang}/about",
+            lang=lang,
+            title=title,
+            desc=desc,
+            text=f"<p>{esc(desc)}</p>",
+        )
+        links.append((f"{lang}/about", title))
     return links
 
 

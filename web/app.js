@@ -3,7 +3,7 @@
 // (a book's parts), #/read/<book>,
 // #/library, #/reference (the book cards),
 // #/timeline, #/blog, #/comics,
-// #/features,
+// #/features, #/about,
 // #/contribute, #/news and #/stats; the
 // data
 // comes from
@@ -614,7 +614,7 @@ const BY_SA = "https://creativecommons.org/"
 function siteFooter() {
   const pages = ["library", "reference", "blog",
     "comics", "map", "features", "timeline",
-    "stats", "recent"];
+    "about", "stats", "recent"];
   return h("footer", { class: "site-foot" },
     h("p", { class: "foot-name" },
       h("span", { lang: "hy" }, "Նախագիր"),
@@ -637,7 +637,9 @@ function siteFooter() {
       " · ",
       h("a", { href: REPO }, "GitHub"),
       offlineLink()),
-    h("p", {}, t("foot.by")));
+    h("p", {}, t("foot.by1"),
+      h("a", { href: "#/about" }, t("foot.name")),
+      t("foot.by2")));
 }
 
 // the published site only: a link to #/offline
@@ -3396,6 +3398,32 @@ function contributePage() {
     h("p", { class: "sub" }, t("co.lic1"),
       h("a", { href: BY_SA, rel: "license" },
         "CC BY-SA 4.0"), t("co.lic2")));
+}
+
+// -- about --
+
+// #/about: the project and its author
+const AUTHOR_URL = "https://github.com/serjhnn";
+
+function aboutPage() {
+  document.title = t("ab.title") + " · " + NAME;
+  const part = (k) => h("li", {},
+    h("h2", {}, t("ab." + k + ".h")),
+    h("p", {}, named(t("ab." + k + ".t"))));
+  show(
+    h("p", { class: "crumbs" },
+      h("a", { href: "#/" }, t("home"))),
+    h("h1", {}, t("ab.title")),
+    h("p", { class: "sub" }, named(t("ab.sub"))),
+    h("ul", { class: "features" },
+      ["what", "name", "do", "open", "author"]
+        .map(part)),
+    h("p", { class: "cta" },
+      h("a", { class: "cta-main", href: AUTHOR_URL },
+        t("ab.contact")),
+      h("a", { href: "#/contribute" },
+        t("foot.join")),
+      h("a", { href: REPO }, t("co.gh"))));
 }
 
 // -- announcements --
@@ -7579,6 +7607,8 @@ async function route() {
       await referencePage();
     } else if (hash === "contribute") {
       contributePage();
+    } else if (hash === "about") {
+      aboutPage();
     } else if (hash === "news"
       || hash.startsWith("news/")) {
       newsPage(decodeURIComponent(hash.slice(5)));
