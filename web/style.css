@@ -1063,13 +1063,18 @@ body.home .bar {
   z-index: 2;
   left: 0.9rem;
   bottom: 0.7rem;
-  padding: 0.25rem 0.7rem;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 1.8rem;
+  padding: 0.12rem 0.75rem 0;
   border: 1px solid #d4a23c;
   border-radius: 999px;
   background: rgb(12 7 3 / 0.55);
   color: #f3dfae;
   font-family: var(--sans);
   font-size: 0.78rem;
+  line-height: 1;
   text-decoration: none;
 }
 .top-about:hover,
