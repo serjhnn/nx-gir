@@ -589,8 +589,8 @@ function show(...kids) {
   window.scrollTo(0, 0);
 }
 
-// a page without the footer (the Library and
-// search: their lists go on to the bottom)
+// a page without the footer (the Library: its
+// lists go on to the bottom of the screen)
 function showBare(...kids) {
   main.replaceChildren(...withSearch(kids));
   window.scrollTo(0, 0);
@@ -7117,7 +7117,7 @@ async function searchPage(query) {
     h("h1", {}, t("nav.search")),
     withHome(searchBox(q)),
   ];
-  const say = (...x) => showBare(...head,
+  const say = (...x) => show(...head,
     h("p", { class: "sub" }, ...x));
   if (!q.match(SEARCH_WORD)) {
     say(t("s.hint"));
@@ -7167,7 +7167,7 @@ async function searchPage(query) {
   // a name found and no line: the names alone
   const none = SEARCH_IN.every((w) => !counts[w]);
   if (!f.spelled.length || (names && none)) {
-    showBare(...head, names, common);
+    show(...head, names, common);
     return;
   }
   const filters = h("div", { class: "filters" },
@@ -7243,7 +7243,7 @@ async function searchPage(query) {
     }));
   };
   draw();
-  showBare(...head, names,
+  show(...head, names,
     names ? h("h2", { class: "s-head2" },
       t("s.found")) : null,
     h("p", { class: "s-sum" },
