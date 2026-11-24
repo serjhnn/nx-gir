@@ -295,6 +295,9 @@ const ICONS = {
   // up and down: the found one before, after
   up: ["M6 15l6-6l6 6"],
   down: ["M6 9l6 6l6-6"],
+  // an arrow into a tray: save for offline
+  save: ["M12 4v11M7 10l5 5l5-5",
+    "M4 17v2a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2"],
 };
 
 // 512 B, 3.4 KB: like human_size() in Python.
@@ -742,7 +745,7 @@ function siteFooter() {
       pages.flatMap((p, i) => [
         i ? " · " : null,
         h("a", { href: "#/" + p }, t("nav." + p))])),
-    h("p", {}, t("foot.tr"),
+    h("p", { class: "foot-keep" }, t("foot.tr"),
       h("a", { href: BY_SA, rel: "license" },
         "CC BY-SA 4.0"),
       t("foot.pd")),
@@ -754,7 +757,7 @@ function siteFooter() {
       " · ",
       h("a", { href: REPO }, "GitHub"),
       offlineLink()),
-    h("p", {}, t("foot.by1"),
+    h("p", { class: "foot-keep" }, t("foot.by1"),
       h("a", { href: "#/about" }, t("foot.name")),
       t("foot.by2")));
 }
@@ -1345,6 +1348,16 @@ function logoMark() {
   return mark.cloneNode(true);
 }
 
+// the end of the More sheet: Offline, the
+// footer's link, which phones do not show
+// (style.css; the license and credits stay)
+function sheetLinks() {
+  if (!hasWorker()) return null;
+  return h("a", { class: "icon-btn",
+    href: "#/offline" }, icon(ICONS.save),
+  t("nav.offline"));
+}
+
 function tabBar() {
   const link = ([href, ic, label, key]) => h("a",
     { href, "data-tab": key },
@@ -1361,9 +1374,11 @@ function tabBar() {
   const draw = () => {
     sheet.lang = LANG;
     sheet.setAttribute("aria-label", t("nav.more"));
-    sheet.replaceChildren(...MORE.map((g) =>
+    sheet.replaceChildren(...MORE.map((g, i) =>
       h("div", { class: "more-group",
-        role: "group" }, g.map(menuLink))));
+        role: "group" }, g.map(menuLink),
+      i === MORE.length - 1 ? sheetLinks()
+        : null)));
     more.replaceChildren(icon(ICONS.menu),
       t("nav.more"));
     bar.lang = LANG;
