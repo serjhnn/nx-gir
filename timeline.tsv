@@ -119,5 +119,8 @@
 2026-11-22	Site		A card for every book	Every book in the Library has a short card in Armenian, English and Russian, written by Claude from Wikipedia and the books themselves, and the search finds a book by its English or Russian title.	
 2026-11-22	Site		The Reference page	Տեղեկատու shows every book as a card, with filters by kind and by century, in Armenian, English and Russian.	
 2026-11-22	Site	*	The site in three languages	Every page is in Armenian, English or Russian, picked with the Հայ · Eng · Рус button or taken from the browser, and the language is part of every address (nxgir.am/en/library).	
+2026-11-23	Site		A tip on the home page	A framed Tip under the menu says that the scroll and the book icon in the Library open the cards about authors and books.	
+2026-11-24	Translation	*	The second part of Narekatsi's Book of Lamentations in modern Armenian	All 3,933 lines of part 2, chapters 37 to 74, translated line for line; the draft is open for human review.	grabar/grigor-narekatsi/1-matean-voghbergutyan/02.txt
+2026-11-24	Site		About page	The About page tells what nxGir is and who makes it, Sergey Ohanyan with Claude; the footer links to it.	
 next	Translation		All of Amaran hator in modern Armenian	Then the other works of Grigor Tatevatsi.	
 next	Site		A contents page for each book	What each part of a book is about.	

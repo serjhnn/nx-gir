@@ -26,6 +26,7 @@ def test_loose_folds_the_two_spellings():
     assert srch.loose("Եղիշէ") == "եղիշե"
     assert srch.loose("օր") == "որ"
     assert srch.loose("յորժամ") == "հորժամ"
+    assert srch.loose("հույս") == srch.loose("յոյս")
     # յ inside a word stays
     assert srch.loose("Հայոց") == "հայոց"
 
@@ -352,3 +353,22 @@ def test_api_lines(app):
             "/api/lines",
             {"name": ["grabar/smbat/b/02.txt"], "k": ["x"]},
         )
+
+
+def test_lemmas_group_the_forms_of_a_word():
+    pairs = [
+        ("յուսով", "յոյս"),
+        ("յոյսն", "յոյս"),
+        ("յուսալ", "յուսալ"),
+    ]
+    keys = [
+        srch.loose(w)
+        for w in ("յոյս", "յուսով", "յուսալ", "հոյսն")
+    ]
+    got = srch.lemmas(keys, pairs)
+    assert got == [
+        sorted(
+            srch.loose(w)
+            for w in ("յոյս", "յուսով", "հոյսն")
+        )
+    ]

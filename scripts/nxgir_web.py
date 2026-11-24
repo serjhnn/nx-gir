@@ -28,6 +28,7 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/volume?folder=     a book's page: its parts
   GET  /api/search?w=          the lines of a word
                                (nxgir_search.py)
+  GET  /api/search-lemmas      forms of one word
   GET  /api/search-parts       the parts searched,
                                their books and authors
   GET  /api/lines?name=&k=     100 lines of a book
@@ -1374,6 +1375,14 @@ def search_index(app):
         return app.found
 
 
+def search_lemmas(app):
+    """The lemma table of the index: [[key, ...]],
+    the keys that are forms of one word."""
+    index, _ = search_index(app)
+    pairs = grabar.tsv(grabar.FORMS)
+    return {"groups": srch.lemmas(index.keys(), pairs)}
+
+
 def search(app, w):
     """A word's entry in the index: {"key": its loose
     key, "entry": see nxgir_search.py, or None}."""
@@ -1441,6 +1450,8 @@ def get(app, route, query):
         return volume(app, arg("folder"))
     if route == "/api/search":
         return search(app, arg("w"))
+    if route == "/api/search-lemmas":
+        return search_lemmas(app)
     if route == "/api/search-parts":
         return search_index(app)[1]
     if route == "/api/lines":

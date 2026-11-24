@@ -84,6 +84,35 @@ Status (2026-11-21): 1 to 3 are in `books/`
 `mkhitar-heratsi/`) is in too: the ranked list is done.
 What is left is later (15th to 19th century) or minor.
 
+## 0b. The dark ages, 7th to 15th century (2026-11-24)
+
+What `notes/digilib.tsv` has for the Arab, Seljuk, Mongol
+and Timurid centuries and `books/` has not. Compared by
+author and title only; look at each before fetching (the
+`kind` is a guess). Ranked by how much it tells of the
+period, then by cost.
+
+| #  | work | id | parts | why |
+|----|------|----|-------|-----|
+| 1  | Հեթում Պատմիչ, Համառօտ պատմութիւն ժամանակաց | 1588 | 2 | the third book of an author already in `books/` |
+| 2  | Անանուն ժամանակագրութիւններ (Ա, Գ, Ե, ԺԱ; Բ) | 98, 100, 102, 108, 99 | 3, 2, 2, 2, 1 | short, grabar, Seljuk to Timurid years |
+| 3  | Հայոց նոր վկաներ (1155-1843) | 1587 | 140 | martyrs under Seljuk, Mongol and later rule |
+| 4  | Հայ միջնադարեան պատմական ողբեր | 2656 | 12 | laments over the conquests |
+| 5  | Հայերէն Յիշատակարաններ (colophons) | 1585 | 716 | the voice of the 13th to 15th century; big, cut into parts |
+| 6  | Յովհաննէս Հաննա, Գիրք պատմութեան | 217 | 143 | unclear: look first |
+
+Then the short chronicles, 1 to 2 sections each (15th to
+18th century), one batch: Բաղդասար Դպիր (139), Գրիգոր
+Վարագեցի (182), Մարտիրոս Խալիֆայ (259), Մովսէս Արծկեցի
+(282), Դաւիթ Մերդինցի (146), Յակոբ Կարնեցի (192, 193),
+Վարդան Բաղիշեցի (357), Ուրախ Կարնեցի (351), Յովհաննիսիկ
+Ծարեցի (226).
+
+Last, later history, minor for the period: Պօղոս
+Կաղզուանցի (1481), Ղուկաս Սեբաստացի (170), Աբրահամ
+Երեւանցի (52), Աբրահամ Կրետացի (53), Սիմէօն Երեւանցի's
+colophons (325, 326, 1473, 1475), Չամչեանց (1465-1467).
+
 ## 1. The 5th-century core (plain Grabar, the model
    of the language)
 

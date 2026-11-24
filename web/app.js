@@ -3,7 +3,7 @@
 // (a book's parts), #/read/<book>,
 // #/library, #/reference (the book cards),
 // #/timeline, #/blog, #/comics,
-// #/features,
+// #/features, #/about,
 // #/contribute, #/news and #/stats; the
 // data
 // comes from
@@ -157,12 +157,11 @@ function icon(paths, cls) {
 }
 
 const ICONS = {
-  // a bin: take off the list
-  bin: [
-    "M4 7h16M10 11v6M14 11v6",
-    "M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12",
-    "M9 7V4h6v3",
-  ],
+  // a soft cross, drawn like a pen stroke: take off
+  // the list
+  tick: ["M5 12.5l4.5 4.5L19 7.5"],
+  close: ["M6.5 6c3.5 3 7 7 11 12",
+    "M17.5 6c-3.5 3-7 7-11 12"],
   folder: [
     "M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8" +
       "a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
@@ -193,6 +192,11 @@ const ICONS = {
   person: [
     "M12 11a3.5 3.5 0 1 0 0-7a3.5 3.5 0 0 0 0 7z",
     "M5 20c0-4 3-6.5 7-6.5s7 2.5 7 6.5",
+  ],
+  // a circle with an i: about the project
+  info: [
+    "M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18z",
+    "M12 11v5M12 8h.01",
   ],
   // a rolled sheet with lines: about an author
   scroll: [
@@ -241,6 +245,13 @@ const ICONS = {
     "M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5" +
       "a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z",
     "M8 12l3 3l5-6",
+  ],
+  // a globe: the language slider shows or hides
+  globe: [
+    "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z",
+    "M3 12h18",
+    "M12 3c3 2.5 3 15.5 0 18",
+    "M12 3c-3 2.5-3 15.5 0 18",
   ],
   sun: [
     "M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8z",
@@ -329,8 +340,10 @@ const BUILD = window.NXGIR_BUILD || "";
 
 // Visits to the published copy are counted by
 // GoatCounter (NXGIR_COUNT, set by static.js when
-// build-site.py has a code): the page and its title,
-// where the visitor came from and the screen width;
+// build-site.py has a code): the page (its path
+// starts with the language, /en/library) and its
+// title, where the visitor came from and the screen
+// width;
 // no cookies, nothing about the visitor. Sent as an
 // image, as GoatCounter allows, so no script of
 // theirs is loaded. Not when a program drives the
@@ -566,6 +579,9 @@ async function staticApi(path) {
   if (route === "search-parts") {
     return json("data/search/parts.json");
   }
+  if (route === "search-lemmas") {
+    return json("data/search/lemmas.json");
+  }
   if (route === "lines") {
     return json("data/lines/" + enc(q.get("name"))
       + "/" + Number(q.get("k")) + ".json");
@@ -610,7 +626,7 @@ const BY_SA = "https://creativecommons.org/"
 function siteFooter() {
   const pages = ["library", "reference", "blog",
     "comics", "map", "features", "timeline",
-    "stats", "recent"];
+    "about", "stats", "recent"];
   return h("footer", { class: "site-foot" },
     h("p", { class: "foot-name" },
       h("span", { lang: "hy" }, "Նախագիր"),
@@ -633,7 +649,9 @@ function siteFooter() {
       " · ",
       h("a", { href: REPO }, "GitHub"),
       offlineLink()),
-    h("p", {}, t("foot.by")));
+    h("p", {}, t("foot.by1"),
+      h("a", { href: "#/about" }, t("foot.name")),
+      t("foot.by2")));
 }
 
 // the published site only: a link to #/offline
@@ -755,61 +773,69 @@ viewBtn.addEventListener("click", () => {
 });
 
 // -- the language --
-// The button in the top bar (Հայ, Eng, Рус) opens
-// a list of the languages: links to the page shown
-// in each. route() sees the new language in the
-// address and sends "langchange": the menus, the
-// tab bar and the buttons draw their words again,
-// then the page itself is drawn.
+// A slider in the top bar (Հայ, Eng, Рус): the three
+// languages always in view, each a link to the page
+// shown in it, the thumb under the current one. The
+// names are short; the full name is the title and the
+// aria-label. route() sees the new language in the
+// address and sends "langchange": the thumb slides,
+// the menus, the tab bar and the buttons draw their
+// words again, then the page itself is drawn.
 
 function langButton() {
-  const bar = topBar.parentNode;
-  const btn = h("button", { class: "icon-btn lang-btn",
-    type: "button", "aria-expanded": "false",
-    "aria-controls": "lang-panel" });
-  const panel = h("nav", { class: "lang-panel",
-    id: "lang-panel", hidden: "" });
-  const open = (on) => {
-    panel.hidden = !on;
-    btn.setAttribute("aria-expanded", String(on));
+  const nav = h("nav", { class: "lang-slider",
+    id: "lang-slider", role: "group" });
+  // the globe hides the slider and brings it back; the
+  // choice is kept (shown at first)
+  const globe = h("button", {
+    class: "icon-btn lang-globe", type: "button",
+    "aria-controls": "lang-slider" }, icon(ICONS.globe));
+  const show = (on, keep) => {
+    nav.hidden = !on;
+    globe.setAttribute("aria-expanded", String(on));
+    if (!keep) return;
+    try {
+      localStorage.setItem("nxgir-lang-bar",
+        on ? "1" : "0");
+    } catch (e) {}
   };
+  let shown = true;
+  try {
+    shown = localStorage.getItem("nxgir-lang-bar") !== "0";
+  } catch (e) {}
+  globe.addEventListener("click",
+    () => show(nav.hidden, true));
+  // short in the bar, the full name on a phone, where
+  // the slider has a row of its own (style.css)
+  const links = LANGS.map((l) => h("a",
+    { lang: l, hreflang: l },
+    h("span", { class: "ls" }, LANG_SHORT[l]),
+    h("span", { class: "lf" }, LANG_FULL[l])));
+  nav.append(...links);
   const draw = () => {
-    btn.textContent = LANG_SHORT[LANG];
-    btn.lang = LANG;
-    btn.title = t("lang.pick");
-    btn.setAttribute("aria-label",
-      t("lang.pick") + ": " + LANG_FULL[LANG]);
-    panel.setAttribute("aria-label", t("lang.pick"));
-    panel.replaceChildren(...LANGS.map((l) => h("a",
-      { href: inLang(l, hashNow()), lang: l,
-        hreflang: l,
-        "aria-current": l === LANG ? "true" : null },
-      LANG_FULL[l])));
+    nav.setAttribute("aria-label", t("lang.pick"));
+    nav.title = t("lang.pick");
+    globe.title = t("lang.pick");
+    globe.setAttribute("aria-label", t("lang.pick"));
+    nav.style.setProperty("--i", LANGS.indexOf(LANG));
+    links.forEach((a, i) => {
+      const l = LANGS[i];
+      setRoute(a, inLang(l, hashNow()));
+      a.title = LANG_FULL[l];
+      a.setAttribute("aria-label", LANG_FULL[l]);
+      if (l === LANG) {
+        a.setAttribute("aria-current", "true");
+      } else a.removeAttribute("aria-current");
+    });
   };
-  btn.addEventListener("click", () => {
-    draw();
-    open(panel.hidden);
-  });
-  panel.addEventListener("click", (e) => {
-    if (e.target.closest("a")) open(false);
-  });
-  document.addEventListener("pointerdown", (e) => {
-    if (!btn.contains(e.target)
-      && !panel.contains(e.target)) open(false);
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !panel.hidden) {
-      open(false);
-      btn.focus();
-    }
-  });
-  window.addEventListener("navigate", () => {
-    open(false);
-    draw();
-  });
+  window.addEventListener("navigate", draw);
+  // the language changes after "navigate": the links
+  // in each language and the thumb, drawn again
+  window.addEventListener("langchange", draw);
   draw();
-  topBar.prepend(btn);
-  bar.append(panel);
+  show(shown, false);
+  topBar.prepend(nav);
+  topBar.append(globe);
 }
 langButton();
 
@@ -907,6 +933,31 @@ function intro(news) {
     qa("intro.q5", t("intro.a5"), mail(), t("dot")));
 }
 
+// a tip: a framed note with its label in a pill on
+// the top line (.tip); kids are its words and icons
+function tip(...kids) {
+  return h("aside", { class: "tip" },
+    h("span", { class: "tip-tag" },
+      h("i", { class: "tip-dot" }), t("tip.label"),
+      h("i", { class: "tip-dot" })),
+    h("p", {}, ...kids),
+    h("i", { class: "tip-dot tip-end" }));
+}
+
+// an icon inside a tip's sentence
+function tipIcon(name) {
+  return h("span", { class: "tip-ic" },
+    icon(ICONS[name]));
+}
+
+// the tip under the menu of the top page: what the
+// scroll and the book icon of the Library open
+function libraryTip() {
+  return tip(t("tip.lib.a") + " ", tipIcon("scroll"),
+    " " + t("tip.lib.b") + " ", tipIcon("book"),
+    " " + t("tip.lib.c"));
+}
+
 // the newest steps of the timeline, in English
 // for now (timeline.tsv)
 function newsList(news) {
@@ -979,9 +1030,9 @@ async function shelf(folder) {
     // at the top: the picture, the Library and the
     // other pages, what was read last, then the
     // welcome
-    folder ? null : devBanner(),
     folder ? null : topBanner(),
     folder ? null : menuBar(...MENU.map(menuLink)),
+    folder ? null : libraryTip(),
     ...(folder ? [] : NEWS.slice(0, 2).map(
       (a) => newsBanner(a))),
     folder ? null : joinBanner(),
@@ -1085,20 +1136,28 @@ const TABS = [
   ["#/", "logo", "nav.home", "home"],
   ["#/library", "book", "nav.library", "library"],
   ["#/recent", "resume", "nav.continue", "continue"],
-  ["#/search", "search", "nav.search", "search"],
+  ["#/reference", "cards", "nav.reference", "reference"],
 ];
-// the pages the More tab opens
+// the pages the More tab opens, in groups: what to
+// read, what is new, the project and its people
 const MORE = [
-  ["#/recent", "clock", "nav.recent"],
-  ["#/reference", "cards", "nav.reference"],
-  ["#/blog", "pen", "nav.blog"],
-  ["#/map", "map", "nav.map"],
-  ["#/comics", "panels", "nav.comics"],
-  ["#/features", "tick", "nav.features"],
-  ["#/contribute", "join", "nav.contribute"],
-  ["#/news", "horn", "nav.news"],
-  ["#/timeline", "scroll", "nav.timeline"],
-  ["#/stats", "sliders", "nav.stats"],
+  [
+    ["#/recent", "clock", "nav.recent"],
+    ["#/search", "search", "nav.search"],
+    ["#/blog", "pen", "nav.blog"],
+    ["#/comics", "panels", "nav.comics"],
+    ["#/map", "map", "nav.map"],
+  ],
+  [
+    ["#/news", "horn", "nav.news"],
+    ["#/timeline", "scroll", "nav.timeline"],
+    ["#/features", "tick", "nav.features"],
+    ["#/stats", "sliders", "nav.stats"],
+  ],
+  [
+    ["#/about", "info", "nav.about"],
+    ["#/contribute", "join", "nav.contribute"],
+  ],
 ];
 
 // which tab a page belongs to: a TABS key, "more",
@@ -1111,7 +1170,7 @@ function tabFor(hash) {
   if (["library", "b", "f"].includes(top)) {
     return "library";
   }
-  if (top === "search") return "search";
+  if (top === "reference") return "reference";
   return "more";
 }
 
@@ -1122,7 +1181,7 @@ function tabFor(hash) {
 // opens the book read last; the reader keeps its own
 // place. Tapping the tab shown scrolls to the top,
 // and from the top goes to the tab's first page.
-const REMEMBER = ["home", "library", "search"];
+const REMEMBER = ["home", "library", "reference"];
 let tabPlace = {};
 try {
   tabPlace = JSON.parse(
@@ -1183,21 +1242,24 @@ function logoMark() {
 
 // the end of the More sheet: what the footer
 // says, which phones do not show (style.css)
-function sheetEnd() {
-  const links = [
-    hasWorker() ? ["#/offline", "save",
-      "nav.offline"] : null,
-    [REPO, "code", "GitHub"],
-  ].filter(Boolean).map(([href, ic, label]) =>
-    h("a", { class: "icon-btn", href },
-      icon(ICONS[ic]),
-      label === "GitHub" ? label : t(label)));
-  return [...links,
-    h("p", { class: "sheet-foot" },
-      t("foot.tr"),
-      h("a", { href: BY_SA, rel: "license" },
-        "CC BY-SA 4.0"),
-      t("foot.pd"), h("br"), t("foot.by"))];
+function sheetLinks() {
+  return [
+    hasWorker() ? h("a", { class: "icon-btn",
+      href: "#/offline" }, icon(ICONS.save),
+    t("nav.offline")) : null,
+    h("a", { class: "icon-btn", href: REPO },
+      icon(ICONS.code), "GitHub"),
+  ];
+}
+
+function sheetFoot() {
+  return h("p", { class: "sheet-foot" },
+    t("foot.tr"),
+    h("a", { href: BY_SA, rel: "license" },
+      "CC BY-SA 4.0"),
+    t("foot.pd"), h("br"), t("foot.by1"),
+    h("a", { href: "#/about" }, t("foot.name")),
+    t("foot.by2"));
 }
 
 function tabBar() {
@@ -1216,8 +1278,11 @@ function tabBar() {
   const draw = () => {
     sheet.lang = LANG;
     sheet.setAttribute("aria-label", t("nav.more"));
-    sheet.replaceChildren(...MORE.map(menuLink),
-      ...sheetEnd());
+    sheet.replaceChildren(...MORE.map((g, i) =>
+      h("div", { class: "more-group",
+        role: "group" }, g.map(menuLink),
+      i === MORE.length - 1 ? sheetLinks()
+        : null)), sheetFoot());
     more.replaceChildren(icon(ICONS.menu),
       t("nav.more"));
     bar.lang = LANG;
@@ -1236,6 +1301,11 @@ function tabBar() {
   };
   more.addEventListener("click",
     () => open(sheet.hidden));
+  // a link to the page already open does not navigate,
+  // so the sheet is shut by the click itself
+  sheet.addEventListener("click", (e) => {
+    if (e.target.closest("a")) open(false);
+  });
   document.addEventListener("pointerdown", (e) => {
     if (!bar.contains(e.target)
       && !sheet.contains(e.target)) open(false);
@@ -1256,12 +1326,18 @@ const tabs = tabBar();
 // in the reader the bar shows on scrolling up, and
 // goes again on scrolling down (.peek, style.css)
 let lastY = 0;
+// the very bottom of the page also shows the bar
+function atEnd() {
+  const de = document.documentElement;
+  return window.scrollY > 50 && window.innerHeight
+    + window.scrollY >= de.scrollHeight - 4;
+}
 window.addEventListener("scroll", () => {
   const y = window.scrollY;
   const body = document.body;
   if (!body.classList.contains("reading")) {
     body.classList.remove("peek");
-  } else if (y < lastY - 8) {
+  } else if (y < lastY - 8 || atEnd()) {
     body.classList.add("peek");
   } else if (y > lastY + 8 || y < 50) {
     body.classList.remove("peek");
@@ -1291,19 +1367,26 @@ window.addEventListener("scroll", () => {
 }, { passive: true });
 
 // the picture at the very top of the top page,
-// with a short line in its corner
+// with a short line in its corner; a click on it
+// leads to #/about, the link in the other corner
+// is for a keyboard
 function topBanner() {
   return h("div", { class: "top-banner" },
     h("img", { src: "banner.jpg", alt: "",
       width: "1600", height: "550",
       fetchpriority: "high" }),
-    h("p", { class: "top-text", lang: "hy" },
-      "… ժամանակ ժողովելոյ քարինս"));
+    h("a", { class: "banner-all", href: "#/about",
+      tabindex: "-1", "aria-hidden": "true" }),
+    h("div", { class: "top-corner" },
+      h("a", { class: "top-about", href: "#/about" },
+        t("top.about")),
+      h("p", { class: "top-text", lang: "hy" },
+        "… ժամանակ ժողովելոյ քարինս")));
 }
 
-// a note at the top of the top page: the site is
-// being built, with something new every day; it
-// opens the timeline; and the contact address
+// a note on the About page: the site is being
+// built, with something new every day; it opens
+// the timeline; and the contact address
 function devBanner() {
   return h("div", { class: "dev-banner",
     role: "note", lang: LANG },
@@ -1346,20 +1429,31 @@ function mapBanner() {
 }
 
 // a narrow banner on the top page, with the
-// picture of the newest announcement, leading to
-// #/news
+// picture of the newest announcement. A click on it
+// leads to #/news; its two links, under the words,
+// to the announcement and to the book itself (its
+// own words in bookText, else "Read the book")
 function newsBanner(a = NEWS[0],
   lang = newsLang()) {
   const en = lang !== "hy" && a["banner_" + lang];
-  return h("a", { class: "join-banner news-banner",
-    href: "#/news/" + a.id, lang },
+  const ui = NEWS_UI[lang];
+  const to = "#/news/" + a.id;
+  return h("div", { class: "join-banner news-banner",
+    lang },
   h("img", { src: a.face, alt: "",
     width: "600", height: "400" }),
+  // the whole banner, for a mouse or a finger; the
+  // links below are for a keyboard
+  h("a", { class: "banner-all", href: to,
+    tabindex: "-1", "aria-hidden": "true" }),
   h("span", { class: "join-text" },
     h("b", {}, (en || a.banner)[0]),
     h("span", {}, (en || a.banner)[1]),
     h("span", { class: "join-go" },
-      NEWS_UI[lang].read)));
+      h("a", { href: to }, ui.read),
+      a.book ? h("a", { href: a.book },
+        a.bookText ? a.bookText[lang] : ui.book)
+        : null)));
 }
 
 // -- readings --
@@ -1399,7 +1493,7 @@ function askForget(title) {
       class: "icon-btn" }, t("cancel"));
     const yes = h("button", { type: "button",
       class: "icon-btn danger" },
-    icon(ICONS.bin), t("remove"));
+    t("remove"));
     no.addEventListener("click", () => end(false));
     yes.addEventListener("click", () => end(true));
     box.append(h("div", { class: "ask-card",
@@ -1453,7 +1547,7 @@ function readingList(items) {
       class: "forget",
       "aria-label": t("forget.title"),
       title: t("forget.title") },
-    icon(ICONS.bin));
+    icon(ICONS.close));
     x.addEventListener("click", async () => {
       if (!await askForget(r.title)) return;
       x.disabled = true;
@@ -1826,6 +1920,57 @@ function slideIn(pane, dir) {
 // #/library: the Grabar books, by author, or the
 // starred ones, or those being read (tabs);
 // #/library/<author> scrolls to that author
+// a long book's parts open under its row, on the
+// same page (the row's click; "the book's page" is
+// a link in the list). The parts come from the
+// book's page data once, at the first opening.
+function openParts(li, b) {
+  const row = li.querySelector(".row");
+  const meta = row.querySelector(".meta");
+  const chev = icon(ICONS.fold, "chev");
+  meta.prepend(chev);
+  row.setAttribute("aria-expanded", "false");
+  let panel = null;
+  row.addEventListener("click", async (e) => {
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey
+      || e.shiftKey || e.button) return;
+    e.preventDefault();
+    const on = row.getAttribute("aria-expanded")
+      !== "true";
+    row.setAttribute("aria-expanded", String(on));
+    li.classList.toggle("open", on);
+    if (panel) {
+      panel.hidden = !on;
+      return;
+    }
+    panel = h("li", { class: "parts", lang: LANG });
+    li.after(panel);
+    try {
+      const dir = dirOf(b.first);
+      const data = await api("volume?folder="
+        + encodeURIComponent(dir));
+      const list = h("ul", { class: "shelf" });
+      for (const g of data.groups) {
+        if (g.label) {
+          list.append(h("li", { class: "group" },
+            g.label));
+        }
+        for (const p of g.parts) {
+          list.append(h("li", {}, partRow(p)));
+        }
+      }
+      panel.replaceChildren(list,
+        h("a", { class: "parts-page",
+          href: folderHref(dir) }, t("lib.bookpage")));
+    } catch (err) {
+      panel.remove();
+      panel = null;
+      row.setAttribute("aria-expanded", "false");
+      li.classList.remove("open");
+    }
+  });
+}
+
 async function libraryPage(who) {
   const [data, recent] = await Promise.all([
     api("library"),
@@ -1869,6 +2014,7 @@ async function libraryPage(who) {
     const list = h("ul", { class: "shelf" });
     // co-authors of all its books go in the
     // heading, others under a book's name
+    const page = a.page;
     const co = a.with || [];
     const shared = new Set(co.map((c) => c.id));
     const rows = a.books.map((b) => {
@@ -1877,6 +2023,7 @@ async function libraryPage(who) {
       const li = bookItem(b, libraryRow(b,
         own.length ? byLine(own, a.name) : null),
       starBtn(b));
+      if (b.parts > 1 && !page) openParts(li, b);
       list.append(li);
       return { el: li, names: [b.name, b.title,
         ...own.map((c) => c.name)],
@@ -1884,7 +2031,6 @@ async function libraryPage(who) {
     });
     // an author whose books are grouped (the Bible)
     // has a page of its own (flat_author())
-    const page = a.page;
     const head = co.length
       ? watchNames(h("h2", { class: "co-names" },
         ...authorNames(co.concat([{ id,
@@ -1924,7 +2070,7 @@ async function libraryPage(who) {
       class: "forget",
       "aria-label": t("forget.title"),
       title: t("forget.title") },
-    icon(ICONS.bin));
+    icon(ICONS.close));
     x.addEventListener("click", async () => {
       if (!await askForget(r.b.name)) return;
       x.disabled = true;
@@ -3306,6 +3452,36 @@ function contributePage() {
         "CC BY-SA 4.0"), t("co.lic2")));
 }
 
+// -- about --
+
+// #/about: the project and its author
+const AUTHOR_URL = "https://github.com/serjhnn";
+const INSTAGRAM = "https://www.instagram.com/srg77.h";
+
+function aboutPage() {
+  document.title = t("ab.title") + " · " + NAME;
+  const part = (k) => h("li", {},
+    h("h2", {}, t("ab." + k + ".h")),
+    h("p", {}, named(t("ab." + k + ".t"))));
+  show(
+    h("p", { class: "crumbs" },
+      h("a", { href: "#/" }, t("home"))),
+    h("h1", {}, t("ab.title")),
+    h("p", { class: "sub" }, named(t("ab.sub"))),
+    devBanner(),
+    h("ul", { class: "features" },
+      ["what", "name", "do", "open", "author"]
+        .map(part)),
+    h("p", { class: "cta" },
+      h("a", { class: "cta-main", href: AUTHOR_URL },
+        t("ab.contact")),
+      h("a", { href: INSTAGRAM, rel: "noopener me" },
+        "Instagram"),
+      h("a", { href: "#/contribute" },
+        t("foot.join")),
+      h("a", { href: REPO }, t("co.gh"))));
+}
+
 // -- announcements --
 
 // #/news: what is new on the shelf, newest first.
@@ -3321,15 +3497,17 @@ const ZENOB = "#/b/grabar/hovhan-mamikonean/";
 // the words of the page itself, by language
 const NEWS_UI = {
   hy: { home: "Գլխավոր", title: "Հայտարարություններ",
-    read: "Կարդալ →" },
+    read: "Կարդալ →", book: "Կարդալ գիրքը →" },
   en: { home: "Home", title: "Announcements",
-    read: "Read →" },
+    read: "Read →", book: "Read the book →" },
   ru: { home: "Главная", title: "Объявления",
-    read: "Читать →" },
+    read: "Читать →", book: "Читать книгу →" },
 };
 
 const NEWS = [{
   id: "zenob-glak",
+  book: "#/read/grabar/hovhan-mamikonean/"
+    + "1-patmutiun-taronoy/01.txt",
   date: "2026-11-22",
   img: "zenob-glak.jpg",
   face: "zenob-glak-face.jpg",
@@ -3498,6 +3676,13 @@ const NEWS = [{
   },
 }, {
   id: "smbat-sparapet",
+  book: "#/read/grabar/smbat-sparapet/"
+    + "2-taregirk/01.txt",
+  bookText: {
+    hy: "Կարդալ Տարեգիրքը →",
+    en: "Read the Taregirk →",
+    ru: "Читать Летопись →",
+  },
   date: "2026-11-16",
   img: "smbat-sparapet.jpg",
   face: "smbat-sparapet-face.jpg",
@@ -4686,7 +4871,7 @@ function loose(w) {
   return wordKey(w).replace(/իւ/g, "յու")
     .replace(/եա/g, "յա").replace(/եօ/g, "յո")
     .replace(/(?<!ո)ւ/g, "վ").replace(/է/g, "ե")
-    .replace(/օ/g, "ո")
+    .replace(/օ/g, "ո").replace(/ույ/g, "ոյ")
     .replace(/^յ(?=[աեէըիոօ])/, "հ");
 }
 
@@ -6650,9 +6835,10 @@ const searchCache = new Map();
 const lineFiles = new Map();
 let searchParts = null;
 
-function searchHref(q, where, open) {
+function searchHref(q, where, open, forms) {
   const p = new URLSearchParams({ q });
   if (where && where !== "grabar") p.set("in", where);
+  if (forms === false) p.set("forms", "0");
   if (open && open.size) {
     p.set("open", [...open].join(","));
   }
@@ -6759,6 +6945,48 @@ async function searchEntry(w) {
   return searchCache.get(k);
 }
 
+// the lemma table: key -> the groups of keys (forms
+// of one word) it is in; none if it cannot be read
+let searchLemmas = null;
+async function lemmaMap() {
+  if (!searchLemmas) {
+    searchLemmas = api("search-lemmas").then((d) => {
+      const by = new Map();
+      for (const g of d.groups) {
+        for (const k of g) {
+          if (!by.has(k)) by.set(k, []);
+          by.get(k).push(g);
+        }
+      }
+      return by;
+    }).catch(() => new Map());
+  }
+  return searchLemmas;
+}
+
+// a word's entry with the entries of all the forms
+// of its word (lemma table), spellings together
+async function formsEntry(w) {
+  const f = await searchEntry(w);
+  f.keys = [f.key];
+  if (!f.entry || f.entry["*"]) return f;
+  const by = await lemmaMap();
+  const others = new Set();
+  for (const g of by.get(f.key) || []) {
+    for (const k of g) if (k !== f.key) others.add(k);
+  }
+  if (!others.size) return f;
+  const more = await Promise.all(
+    [...others].map(searchEntry));
+  const entry = { ...f.entry };
+  for (const m of more) {
+    if (m.entry && !m.entry["*"]) {
+      Object.assign(entry, m.entry);
+    }
+  }
+  return { key: f.key, entry, keys: [f.key, ...others] };
+}
+
 async function partsOf() {
   if (!searchParts) {
     searchParts = api("search-parts").catch((e) => {
@@ -6805,11 +7033,11 @@ function linesOf(entry) {
 // The lines of a search: those with all its words
 // (each in either spelling). A word too common to
 // search alone is left out when there are others.
-async function findLines(q) {
+async function findLines(q, forms = true) {
   const words = [...new Set(q.match(SEARCH_WORD)
     || [])];
   const found = await Promise.all(
-    words.map(searchEntry));
+    words.map(forms ? formsEntry : searchEntry));
   const common = [];
   const used = [];
   found.forEach((f, i) => {
@@ -6823,7 +7051,7 @@ async function findLines(q) {
   const spelled = [];
   for (const [w, f] of used) {
     const got = f.entry ? linesOf(f.entry) : new Map();
-    spelled.push([w, f.key, got]);
+    spelled.push([w, f.keys || [f.key], got]);
     if (lines === null) {
       lines = new Set(got.keys());
     } else {
@@ -6832,7 +7060,7 @@ async function findLines(q) {
     }
   }
   return { words, common, spelled,
-    keys: new Set(spelled.map((x) => x[1])),
+    keys: new Set(spelled.flatMap((x) => x[1])),
     lines: lines ? [...lines] : [] };
 }
 
@@ -7132,6 +7360,7 @@ async function searchPage(query) {
   const q = (p.get("q") || "").trim();
   const where = SEARCH_IN.includes(p.get("in"))
     ? p.get("in") : "grabar";
+  const forms = p.get("forms") !== "0";
   const open = new Set((p.get("open") || "")
     .split(",").filter(Boolean));
   document.title = (q ? q + " · " : "")
@@ -7153,7 +7382,7 @@ async function searchPage(query) {
   say(t("s.wait"));
   const at = hashNow();
   const [parts, f, about] = await Promise.all([
-    partsOf(), findLines(q), authorsAbout()]);
+    partsOf(), findLines(q, forms), authorsAbout()]);
   // gone to another page meanwhile
   if (hashNow() !== at) return;
   // how many parts each book has, for "մաս n"
@@ -7175,7 +7404,7 @@ async function searchPage(query) {
   const remember = () => {
     try {
       sessionStorage.setItem(FOUND, JSON.stringify({
-        q, back: searchHref(q, where, open),
+        q, back: searchHref(q, where, open, forms),
         list: g.hits.map((x) => [x.name, x.line]) }));
     } catch (e) {}
   };
@@ -7197,9 +7426,16 @@ async function searchPage(query) {
   }
   const filters = h("div", { class: "filters" },
     ...SEARCH_IN.map((w) =>
-      h("a", { href: searchHref(q, w),
+      h("a", { href: searchHref(q, w, null, forms),
         "aria-current": w === where ? "page" : null },
       searchInName(w) + " · " + nf(counts[w]))));
+  // search the forms of the word too: a tick box
+  const formBar = h("div", { class: "s-forms" },
+    h("a", { href: searchHref(q, where, null, !forms),
+      role: "checkbox", "aria-checked": String(forms),
+      class: "tickbox" },
+    h("span", { class: "box" }, icon(ICONS.tick)),
+    t("s.forms")));
   // each spelling found, and in how many lines; for
   // the words found in more than one
   const spells = new Map();
@@ -7239,7 +7475,7 @@ async function searchPage(query) {
   // that back from the reader finds it the same
   const draw = () => {
     history.replaceState(history.state, "",
-      pathOf(searchHref(q, where, open)));
+      pathOf(searchHref(q, where, open, forms)));
     remember();
     if (all) {
       all.textContent = open.size >= g.authors.length
@@ -7275,7 +7511,7 @@ async function searchPage(query) {
       h("span", {}, t("s.lines", g.hits.length)
         + " · " + t("s.authors", g.authors.length)
         + " · " + t("s.books", nb)), all || null),
-    filters, spelling, common,
+    filters, formBar, spelling, common,
     g.hits.length ? list : h("p", { class: "sub" },
       f.lines.length ? t("s.notin") : t("s.none")));
 }
@@ -7434,7 +7670,11 @@ async function route() {
   if (!hash.startsWith("read/")) clearReading();
   document.body.classList.remove("home");
   // back to the top bar from the reading tools
-  if (button.parentNode !== topBar) topBar.append(button);
+  // (in its place: before the language globe)
+  if (button.parentNode !== topBar) {
+    topBar.insertBefore(button,
+      topBar.querySelector(".lang-globe"));
+  }
   try {
     if (hash.startsWith("read/")) {
       // #/read/<book>?line=N opens at line N; with
@@ -7474,6 +7714,8 @@ async function route() {
       await referencePage();
     } else if (hash === "contribute") {
       contributePage();
+    } else if (hash === "about") {
+      aboutPage();
     } else if (hash === "news"
       || hash.startsWith("news/")) {
       newsPage(decodeURIComponent(hash.slice(5)));
@@ -7495,7 +7737,7 @@ async function route() {
       await shelf("");
     }
     backToPlace(hash);
-    visit("/" + decodeURIComponent(hash));
+    visit("/" + LANG + "/" + decodeURIComponent(hash));
   } catch (e) {
     clearReading();
     showError(e.message || t("error"));

@@ -434,8 +434,13 @@
   (`tests/test_i18n.py` checks the keys, and that
   every `t("...")` is there). `<html lang>` is
   `LANG`; text of the books, authors' and books'
-  names keep `lang: "hy"`. The language button
-  (`langButton()`) links the page in each language;
+  names keep `lang: "hy"`. The language slider
+  (`langButton()`: Հայ · Eng · Рус, the thumb slides
+  under the current one; on a phone a row of its own
+  with the full names) links the page in each
+  language; the globe button beside it hides and
+  shows it (kept as `nxgir-lang-bar`, shown at
+  first);
   `route()` calls `followLang()`, which sends
   `langchange` for what is drawn once (menus, tab
   bar). The per-page pickers (blog, comics, map,
@@ -514,6 +519,13 @@
   `scripts/render-web.py`: regenerate the README
   images in `docs/` after changing the logo, the
   screens or the web pages
+- `scripts/record-web.py`, `scripts/record.js`: record
+  the video tutorial of the web reader (Playwright for
+  Node, ffmpeg; a throwaway state, a fake cursor and
+  captions); change the steps in `record.js` after the
+  pages change. The video is not kept in git. How to
+  run it and the pitfalls: `notes/video.md` (read it
+  first)
 - `scripts/render-og.py`: regenerates
   `web/og-image.png`, the link preview image
   (`og:image` in `web/index.html`, for LinkedIn

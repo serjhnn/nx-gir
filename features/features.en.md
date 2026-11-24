@@ -36,7 +36,7 @@ The site remembers where you stopped reading each book, in this browser. The hom
 
 ## Tabs at the bottom of a phone
 
-On a phone, a bar at the bottom of every page leads to the Home page, the Library, the book you read last (Continue) and the search; More opens the other pages (your Readings, the Blog, the Map, Comics, Features, Timeline and more). In the reader it steps aside, to leave the room to the text, and comes back when you scroll up. Each tab remembers where you were in it, and a second tap scrolls it to the top.
+On a phone, a bar at the bottom of every page leads to the Home page, the Library, the book you read last (Continue) and the Reference; More opens the other pages (your Readings, the Blog, the Map, Comics, Features, Timeline and more). In the reader it steps aside, to leave the room to the text, and comes back when you scroll up. Each tab remembers where you were in it, and a second tap scrolls it to the top.
 
 ## Contents
 
@@ -82,6 +82,8 @@ The Library page lists the Grabar books by author, with how many parts each has 
 
 The scroll beside an author's name opens a short card about them: when and where they lived, what they wrote, their places on the map and a blog post about them. The card is in Armenian, English and Russian. The scroll is in the Library, on a book's page and in the search. Claude wrote the cards, and a card says so until a person has reviewed it.
 
+On the home page, a framed Tip under the menu says what the scroll and the book icon do in the Library: tap them to read about an author or a book.
+
 ## About the books
 
 Every book in the Library has a card of its own: its icon is in the accent color, and tapping it opens the card. It tells when the book was written, what it is and what is in it, in the same three languages. The rest of the row still opens the book. A book written by two authors shows both names, the earlier first, each with its own card: «Պատմութիւն Տարաւնոյ» is by Զենոբ Գլակ and Յովհան Մամիկոնեան, and its card tells which sections each wrote.
@@ -109,3 +111,7 @@ Offline at the bottom of every page leads to two ways to read with no network: i
 ## Armenian, English or Russian
 
 The whole site speaks the language you choose: press Հայ, Eng or Рус at the top of any page. On a first visit it takes your browser's language. The language is part of every address (nxgir.am/en/library, nxgir.am/ru/blog), so a link opens the page in the language it was shared in. The books stay as they are; word meanings come in English or Armenian (in Russian, for now, in English).
+
+## About the project
+
+The About page, linked from the footer and from the author's name there, says what nxGir is, what you can do with it and who makes it.

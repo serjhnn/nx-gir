@@ -327,6 +327,12 @@ def test_searchable(tmp_path, files):
     assert "<h1>Timeline</h1>" in tl
     tl = (out / "ru/timeline/index.html").read_text("utf-8")
     assert "<h1>Хронология</h1>" in tl
+    # the About page
+    ab = (out / "en/about/index.html").read_text("utf-8")
+    assert "Sergey Ohanyan" in ab
+    ab = (out / "ru/about/index.html").read_text("utf-8")
+    assert "Сергей Оганян" in ab
+    assert f"{bs.SITE}/en/about/" in sm
     # none of these are saved for offline
     off = json.loads((out / "offline.json").read_text())
     saved = [f[0] for f in off["files"]]
@@ -422,8 +428,9 @@ def test_build_search(tmp_path):
     found = read(f"search/{bs.bucket(key)}.json")
     assert found[key] == {"թագաւոր": [[0, 122]]}
     assert len(list((data / "search").glob("*.json"))) == (
-        bs.BUCKETS + 1
+        bs.BUCKETS + 2
     )
+    assert read("search/lemmas.json") == {"groups": []}
     lines = "lines/grabar/ann/1-book/01.txt"
     assert read(f"{lines}/0.json")["lines"][0] == (
         "Գիրք · 1/1"

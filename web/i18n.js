@@ -95,7 +95,7 @@ const UI = {
     "nav.features": "Հնարավորություններ",
     "nav.contribute": "Միանալ",
     "nav.news": "Հայտարարություններ",
-    "nav.timeline": "Ժամանակագրություն",
+    "nav.timeline": "Թարմացումներ",
     "nav.stats": "Վիճակագրություն",
     "nav.offline": "Անցանց",
     "nav.menu": "Ցանկ",
@@ -107,7 +107,54 @@ const UI = {
     "foot.pd": " · Գրաբար բնագրերը հանրային"
       + " սեփականություն են",
     "foot.join": "Դառնալ մասնակից",
-    "foot.by": "Մշակել են Ս.Օ.-ն և Claude-ը",
+    "nav.about": "Մասին",
+    "foot.by1": "Մշակել են ",
+    "foot.name": "Սերգեյ Օհանյանը",
+    "foot.by2": " և Claude-ը",
+    "ab.title": "Նախագծի մասին",
+    "ab.sub":
+      "Նախագիրը (nxGir) գրաբար՝ հին հայերեն գրքերի "
+      + "անվճար գրադարան և ընթերցարան է։ "
+      + "Յուրաքանչյուր բառի իմաստը կարելի է տեսնել, "
+      + "իսկ պատրաստ թարգմանությունները կարդացվում "
+      + "են բնագրի կողքին։",
+    "ab.what.h": "Հին գրքերի ընթերցարան",
+    "ab.what.t":
+      "Նախագիրը հավաքում է գրաբարով գրված գրքեր՝ "
+      + "առաջին պատմիչներից մինչև ավելի ուշ "
+      + "ժամանակագրություններ ու մեկնություններ։ "
+      + "Դրանք կարելի է կարդալ դիտարկիչում, "
+      + "հեռախոսով կամ տերմինալում. տեքստը պարզ "
+      + "յունիկոդ է, ոչինչ տեղադրել պետք չէ։",
+    "ab.name.h": "Անունը",
+    "ab.name.t":
+      "Նախագիր՝ «նախ» (առաջին) և «գիր» (տառ, "
+      + "գրություն) բառերից։ Անգլերեն նախագիծը "
+      + "կոչվում է nxGir։",
+    "ab.do.h": "Ինչ կարելի է անել",
+    "ab.do.t":
+      "Բացեք գիրքը և սեղմեք բառի վրա՝ նրա իմաստն "
+      + "ու ձևերը տեսնելու համար։ Կարդացեք գրաբարը "
+      + "ժամանակակից հայերենի կողքին։ Որոնեք ամբողջ "
+      + "գրադարանում։ Քարտեզի վրա հետևեք գրքերի "
+      + "վայրերին։ Կարդացեք բլոգը և կոմիքսները։",
+    "ab.open.h": "Ազատ և բաց",
+    "ab.open.t":
+      "Գրաբար բնագրերը հանրային սեփականություն են։ "
+      + "Մեր թարգմանությունները տարածվում են CC "
+      + "BY-SA 4.0 լիցենզիայով և սկսվում են որպես "
+      + "մեքենայական սևագրեր. դրանք նշված են, մինչև "
+      + "մարդը վերանայի։ Կոդը և տեքստերը GitHub-ում "
+      + "են, և ցանկացողը կարող է օգնել։",
+    "ab.author.h": "Հեղինակը",
+    "ab.author.t":
+      "Նախագիրը ստեղծում են Սերգեյ Օհանյանը և "
+      + "Claude-ը՝ Anthropic-ի արհեստական "
+      + "բանականության օգնականը, որն օգնում է գրել "
+      + "կոդը և թարգմանությունների առաջին սևագրերը։ "
+      + "Հարցերը, ուղղումներն ու գաղափարները "
+      + "ողջունվում են GitHub-ում։",
+    "ab.contact": "Գրել հեղինակին GitHub-ում",
     "home": "← Գլխավոր",
     "back.library": "Վերադառնալ գրադարան",
     "error": "Ինչ-որ բան այն չէ",
@@ -131,19 +178,21 @@ const UI = {
     // the top page's banners
     "dot": "։",
     "n.heading": (n) => n + " վերնագիր",
-    "dev.title": "Կայքը ակտիվ մշակման փուլում է",
-    "dev.text": "Ամեն օր նոր հնարավորություններ են"
-      + " ավելանում։ Հաճախ վերադարձեք՝ տեսնելու, թե ինչ է"
-      + " նոր։",
-    "dev.more": "Տեսնել նորությունները"
-      + " ժամանակագրությունում →",
-    "dev.mail": "Հարցեր կամ գաղափարնե՞ր։ Գրեք՝ ",
+    "dev.title": "Կայքը շարունակաբար զարգանում է",
+    "dev.text": "Ամեն ժամ ավելացնում ենք նոր"
+      + " հնարավորություններ ու բարելավումներ։"
+      + " Պարբերաբար այցելեք մեզ՝ տեսնելու, թե ինչ"
+      + " նորություններ կան։",
+    "dev.more": "Տեսեք վերջին թարմացումները →",
+    "dev.mail": "Հարցեր կամ առաջարկնե՞ր ունեք։"
+      + " Գրեք մեզ՝ ",
     "join.title": "Միացեք Նախագրին",
     "join.text": "Օգնեք թարգմանել և խմբագրել առկա"
       + " թարգմանությունները",
     "join.go": "Ինչպես միանալ →",
     "mapb.text": "Պատմական դեպքերի վայրերը քարտեզի վրա",
     "mapb.go": "Բացել քարտեզը →",
+    "top.about": "Նախագծի մասին →",
     // readings
     "ago.now": "հենց նոր",
     "ago.min": (n) => n + " րոպե առաջ",
@@ -184,15 +233,21 @@ const UI = {
       + " հանդիպում է գրքում։",
     "intro.q3": "Ի՞նչ փոփոխություններ կան կայքում։",
     "intro.all": "Բոլոր իրադարձությունները →"
-      + " Ժամանակագրություն",
+      + " Թարմացումներ",
     "intro.q4": "Ո՞վ է թարգմանել։",
     "intro.a4": "Թարգմանությունը մեքենայական է և դեռ"
       + " ստուգված չէ մասնագետի կողմից։",
     "intro.q5": "Ինչպե՞ս կապվել։",
     "intro.a5": "Հարցերի, առաջարկների կամ սխալների մասին"
       + " գրեք նախագծի հեղինակին՝ ",
+    "tip.label": "Հուշում",
+    "tip.lib.a": "Գրադարանում սեղմեք",
+    "tip.lib.b": "հեղինակի անվան կողքին՝ նրա մասին"
+      + " կարդալու, կամ",
+    "tip.lib.c": "գրքի կողքին՝ գրքի մասին կարդալու։",
     // the Library
     "lib.done": "թարգմանված",
+    "lib.bookpage": "Գրքի էջը →",
     "lib.none": "Գրքեր դեռ չկան։",
     "lib.part": (p) => "մաս " + p + " · ",
     "lib.noread": "Դեռ ոչինչ չեք կարդում։ Բացեք գիրքը՝ այն"
@@ -339,7 +394,8 @@ const UI = {
     "s.common": "․ շատ հաճախ է, որոնվում են մյուս բառերը։",
     "s.common1": "․ շատ հաճախ է․ ավելացրեք ևս մի բառ։",
     "s.all": "Բոլորը",
-    "s.spelled": "Գրված է՝",
+    "s.forms": "Որոնել բառաձևերը",
+    "s.spelled": "Գրելաձևեր",
     "s.open": "Բացել բոլորը",
     "s.close": "Փակել բոլորը",
     "s.found": "Տողեր",
@@ -508,7 +564,55 @@ const UI = {
     "foot.tr": "Translations ",
     "foot.pd": " · Grabar texts in the public domain",
     "foot.join": "Become a contributor",
-    "foot.by": "Developed by S.O. and Claude",
+    "nav.about": "About",
+    "foot.by1": "Developed by ",
+    "foot.name": "Sergey Ohanyan",
+    "foot.by2": " and Claude",
+    "ab.title": "About the project",
+    "ab.sub":
+      "Նախագիր (nxGir) is a free library and "
+      + "reader of books in Grabar, Classical "
+      + "Armenian. Every word can be looked up, and "
+      + "ready translations are read beside the "
+      + "original.",
+    "ab.what.h": "A reader for old Armenian books",
+    "ab.what.t":
+      "nxGir collects books written in Grabar, "
+      + "from the first historians to later "
+      + "chronicles and commentaries. You can read "
+      + "them in a browser, on a phone or in the "
+      + "terminal; the text is plain Unicode, and "
+      + "there is nothing to install.",
+    "ab.name.h": "The name",
+    "ab.name.t":
+      "Նախագիր is made of նախ, “first”, and գիր, "
+      + "“letter, script”. In English the project is "
+      + "called nxGir.",
+    "ab.do.h": "What you can do",
+    "ab.do.t":
+      "Open a book and click a word to see its "
+      + "meaning and forms. Read Grabar beside a "
+      + "Modern Armenian translation. Search the "
+      + "whole Library. Follow the places of the "
+      + "books on the map. Read the blog and the "
+      + "comics.",
+    "ab.open.h": "Free and open",
+    "ab.open.t":
+      "The Grabar texts are in the public domain. "
+      + "Our translations are under CC BY-SA 4.0 and "
+      + "begin as machine drafts; they are marked as "
+      + "such until a person reviews them. The code "
+      + "and the texts are on GitHub, and anyone can "
+      + "help.",
+    "ab.author.h": "The author",
+    "ab.author.t":
+      "nxGir is made by Sergey Ohanyan together "
+      + "with Claude, an AI assistant made by "
+      + "Anthropic, which helps write the code and "
+      + "the first drafts of the translations. "
+      + "Questions, corrections and ideas are "
+      + "welcome on GitHub.",
+    "ab.contact": "Write to the author on GitHub",
     "home": "← Home",
     "back.library": "Back to the library",
     "error": "Something went wrong",
@@ -544,6 +648,7 @@ const UI = {
     "join.go": "How to join →",
     "mapb.text": "The places of history on the map",
     "mapb.go": "Open the map →",
+    "top.about": "About the project →",
     // readings
     "ago.now": "just now",
     "ago.min": (n) => n + " min ago",
@@ -593,8 +698,14 @@ const UI = {
     "intro.q5": "How can I get in touch?",
     "intro.a5": "Write to the author of the project with"
       + " questions, ideas or mistakes found: ",
+    "tip.label": "Tip",
+    "tip.lib.a": "In the Library, tap",
+    "tip.lib.b": "beside an author's name to read about"
+      + " the author, and",
+    "tip.lib.c": "beside a book to read about the book.",
     // the Library
     "lib.done": "translated",
+    "lib.bookpage": "Book page →",
     "lib.none": "No books yet.",
     "lib.part": (p) => "part " + p + " · ",
     "lib.noread": "Nothing being read yet. Open a book and"
@@ -742,7 +853,8 @@ const UI = {
       + " searched.",
     "s.common1": ": too common; add another word.",
     "s.all": "All",
-    "s.spelled": "Spelled:",
+    "s.forms": "Search word forms",
+    "s.spelled": "Spellings",
     "s.open": "Open all",
     "s.close": "Close all",
     "s.found": "Lines",
@@ -908,7 +1020,54 @@ const UI = {
     "foot.pd": " · Тексты на грабаре в общественном"
       + " достоянии",
     "foot.join": "Стать участником",
-    "foot.by": "Разработали С.О. и Claude",
+    "nav.about": "О проекте",
+    "foot.by1": "Разработали ",
+    "foot.name": "Сергей Оганян",
+    "foot.by2": " и Claude",
+    "ab.title": "О проекте",
+    "ab.sub":
+      "Նախագիր (nxGir) — бесплатная библиотека и "
+      + "читалка книг на грабаре, древнеармянском "
+      + "языке. Можно узнать значение каждого слова, "
+      + "а готовые переводы читаются рядом с "
+      + "оригиналом.",
+    "ab.what.h": "Читалка старых армянских книг",
+    "ab.what.t":
+      "nxGir собирает книги, написанные на "
+      + "грабаре: от первых историков до поздних "
+      + "хроник и толкований. Их можно читать в "
+      + "браузере, на телефоне или в терминале; "
+      + "текст — обычный Unicode, ничего "
+      + "устанавливать не нужно.",
+    "ab.name.h": "Название",
+    "ab.name.t":
+      "Նախագիր составлено из слов նախ — «первый» и "
+      + "գիր — «буква, письмо». По-английски проект "
+      + "называется nxGir.",
+    "ab.do.h": "Что можно делать",
+    "ab.do.t":
+      "Откройте книгу и нажмите на слово, чтобы "
+      + "увидеть его значение и формы. Читайте "
+      + "грабар рядом с переводом на современный "
+      + "армянский. Ищите по всей библиотеке. "
+      + "Следите за местами из книг на карте. "
+      + "Читайте блог и комиксы.",
+    "ab.open.h": "Свободно и открыто",
+    "ab.open.t":
+      "Тексты на грабаре — общественное достояние. "
+      + "Наши переводы распространяются по лицензии "
+      + "CC BY-SA 4.0 и начинаются как машинные "
+      + "черновики; они помечены, пока их не "
+      + "проверит человек. Код и тексты лежат на "
+      + "GitHub, помочь может каждый.",
+    "ab.author.h": "Автор",
+    "ab.author.t":
+      "nxGir делают Сергей Оганян и Claude — "
+      + "ИИ-помощник от Anthropic, который помогает "
+      + "писать код и первые черновики переводов. "
+      + "Вопросы, исправления и идеи приветствуются "
+      + "на GitHub.",
+    "ab.contact": "Написать автору на GitHub",
     "home": "← Главная",
     "back.library": "Вернуться в библиотеку",
     "error": "Что-то пошло не так",
@@ -950,6 +1109,7 @@ const UI = {
     "join.go": "Как присоединиться →",
     "mapb.text": "Места исторических событий на карте",
     "mapb.go": "Открыть карту →",
+    "top.about": "О проекте →",
     // readings
     "ago.now": "только что",
     "ago.min": (n) => n + " мин. назад",
@@ -999,8 +1159,14 @@ const UI = {
     "intro.q5": "Как связаться?",
     "intro.a5": "С вопросами, предложениями или найденными"
       + " ошибками пишите автору проекта: ",
+    "tip.label": "Совет",
+    "tip.lib.a": "В Библиотеке нажмите",
+    "tip.lib.b": "рядом с именем автора, чтобы прочитать"
+      + " об авторе, или",
+    "tip.lib.c": "рядом с книгой, чтобы прочитать о книге.",
     // the Library
     "lib.done": "переведено",
+    "lib.bookpage": "Страница книги →",
     "lib.none": "Книг пока нет.",
     "lib.part": (p) => "часть " + p + " · ",
     "lib.noread": "Вы пока ничего не читаете. Откройте"
@@ -1151,7 +1317,8 @@ const UI = {
     "s.common": ": слишком частое, ищутся другие слова.",
     "s.common1": ": слишком частое; добавьте ещё слово.",
     "s.all": "Все",
-    "s.spelled": "Написано:",
+    "s.forms": "Искать словоформы",
+    "s.spelled": "Написания",
     "s.open": "Раскрыть все",
     "s.close": "Свернуть все",
     "s.found": "Строки",
