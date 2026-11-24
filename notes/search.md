@@ -56,7 +56,17 @@ Decided (2026-11-21):
    (`forms.tsv`); `data/search/lemmas.json`,
    `/api/search-lemmas`; `formsEntry()` in `app.js`
    joins the entries of a word's group. So `հույս`
-   finds `յոյս` and `յուսով`. Planned as: the forms
+   finds `յոյս` and `յուսով`. A word that is no form
+   in the table, but is one with its article (ն ս դ)
+   or preposition (զ, or հ for յ) taken off, joins
+   that word's group (`stripped()`; հ only with 5
+   letters or more left: համառ is not ամառ).
+   Measured 2026-11-24 on all of grabar/: tokens in
+   a group 45% → 56%. Still outside: inflections
+   Wiktionary lacks (դատաստանաց), the ց prefix and
+   spellings it lacks (հոգեւոր). A word with no
+   forms (թե, իսկ, ապա) needs no group.
+   Planned as: the forms
    of the word in `grabar/forms.tsv`, the same
    table the word lookup uses. `թագավոր`: 1,074
    lines; with all forms (`թագաւորի`,

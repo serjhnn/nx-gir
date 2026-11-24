@@ -73,20 +73,57 @@ def loose(word):
     return Y_RE.sub("հ", k)
 
 
+# what is written onto a word: the article ն ս դ at
+# the end, the preposition զ (the accusative mark)
+# and յ (loose(): հ) at the start
+SUFFIXES = ("", "ն", "ս", "դ")
+PREFIXES = ("", "զ", "հ")
+
+
+def stripped(key):
+    """The keys a word may be a written form of, once
+    its article or preposition is taken off (not the
+    key itself): թագավորն, զթագավոր → թագավոր."""
+    for pre in PREFIXES:
+        for suf in SUFFIXES:
+            if not (pre or suf) or not key.startswith(pre):
+                continue
+            if not key.endswith(suf):
+                continue
+            k = key[len(pre) : len(key) - len(suf)]
+            # հ stands for յ: a short rest is too
+            # often another word (համառ, ամառ)
+            if len(k) >= (5 if pre == "հ" else 3):
+                yield k
+
+
 def lemmas(keys, pairs):
     """The lemma table: groups of loose keys that are
     forms of one headword. pairs: (form, headword),
     as in grabar/forms.tsv; keys: the keys of the
     index (a key not in it is left out, and a group
-    of one key). A key in two groups is in both."""
+    of one key). A key in two groups is in both. A
+    key that is no form in the table, but is one
+    with an article or a preposition taken off
+    (stripped()), joins the groups of that one."""
     keys = set(keys)
     groups = {}
+    of = {}
     for form, head in pairs:
-        g = groups.setdefault(loose(head), set())
-        g.add(loose(form))
+        h = loose(head)
+        g = groups.setdefault(h, set())
+        f = loose(form)
+        g.update((h, f))
+        of.setdefault(f, set()).add(h)
+        of.setdefault(h, set()).add(h)
+    for k in keys - of.keys():
+        for c in stripped(k):
+            if c in of:
+                for h in of[c]:
+                    groups[h].add(k)
+                break
     out = []
-    for head, g in groups.items():
-        g.add(head)
+    for g in groups.values():
         g &= keys
         if len(g) > 1:
             out.append(sorted(g))

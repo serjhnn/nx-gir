@@ -372,3 +372,31 @@ def test_lemmas_group_the_forms_of_a_word():
             for w in ("յոյս", "յուսով", "հոյսն")
         )
     ]
+
+
+def test_stripped_takes_off_article_and_preposition():
+    got = set(srch.stripped("զթագավորն"))
+    assert "թագավոր" in got
+    assert "թագավորն" in got
+    assert set(srch.stripped("հերկինս")) >= {"երկին"}
+    # a short rest after հ is left alone
+    assert "ամառ" not in set(srch.stripped("համառ"))
+
+
+def test_lemmas_join_a_word_with_an_article():
+    pairs = [("թագաւորի", "թագաւոր")]
+    keys = [
+        srch.loose(w)
+        for w in (
+            "թագաւոր",
+            "թագաւորի",
+            "թագաւորն",
+            "զթագաւոր",
+            "հարց",
+        )
+    ]
+    got = srch.lemmas(keys, pairs)
+    assert len(got) == 1
+    assert srch.loose("թագաւորն") in got[0]
+    assert srch.loose("զթագաւոր") in got[0]
+    assert srch.loose("հարց") not in got[0]
