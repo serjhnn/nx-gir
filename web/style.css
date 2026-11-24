@@ -4636,3 +4636,7 @@ body.home .search-wrap {
     transform: translateY(-0.8rem);
   }
 }
+.filters.forms {
+  align-items: center;
+  margin-bottom: 1rem;
+}

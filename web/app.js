@@ -6805,9 +6805,10 @@ const searchCache = new Map();
 const lineFiles = new Map();
 let searchParts = null;
 
-function searchHref(q, where, open) {
+function searchHref(q, where, open, forms) {
   const p = new URLSearchParams({ q });
   if (where && where !== "grabar") p.set("in", where);
+  if (forms === false) p.set("forms", "0");
   if (open && open.size) {
     p.set("open", [...open].join(","));
   }
@@ -6937,6 +6938,7 @@ async function lemmaMap() {
 // of its word (lemma table), spellings together
 async function formsEntry(w) {
   const f = await searchEntry(w);
+  f.keys = [f.key];
   if (!f.entry || f.entry["*"]) return f;
   const by = await lemmaMap();
   const others = new Set();
@@ -6952,7 +6954,7 @@ async function formsEntry(w) {
       Object.assign(entry, m.entry);
     }
   }
-  return { key: f.key, entry };
+  return { key: f.key, entry, keys: [f.key, ...others] };
 }
 
 async function partsOf() {
@@ -7001,11 +7003,11 @@ function linesOf(entry) {
 // The lines of a search: those with all its words
 // (each in either spelling). A word too common to
 // search alone is left out when there are others.
-async function findLines(q) {
+async function findLines(q, forms = true) {
   const words = [...new Set(q.match(SEARCH_WORD)
     || [])];
   const found = await Promise.all(
-    words.map(formsEntry));
+    words.map(forms ? formsEntry : searchEntry));
   const common = [];
   const used = [];
   found.forEach((f, i) => {
@@ -7019,7 +7021,7 @@ async function findLines(q) {
   const spelled = [];
   for (const [w, f] of used) {
     const got = f.entry ? linesOf(f.entry) : new Map();
-    spelled.push([w, f.key, got]);
+    spelled.push([w, f.keys || [f.key], got]);
     if (lines === null) {
       lines = new Set(got.keys());
     } else {
@@ -7028,7 +7030,7 @@ async function findLines(q) {
     }
   }
   return { words, common, spelled,
-    keys: new Set(spelled.map((x) => x[1])),
+    keys: new Set(spelled.flatMap((x) => x[1])),
     lines: lines ? [...lines] : [] };
 }
 
@@ -7328,6 +7330,7 @@ async function searchPage(query) {
   const q = (p.get("q") || "").trim();
   const where = SEARCH_IN.includes(p.get("in"))
     ? p.get("in") : "grabar";
+  const forms = p.get("forms") !== "0";
   const open = new Set((p.get("open") || "")
     .split(",").filter(Boolean));
   document.title = (q ? q + " · " : "")
@@ -7349,7 +7352,7 @@ async function searchPage(query) {
   say(t("s.wait"));
   const at = hashNow();
   const [parts, f, about] = await Promise.all([
-    partsOf(), findLines(q), authorsAbout()]);
+    partsOf(), findLines(q, forms), authorsAbout()]);
   // gone to another page meanwhile
   if (hashNow() !== at) return;
   // how many parts each book has, for "մաս n"
@@ -7371,7 +7374,7 @@ async function searchPage(query) {
   const remember = () => {
     try {
       sessionStorage.setItem(FOUND, JSON.stringify({
-        q, back: searchHref(q, where, open),
+        q, back: searchHref(q, where, open, forms),
         list: g.hits.map((x) => [x.name, x.line]) }));
     } catch (e) {}
   };
@@ -7393,9 +7396,17 @@ async function searchPage(query) {
   }
   const filters = h("div", { class: "filters" },
     ...SEARCH_IN.map((w) =>
-      h("a", { href: searchHref(q, w),
+      h("a", { href: searchHref(q, w, null, forms),
         "aria-current": w === where ? "page" : null },
       searchInName(w) + " · " + nf(counts[w]))));
+  // one form or all the forms of the word
+  const formBar = h("div", { class: "filters forms" },
+    h("span", { class: "meta" }, t("s.forms")),
+    ...[[true, "s.allforms"], [false, "s.oneform"]]
+      .map(([on, key]) =>
+        h("a", { href: searchHref(q, where, null, on),
+          "aria-current": on === forms ? "page" : null },
+        t(key))));
   // each spelling found, and in how many lines; for
   // the words found in more than one
   const spells = new Map();
@@ -7435,7 +7446,7 @@ async function searchPage(query) {
   // that back from the reader finds it the same
   const draw = () => {
     history.replaceState(history.state, "",
-      pathOf(searchHref(q, where, open)));
+      pathOf(searchHref(q, where, open, forms)));
     remember();
     if (all) {
       all.textContent = open.size >= g.authors.length
@@ -7471,7 +7482,7 @@ async function searchPage(query) {
       h("span", {}, t("s.lines", g.hits.length)
         + " · " + t("s.authors", g.authors.length)
         + " · " + t("s.books", nb)), all || null),
-    filters, spelling, common,
+    filters, formBar, spelling, common,
     g.hits.length ? list : h("p", { class: "sub" },
       f.lines.length ? t("s.notin") : t("s.none")));
 }
