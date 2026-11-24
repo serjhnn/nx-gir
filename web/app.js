@@ -1332,10 +1332,11 @@ function topBanner() {
       fetchpriority: "high" }),
     h("a", { class: "banner-all", href: "#/about",
       tabindex: "-1", "aria-hidden": "true" }),
-    h("a", { class: "top-about", href: "#/about" },
-      t("top.about")),
-    h("p", { class: "top-text", lang: "hy" },
-      "… ժամանակ ժողովելոյ քարինս"));
+    h("div", { class: "top-corner" },
+      h("a", { class: "top-about", href: "#/about" },
+        t("top.about")),
+      h("p", { class: "top-text", lang: "hy" },
+        "… ժամանակ ժողովելոյ քարինս")));
 }
 
 // a note at the top of the top page: the site is

@@ -1032,10 +1032,6 @@ body.home .bar {
 /* one line at every width: the letters shrink
    with the banner (cqw), so a phone gets less */
 .top-text {
-  position: absolute;
-  z-index: 1;
-  right: 0.9rem;
-  bottom: 0.7rem;
   margin: 0;
   padding-top: 0.5rem;
   border-top: 1px solid #d4a23c;
@@ -1058,31 +1054,29 @@ body.home .bar {
   z-index: 1;
   inset: 0;
 }
-.top-about {
+.top-corner {
   position: absolute;
   z-index: 2;
-  left: 0.9rem;
+  right: 0.9rem;
   bottom: 0.7rem;
   display: flex;
-  align-items: center;
-  box-sizing: border-box;
-  height: 1.8rem;
-  padding: 0.12rem 0.75rem 0;
-  border: 1px solid #d4a23c;
-  border-radius: 999px;
-  background: rgb(12 7 3 / 0.55);
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  pointer-events: none;
+}
+.top-about {
+  pointer-events: auto;
   color: #f3dfae;
   font-family: var(--sans);
   font-size: 0.78rem;
   line-height: 1;
   text-decoration: none;
+  text-shadow: 0 1px 6px rgb(0 0 0 / 0.8);
 }
 .top-about:hover,
 .top-about:focus-visible {
-  background: rgb(12 7 3 / 0.85);
-}
-.top-text {
-  pointer-events: none;
+  text-decoration: underline;
 }
 
 /* the top page: the note that the site is being
