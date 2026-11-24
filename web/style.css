@@ -1080,7 +1080,7 @@ body.home .bar {
   text-decoration: underline;
 }
 
-/* the top page: the note that the site is being
+/* the About page: the note that the site is being
    built, an outline with the accent on the left */
 .dev-banner {
   display: flex;

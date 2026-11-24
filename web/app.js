@@ -1018,7 +1018,6 @@ async function shelf(folder) {
     // at the top: the picture, the Library and the
     // other pages, what was read last, then the
     // welcome
-    folder ? null : devBanner(),
     folder ? null : topBanner(),
     folder ? null : menuBar(...MENU.map(menuLink)),
     folder ? null : libraryTip(),
@@ -1339,9 +1338,9 @@ function topBanner() {
         "… ժամանակ ժողովելոյ քարինս")));
 }
 
-// a note at the top of the top page: the site is
-// being built, with something new every day; it
-// opens the timeline; and the contact address
+// a note on the About page: the site is being
+// built, with something new every day; it opens
+// the timeline; and the contact address
 function devBanner() {
   return h("div", { class: "dev-banner",
     role: "note", lang: LANG },
@@ -3423,6 +3422,7 @@ function aboutPage() {
       h("a", { href: "#/" }, t("home"))),
     h("h1", {}, t("ab.title")),
     h("p", { class: "sub" }, named(t("ab.sub"))),
+    devBanner(),
     h("ul", { class: "features" },
       ["what", "name", "do", "open", "author"]
         .map(part)),
