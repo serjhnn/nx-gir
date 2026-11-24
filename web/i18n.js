@@ -107,7 +107,7 @@ const UI = {
     "foot.pd": " · Գրաբար բնագրերը հանրային"
       + " սեփականություն են",
     "foot.join": "Դառնալ մասնակից",
-    "foot.by": "Մշակել են Ս.Օ.-ն և Claude-ը",
+    "foot.by": "Մշակել են Սերգեյ Օհանյանը և Claude-ը",
     "home": "← Գլխավոր",
     "back.library": "Վերադառնալ գրադարան",
     "error": "Ինչ-որ բան այն չէ",
@@ -515,7 +515,7 @@ const UI = {
     "foot.tr": "Translations ",
     "foot.pd": " · Grabar texts in the public domain",
     "foot.join": "Become a contributor",
-    "foot.by": "Developed by S.O. and Claude",
+    "foot.by": "Developed by Sergey Ohanyan and Claude",
     "home": "← Home",
     "back.library": "Back to the library",
     "error": "Something went wrong",
@@ -921,7 +921,7 @@ const UI = {
     "foot.pd": " · Тексты на грабаре в общественном"
       + " достоянии",
     "foot.join": "Стать участником",
-    "foot.by": "Разработали С.О. и Claude",
+    "foot.by": "Разработали Сергей Оганян и Claude",
     "home": "← Главная",
     "back.library": "Вернуться в библиотеку",
     "error": "Что-то пошло не так",
