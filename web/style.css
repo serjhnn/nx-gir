@@ -2287,12 +2287,18 @@ body.reading .bar {
   box-shadow: 0 0 0 2px var(--accent-ink);
 }
 
-/* a bookmarked word, the first word of a sentence
+/* a bookmarked line, the first word of a sentence
    with a note, the sentence a note is written on */
 
-.w.bm {
+.text p.bm {
   text-decoration: underline 2px var(--accent);
   text-underline-offset: 5px;
+}
+
+.local-hint {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.8rem;
 }
 
 .w.noted::before {

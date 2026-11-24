@@ -392,8 +392,8 @@ The published copy is at
 Pages). A read-only copy of the web reader can be
 published as plain files, with no server: the
 library, the books, word lookups and the text
-settings. It has no bookmarks, notes or editing,
-and where you stopped is kept in each browser. The test texts of `data/`,
+settings. It has no editing; bookmarks, notes and
+where you stopped are kept in each browser only. The test texts of `data/`,
 your own texts in `interpretations/` and your saved
 state are left out; the rest of the shelf goes in,
 and a GitHub Pages site can be seen by anyone.

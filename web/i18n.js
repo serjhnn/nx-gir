@@ -479,6 +479,8 @@ const UI = {
     "r.nextpage": "Հաջորդ էջը",
     "r.page": (k, n) => "Էջ " + k + " / " + n,
     "r.chapter": "Գլուխ",
+    "r.local": "Պահվում է միայն այս զննարկչում։",
+    "r.nosave": "Չհաջողվեց պահել։",
     "r.nomarks": "Էջանիշներ դեռ չկան։ Սեղմեք բառի վրա,"
       + " ապա՝ ☆ Էջանիշ։",
     "r.nonotes": "Նշումներ դեռ չկան։ Սեղմեք բառի վրա,"
@@ -935,6 +937,8 @@ const UI = {
     "r.nextpage": "Next page",
     "r.page": (k, n) => "Page " + k + " of " + n,
     "r.chapter": "Chapter",
+    "r.local": "Kept in this browser only.",
+    "r.nosave": "Could not save.",
     "r.nomarks": "No bookmarks yet. Tap a word, then ☆"
       + " Bookmark.",
     "r.nonotes": "No notes yet. Tap a word, then ✎ Add"
@@ -1400,6 +1404,8 @@ const UI = {
     "r.nextpage": "Следующая страница",
     "r.page": (k, n) => "Страница " + k + " из " + n,
     "r.chapter": "Глава",
+    "r.local": "Хранится только в этом браузере.",
+    "r.nosave": "Не удалось сохранить.",
     "r.nomarks": "Закладок пока нет. Нажмите на слово,"
       + " затем ☆ Закладка.",
     "r.nonotes": "Заметок пока нет. Нажмите на слово,"

@@ -329,8 +329,8 @@ async function api(path) {
 // No server there: scripts/build-site.py wrote the
 // answers into files under data/, and sets
 // NXGIR_STATIC (static.js). It only reads: no
-// bookmarks, notes or editing; where you stopped is
-// kept in this browser.
+// editing; bookmarks, notes (localSend()) and where
+// you stopped are kept in this browser.
 
 const STATIC = window.NXGIR_STATIC === true;
 // this build of the published copy: after each
@@ -440,6 +440,82 @@ function readAt(name) {
   } catch (e) {
     return null;
   }
+}
+
+// -- bookmarks and notes of the published copy --
+// No server there: they are kept in this browser
+// (localStorage), one entry a book, with the same
+// answers as /api/mark and /api/note.
+
+function localGet(name) {
+  try {
+    const d = JSON.parse(localStorage.getItem(
+      "nxgir-marks:" + name) || "null");
+    return { marks: d?.marks || [],
+      notes: d?.notes || [] };
+  } catch (e) {
+    return { marks: [], notes: [] };
+  }
+}
+
+function localPut(name, d) {
+  try {
+    localStorage.setItem("nxgir-marks:" + name,
+      JSON.stringify(d));
+  } catch (e) {
+    throw new Error(t("r.nosave"));
+  }
+}
+
+// {marks, notes} of the open book, each with "at":
+// the index of its word
+function localPlaces(name) {
+  const d = localGet(name);
+  const at = new Map(R.wpos.map((p, i) =>
+    [p[0] + "," + p[1], i]));
+  const of = (pos) => at.get(pos[0] + "," + pos[1]);
+  return {
+    marks: d.marks.filter((m) => of(m) !== undefined)
+      .map((m) => ({ pos: m, at: of(m) })),
+    notes: d.notes.map((n) => ({ ...n,
+      at: of(n.pos) ?? 0 })),
+  };
+}
+
+// the start of a text, cut at a space with …
+function quoteOf(text, width = 50) {
+  if (text.length <= width) return text;
+  let cut = text.slice(0, width - 1);
+  if (cut.includes(" ")) {
+    cut = cut.slice(0, cut.lastIndexOf(" "));
+  }
+  return cut.replace(/[ ,.]+$/, "") + "…";
+}
+
+function localSend(path, body) {
+  const d = localGet(body.name);
+  if (path === "mark") {
+    const k = JSON.stringify(body.pos);
+    const i = d.marks.findIndex((m) =>
+      JSON.stringify(m) === k);
+    if (i >= 0) d.marks.splice(i, 1);
+    else d.marks.push(body.pos);
+    d.marks.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+  } else if ("i" in body) {
+    if (body.delete === true) d.notes.splice(body.i, 1);
+    else d.notes[body.i].text = body.text;
+  } else {
+    const [lo, hi] = sentenceOf(R.wsel.get(
+      body.pos[0] + "," + body.pos[1]));
+    d.notes.push({ pos: R.wpos[lo],
+      quote: quoteOf(wordsOf(lo, hi)),
+      text: body.text,
+      date: new Date().toISOString().slice(0, 10) });
+    d.notes.sort((a, b) => a.pos[0] - b.pos[0]
+      || a.pos[1] - b.pos[1]);
+  }
+  localPut(body.name, d);
+  return localPlaces(body.name);
 }
 
 // the books read in this browser, newest first, as
@@ -4922,6 +4998,9 @@ const R = {
 };
 
 async function send(path, body, keepalive) {
+  if (STATIC && (path === "mark" || path === "note")) {
+    return localSend(path, body);
+  }
   const r = await fetch("/api/" + path, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -5250,10 +5329,7 @@ async function drawWord() {
   }
   // a later word may have been chosen meanwhile
   if (R.sel !== at) return;
-  const parts = [STATIC
-    ? h("div", { class: "actions" }, linkButton(),
-      reportButton())
-    : wordActions(),
+  const parts = [wordActions(),
     placesNav(), searchWordButton(w)];
   if (data.error) {
     parts.push(h("p", { class: "error" },
@@ -5376,11 +5452,15 @@ function go(i) {
 // the marks on the words, and the counts above
 function decorate() {
   for (const s of main.querySelectorAll(
-    ".w.bm, .w.noted")) {
-    s.classList.remove("bm", "noted");
+    ".w.noted")) {
+    s.classList.remove("noted");
   }
+  for (const p of main.querySelectorAll("p.bm")) {
+    p.classList.remove("bm");
+  }
+  // a bookmark belongs to its line: the whole line
   for (const m of R.marks) {
-    spanOf(m.at)?.classList.add("bm");
+    R.lineEls[R.wpos[m.at][0]]?.classList.add("bm");
   }
   for (const n of R.notes) {
     spanOf(n.at)?.classList.add("noted");
@@ -5420,10 +5500,10 @@ function decorate() {
       title: t("r.contents") + ": "
         + plural(R.contents.length, "heading") })
       : null,
-    STATIC ? null : btn(count("★", t("r.marks"),
+    btn(count("★", t("r.marks"),
       R.marks.length), showMarks,
     { "aria-label": marks, title: marks }),
-    STATIC ? null : btn(count("✎", t("r.notes"),
+    btn(count("✎", t("r.notes"),
       R.notes.length), showNotes,
     { "aria-label": notes, title: notes }),
     R.editable ? h("a", { class: "icon-btn",
@@ -5790,6 +5870,12 @@ function showContents() {
     ?.scrollIntoView({ block: "center" });
 }
 
+// on the published copy: they stay in this browser
+function localHint() {
+  return STATIC ? h("p", { class: "local-hint" },
+    t("r.local")) : null;
+}
+
 function showMarks() {
   closePanel();
   if (!R.marks.length) {
@@ -5817,7 +5903,7 @@ function showMarks() {
     }, { class: "link-btn" });
     list.append(h("li", {}, link, del));
   }
-  openPanel(t("r.marks"), LANG, list);
+  openPanel(t("r.marks"), LANG, localHint(), list);
 }
 
 function showNotes() {
@@ -5855,7 +5941,7 @@ function showNotes() {
     list.append(h("li", {}, link,
       h("div", { class: "item-btns" }, edit, del)));
   });
-  openPanel(t("r.notes"), LANG, list);
+  openPanel(t("r.notes"), LANG, localHint(), list);
 }
 
 // write a new note on the chosen word's sentence
@@ -6527,6 +6613,13 @@ async function book(name, line, found) {
     }
   });
   R.first.push(R.keys.length);
+  if (STATIC) {
+    R.wsel = new Map(R.wpos.map((p, i) =>
+      [p[0] + "," + p[1], i]));
+    const own = localPlaces(name);
+    R.marks = own.marks;
+    R.notes = own.notes;
+  }
   R.spans = new Array(R.keys.length);
   R.pages = pagesOf();
   // the other version, read beside it on a wide
