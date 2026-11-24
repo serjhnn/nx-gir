@@ -3411,6 +3411,7 @@ function contributePage() {
 
 // #/about: the project and its author
 const AUTHOR_URL = "https://github.com/serjhnn";
+const INSTAGRAM = "https://www.instagram.com/srg77.h";
 
 function aboutPage() {
   document.title = t("ab.title") + " · " + NAME;
@@ -3428,6 +3429,8 @@ function aboutPage() {
     h("p", { class: "cta" },
       h("a", { class: "cta-main", href: AUTHOR_URL },
         t("ab.contact")),
+      h("a", { href: INSTAGRAM, rel: "noopener me" },
+        "Instagram"),
       h("a", { href: "#/contribute" },
         t("foot.join")),
       h("a", { href: REPO }, t("co.gh"))));

@@ -7,6 +7,5 @@ Done: `/about` (`aboutPage()` in `web/app.js`, keys
 from the author's name there.
 
 - [ ] The author's bio and a photo, if wanted.
-- [ ] The Instagram profile: add the link on the
-  page once decided (a personal or a project
-  account) and give its address.
+- [x] The Instagram profile (srg77.h) is linked
+  on the page, beside the GitHub link.
