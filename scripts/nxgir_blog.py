@@ -7,8 +7,8 @@ Drafts are in blog/drafts/, which is not read.
 A post can name its theme on the line after the
 title: "theme: site", "theme: authors", "theme:
 books" or "theme: tech" (THEMES; one version is
-enough). The Blog
-page has a sub page for each theme.
+enough). The Blog page has a sub page for each
+theme.
 
 A post can also name the places it is about, on a
 line "place: ani, duin" after the title: ids of
