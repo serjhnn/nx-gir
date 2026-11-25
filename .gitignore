@@ -3,3 +3,5 @@ __pycache__/
 .ruff_cache/
 .digilib-cache/
 site/
+blender/cache/
+blender/out/
