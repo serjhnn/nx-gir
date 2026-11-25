@@ -224,11 +224,14 @@ def window(
     return None
 
 
-def checker(outline, z, rows=2, size=0.8, out=0.03):
+def checker(
+    outline, z, rows=2, size=0.8, out=0.03, closed=True
+):
     """A band of light and dark stones in turn round
-    a convex outline (the foot of the walls)."""
+    a convex outline (the foot of the walls), or
+    along a line when not closed."""
     k = len(outline)
-    for i in range(k):
+    for i in range(k if closed else k - 1):
         a = Vector(outline[i])
         b = Vector(outline[(i + 1) % k])
         d = b - a
@@ -1469,89 +1472,195 @@ def drum(dx, dy, b, band):
 # -- the porch and the belfry --
 
 
+def blind_niche(holes, x, y, z, rz, w, h):
+    """A tall narrow round-arched niche cut into a
+    wall, a roll round it and a carved crown over it
+    (three courses corbelled out, a pointed hood)."""
+    n = n_of(rz)
+    holes.add(L.arch(w, h), 1.0, L.face(x, y, z, rz))
+    c = Vector((x, y, 0))
+    arch_rolls(
+        c, rz, z, [(w + 0.12, h + 0.06, 0.04)], False
+    )
+    top = z + h + 0.15
+    for k, (cw, ch) in enumerate(
+        ((w + 0.5, 0.18), (w + 0.35, 0.18), (w + 0.2, 0.18))
+    ):
+        p = c + n * (0.06 + 0.05 * (2 - k))
+        L.box(
+            "crown",
+            cw,
+            0.12 + 0.1 * (2 - k),
+            ch,
+            "porch",
+            p.x,
+            p.y,
+            top + k * 0.2,
+            -rz,
+        )
+    p = c + n * 0.05
+    L.prism(
+        "crown-gable",
+        [
+            (-(w + 0.5) / 2, 0),
+            ((w + 0.5) / 2, 0),
+            (0, 0.75),
+        ],
+        0.12,
+        "porch",
+        L.face(p.x, p.y, top + 0.6, rz),
+    )
+
+
 def porch():
+    """The porch under the belfry, after the
+    photograph from the west (before 1915) and
+    Lynch's from the south-west: on the front one
+    tall pointed portal in a rectangular frame, its
+    orders stepping in to the door; over it three
+    small arched openings between two light slabs
+    (the white marble of the text); either side a
+    tall narrow blind niche with a carved crown;
+    lozenges at the foot; shafts at the corners. On
+    the south and north faces two framed windows
+    high and a blind niche below; a thin slab for a
+    roof edge. Measured on the photograph from the
+    west: 33 pixels to the metre."""
     gx, gw, gd, gh = -16.85, 9.9, 9.4, 10.4
     fx = gx - gw / 2
     body = L.box("porch", gw, gd, gh, "porch", gx, 0)
     holes = Holes("porch")
     frames = []
-    # the portal: three pointed recesses stepping in,
+    front = Vector((fx, 0, 0))
+    # the portal: three pointed orders stepping in,
     # the door at the back
-    for aw, ah, dp in (
-        (3.8, 6.8, 0.25),
-        (3.0, 6.1, 0.5),
-        (2.3, 5.4, 0.8),
-    ):
+    orders = (
+        (3.5, 7.25, 0.2),
+        (3.2, 7.0, 0.4),
+        (2.9, 6.75, 0.8),
+    )
+    for aw, ah, dp in orders:
         holes.add(
             L.arch(aw, ah, True),
             dp * 2,
             L.face(fx, 0, 0, -PI / 2),
         )
-    L.box("door", 0.08, 2.0, 3.3, "wood", fx + 0.78, 0, 0)
+    arch_rolls(
+        front,
+        -PI / 2,
+        0,
+        [
+            (w + 0.08, h + 0.04, -dp + 0.02)
+            for w, h, dp in orders
+        ],
+    )
+    L.box("door", 0.08, 1.7, 3.2, "wood", fx + 0.78, 0, 0)
     L.box(
-        "door-back", 0.04, 2.3, 5.5, "hole", fx + 0.82, 0, 0
+        "door-back", 0.04, 3.0, 6.8, "hole", fx + 0.82, 0, 0
     )
-    rosette(fx + 0.78, 0, 4.25, -PI / 2, 0.55)
-    for y in (-3.4, 3.4):
-        frames.append(
-            window(holes, fx, y, 7.6, -PI / 2, 0.5, 0.9)
-        )
-    for s in (-1, 1):
-        frames.append(
-            window(
-                holes,
-                gx,
-                s * gd / 2,
-                7.6,
-                0 if s > 0 else PI,
-                0.5,
-                0.9,
-            )
-        )
-        frames.append(
-            window(
-                holes,
-                gx,
-                s * gd / 2,
-                3.2,
-                0 if s > 0 else PI,
-                0.5,
-                0.9,
-            )
-        )
-    holes.cut(body, *frames)
-    # the marble slabs with rosettes on its front
-    for y, z, w, h in (
-        (-3.6, 1.8, 1.1, 1.6),
-        (3.6, 1.8, 1.1, 1.6),
-        (-3.6, 4.2, 1.1, 1.1),
-        (3.6, 4.2, 1.1, 1.1),
-    ):
-        L.box("slab", 0.1, w, h, "marble", fx - 0.05, y, z)
-        rosette(
-            fx - 0.1,
+    # its rectangular frame
+    for y in (-1.95, 1.95):
+        L.box(
+            "portal-frame",
+            0.2,
+            0.3,
+            7.5,
+            "porch",
+            fx - 0.08,
             y,
-            z + h / 2,
-            -PI / 2,
-            min(w, h) * 0.38,
+            0,
         )
-    out = L.rect(gx, 0, gw, gd)
-    checker(out, 0.0)
-    L.mould(
-        "porch-course",
-        out,
-        [(0.0, 5.55), (0.1, 5.6), (0.1, 5.75), (0.0, 5.8)],
+    L.box(
+        "portal-frame",
+        0.2,
+        4.2,
+        0.3,
         "porch",
+        fx - 0.08,
+        0,
+        7.45,
     )
+    # over it, three small arched openings between
+    # two light slabs
+    for y in (-1.15, 0.0, 1.15):
+        frames.append(
+            window(
+                holes,
+                fx,
+                y,
+                7.95,
+                -PI / 2,
+                0.75,
+                1.4,
+                False,
+            )
+        )
+    for y in (-3.35, 3.35):
+        L.box(
+            "slab",
+            0.1,
+            1.0,
+            1.7,
+            "marble",
+            fx - 0.05,
+            y,
+            6.85,
+        )
+    # either side a tall blind niche, a crown over it
+    for y in (-3.3, 3.3):
+        blind_niche(holes, fx, y, 1.7, -PI / 2, 0.85, 3.4)
+    # the south and north faces
+    for sg in (-1, 1):
+        rz = 0 if sg > 0 else PI
+        y = sg * gd / 2
+        for x, w in ((gx - 1.6, 0.8), (gx + 3.0, 0.55)):
+            frames.append(
+                window(holes, x, y, 7.4, rz, w, 1.1, "rect")
+            )
+        blind_niche(holes, gx - 1.6, y, 1.8, rz, 0.8, 3.2)
+        # the pilaster between the two panels
+        p = Vector((gx + 1.0, y, 0)) + n_of(rz) * 0.08
+        L.box(
+            "pilaster",
+            0.45,
+            0.16,
+            9.6,
+            "porch",
+            p.x,
+            p.y,
+            0,
+            -rz,
+        )
+    holes.cut(body, *[f for f in frames if f])
+    # shafts at the four corners
+    for cx in (-1, 1):
+        for cy in (-1, 1):
+            shaft(
+                "porch-shaft",
+                gx + cx * (gw / 2 + 0.05),
+                cy * (gd / 2 + 0.05),
+                1.6,
+                7.8,
+                0.13,
+            )
+    # the foot: lozenges either side of the portal on
+    # the front, light and dark stones on the sides
+    diamonds((fx, -gd / 2), (fx, -2.1), 0.0, 1.5)
+    diamonds((fx, 2.1), (fx, gd / 2), 0.0, 1.5)
+    for a, b in (
+        ((fx, -gd / 2), (fx + gw, -gd / 2)),
+        ((fx + gw, gd / 2), (fx, gd / 2)),
+    ):
+        checker([a, b], 0.0, closed=False)
     L.mould(
         "porch-cornice",
-        out,
+        L.rect(gx, 0, gw, gd),
         [
-            (0.0, 9.7),
-            (0.1, 9.8),
-            (0.3, 10.05),
-            (0.45, 10.25),
-            (0.45, 10.4),
+            (0.0, 9.95),
+            (0.3, 10.02),
+            (0.35, 10.12),
+            (0.35, 10.3),
+            (0.25, 10.4),
         ],
         "porch",
     )
@@ -2314,6 +2423,7 @@ VIEWS = {
     # close views, to check the details
     "belfry": ((-46, -24, 13), (-16.85, 0, 17.5), 38),
     "drums": ((-6, -3, 18), (23, -0.3, 16), 34),
+    "porch": ((-36, -21, 5), (-17, -1, 5.5), 32),
     "hall": ((-31, -29, 8), (-3, -10, 5), 30),
 }
 
