@@ -1479,6 +1479,14 @@ function joinBanner() {
 // a narrow banner on the top page, with the
 // painted map, leading to #/map
 function mapBanner() {
+  return h("div", { class: "m3-banner" },
+    mapBannerLink(),
+    // the 3D map: three.js is loaded only there
+    h("a", { class: "m3-badge", href: "#/map3d",
+      "aria-label": t("nav.map3d"),
+      title: t("nav.map3d") }, t("m3.badge")));
+}
+function mapBannerLink() {
   return h("a", { class: "join-banner map-banner",
     href: "#/map", lang: LANG },
   h("img", { src: "img/map/base.webp", alt: "",
@@ -3002,6 +3010,24 @@ function pinKind(p) {
   return p.stories.length ? "comics" : "place";
 }
 
+// a place's pin, a button (the Map page and the
+// 3D map)
+function mapPin(p, lang) {
+  const kind = pinKind(p);
+  const fresh = p.stories.some((s) =>
+    Date.now() - isoDate(s.date) < MAP_FRESH);
+  return h("button", { type: "button",
+    class: "pin pin-" + kind + (fresh ? " fresh" : "")
+      + (p.x > 88 ? " pin-r" : ""),
+    "aria-label": p.names[lang] },
+  h("span", { class: "pin-dot" },
+    kind === "place" ? null
+      : icon(ICONS[kind === "blog" ? "book"
+        : "panels"])),
+  h("span", { class: "pin-label", lang },
+    p.names[lang]));
+}
+
 // a story in the popup: a link, with its cover small,
 // its type and date, and its title
 function mapLink(s, lang) {
@@ -3047,19 +3073,7 @@ async function mapPage(path) {
     view.append(stage);
     const pins = new Map();
     for (const p of places) {
-      const kind = pinKind(p);
-      const fresh = p.stories.some((s) =>
-        Date.now() - isoDate(s.date) < MAP_FRESH);
-      const b = h("button", { type: "button",
-        class: "pin pin-" + kind + (fresh ? " fresh" : "")
-          + (p.x > 88 ? " pin-r" : ""),
-        "aria-label": nm(p) },
-      h("span", { class: "pin-dot" },
-        kind === "place" ? null
-          : icon(ICONS[kind === "blog" ? "book"
-            : "panels"])),
-      h("span", { class: "pin-label", lang },
-        nm(p)));
+      const b = mapPin(p, lang);
       // not a style attribute: the CSP forbids it
       b.style.left = p.x + "%";
       b.style.top = p.y + "%";
@@ -3337,6 +3351,10 @@ async function mapPage(path) {
       langs.length > 1 ? pickLang : null,
       pickShow,
       h("div", { class: "map-wrap" }, view),
+      h("p", { class: "m3-go" },
+        h("a", { class: "icon-btn", href: "#/map3d"
+          + (st.sel ? "/" + st.sel : "") },
+        icon(ICONS.map), window.t("nav.map3d"))),
       h("h2", { class: "map-list-h", lang }, t.list),
       list);
     apply();
@@ -3344,6 +3362,155 @@ async function mapPage(path) {
     if (st.sel) center(true);
   };
   draw();
+}
+
+// -- the 3D map --
+
+// the 3D map in view ({ stop() } of web/map3d.js),
+// let go when another page opens
+let m3 = null;
+function stopMap3d() {
+  if (m3) m3.stop();
+  m3 = null;
+}
+
+// #/map3d and #/map3d/<place>: the painted map on its
+// relief, in 3D. web/map3d.js and three.js
+// (vendor/three/) are loaded only here.
+async function map3dPage(path) {
+  const [want] = path.split("/");
+  const lang = blogLang();
+  const tm = MAP_UI[lang];
+  const data = await api("map");
+  const places = data.places;
+  const by = new Map(places.map((p) => [p.id, p]));
+  let sel = by.has(want) ? want : "";
+  const view = h("div", { class: "map-view m3-view",
+    role: "application", "aria-label": tm.map },
+  h("p", { class: "m3-wait" }, t("m3.load")));
+  const pins = new Map();
+  for (const p of places) {
+    const b = mapPin(p, lang);
+    b.classList.add("m3-off");
+    b.addEventListener("click", () => pick(p.id));
+    pins.set(p.id, b);
+    view.append(b);
+  }
+  const pop = h("section", { class: "map-pop",
+    role: "dialog", hidden: "" });
+  view.append(pop);
+  // the panel beside its pin; on a narrow map,
+  // docked at the bottom
+  const placePop = () => {
+    const b = pins.get(sel);
+    if (!b || pop.hidden) return;
+    const w = view.clientWidth;
+    const hh = view.clientHeight;
+    const dock = w < 520;
+    pop.classList.toggle("dock", dock);
+    view.classList.toggle("popped", dock);
+    if (dock) {
+      pop.style.left = "";
+      pop.style.top = "";
+      return;
+    }
+    const px = parseFloat(b.style.left) || 0;
+    const py = parseFloat(b.style.top) || 0;
+    const pw = pop.offsetWidth;
+    const ph = pop.offsetHeight;
+    let x = px + 22;
+    if (x + pw > w - 8) x = px - 22 - pw;
+    x = Math.max(8, Math.min(w - pw - 8, x));
+    pop.style.left = x + "px";
+    pop.style.top = Math.max(8,
+      Math.min(hh - ph - 8, py - ph / 2)) + "px";
+  };
+  const drawPop = () => {
+    const p = by.get(sel);
+    for (const [id, b] of pins) {
+      b.classList.toggle("on", id === sel);
+    }
+    if (!p) {
+      pop.hidden = true;
+      pop.replaceChildren();
+      view.classList.remove("popped");
+      return;
+    }
+    const close = h("button", { type: "button",
+      class: "map-close", "aria-label": tm.close },
+    "×");
+    close.addEventListener("click", () => pick(""));
+    pop.lang = lang;
+    pop.replaceChildren(close,
+      h("p", { class: "map-kind" }, tm.kinds[p.kind]),
+      h("h2", {}, p.names[lang]),
+      p.stories.length
+        ? h("div", { class: "map-links" },
+          p.stories.map((s) => mapLink(s, lang)))
+        : h("p", { class: "empty" }, tm.none));
+    pop.hidden = false;
+    placePop();
+  };
+  function pick(id) {
+    sel = id;
+    history.replaceState(history.state, "",
+      pathOf("#/map3d" + (id ? "/" + id : "")));
+    drawPop();
+    if (id && m3) m3.pick(id);
+  }
+  const ctl = (label, text, fn) => {
+    const b = h("button", { type: "button",
+      "aria-label": label, title: label }, text);
+    b.addEventListener("click", () => m3 && fn(m3));
+    return b;
+  };
+  view.append(h("div", { class: "map-ctl" },
+    ctl(tm.zin, "+", (m) => m.zoom(0.7)),
+    ctl(tm.zout, "−", (m) => m.zoom(1 / 0.7)),
+    ctl(t("m3.left"), "⟲", (m) => m.turn(-30)),
+    ctl(t("m3.right"), "⟳", (m) => m.turn(30)),
+    ctl(t("m3.above"), "⤒", (m) => m.tilt(-0.25)),
+    ctl(t("m3.side"), "⤓", (m) => m.tilt(0.25)),
+    ctl(tm.reset, "⌂", (m) => m.reset())));
+  document.title = t("nav.map3d") + " · " + NAME;
+  show(
+    h("p", { class: "crumbs", lang },
+      h("a", { href: "#/" }, BLOG[lang].home),
+      " / ", h("a", { href: "#/map" }, tm.title)),
+    h("h1", {}, t("nav.map3d")),
+    h("p", { class: "sub" }, t("m3.sub")),
+    h("div", { class: "map-wrap" }, view),
+    h("p", { class: "m3-hint" }, t("m3.hint")),
+    h("p", { class: "m3-go" },
+      h("a", { class: "icon-btn", href: "#/map"
+        + (sel ? "/" + sel : "") },
+      icon(ICONS.map), t("m3.flat"))));
+  let mod;
+  try {
+    mod = await import("./map3d.js");
+  } catch {
+    mod = null;
+  }
+  // gone to another page while it loaded
+  if (!view.isConnected) return;
+  const wait = view.querySelector(".m3-wait");
+  if (!mod || !mod.supported()) {
+    wait.textContent = t("m3.nogl");
+    return;
+  }
+  stopMap3d();
+  m3 = await mod.start(view, { ...data,
+    height: "img/map/height.png" },
+  { pins, onPick: pick, onDraw: placePop });
+  if (!view.isConnected) {
+    stopMap3d();
+    return;
+  }
+  wait.remove();
+  if (sel) {
+    drawPop();
+    m3.pick(sel);
+  }
 }
 
 // -- features --
@@ -7731,6 +7898,7 @@ async function route() {
   E.dirty = false;
   E.save = null;
   E.hash = "";
+  stopMap3d();
   followLang();
   const hash = hashNow().replace(/^#\/?/, "");
   markTab(hash);
@@ -7783,6 +7951,10 @@ async function route() {
       || hash.startsWith("comics/")) {
       await comicsPage(decodeURIComponent(
         hash.slice(7)));
+    } else if (hash === "map3d"
+      || hash.startsWith("map3d/")) {
+      await map3dPage(decodeURIComponent(
+        hash.slice(6)));
     } else if (hash === "map"
       || hash.startsWith("map/")) {
       await mapPage(decodeURIComponent(hash.slice(4)));

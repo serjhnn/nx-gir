@@ -3437,6 +3437,69 @@ body.reading.full .bar {
   color: #7a6340;
   font-size: 0.85rem;
 }
+/* the 3D map (#/map3d, web/map3d.js): the canvas
+   under the pins; a pin out of view is hidden */
+.m3-view {
+  aspect-ratio: 4 / 3;
+  touch-action: none;
+  cursor: grab;
+  background: var(--bg);
+}
+.m3-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.m3-view .map-pop {
+  z-index: 200;
+}
+.m3-view .pin.m3-off {
+  visibility: hidden;
+}
+.m3-wait {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--muted);
+}
+.m3-hint {
+  margin: -0.4rem 0 0.6rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.m3-go {
+  margin: 0 0 1rem;
+}
+/* the top page's map banner, with its 3D badge */
+.m3-banner {
+  position: relative;
+}
+.m3-badge {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid #e8c36a;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.6);
+  color: #f6e7c1;
+  font: 700 0.85rem/1 var(--sans);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
+.m3-badge:hover,
+.m3-badge:focus-visible {
+  background: #5a2f1a;
+}
+@media (max-width: 520px) {
+  .m3-view {
+    aspect-ratio: 3 / 4;
+  }
+}
 .map-list-h {
   margin: 1.4rem 0 0.4rem;
   font: 500 1.1rem var(--serif);
