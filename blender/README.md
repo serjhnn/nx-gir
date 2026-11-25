@@ -64,3 +64,15 @@ dark courses of the checkered band),
 - In the end the objects of each material are joined
   into one (`finish()`), so the `.glb` has few parts
   to draw.
+
+## State (2026-11-25)
+
+The full build takes about 15 minutes on 4 cores
+(each render 3-4 minutes). `glakavank.glb`: 10.6 MB,
+of which 8.5 MB are the 27 texture pictures (9
+materials, 3 maps each, 1K) and about 2 MB the
+meshes: too big for a phone yet. To do before the
+web: smaller pictures (512 for the far materials, no
+roughness map where it adds little), a lighter ground
+(it is 300x300 squares), better trees and slopes
+(grass and rock mixed, not one texture).
