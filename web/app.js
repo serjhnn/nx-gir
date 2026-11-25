@@ -2687,15 +2687,15 @@ const BLOG = {
   hy: { name: "Հայերեն", title: "Բլոգ",
     sub: "Նորություններ և նշումներ Նախագրից",
     home: "← Գլխավոր", none: "Գրառումներ դեռ չկան։",
-    read: "Կարդալ →" },
+    read: "Կարդալ →", all: "Բոլորը" },
   en: { name: "English", title: "Blog",
     sub: "News and notes from nxGir",
     home: "← Home", none: "No posts yet.",
-    read: "Read →" },
+    read: "Read →", all: "All" },
   ru: { name: "Русский", title: "Блог",
     sub: "Новости и заметки nxGir",
     home: "← Главная", none: "Записей пока нет.",
-    read: "Читать →" },
+    read: "Читать →", all: "Все" },
 };
 // the themes of the posts: THEMES in nxgir_blog.py;
 // each has a sub page, #/blog/theme/<name>
@@ -2871,8 +2871,8 @@ function postCard(p, lang) {
     : null);
 }
 
-// #/blog: the posts about the site, newest first,
-// always: no theme is remembered; #/blog/<slug>
+// #/blog: all the posts, newest first, always: no
+// theme is remembered; #/blog/<slug>
 // that one post; #/blog/<slug>/<lang> in lang;
 // #/blog/theme/<name> the posts of one theme
 async function blogPage(path) {
@@ -2886,7 +2886,6 @@ async function blogPage(path) {
     slug = want = "";
   }
   const home = !slug && !theme;
-  if (home) theme = "site";
   const data = await api("blog");
   const one = slug
     ? data.posts.find((p) => p.slug === slug) : null;
@@ -2917,15 +2916,16 @@ async function blogPage(path) {
       });
       return b;
     }));
-    // one tab for each theme
+    // "All", then one tab for each theme
     const tabs = h("nav", { class: "filters outline themes",
       "aria-label": "Themes", lang },
+    h("a", { href: "#/blog",
+      "aria-current": home ? "page" : null }, t.all),
     Object.entries(BLOG_THEMES).map(([k, v]) =>
-      h("a", { href: k === "site" ? "#/blog"
-        : "#/blog/theme/" + k,
+      h("a", { href: "#/blog/theme/" + k,
       "aria-current": k === theme ? "page" : null },
       v[lang])));
-    const name = theme && !home
+    const name = theme
       ? BLOG_THEMES[theme][lang] : "";
     document.title = (one ? version(one, lang).title
       + " · " : "") + (name ? name + " · " : "")

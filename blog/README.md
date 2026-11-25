@@ -12,15 +12,17 @@ read by `scripts/nxgir_blog.py`. Content, not code.
   address, `/blog/welcome`.
 - Themes: a line `theme: site`, `theme: authors`,
   `theme: books` or `theme: tech` (how things are
-  made) right after the title puts the post in a theme; the line is not shown. One
-  version of a post is enough (the others must
-  not differ). The Blog page has a sub page for
-  each (`/blog/theme/authors`) with tabs between
-  them. `/blog` itself shows the `site` theme,
-  every time; nothing is remembered. A post
-  without a theme is on no page. `THEMES` in `scripts/nxgir_blog.py` must
-  match `BLOG_THEMES` in `web/app.js` (a test
-  checks it); a new theme is added to both.
+  made) right after the title puts the post in a
+  theme; the line is not shown. One version of a
+  post is enough (the others must not differ). The
+  Blog page has a sub page for each
+  (`/blog/theme/authors`), with tabs between them.
+  `/blog` itself shows all the posts (the tab
+  "All"), every time; nothing is remembered. A post
+  without a theme is only on `/blog`. `THEMES` in
+  `scripts/nxgir_blog.py` must match `BLOG_THEMES`
+  in `web/app.js` (a test checks it); a new theme is
+  added to both.
 - Places: a line `place: ani, duin` right after the
   title (and the theme) names the places the post is
   about, ids of `map/places.tsv`; the map page shows
