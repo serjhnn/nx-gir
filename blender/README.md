@@ -130,22 +130,29 @@ Fixed, each with a picture in `renders/fixes/`:
    roof and barred windows; a flat-roofed hut on the
    hall's roof, right behind the belfry.
 
-Still to do, in this order:
+5. The porch front: one tall pointed portal in a
+   frame, three small arched openings over it
+   between two light slabs, tall blind niches with
+   carved crowns; on the south and north faces two
+   framed windows high, a blind niche, a pilaster;
+   shafts at the corners; no rosette slabs.
+6. The south front (Lynch Fig. 155, `SOUTH`):
+   blocks of different heights, the top sloping
+   down to the east, a small square tower at the
+   east end, chimneys, the great round tower where
+   the photograph has it; no round towers at the
+   south corners; the south range ends where the
+   wall falls away.
+7. The court: a wooden railing on the galleries'
+   upper floor, their upper arches larger than the
+   lower; trees behind the belfry, the cypress
+   behind the hut.
 
-- The porch front: one tall pointed portal in a
-  frame, three small arched openings over it between
-  two light slabs (the marble slabs of the text?),
-  tall blind niches with carved crowns on each side;
-  a corner shaft and panels on its south face; a
-  slab roof. The rosette slabs low by the door are
-  not seen in a photograph.
-- The enclosure (Lynch Fig. 155): buildings of
-  different heights, wall tops stepping down the
-  slope to the east, chimneys, one great round
-  tower. The four corner towers are not seen in a
-  photograph.
-- The court: a wooden railing on the upper gallery,
-  its arches larger than the lower ones; a cypress
-  by the hut, trees behind the belfry.
+Still to do:
+
+- The north corner towers are not seen in any
+  photograph; kept for now.
+- The ground is flat round the walls; Fig. 155 has
+  the slope steeper on the south.
 - The web page (`web.sh`) still has the model
   before these fixes.
