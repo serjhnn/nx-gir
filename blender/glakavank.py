@@ -1699,7 +1699,7 @@ def belfry(gx):
     pinnacles over the corners. Second: eight columns
     under cusped (five-lobed) arches, a high plain
     frieze, a roof of plain slabs."""
-    by, s, sh = 10.9, 7.6, 7.6
+    by, s, sh = 10.9, 7.6, 5.8
     c8 = 1.25
     oct8 = octagon(gx, 0, s, c8)
     L.mould(
@@ -1713,14 +1713,14 @@ def belfry(gx):
         "belfry", oct8, [(0.0, 0.0), (0.0, sh)], "porch", by
     )
     holes = Holes("belfry")
-    aw, ah = 3.5, 6.75
+    aw, ah = 3.5, 5.4
     for rz in (0, PI / 2):
         holes.add(
             L.arch(aw, ah, True),
             s + 2,
             L.face(gx, 0, by, rz),
         )
-    orders = ((4.1, 7.25, 0.22), (3.8, 7.0, 0.4))
+    orders = ((4.1, 5.85, 0.22), (3.8, 5.6, 0.4))
     for rz in (0, PI / 2, PI, -PI / 2):
         n = n_of(rz)
         c = Vector((gx, 0, 0)) + n * (s / 2)
@@ -1742,9 +1742,9 @@ def belfry(gx):
             [
                 (-0.5, 0),
                 (0.5, 0),
-                (0.5, 5.3),
-                (0, 6.2),
-                (-0.5, 5.3),
+                (0.5, 4.0),
+                (0, 4.8),
+                (-0.5, 4.0),
             ],
             0.9,
             L.face(cc.x, cc.y, by + 0.35, rz),
@@ -1757,12 +1757,12 @@ def belfry(gx):
         t = Vector((n.y, -n.x, 0))
         for sg in (-1, 1):
             q = cc + t * sg * 0.7 + n * 0.06
-            shaft("bel-shaft", q.x, q.y, by, 6.4, 0.09)
+            shaft("bel-shaft", q.x, q.y, by, 5.0, 0.09)
         # its gable mould, a roll round the niche
         L.tube(
             "roll",
             L.on_face(
-                [(-0.62, 5.25), (0, 6.35), (0.62, 5.25)],
+                [(-0.62, 3.95), (0, 4.95), (0.62, 3.95)],
                 L.face(cc.x, cc.y, by + 0.35, rz),
                 0.05,
             ),
@@ -1793,19 +1793,19 @@ def belfry(gx):
             ],
         )
         # the hood over the arch
-        arch_rolls(c, rz, by, [(4.5, 7.5, 0.06)])
+        arch_rolls(c, rz, by, [(4.5, 6.15, 0.06)])
         # the clustered shafts beside the arch
         for sg in (-1, 1):
             for off in (2.28, 2.46):
                 p = c + t * sg * off + n * 0.1
-                shaft("bel-shaft", p.x, p.y, by, 5.0, 0.08)
+                shaft("bel-shaft", p.x, p.y, by, 3.2, 0.08)
         # the gable, its crockets and its finial
         g = c - n * 0.25
         top = by + sh + 0.25
         gw = s / 2 - c8 + 0.25
         L.prism(
             "bel-gable",
-            [(-gw, 0), (gw, 0), (0, 3.4)],
+            [(-gw, 0), (gw, 0), (0, 1.6)],
             0.5,
             "porch",
             L.face(g.x, g.y, top, rz),
@@ -1814,10 +1814,10 @@ def belfry(gx):
         for sg in (-1, 1):
             a = c + t * sg * gw + n * 0.05
             a = Vector((a.x, a.y, top))
-            b = Vector((apex.x, apex.y, top + 3.45))
+            b = Vector((apex.x, apex.y, top + 1.65))
             rod("bel-rake", a, b, 0.11, "porch")
-            for k in range(1, 6):
-                q = a + (b - a) * (k / 6.0)
+            for k in range(1, 4):
+                q = a + (b - a) * (k / 4.0)
                 L.box(
                     "crocket",
                     0.22,
@@ -1833,9 +1833,9 @@ def belfry(gx):
             "bel-fin",
             apex.x,
             apex.y,
-            top + 3.4,
-            0.16,
-            0.75,
+            top + 1.6,
+            0.14,
+            0.6,
             4,
             False,
             False,
@@ -1878,8 +1878,20 @@ def belfry(gx):
             False,
             False,
         )
+    # the roof behind the gables, up to the second
+    # stage
+    L.lathe(
+        "bel-roof1",
+        [(4.15, 0), (3.3, 1.35)],
+        8,
+        "slate",
+        gx,
+        0,
+        by + sh + 0.25,
+        PI / 8,
+    )
     # the second stage
-    uy = by + sh + 0.5
+    uy = by + sh + 1.6
     ur = 2.5
     L.lathe(
         "ring-base",
@@ -1896,7 +1908,7 @@ def belfry(gx):
         uy,
     )
     top = uy + 0.85
-    ch = 3.3
+    ch = 3.2
     for i in range(8):
         a = i * PI / 4
         column(
@@ -1908,7 +1920,7 @@ def belfry(gx):
             0.18,
             "porch",
         )
-    band = 2.3
+    band = 2.0
     z0 = top + ch - 0.9
     ring = L.lathe(
         "ring-arch",
@@ -1932,7 +1944,7 @@ def belfry(gx):
     for i in range(8):
         f = i * PI / 4 + PI / 8
         holes.add(
-            L.foil(1.7, 1.75),
+            L.foil(1.7, 1.65),
             2.0,
             L.face(
                 gx + 2.6 * math.sin(f),
@@ -1985,7 +1997,7 @@ def belfry(gx):
         0,
         ry + 0.65,
         3.25,
-        5.6,
+        4.6,
         8,
         True,
         False,

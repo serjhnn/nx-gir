@@ -108,7 +108,10 @@ Fixed, each with a picture in `renders/fixes/`:
    in round its arches, ringed shafts, steep gables
    with crockets and a finial (no rosettes); in each
    corner a tall gabled niche carved in, a small
-   shrine at its foot; small pinnacles; no bell
+   shrine at its foot; small pinnacles; low gables
+   whose tops are level with the foot of the second
+   stage (measured again from the photographs: the
+   first stage about 7.7 m to there); no bell
    (none is seen), a ladder.
 2. The drums, each its own: Stepanos in a patchwork
    of light and dark stone with a ring, a band of
