@@ -1,0 +1,138 @@
+{
+  "models": [
+    {
+      "id": "glakavank",
+      "kind": "monastery",
+      "place": "glakavank",
+      "book": "grabar/hovhan-mamikonean/1-patmutiun-taronoy",
+      "year": 1893,
+      "image": "models/glakavank.webp",
+      "names": {
+        "hy": "Գլակավանք",
+        "en": "Glakavank",
+        "ru": "Глакаванк"
+      },
+      "sub": {
+        "hy": "Մշո Կարապետի վանքը, Տարոն, ինչպես 1893 թվականին էր",
+        "en": "The monastery of Karapet above Mush, Taron, as it was in 1893",
+        "ru": "Монастырь Карапета над Мушем, Тарон, каким он был в 1893 году"
+      },
+      "about": {
+        "hy": [
+          "Վանքը կանգնած էր Մշո դաշտից հյուսիս՝ լեռան լանջին, մոտ 1950 մետր բարձրության վրա, ամրոցի պես պարսպապատ։ Ավանդության համաձայն այն հիմնել է Գրիգոր Լուսավորիչը, իսկ առաջին վանահայրը եղել է Զենոբ Գլակը, որի անունով էլ կոչվել է Գլակավանք։ Նրա «Տարոնի պատմությունը» կա Գրադարանում։",
+          "Գլխավոր եկեղեցին մեծ սրահ էր՝ տասնվեց սյունով և հարթ տանիքով։ Արևելքում չորս մատուռ կար. երկուսի վրա բարձր թմբուկներ էին՝ բաց ու մուգ քարերով և կոնաձև տանիքով։ Արևմուտքում՝ գավիթն էր ու նրա վրա բաց զանգակատունը, ճակատը զարդարված սպիտակ մարմարե քանդակազարդ սալերով։",
+          "1915 թվականից հետո վանքն ավերվեց, և այսօր գրեթե ոչինչ չի մնացել։ Այս մոդելը վերակազմություն է. հատակագիծը վերցված է Ռ. Հյուսենի ատլասից, ձևերն ու բարձրությունները՝ Հ. Ֆ. Բ. Լինչի 1893 թվականի և 1915-ից առաջ արված այլ լուսանկարներից։ Չափերը մոտավոր են, մանրամասները՝ պարզեցված։ Մոդելը պատրաստված է Blender-ում, քարը՝ լուսանկարներից (Poly Haven)։"
+        ],
+        "en": [
+          "The monastery stood high on the mountain wall north of the plain of Mush, at about 1,950 metres, walled like a fortress. Tradition says Gregory the Illuminator founded it, and its first abbot was Zenob Glak, after whom it was called Glakavank. His History of Taron is in the Library.",
+          "The main church was a large hall of sixteen columns with a flat roof. On the east were four chapels; two of them carried tall drums of light and dark stone with cone roofs. On the west stood the porch and the open belfry above it, its front set with slabs of white marble with reliefs.",
+          "After 1915 the monastery was destroyed, and almost nothing is left. This model is a reconstruction: the plan comes from R. Hewsen's atlas, the forms and heights from H. F. B. Lynch's photographs of 1893 and other photographs taken before 1915. The sizes are estimates and the details are simplified. The model was made in Blender, with stone from photographs (Poly Haven)."
+        ],
+        "ru": [
+          "Монастырь стоял высоко на горной стене к северу от Мушской равнины, на высоте около 1950 метров, обнесённый стенами, как крепость. По преданию, его основал Григорий Просветитель, а первым настоятелем был Зеноб Глак, по имени которого он и назван Глакаванком. Его «История Тарона» есть в Библиотеке.",
+          "Главная церковь была большим залом с шестнадцатью колоннами и плоской крышей. С востока к ней примыкали четыре часовни; над двумя поднимались высокие барабаны из светлого и тёмного камня с коническими крышами. С запада стоял притвор, а над ним открытая колокольня; её фасад был украшен плитами белого мрамора с рельефами.",
+          "После 1915 года монастырь был разрушен, от него почти ничего не осталось. Эта модель — реконструкция: план взят из атласа Р. Хьюсена, формы и высоты — с фотографий Г. Ф. Б. Линча 1893 года и других снимков, сделанных до 1915 года. Размеры приблизительны, детали упрощены. Модель сделана в Blender, камень — по фотографиям (Poly Haven)."
+        ]
+      },
+      "labels": {
+        "belfry": {
+          "hy": "Զանգակատուն",
+          "en": "Belfry",
+          "ru": "Колокольня"
+        },
+        "gavit": {
+          "hy": "Գավիթ",
+          "en": "Porch (gavit)",
+          "ru": "Притвор (гавит)"
+        },
+        "church": {
+          "hy": "Գլխավոր եկեղեցի",
+          "en": "Main church",
+          "ru": "Главная церковь"
+        },
+        "stepanos": {
+          "hy": "Ստեփանոսի մատուռ",
+          "en": "Chapel of Stepanos",
+          "ru": "Часовня Степаноса"
+        },
+        "karapet": {
+          "hy": "Կարապետի մատուռ",
+          "en": "Chapel of Karapet",
+          "ru": "Часовня Карапета"
+        },
+        "north": {
+          "hy": "Հյուսիսային մատուռ",
+          "en": "North chapel",
+          "ru": "Северная часовня"
+        },
+        "gevorg": {
+          "hy": "Գևորգի մատուռ",
+          "en": "Chapel of Gevorg",
+          "ru": "Часовня Геворга"
+        },
+        "gate": {
+          "hy": "Դարպաս",
+          "en": "Gate",
+          "ru": "Ворота"
+        },
+        "mampre": {
+          "hy": "Մամբրե եպիսկոպոսի նոր շենքը",
+          "en": "Bishop Mampre's new building",
+          "ru": "Новое здание епископа Мамбре"
+        },
+        "cells": {
+          "hy": "Խցեր և սեղանատուն",
+          "en": "Cells and refectory",
+          "ru": "Кельи и трапезная"
+        },
+        "tower": {
+          "hy": "Կլոր աշտարակ",
+          "en": "Round tower",
+          "ru": "Круглая башня"
+        },
+        "cemetery": {
+          "hy": "Գերեզմանոց",
+          "en": "Cemetery",
+          "ru": "Кладбище"
+        },
+        "harutyun": {
+          "hy": "Հարության մատուռ",
+          "en": "Harutyun chapel",
+          "ru": "Часовня Арутюн"
+        },
+        "khachbak": {
+          "hy": "Խաչբակ",
+          "en": "Cross-yard (Khachbak)",
+          "ru": "Хачбак, двор крестов"
+        },
+        "westcells": {
+          "hy": "Արևմտյան խցեր",
+          "en": "Cells on the west",
+          "ru": "Западные кельи"
+        }
+      },
+      "sources": [
+        {
+          "title": "H. F. B. Lynch, Armenia: Travels and Studies, vol. 2 (1901), pp. 176–181, the photographs of the monastery",
+          "url": "https://archive.org/details/armeniatravelsst02lync"
+        },
+        {
+          "title": "The plan, after R. Hewsen, Armenia: A Historical Atlas (2001), p. 206; drawn by Yerevantsi, CC BY-SA 4.0",
+          "url": "https://commons.wikimedia.org/wiki/File:Surb_Karapet_Monastery_plan.png"
+        },
+        {
+          "title": "Nune Movsisyan, «Մշո Ս. Կարապետ» (2013): photographs before 1915, and a text from «Տարոնի պատմական հուշարձանները»",
+          "url": "https://movsisyannune.com/2013/08/13/%D5%B4%D5%B7%D5%B8-%D5%BD-%D5%AF%D5%A1%D6%80%D5%A1%D5%BA%D5%A5%D5%BF-%D5%BE%D5%A1%D5%B6%D6%84%D5%A8/"
+        },
+        {
+          "title": "Wikipedia: Surb Karapet Monastery",
+          "url": "https://en.wikipedia.org/wiki/Surb_Karapet_Monastery"
+        },
+        {
+          "title": "The model: made in Blender (blender/glakavank.py); stone and sky from Poly Haven, CC0",
+          "url": "https://polyhaven.com"
+        }
+      ]
+    }
+  ]
+}

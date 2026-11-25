@@ -54,6 +54,12 @@ Every long book has a page of its own: open it from the Library to see all its p
 
 The Map page shows the Armenian Highland on a painted map, with a pin on each place a post or a comic is about. Tap a pin and a small panel opens with links to them, comics and posts; the pins of new posts glow. Zoom with + and −, drag to move, pinch on a phone; the filters show only the blog, only the comics or only places with nothing written yet. The places carry their ancient Armenian names, and the list under the map has the same places for a keyboard.
 
+## 3D map and reconstructions
+
+The 3D map lays the painted map on a relief: the mountains rise, the lakes lie flat, and the same pins and panels are on it. Drag to move it; with two fingers (or the right button) turn and tilt it; the buttons zoom, turn and look from above or from the side. It has its own page, reached from the 3D badge on the map banner of the home page and from the Map page, and it loads only when you open it.
+
+Under the 3D map is a list of monasteries and castles rebuilt in 3D from old photographs and plans. The first is Glakavank, the monastery of Karapet above Mush, as H. F. B. Lynch photographed it in 1893: the walls, the hall church, the two chapels with their cones and the belfry over the porch. Its buildings are a model made in Blender, with stone from photographs. Turn round it, tap a name to go closer, and read how it was made and from which sources. The sizes are estimates; the page says so.
+
 ## Report an error
 
 See a mistake in the Grabar text or in a translation? Tap the word, press Report an error, and write what the sentence should say. A new issue opens on GitHub, filled in with the book, the line and the sentence, for you to look over and send. No GitHub account? Send the same report by email.

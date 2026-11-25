@@ -294,3 +294,20 @@ position).
 - A small panel at the pin, not a card below the map.
 - One developer, no pull requests: commit to the
   session branch, push, ask before pushing to `main`.
+
+## The 3D map (2026-11-25)
+
+`#/map3d` (`web/map3d.js`): the same picture on a
+relief, `web/img/map/height.png` (384x256), made by
+`scripts/render-heightmap.py`. The relief is not from
+real heights (the picture is not a projection): the
+painted ranges and peaks are `RIDGES` there, set by eye
+like the pins, and the strokes of the painting roughen
+them; the water stays flat. Change `RIDGES` and run the
+script again to raise or move a range.
+
+To do: try it on a real phone (speed, touch); maybe a
+lower `SEG_X`/`SEG_Z` there. Under it, the list of 3D
+reconstructions (`web/models/`, see CLAUDE.md); a
+place with a model has a "3D model" link in its panel
+on the 3D map (Glakavank now).

@@ -3451,6 +3451,165 @@ body.reading.full .bar {
   color: #7a6340;
   font-size: 0.85rem;
 }
+/* the 3D map (#/map3d, web/map3d.js): the canvas
+   under the pins; a pin out of view is hidden */
+.m3-view {
+  aspect-ratio: 4 / 3;
+  touch-action: none;
+  cursor: grab;
+  background: var(--bg);
+}
+.m3-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.m3-view .map-pop {
+  z-index: 200;
+}
+.m3-view .pin.m3-off {
+  visibility: hidden;
+}
+.m3-wait {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--muted);
+}
+.m3-hint {
+  margin: -0.4rem 0 0.6rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.m3-go {
+  margin: 0 0 1rem;
+}
+/* the names over a 3D model (#/3d/<id>) */
+.m3-tag {
+  position: absolute;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid #b8975a;
+  border-radius: 999px;
+  background: rgba(244, 232, 204, 0.92);
+  color: #3a2614;
+  font: 600 0.75rem/1.4 var(--serif);
+  white-space: nowrap;
+  cursor: pointer;
+  transform: translate(-50%, -100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+.m3-tag:hover,
+.m3-tag:focus-visible {
+  background: #fff4d2;
+}
+.m3-tag.m3-off,
+.m3-bare .m3-tag {
+  visibility: hidden;
+}
+.m3-model {
+  aspect-ratio: 16 / 10;
+}
+.m3-alt {
+  margin: 0.2rem 0 0.3rem;
+  font: 1.2rem/1.3 var(--serif);
+}
+.m3-go {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.m3-about {
+  max-width: 42rem;
+}
+.m3-about ul {
+  padding-left: 1.2rem;
+}
+.m3-about li {
+  margin: 0.3rem 0;
+}
+.m3-model-go {
+  margin: 0.2rem 0 0.6rem;
+}
+/* the list of models under the 3D map */
+.m3-models {
+  margin: 1.5rem 0;
+}
+.m3-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,
+    minmax(15rem, 1fr));
+  gap: 1rem;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.m3-cards a {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: var(--surface);
+  color: inherit;
+  text-decoration: none;
+}
+.m3-cards a:hover {
+  border-color: var(--accent);
+}
+.m3-cards img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+.m3-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.6rem 0.8rem 0.8rem;
+}
+.m3-card-text b {
+  font: 600 1.15rem/1.3 var(--serif);
+}
+.m3-card-meta {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+@media (max-width: 520px) {
+  .m3-model {
+    aspect-ratio: 4 / 5;
+  }
+}
+/* the top page's map banner, with its 3D badge */
+.m3-banner {
+  position: relative;
+}
+.m3-badge {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid #e8c36a;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.6);
+  color: #f6e7c1;
+  font: 700 0.85rem/1 var(--sans);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
+.m3-badge:hover,
+.m3-badge:focus-visible {
+  background: #5a2f1a;
+}
+@media (max-width: 520px) {
+  .m3-view {
+    aspect-ratio: 3 / 4;
+  }
+}
 .map-list-h {
   margin: 1.4rem 0 0.4rem;
   font: 500 1.1rem var(--serif);
