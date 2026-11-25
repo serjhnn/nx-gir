@@ -57,7 +57,7 @@ same in both). Not one `.glb`, and no Draco: the
 page's rules (CSP) forbid the `blob:` addresses and
 workers they need. The script then welds the vertices
 and stores them in fewer bits (gltf-transform,
-`KHR_mesh_quantization`): about 4.8 MB in all, loaded
+`KHR_mesh_quantization`): about 5.9 MB in all, loaded
 only on that page.
 
 ## Stone and sky (Poly Haven, CC0)
@@ -154,5 +154,3 @@ Still to do:
   photograph; kept for now.
 - The ground is flat round the walls; Fig. 155 has
   the slope steeper on the south.
-- The web page (`web.sh`) still has the model
-  before these fixes.

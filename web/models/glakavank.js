@@ -44,7 +44,7 @@ export function build(k) {
       turn: -0.82 },
     limits: { dist: [10, 420], far: 200 },
     labels: [
-      { id: "belfry", at: [-16.85, 33.5, 0] },
+      { id: "belfry", at: [-16.85, 30.5, 0] },
       { id: "gavit", at: [-22.3, 8.5, 0] },
       { id: "church", at: [-2, 10.8, 0] },
       { id: "stepanos", at: [23, 25.6, -6.4] },
@@ -54,7 +54,7 @@ export function build(k) {
       { id: "gate", at: [-63, 10.5, 0] },
       { id: "mampre", at: [-55, 14.4, 22] },
       { id: "cells", at: [-10, 10.5, 39] },
-      { id: "tower", at: [-22, 13.5, 45] },
+      { id: "tower", at: [-30.8, 14, 45] },
       { id: "cemetery", at: [-73, 1.5, 59] },
       { id: "harutyun", at: [-40, 7, 22] },
       { id: "khachbak", at: [37, 3, -8] },
