@@ -2829,6 +2829,15 @@ function videoBlock(id, alt, still) {
         rel: "noopener" }, t("video.youtube"))));
 }
 
+// a small spinning cube (CSS 3D), the icon of a
+// link to a 3D page
+function cube3d() {
+  return h("span", { class: "cube-box",
+    "aria-hidden": "true" },
+  h("span", { class: "cube" },
+    [0, 1, 2, 3, 4, 5].map(() => h("i"))));
+}
+
 // one post: its date, title and text (parse()
 // in nxgir_blog.py: ["p", text], ["h", text],
 // ["img", file, alt], ["video", id, alt, still] or
@@ -2847,7 +2856,10 @@ function postItem(p, lang) {
       ? videoBlock(text, alt, still)
       : kind === "link"
       ? h("p", { class: "post-link" },
-        h("a", { href: alt }, named(text)))
+        h("a", { href: alt },
+          /^#\/(map)?3d(\/|$)/.test(alt) ? cube3d()
+            : null,
+          named(text)))
       : kind === "img"
       ? h("img", { src: "img/" + text, alt,
         loading: "lazy" })
@@ -3009,7 +3021,10 @@ function comicItem(s, lang) {
       ? videoBlock(text, alt, still)
       : kind === "link"
       ? h("p", { class: "post-link" },
-        h("a", { href: alt }, named(text)))
+        h("a", { href: alt },
+          /^#\/(map)?3d(\/|$)/.test(alt) ? cube3d()
+            : null,
+          named(text)))
       : kind === "img"
       ? h("img", { src: "img/" + text, alt,
         loading: "lazy" })

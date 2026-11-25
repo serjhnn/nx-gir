@@ -4922,3 +4922,76 @@ body.home .search-wrap {
 .blog .post.p-glakavank-3d img {
   max-width: 40rem;
 }
+
+/* a link line in a post: a narrow banner; the link
+   to a 3D page has a spinning cube */
+.post-link a {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--accent-ink);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+.post-link a::after {
+  content: "\2192";
+  margin-left: auto;
+}
+.post-link a:hover,
+.post-link a:focus-visible {
+  border-color: var(--accent);
+}
+.cube-box {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  perspective: 70px;
+}
+.cube {
+  display: block;
+  position: relative;
+  width: 18px;
+  height: 18px;
+  transform-style: preserve-3d;
+  animation: cube-spin 7s linear infinite;
+}
+.cube i {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--accent);
+  border-radius: 2px;
+  background: color-mix(
+    in srgb, var(--accent) 22%, transparent
+  );
+}
+.cube i:nth-child(1) { transform: translateZ(9px); }
+.cube i:nth-child(2) {
+  transform: rotateY(180deg) translateZ(9px);
+}
+.cube i:nth-child(3) {
+  transform: rotateY(90deg) translateZ(9px);
+}
+.cube i:nth-child(4) {
+  transform: rotateY(-90deg) translateZ(9px);
+}
+.cube i:nth-child(5) {
+  transform: rotateX(90deg) translateZ(9px);
+}
+.cube i:nth-child(6) {
+  transform: rotateX(-90deg) translateZ(9px);
+}
+@keyframes cube-spin {
+  from { transform: rotateX(-24deg) rotateY(0deg); }
+  to { transform: rotateX(-24deg) rotateY(360deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cube {
+    animation: none;
+    transform: rotateX(-24deg) rotateY(35deg);
+  }
+}
