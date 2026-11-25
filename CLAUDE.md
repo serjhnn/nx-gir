@@ -211,7 +211,13 @@
   and `modelList()` in `app.js`, the viewer
   `web/model3d.js`): monasteries and castles built in
   code from old photographs and plans, listed under
-  the 3D map. One module per model,
+  the 3D map. The viewer draws stone textures with
+  relief in the browser (no image files) and soft
+  shadows of corners (`vendor/three/fx.min.js`) once
+  the view stands still; its kit has the shapes a
+  model uses (`arcade()` with round or pointed
+  arches, `win()`, `cornice()`, `slab()` carved
+  reliefs, `tree()`). One module per model,
   `web/models/<id>.js` (`build(kit)`: metres, x east,
   z south), listed in `web/models/models.json`
   (names, text in hy, en, ru, the names of the parts,

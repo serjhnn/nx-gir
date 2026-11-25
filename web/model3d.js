@@ -326,6 +326,12 @@ function materials() {
     leaf: new THREE.MeshStandardMaterial({
       color: 0x5d6b34, roughness: 1,
       flatShading: true }),
+    // the leaves of trees, a little smoother
+    crown: new THREE.MeshStandardMaterial({
+      color: 0x5f6e35, roughness: 0.95 }),
+    iron: new THREE.MeshStandardMaterial({
+      color: 0x2b2826, roughness: 0.6,
+      metalness: 0.5 }),
   };
 }
 
@@ -356,6 +362,140 @@ function roundUV(geo, r, h) {
     uv.setXY(k, uv.getX(k) * around, uv.getY(k) * h);
   }
   return geo;
+}
+
+// the outline of an opening aw wide, ah high from
+// its sill to the top of its arch: round, or pointed
+// (two arcs meeting at the top, as in the belfry)
+function archPath(cx, sill, aw, ah, pointed) {
+  const r = aw / 2;
+  const p = new THREE.Path();
+  p.moveTo(cx - r, sill);
+  p.lineTo(cx + r, sill);
+  if (!pointed) {
+    p.lineTo(cx + r, sill + ah - r);
+    p.absarc(cx, sill + ah - r, r, 0, Math.PI, false);
+  } else {
+    const R = aw * 0.75;
+    const th = Math.acos((r - R) / R);
+    const sy = sill + ah - R * Math.sin(th);
+    p.lineTo(cx + r, sy);
+    p.absarc(cx + r - R, sy, R, 0, Math.PI - th, false);
+    p.absarc(cx - r + R, sy, R, th, Math.PI, false);
+  }
+  p.lineTo(cx - r, sill);
+  return p;
+}
+
+// a carved relief, drawn white on black and turned
+// into a normal map: "rosette" (the marble slabs of
+// the porch) or "cross" (a cross-stone, khachkar)
+function reliefTex(kind) {
+  const N = 256;
+  const [c, g] = canvas(N, N);
+  g.fillStyle = "#000";
+  g.fillRect(0, 0, N, N);
+  g.strokeStyle = "#fff";
+  g.fillStyle = "#fff";
+  g.lineCap = "round";
+  // a border of small knots
+  g.lineWidth = 6;
+  g.strokeRect(10, 10, N - 20, N - 20);
+  for (let i = 0; i < 12; i++) {
+    for (const [x, y] of [[20 + i * 19.6, 20],
+      [20 + i * 19.6, N - 20], [20, 20 + i * 19.6],
+      [N - 20, 20 + i * 19.6]]) {
+      g.beginPath();
+      g.arc(x, y, 5, 0, 2 * Math.PI);
+      g.fill();
+    }
+  }
+  g.lineWidth = 7;
+  if (kind === "rosette") {
+    const cx = N / 2;
+    for (let k = 0; k < 12; k++) {
+      const a = k * Math.PI / 6;
+      g.beginPath();
+      g.ellipse(cx + Math.cos(a) * 42,
+        cx + Math.sin(a) * 42, 40, 14, a, 0,
+        2 * Math.PI);
+      g.stroke();
+    }
+    g.beginPath();
+    g.arc(cx, cx, 22, 0, 2 * Math.PI);
+    g.fill();
+    g.beginPath();
+    g.arc(cx, cx, 96, 0, 2 * Math.PI);
+    g.stroke();
+  } else {
+    // a cross with split, curled ends over a
+    // rosette, in a frame of interlace
+    const cx = N / 2;
+    g.lineWidth = 18;
+    g.beginPath();
+    g.moveTo(cx, 46);
+    g.lineTo(cx, 170);
+    g.moveTo(cx - 52, 92);
+    g.lineTo(cx + 52, 92);
+    g.stroke();
+    g.lineWidth = 7;
+    for (const [x, y, a] of [[cx, 40, -Math.PI / 2],
+      [cx - 58, 92, Math.PI], [cx + 58, 92, 0]]) {
+      for (const sgn of [-1, 1]) {
+        g.beginPath();
+        g.arc(x + Math.cos(a + sgn * 1.2) * 12,
+          y + Math.sin(a + sgn * 1.2) * 12, 10, 0,
+          2 * Math.PI);
+        g.stroke();
+      }
+    }
+    g.beginPath();
+    g.arc(cx, 200, 26, 0, 2 * Math.PI);
+    g.stroke();
+    for (let k = 0; k < 8; k++) {
+      const a = k * Math.PI / 4;
+      g.beginPath();
+      g.moveTo(cx, 200);
+      g.lineTo(cx + Math.cos(a) * 24,
+        200 + Math.sin(a) * 24);
+      g.stroke();
+    }
+  }
+  const src = g.getImageData(0, 0, N, N).data;
+  // soften the carving: a small blur
+  const h = new Float32Array(N * N);
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      let sum = 0;
+      for (let dy = -2; dy <= 2; dy++) {
+        for (let dx = -2; dx <= 2; dx++) {
+          const xx = Math.min(N - 1, Math.max(0, x + dx));
+          const yy = Math.min(N - 1, Math.max(0, y + dy));
+          sum += src[(yy * N + xx) * 4];
+        }
+      }
+      h[y * N + x] = sum / 25 / 255;
+    }
+  }
+  const out = g.createImageData(N, N);
+  const H = (x, y) => h[Math.min(N - 1, Math.max(0,
+    y)) * N + Math.min(N - 1, Math.max(0, x))];
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      const ddx = (H(x - 1, y) - H(x + 1, y)) * 4;
+      const ddy = (H(x, y + 1) - H(x, y - 1)) * 4;
+      const l = Math.hypot(ddx, ddy, 1);
+      const k = (y * N + x) * 4;
+      out.data[k] = (ddx / l * 0.5 + 0.5) * 255;
+      out.data[k + 1] = (ddy / l * 0.5 + 0.5) * 255;
+      out.data[k + 2] = (1 / l * 0.5 + 0.5) * 255;
+      out.data[k + 3] = 255;
+    }
+  }
+  g.putImageData(out, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.anisotropy = 4;
+  return t;
 }
 
 function makeKit(mats) {
@@ -414,7 +554,7 @@ function makeKit(mats) {
     // arched openings aw wide and ah high (to the
     // top of the arch), from sill up; standing on y
     arcade(w, h, t, n, aw, ah, mat, x, y, z,
-      ry = 0, sill = 0) {
+      ry = 0, sill = 0, pointed = false) {
       const s = new THREE.Shape();
       s.moveTo(-w / 2, 0);
       s.lineTo(w / 2, 0);
@@ -424,15 +564,8 @@ function makeKit(mats) {
       const step = w / n;
       for (let i = 0; i < n; i++) {
         const cx = -w / 2 + step * (i + 0.5);
-        const p = new THREE.Path();
-        const r = aw / 2;
-        p.moveTo(cx - r, sill);
-        p.lineTo(cx + r, sill);
-        p.lineTo(cx + r, sill + ah - r);
-        p.absarc(cx, sill + ah - r, r, 0, Math.PI,
-          false);
-        p.lineTo(cx - r, sill);
-        s.holes.push(p);
+        s.holes.push(archPath(cx, sill, aw, ah,
+          pointed));
       }
       const g = new THREE.ExtrudeGeometry(s,
         { depth: t, bevelEnabled: false,
@@ -443,6 +576,102 @@ function makeKit(mats) {
     // a dark window or door, set on a wall's face
     hole(w, h, x, y, z, ry = 0) {
       return kit.box(w, h, 0.12, "hole", x, y, z, ry);
+    },
+    // a window w by h with its sill at y, on the
+    // face of a wall at x, z that looks along ry: the
+    // dark opening, a frame of dressed stone round
+    // it, a sill; pointed or round at the top
+    win(w, h, x, y, z, ry = 0, pointed = false) {
+      const nx = Math.sin(ry);
+      const nz = Math.cos(ry);
+      const o = (d) => [x + nx * d, z + nz * d];
+      const [hx, hz] = o(0.02);
+      const [fx, fz] = o(0.09);
+      const [sx, sz] = o(0.14);
+      return kit.group(
+        kit.box(w, h, 0.04, "hole", hx, y, hz, ry),
+        kit.arcade(w + 0.5, h + 0.35, 0.16, 1, w, h,
+          "ashlar", fx, y - 0.1, fz, ry, 0.1, pointed),
+        kit.box(w + 0.7, 0.16, 0.28, "ashlar", sx,
+          y - 0.16, sz, ry));
+    },
+    // a moulded cornice: two courses, the upper
+    // one standing out further; w by d, at y
+    cornice(w, d, x, y, z, mat = "ashlar") {
+      return kit.group(
+        kit.box(w + 0.3, 0.22, d + 0.3, mat, x, y, z),
+        kit.box(w + 0.6, 0.28, d + 0.6, mat, x,
+          y + 0.22, z));
+    },
+    // a carved slab w by h, its face at x, z, looking
+    // along ry: kind "rosette" or "cross"
+    slab(w, h, kind, x, y, z, ry = 0) {
+      const key = "relief-" + kind;
+      if (!mats[key]) {
+        const base = kind === "cross"
+          ? { color: 0xa39785, roughness: 0.9 }
+          : { color: 0xe8e1d2, roughness: 0.55 };
+        mats[key] = new THREE.MeshStandardMaterial({
+          ...base, normalMap: reliefTex(kind),
+          normalScale: new THREE.Vector2(2.2, 2.2) });
+      }
+      const g = new THREE.PlaneGeometry(w, h);
+      g.translate(0, h / 2, 0.005);
+      const face = at(mesh(g, key), x, y, z, ry);
+      const back = kit.box(w, h, 0.18,
+        kind === "cross" ? "ashlar" : "marble",
+        x - Math.sin(ry) * 0.09, y,
+        z - Math.cos(ry) * 0.09, ry);
+      return kit.group(face, back);
+    },
+    // a tree: "poplar" (tall and thin) or "walnut"
+    // (round); h its height
+    tree(kind, x, y, z, h, seed) {
+      const r = rnd(seed);
+      const trunk = kit.cyl(h * 0.025, h * 0.45, 6,
+        "wood", x, y, z, h * 0.018);
+      // the crown: clumps of leaves, each a rough
+      // ball, a little different in color
+      const clump = (cx, cy, cz, sx, sy) => {
+        const geo = new THREE.IcosahedronGeometry(1, 2);
+        const pos = geo.attributes.position;
+        for (let i = 0; i < pos.count; i++) {
+          const k = 0.82 + r() * 0.3;
+          pos.setXYZ(i, pos.getX(i) * k,
+            pos.getY(i) * k, pos.getZ(i) * k);
+        }
+        geo.computeVertexNormals();
+        const mat = mats.crown.clone();
+        mat.color.offsetHSL((r() - 0.5) * 0.03, 0,
+          (r() - 0.5) * 0.08);
+        const m = mesh(geo, mat);
+        m.scale.set(sx, sy, sx);
+        m.position.set(cx, cy, cz);
+        return m;
+      };
+      const parts = [trunk];
+      if (kind === "poplar") {
+        // tall and narrow: clumps up the trunk
+        for (let i = 0; i < 6; i++) {
+          const t = i / 5;
+          const w = h * (0.13 - t * 0.07);
+          parts.push(clump(x + (r() - 0.5) * w * 0.5,
+            y + h * (0.3 + t * 0.62),
+            z + (r() - 0.5) * w * 0.5, w, h * 0.13));
+        }
+      } else {
+        // a wide round crown of seven clumps
+        parts.push(clump(x, y + h * 0.66, z, h * 0.3,
+          h * 0.24));
+        for (let i = 0; i < 6; i++) {
+          const a = i * Math.PI / 3 + r();
+          const d = h * (0.22 + r() * 0.08);
+          parts.push(clump(x + Math.sin(a) * d,
+            y + h * (0.5 + r() * 0.2),
+            z + Math.cos(a) * d, h * 0.2, h * 0.17));
+        }
+      }
+      return kit.group(parts);
     },
     group(...kids) {
       const g = new THREE.Group();
@@ -473,7 +702,7 @@ function skyTex(top, low) {
 // the model's (its terrain); a large square around
 function ground(kit, terrain) {
   const size = terrain.size || 900;
-  const seg = 180;
+  const seg = terrain.seg || 180;
   const geo = new THREE.PlaneGeometry(size, size,
     seg, seg);
   geo.rotateX(-Math.PI / 2);
@@ -532,7 +761,8 @@ export async function start(view, mod, opts) {
   const scene = new THREE.Scene();
   const sky = model.sky || ["#8fb3d9", "#e9e3d3"];
   scene.background = skyTex(sky[0], sky[1]);
-  scene.fog = new THREE.Fog(sky[1], 180, 700);
+  const fogFar = model.fog || [180, 700];
+  scene.fog = new THREE.Fog(sky[1], fogFar[0], fogFar[1]);
   scene.add(model.group);
   if (model.terrain) scene.add(ground(kit, model.terrain));
 
@@ -551,8 +781,8 @@ export async function start(view, mod, opts) {
   sun.shadow.normalBias = 0.05;
   scene.add(sun);
 
-  const cam = new THREE.PerspectiveCamera(40, 1, 0.5,
-    2000);
+  const cam = new THREE.PerspectiveCamera(40, 1, 1,
+    8000);
   // a tall view (a phone) stands further back
   const tall = view.clientWidth < view.clientHeight;
   const home = { ...model.view,
@@ -571,6 +801,12 @@ export async function start(view, mod, opts) {
       st.target.x + st.dist * s * Math.sin(st.turn),
       st.target.y + st.dist * Math.cos(st.tilt),
       st.target.z + st.dist * s * Math.cos(st.turn));
+    // never inside a hill: above the ground there
+    if (model.terrain) {
+      const g = model.terrain.height(cam.position.x,
+        cam.position.z) + 4;
+      if (cam.position.y < g) cam.position.y = g;
+    }
     cam.lookAt(st.target);
   };
 
@@ -595,10 +831,40 @@ export async function start(view, mod, opts) {
     }
   };
 
+  // the soft shadows of corners and eaves (ambient
+  // occlusion, vendor/three/fx.min.js): drawn when
+  // the view stands still; while it moves, the plain
+  // picture, which is quicker
+  let fx = null;
+  try {
+    const F = await import("./vendor/three/fx.min.js");
+    const comp = new F.EffectComposer(renderer);
+    comp.addPass(new F.RenderPass(scene, cam));
+    const ao = new F.GTAOPass(scene, cam, 512, 512);
+    ao.blendIntensity = 1;
+    ao.updateGtaoMaterial({ radius: 3.5,
+      distanceExponent: 1.5, thickness: 2.5,
+      scale: 1.3, samples: 16 });
+    ao.updatePdMaterial({ lumaPhi: 10, depthPhi: 2,
+      normalPhi: 3, radius: 6, rings: 2,
+      samples: 16 });
+    comp.addPass(ao);
+    comp.addPass(new F.OutputPass());
+    comp.addPass(new F.SMAAPass());
+    fx = { comp, ao };
+  } catch {
+    fx = null;
+  }
+  let still = 0;
+
   const size = () => {
     const w = view.clientWidth;
     const hh = view.clientHeight;
     renderer.setSize(w, hh, false);
+    if (fx) {
+      fx.comp.setPixelRatio(renderer.getPixelRatio());
+      fx.comp.setSize(w, hh);
+    }
     cam.aspect = w / hh;
     cam.updateProjectionMatrix();
   };
@@ -624,10 +890,24 @@ export async function start(view, mod, opts) {
       if (k >= 1) anim = null;
     }
     place();
-    renderer.render(scene, cam);
+    clearTimeout(still);
+    if (fine && fx) {
+      fine = false;
+      fx.comp.render();
+    } else {
+      renderer.render(scene, cam);
+      // the fine picture once it stops moving
+      if (fx && !anim) {
+        still = setTimeout(() => {
+          fine = true;
+          ask();
+        }, 180);
+      }
+    }
     drawTags();
     if (anim) ask();
   };
+  let fine = false;
   const ask = () => {
     if (!frame) frame = requestAnimationFrame(render);
   };
@@ -735,6 +1015,8 @@ export async function start(view, mod, opts) {
   function stop() {
     if (!alive) return;
     alive = false;
+    clearTimeout(still);
+    if (fx) fx.comp.dispose();
     cancelAnimationFrame(frame);
     ac.abort();
     ro.disconnect();
@@ -745,6 +1027,7 @@ export async function start(view, mod, opts) {
       if (o.material && o.material.map) {
         o.material.map.dispose();
       }
+      if (o.material) o.material.dispose();
     });
     for (const m of Object.values(kit.mats)) {
       if (m.map) m.map.dispose();

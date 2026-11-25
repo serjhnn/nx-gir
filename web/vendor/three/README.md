@@ -14,3 +14,23 @@ Only the 3D map loads it (`web/map3d.js`, opened
 by `map3dPage()` in `app.js`), when that page is
 opened. It is not in the files the first screen
 needs (`SHELL` in `web/sw.js`).
+
+`fx.min.js` is the post-processing of three.js r187
+(EffectComposer, RenderPass, GTAOPass for the soft
+shadows of corners, OutputPass, SMAAPass), bundled
+the same way with its own import of three turned
+into `./three.min.js`:
+
+    cat > fx.js <<'END'
+    export { EffectComposer } from "./node_modules/three/examples/jsm/postprocessing/EffectComposer.js";
+    export { RenderPass } from "./node_modules/three/examples/jsm/postprocessing/RenderPass.js";
+    export { GTAOPass } from "./node_modules/three/examples/jsm/postprocessing/GTAOPass.js";
+    export { OutputPass } from "./node_modules/three/examples/jsm/postprocessing/OutputPass.js";
+    export { SMAAPass } from "./node_modules/three/examples/jsm/postprocessing/SMAAPass.js";
+    END
+    npx esbuild fx.js --bundle --minify --format=esm \
+      --external:three --legal-comments=inline \
+      --outfile=fx.min.js
+    sed -i 's#from"three"#from"./three.min.js"#g' fx.min.js
+
+Only the 3D models load it (`web/model3d.js`).
