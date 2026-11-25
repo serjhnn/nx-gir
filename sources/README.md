@@ -135,3 +135,35 @@ the text. The text in `books/grabar/aristakes-lastivertsi/`
 (from Digilib) is the same critical edition, and is the
 reference the OCR is scored against. Pages are not typed
 from this scan.
+
+## glakavank/
+
+What the 3D model of Glakavank (the monastery of
+Karapet above Mush, `web/models/glakavank.js`) is built
+from, copied on 2026-11-25:
+
+| File | What it is |
+|------|------------|
+| `lynch-1901-fig155-south.jpg` | H. F. B. Lynch, *Armenia: Travels and Studies*, vol. 2 (1901), Fig. 155, "Monastery of Surb Karapet from the South" (PDF page 242): the walls, the round tower, the two cones, the slope |
+| `lynch-1901-church-south-west.jpg` | the same book, "Church of Surb Karapet from South-West" (PDF page 243): the belfry over the porch, the hall, the graves |
+| `lynch-1901-fig158-two-chapels.jpg` | the same book, Fig. 158, "The Two Chapels at Surb Karapet" (PDF page 251): the banded drums, the cones, the cross roofs |
+| `plan-hewsen-2001-commons.png` | the plan, drawn by Yerevantsi after R. Hewsen, *Armenia: A Historical Atlas* (2001), p. 206; Wikimedia Commons, `File:Surb_Karapet_Monastery_plan.png`, CC BY-SA 4.0 |
+
+Lynch's book (public domain) is the scan on the
+Internet Archive:
+<https://archive.org/details/armeniatravelsst02lync>
+(`armeniatravelsst02lync.pdf`); the photographs are cut
+from it, in grey. His text on the monastery is on
+pp. 176-181: the gate on the west, the long line of
+buildings on the south, the belfry and porch faced with
+white marble, the two chapels on the east "with their
+polygonal towers and conical roofs", the flat roof of
+the church, the terrace and cemetery outside the walls,
+the height (about 6400 feet).
+
+Measured from the plan at about 0.085 m a pixel: the
+hall 23 by 28 m (16 columns), the chapels 20 m deep.
+Not in any source, estimated from the photographs: the
+heights, the size of the enclosure (about 104 by 84 m),
+the buildings on the north and the round towers at the
+corners.

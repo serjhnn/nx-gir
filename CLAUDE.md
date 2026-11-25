@@ -197,6 +197,31 @@
   README picture `docs/web-map.jpg` is made by
   `scripts/render-web.py`. How it works, the pitfalls
   and the to-do list: `notes/map.md` (read it first)
+- The 3D map (`/map3d`, `/map3d/<place>`,
+  `map3dPage()` in `app.js`, `web/map3d.js`): the
+  painted map on a relief (`web/img/map/height.png`,
+  made by `scripts/render-heightmap.py` from
+  `RIDGES` set by eye), the same pins and panel.
+  three.js is `web/vendor/three/three.min.js` (r187,
+  see its README), loaded with `import()` only on
+  the 3D pages, never by the first screen. Links: the
+  3D badge on the home page's map banner
+  (`mapBanner()`) and the Map page
+- 3D reconstructions (`/3d/<id>`, `model3dPage()`
+  and `modelList()` in `app.js`, the viewer
+  `web/model3d.js`): monasteries and castles built in
+  code from old photographs and plans, listed under
+  the 3D map. One module per model,
+  `web/models/<id>.js` (`build(kit)`: metres, x east,
+  z south), listed in `web/models/models.json`
+  (names, text in hy, en, ru, the names of the parts,
+  sources), with a card picture `<id>.webp` (a shot of
+  the model, 640x400) and a place in
+  `map/places.tsv`; tested in `tests/test_models.py`.
+  Build only from a source (keep copies in
+  `sources/<id>/`, noted in `sources/README.md`), say
+  on the page what is estimated, and keep sacred
+  words out of the names and texts
 - `blog/`: the Blog page (`/blog`, `/blog/<slug>`,
   `/api/blog`): one `YYYY-MM-DD-slug.LANG.md` per
   post and language (hy, en, ru; Armenian first),

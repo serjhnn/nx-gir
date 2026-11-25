@@ -122,5 +122,7 @@
 2026-11-23	Site		A tip on the home page	A framed Tip under the menu says that the scroll and the book icon in the Library open the cards about authors and books.	
 2026-11-24	Translation	*	The second part of Narekatsi's Book of Lamentations in modern Armenian	All 3,933 lines of part 2, chapters 37 to 74, translated line for line; the draft is open for human review.	grabar/grigor-narekatsi/1-matean-voghbergutyan/02.txt
 2026-11-24	Site		About page	The About page tells what nxGir is and who makes it, Sergey Ohanyan with Claude; the footer links to it.	
+2026-11-25	Site		A 3D map	The painted map on a relief, in 3D, with the same pins; three.js loads only on its page.	
+2026-11-25	Site	*	Glakavank in 3D	The monastery of Karapet above Mush, rebuilt in 3D from Lynch's photographs of 1893 and Hewsen's plan: the first of the reconstructions under the 3D map.	
 next	Translation		All of Amaran hator in modern Armenian	Then the other works of Grigor Tatevatsi.	
 next	Site		A contents page for each book	What each part of a book is about.	
