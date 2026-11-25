@@ -21,6 +21,7 @@ tests/test_web.py); Handler only moves bytes.
   GET  /api/book-cards?lang=   every book's card
   GET  /api/comics             the comics series
   GET  /api/map                the places and their stories
+  GET  /api/bookmarks          every bookmark
   GET  /api/recent?n=          the books read last
   GET  /api/stats              how close to the limits
   GET  /api/library            the Grabar books
@@ -994,6 +995,36 @@ def recent(app, n=0):
     return {"items": items[:n] if n > 0 else items}
 
 
+def bookmarks(app):
+    """Every bookmark, book by book (the books read
+    last first), for the Library: {"items": [{"name",
+    "title", "line" (1-based), "text": the start of
+    the line}]}. Only books on the shelf."""
+    st = app.state()
+    books = sorted(
+        st.books,
+        key=lambda k: -st.books[k].get("seen", 0),
+    )
+    items = []
+    for name in books:
+        marks = st.marks(name)
+        if name not in app.paths or not marks:
+            continue
+        lines = book_text(app, name).splitlines()
+        title = book_title(app, name)
+        for line in sorted({m[0] for m in marks}):
+            text = lines[line] if line < len(lines) else ""
+            items.append(
+                {
+                    "name": name,
+                    "title": title,
+                    "line": line + 1,
+                    "text": quote(text.strip(), 90),
+                }
+            )
+    return {"items": items}
+
+
 def book_text(app, name):
     """The text the reader shows: Markdown marks
     taken out of .md files."""
@@ -1434,6 +1465,8 @@ def get(app, route, query):
         return comics(app)
     if route == "/api/map":
         return map_data(app)
+    if route == "/api/bookmarks":
+        return bookmarks(app)
     if route == "/api/recent":
         n = arg("n", "0")
         if not n.isdigit():

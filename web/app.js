@@ -480,6 +480,37 @@ function localPlaces(name) {
   };
 }
 
+// every bookmark kept in this browser, as
+// /api/bookmarks gives them
+async function localBookmarks() {
+  const items = [];
+  const names = [];
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k.startsWith("nxgir-marks:")) {
+        names.push(k.slice(12));
+      }
+    }
+  } catch (e) {}
+  for (const name of names.sort()) {
+    const lines = new Set(
+      localGet(name).marks.map((m) => m[0] + 1));
+    for (const line of [...lines].sort((a, b) =>
+      a - b)) {
+      let text = "";
+      let title = name.split("/").pop();
+      try {
+        text = await lineText(name, line);
+        title = (await lineText(name, 1)) || title;
+      } catch (e) {}
+      items.push({ name, title, line,
+        text: quoteOf(text.trim(), 90) });
+    }
+  }
+  return { items };
+}
+
 // the start of a text, cut at a space with …
 function quoteOf(text, width = 50) {
   if (text.length <= width) return text;
@@ -558,6 +589,9 @@ async function staticApi(path) {
       if (r) item.progress = r.pct;
     }
     return data;
+  }
+  if (route === "bookmarks") {
+    return localBookmarks();
   }
   if (route === "timeline") {
     return json("data/timeline.json");
@@ -1820,7 +1854,8 @@ function starsHere() {
 // the tab of the Library last shown in this
 // browser: "all", "starred" or "reading"
 const LIB_TAB = "nxgir-library-tab";
-const LIB_TABS = ["all", "starred", "reading"];
+const LIB_TABS = ["all", "starred", "reading",
+  "bookmarks"];
 
 function libraryTab() {
   try {
@@ -1867,6 +1902,23 @@ function readingBooks(data, items) {
     }
   }
   return [...out.values()];
+}
+
+// the book of the Library a part belongs to (a
+// translation counts for its book), or null
+function bookOfPart(data, part) {
+  const name = part.replace(
+    /^ashkharhabar\//, "grabar/");
+  for (const a of data.authors) {
+    for (const b of a.books) {
+      const key = b.parts > 1 ? dirOf(b.first)
+        : b.first;
+      if (key === name || key === dirOf(name)) {
+        return b;
+      }
+    }
+  }
+  return null;
 }
 
 // star a book (named by its first file), or take
@@ -2042,9 +2094,10 @@ function openParts(li, b) {
 }
 
 async function libraryPage(who) {
-  const [data, recent] = await Promise.all([
+  const [data, recent, marked] = await Promise.all([
     api("library"),
     api("recent?n=0").catch(() => ({ items: [] })),
+    api("bookmarks").catch(() => ({ items: [] })),
   ]);
   document.title = t("nav.library") + " · " + NAME;
   let stars = data.stars || [];
@@ -2120,6 +2173,7 @@ async function libraryPage(who) {
       : empty(t("lib.none"))),
     starred: h("div"),
     reading: h("div"),
+    bookmarks: h("div"),
   };
   // being read: each opens where it was left
   const reading = readingBooks(data, recent.items);
@@ -2157,6 +2211,23 @@ async function libraryPage(who) {
   }
   panes.reading.append(reading.length ? readList
     : empty(t("lib.noread")));
+  // the bookmarks, each opens at its line
+  const markList = h("ul", { class: "shelf" });
+  for (const x of marked.items) {
+    const row = h("a", { class: "row",
+      href: "#/read/" + enc(x.name) + "?line="
+        + x.line },
+    icon(ICONS.book, "ico"),
+    h("span", { class: "name" }, x.title,
+      h("span", { class: "by" },
+        t("r.line", x.line) + (x.text
+          ? " · " + x.text : ""))));
+    const b = bookOfPart(data, x.name);
+    markList.append(b ? bookItem(b, row)
+      : h("li", {}, row));
+  }
+  panes.bookmarks.append(marked.items.length
+    ? markList : empty(t("lib.nomarks")));
   // the tabs
   const n = data.authors.reduce(
     (k, a) => k + a.books.length, 0);
@@ -2168,6 +2239,8 @@ async function libraryPage(who) {
     starred: [t("lib.starred"), starCount],
     reading: [t("lib.reading"), reading.length
       ? count(reading.length) : null],
+    bookmarks: [t("lib.marks"), marked.items.length
+      ? count(marked.items.length) : null],
   };
   const tabs = h("div", { class: "lib-tabs",
     role: "tablist", "aria-label": t("nav.library") },
@@ -2239,7 +2312,8 @@ async function libraryPage(who) {
     const step = { ArrowLeft: -1, ArrowRight: 1 }[e.key];
     if (!step) return;
     const i = LIB_TABS.indexOf(tabs.dataset.tab);
-    const t = LIB_TABS[(i + step + 3) % 3];
+    const t = LIB_TABS[(i + step + LIB_TABS.length)
+      % LIB_TABS.length];
     pick(t, true, true);
     tabBtn[t].focus();
   });
@@ -2249,7 +2323,8 @@ async function libraryPage(who) {
   // the names of authors and books: Armenian
   const body = h("div", { class: "lib-panes",
     lang: "hy" },
-    panes.all, panes.starred, panes.reading);
+    panes.all, panes.starred, panes.reading,
+    panes.bookmarks);
   let touch = null;
   // the whole page, so a short list is no smaller
   // a place to swipe

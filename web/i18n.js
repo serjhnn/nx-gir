@@ -266,6 +266,9 @@ const UI = {
     "lib.all": "Բոլոր գրքերը",
     "lib.starred": "★ Ընտրված",
     "lib.reading": "Ընթերցվող",
+    "lib.marks": "Էջանիշեր",
+    "lib.nomarks": "Էջանիշեր դեռ չկան։ Գրքում սեղմեք բառի վրա,"
+      + " ապա՝ ☆ Էջանիշ։",
     "lib.nostars": "Ընտրված գրքեր դեռ չկան։ Գրքի կողքի"
       + " ☆-ով ավելացրեք այստեղ։",
     "star.off": "Հանել աստղը",
@@ -737,6 +740,9 @@ const UI = {
     "lib.all": "All books",
     "lib.starred": "★ Starred",
     "lib.reading": "Reading",
+    "lib.marks": "Bookmarks",
+    "lib.nomarks": "No bookmarks yet. In a book tap a word,"
+      + " then ☆ Bookmark.",
     "lib.nostars": "No starred books yet. Add them here"
       + " with the ☆ beside a book.",
     "star.off": "Take the star off",
@@ -1211,6 +1217,9 @@ const UI = {
     "lib.all": "Все книги",
     "lib.starred": "★ Избранное",
     "lib.reading": "Читаю",
+    "lib.marks": "Закладки",
+    "lib.nomarks": "Закладок пока нет. В книге нажмите на"
+      + " слово, затем ☆ Закладка.",
     "lib.nostars": "Избранных книг пока нет. Добавьте их"
       + " сюда кнопкой ☆ рядом с книгой.",
     "star.off": "Убрать из избранного",

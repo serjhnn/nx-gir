@@ -165,6 +165,20 @@ def test_marks_toggle(app):
     assert r["added"] is False and r["marks"] == []
 
 
+def test_bookmarks_of_all_books(app):
+    assert web.bookmarks(app) == {"items": []}
+    name = "grabar/john.txt"
+    for pos in ([1, 1], [1, 3], [0, 0]):
+        web.post(
+            app, "/api/mark", {"name": name, "pos": pos}
+        )
+    items = web.bookmarks(app)["items"]
+    # two lines, the first one first
+    assert [x["line"] for x in items] == [1, 2]
+    assert items[0]["name"] == name
+    assert items[1]["text"] == "Եւ Բանն էր առ ա՟ծ։"
+
+
 def test_book_position_and_sentences(app):
     name = "grabar/john.txt"
     b = web.book(app, name)
