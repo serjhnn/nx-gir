@@ -2118,6 +2118,92 @@ def belfry(gx):
 W, E, N, S = -62.0, 42.0, 40.0, -44.0
 
 
+# The south front as Lynch's Fig. 155 shows it, west
+# to east: (x0, x1, height at x0, height at x1, out),
+# out how far a block stands out from the wall line;
+# measured at about 15 pixels to the metre.
+SOUTH = [
+    (W, -58.8, 7.0, 7.0, 0.0),
+    (-58.8, -51.0, 10.5, 10.5, 0.8),
+    (-51.0, -34.7, 9.5, 9.5, 0.0),
+    (-34.7, -27.0, 9.5, 9.5, 0.0),
+    (-27.0, -19.2, 11.0, 11.0, 0.6),
+    (-19.2, -8.0, 8.0, 8.0, 0.0),
+    (-8.0, 1.0, 10.5, 10.5, 0.8),
+    (1.0, 6.2, 9.5, 9.5, 0.4),
+    (6.2, 23.7, 9.0, 7.0, 0.0),
+    (23.7, 39.3, 7.0, 4.5, 0.0),
+    (39.3, E + 0.9, 7.5, 7.5, 0.6),
+]
+
+
+def south_wall(holes, wt):
+    """The south front: walls and the backs of
+    buildings of different heights, blocks standing
+    out a little, the top sloping down to the east,
+    a small square tower at the east end, chimneys,
+    slits. Returns the walls, to cut."""
+    out = []
+    for x0, x1, h0, h1, o in SOUTH:
+        y = S - o / 2
+        d = wt + o
+        pts = [(x0, 0), (x1, 0), (x1, h1), (x0, h0)]
+        w = L.prism(
+            "wall", pts, d, "rubble", L.face(0, y, 0, 0)
+        )
+        out.append(w)
+        top = [
+            (x0 - 0.1, h0 - 0.45),
+            (x1 + 0.1, h1 - 0.45),
+            (x1 + 0.1, h1),
+            (x0 - 0.1, h0),
+        ]
+        L.prism(
+            "wall-top",
+            top,
+            d + 0.2,
+            "ashlar",
+            L.face(0, y, 0, 0),
+        )
+        L.prism(
+            "wall-earth",
+            [
+                (x0, h0),
+                (x1, h1),
+                (x1, h1 + 0.25),
+                (x0, h0 + 0.25),
+            ],
+            d,
+            "earth",
+            L.face(0, y, 0, 0),
+        )
+        L.bevel(w, 0.05)
+        # slits, two metres under the top
+        k = int((x1 - x0) // 6.5)
+        for i in range(k):
+            x = x0 + (i + 0.5) * (x1 - x0) / k
+            h = h0 + (h1 - h0) * (x - x0) / (x1 - x0)
+            if h > 6:
+                holes.add(
+                    L.arch(0.35, 0.8),
+                    d + 2,
+                    L.face(x, y, h - 2.2, PI),
+                )
+    # chimneys on the roofs behind the wall
+    for x, h in ((-45.5, 9.5), (-43.0, 9.5), (-3.0, 10.5)):
+        L.box(
+            "chimney",
+            0.7,
+            0.7,
+            1.3,
+            "rubble",
+            x,
+            S + 2.5,
+            h,
+        )
+    return out
+
+
 def enclosure():
     wh, wt = 8.0, 1.8
     L.box(
@@ -2131,7 +2217,6 @@ def enclosure():
     )
     walls = [
         (E - W, wt, (W + E) / 2, N),
-        (E - W, wt, (W + E) / 2, S),
         (wt, N - S, E, (N + S) / 2),
         (wt, N - 6, W, (N + 6) / 2),
         (wt, -6 - S, W, (S - 6) / 2),
@@ -2153,11 +2238,7 @@ def enclosure():
         L.box("wall-earth", w, d, 0.25, "earth", x, y, wh)
         L.bevel(o, 0.05)
     holes = Holes("south")
-    for i in range(16):
-        x = W + 6 + i * 6.2
-        holes.add(
-            L.arch(0.35, 0.8), 3, L.face(x, S, 6.0, PI)
-        )
+    outer += south_wall(holes, wt)
     # the gatehouse on the west
     gate = L.box("gatehouse", 6, 12, 10, "rubble", W, 0)
     gh = Holes("gate")
@@ -2179,12 +2260,12 @@ def enclosure():
         )
     # the round towers, the great one on the south
     towers = []
+    # (Lynch's Fig. 155 shows no round tower at the
+    # south corners; the north ones are not seen)
     for x, y, rr, h in (
         (W, N, 4.2, 11),
         (E, N, 4.2, 11),
-        (E, S, 4.2, 11),
-        (W, S, 4.6, 12),
-        (-22, S - 1, 5.6, 12.5),
+        (-30.8, S - 1, 4.8, 12.7),
     ):
         t = L.cyl("tower", rr, h, 28, "rubble", x, y)
         towers.append(t)
@@ -2233,7 +2314,12 @@ def ranges():
     sw = sx1 - sx0
     scx = (sx0 + sx1) / 2
     # south: cells and the refectory, a gallery of two
-    # floors on the court
+    # floors on the court; east of the high blocks the
+    # wall falls away (Fig. 155): a yard, no range
+    n0, n1 = sx0, sx1
+    sx1 = 6.0
+    sw = sx1 - sx0
+    scx = (sx0 + sx1) / 2
     L.box("s-range", sw, 9.5, 10, "rubble", scx, S + 5.6)
     L.box(
         "s-earth", sw, 9.3, 0.3, "earth", scx, S + 5.6, 10
@@ -2242,8 +2328,8 @@ def ranges():
         "s-gallery", sw, 0.6, 10, "porch", scx, -31.1
     )
     holes = Holes("s-gal")
-    for i in range(24):
-        x = sx0 + (i + 0.5) * sw / 24
+    for i in range(16):
+        x = sx0 + (i + 0.5) * sw / 16
         holes.add(
             L.arch(2.6, 3.8), 1.5, L.face(x, -31.1, 0, 0)
         )
@@ -2265,6 +2351,9 @@ def ranges():
         -32.4,
         10.5,
     )
+    sx0, sx1 = n0, n1
+    sw = sx1 - sx0
+    scx = (sx0 + sx1) / 2
     # north: cells, a gallery too
     L.box("n-range", sw, 7, 8, "rubble", scx, N - 4.4)
     L.box("n-earth", sw, 6.8, 0.3, "earth", scx, N - 4.4, 8)
@@ -2423,6 +2512,7 @@ VIEWS = {
     # close views, to check the details
     "belfry": ((-46, -24, 13), (-16.85, 0, 17.5), 38),
     "drums": ((-6, -3, 18), (23, -0.3, 16), 34),
+    "south": ((-6, -122, 2), (-6, -44, 6), 25),
     "porch": ((-36, -21, 5), (-17, -1, 5.5), 32),
     "hall": ((-31, -29, 8), (-3, -10, 5), 30),
 }
