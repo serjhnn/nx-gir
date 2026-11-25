@@ -238,7 +238,8 @@ export function build(k) {
     [E, N, 4.2, 11], [E, S, 4.2, 11], [W, S, 4.6, 12],
     [-22, S + 1, 5.6, 12.5]]) {
     add(cyl(rr, h, 18, "rubble", x, 0, z),
-      cyl(rr + 0.3, 0.9, 18, "rubble", x, h, z));
+      cyl(rr + 0.3, 0.9, 18, "rubble", x, h, z),
+      cyl(rr - 0.2, 0.3, 18, "earth", x, h + 0.7, z));
   }
 
   // -- the buildings round the court --
@@ -250,7 +251,8 @@ export function build(k) {
   const sx1 = E - 1;
   const sw = sx1 - sx0;
   const scx = (sx0 + sx1) / 2;
-  add(box(sw, 10, 9.5, "rubble", scx, 0, S - 5.6));
+  add(box(sw, 10, 9.5, "rubble", scx, 0, S - 5.6),
+    box(sw, 0.3, 9.3, "earth", scx, 10, S - 5.6));
   add(box(sw, 0.5, 3, "ashlar", scx, 5, 32.4),
     box(sw, 0.6, 3.4, "ashlar", scx, 10, 32.4));
   add(arcade(sw, 5, 0.6, 24, 2.6, 3.8, "ashlar",
@@ -262,7 +264,8 @@ export function build(k) {
       S + 0.95));
   }
   // the buildings on the north, a gallery too
-  add(box(sw, 8, 7, "rubble", scx, 0, N + 4.4));
+  add(box(sw, 8, 7, "rubble", scx, 0, N + 4.4),
+    box(sw, 0.3, 6.8, "earth", scx, 8, N + 4.4));
   add(box(sw, 0.6, 3, "ashlar", scx, 8, -32.2));
   add(arcade(sw, 4, 0.6, 24, 2.6, 3.2, "ashlar",
     scx, 0, -31),
@@ -271,6 +274,7 @@ export function build(k) {
   // the cells on the west, two floors, a gallery
   // on the court (the gate between them)
   add(box(7, 9, 30, "rubble", W + 4.4, 0, -22),
+    box(6.8, 0.3, 30, "earth", W + 4.4, 9, -22),
     box(3, 0.5, 30, "ashlar", W + 9.4, 4.5, -22),
     box(3.4, 0.6, 30, "ashlar", W + 9.4, 9, -22));
   add(arcade(30, 4.5, 0.6, 9, 2.4, 3.4, "ashlar",
@@ -331,7 +335,7 @@ export function build(k) {
   return {
     group,
     terrain: { height, color, size: 900 },
-    sky: ["#7fa3cc", "#e6dfcf"],
+    sky: ["#8eabc9", "#e4ddcd"],
     shadow: 95,
     view: { target: [-8, 7, 2], dist: 105, tilt: 1.2,
       turn: -0.82 },
@@ -395,20 +399,22 @@ function height(x, z) {
   return y * (1 - flat) - 0.02 * flat;
 }
 
+// dry grass and grey rock, as in the photographs
+// (the slopes are bare, the grass yellow by summer)
 function color(x, z, y) {
   const w = wave(x * 1.7, z * 1.7);
-  if (y > 95 + w * 12) return "#8c857b";
-  if (y > 60 + w * 10) return w > 0 ? "#7b7a5c"
-    : "#86806f";
+  if (y > 95 + w * 12) return "#8a8379";
+  if (y > 60 + w * 10) return w > 0 ? "#86806a"
+    : "#8f8674";
   const near = Math.abs(x + 6) < 85
     && z > -52 && z < 62;
-  if (near) return w > 0.3 ? "#8e8063" : "#97896a";
-  // fields below, grass and stubble
+  if (near) return w > 0.3 ? "#8b7d64" : "#94866b";
+  // fields below, stubble and fallow
   if (z > 60) {
     const band = Math.floor((z - 52) / 8) % 2;
-    return band ? "#a49a62" : "#8f9554";
+    return band ? "#a8996a" : "#958c5f";
   }
-  return w > 0 ? "#7e8a4c" : "#94935c";
+  return w > 0 ? "#8f8a5c" : "#9d9266";
 }
 
 // low oak bushes on the slopes round the walls
@@ -437,8 +443,8 @@ function scrub(k) {
     o.rotation.y = r() * Math.PI;
     o.updateMatrix();
     m.setMatrixAt(i, o.matrix);
-    c.setHSL(0.15 + r() * 0.06, 0.3,
-      0.27 + r() * 0.1);
+    c.setHSL(0.13 + r() * 0.06, 0.25,
+      0.22 + r() * 0.1);
     m.setColorAt(i, c);
     i++;
   }

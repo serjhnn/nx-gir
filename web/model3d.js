@@ -39,42 +39,229 @@ function canvas(w, h) {
   return [c, c.getContext("2d")];
 }
 
-// a texture of rows of stones, repeat: one picture
-// is size metres square
+// noise that tiles: the same at x and x + N, values
+// 0 to 1, made of `oct` layers
+function noiser(seed, N) {
+  const r = rnd(seed);
+  const G = 64;
+  const grid = new Float32Array(G * G).map(() => r());
+  const at = (i, j) =>
+    grid[((j % G) + G) % G * G + ((i % G) + G) % G];
+  const one = (x, y, cells) => {
+    const fx = x / N * cells;
+    const fy = y / N * cells;
+    const i = Math.floor(fx);
+    const j = Math.floor(fy);
+    let u = fx - i;
+    let v = fy - j;
+    u = u * u * (3 - 2 * u);
+    v = v * v * (3 - 2 * v);
+    const w = (a) => a % cells;
+    const a = at(w(i), w(j));
+    const b = at(w(i + 1), w(j));
+    const c = at(w(i), w(j + 1));
+    const d = at(w(i + 1), w(j + 1));
+    return (a + (b - a) * u) * (1 - v)
+      + (c + (d - c) * u) * v;
+  };
+  return (x, y, base = 4, oct = 4) => {
+    let s = 0;
+    let amp = 0.5;
+    let cells = base;
+    let tot = 0;
+    for (let o = 0; o < oct; o++) {
+      s += one(x, y, cells) * amp;
+      tot += amp;
+      amp *= 0.5;
+      cells *= 2;
+    }
+    return s / tot;
+  };
+}
+
+function hexRGB(hex) {
+  const n = parseInt(hex.slice(1), 16);
+  return [n >> 16, (n >> 8) & 255, n & 255];
+}
+
+// a texture of stones, and its relief (a normal
+// map): the joints are low, the stones' edges worn,
+// with grain, stains and streaks of weather. One
+// picture is o.size metres square. o.rows: courses;
+// o.check: light and dark stones in turn (the
+// drums); o.rough: rubble, stones of any size
 function stoneTex(o) {
-  const [c, g] = canvas(256, 256);
+  const N = 512;
   const r = rnd(o.seed || 7);
-  g.fillStyle = o.mortar;
-  g.fillRect(0, 0, 256, 256);
+  const nz = noiser((o.seed || 7) + 101, N);
+  const col = new Float32Array(N * N * 3);
+  const hgt = new Float32Array(N * N);
+  const mort = hexRGB(o.mortar);
+  // the joints first
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      const k = y * N + x;
+      const n = 0.8 + 0.4 * nz(x, y, 32, 3);
+      col.set(mort.map((c) => c * n), k * 3);
+      hgt[k] = 0.05 * n;
+    }
+  }
   const rows = o.rows;
-  const rh = 256 / rows;
-  for (let y = 0; y < rows; y++) {
-    let x = o.check ? (y % 2) * rh * 0.8 - rh * 1.6
-      : -r() * 60;
+  const joint = o.rough ? 5 : 2.5;
+  // the courses: equal, or of uneven height
+  const ys = [0];
+  for (let i = 1; i < rows; i++) {
+    const even = N / rows * i;
+    ys.push(o.rough ? even + (r() - 0.5) * N / rows
+      * 0.5 : even);
+  }
+  ys.push(N);
+  for (let row = 0; row < rows; row++) {
+    const y0 = ys[row];
+    const y1 = ys[row + 1];
+    const rh = y1 - y0;
+    let x = o.check ? (row % 2) * rh * 0.8 : r() * 60;
+    const end = x + N;
     let j = 0;
-    while (x < 256) {
-      // the drums: light and dark stones in turn
-      const w = o.check ? rh * 1.6
-        : rh * (1.2 + r() * 1.4);
-      const k = o.check && (j++ + y) % 2;
-      const base = k ? o.dark : o.light;
-      const v = (r() - 0.5) * o.vary;
-      g.fillStyle = shade(base, v);
-      g.fillRect(x + 1.5, y * rh + 1.5, w - 3, rh - 3);
+    while (x < end - rh * 0.6) {
+      let w = o.check ? rh * 1.6
+        : rh * (o.rough ? 0.8 + r() * 1.6
+          : 1.3 + r() * 1.5);
+      if (x + w > end - rh * 0.6) w = end - x;
+      const dark = o.check && (j++ + row) % 2;
+      const base = hexRGB(dark ? o.dark : o.light);
+      const v = 1 + (r() - 0.5) * o.vary;
+      // a block stained by the weather, from its top
+      const stain = r() < 0.2 ? 0.06 + r() * 0.12 : 0;
+      // the corners of rubble are round
+      const rad = o.rough ? rh * (0.2 + r() * 0.25)
+        : 2;
+      const sx = r() * 400;
+      for (let yy = Math.ceil(y0 + joint / 2);
+        yy < y1 - joint / 2; yy++) {
+        for (let xx = Math.ceil(x + joint / 2);
+          xx < x + w - joint / 2; xx++) {
+          // the distance to the stone's edge
+          const dx = Math.min(xx - x, x + w - xx)
+            - joint / 2;
+          const dy = Math.min(yy - y0, y1 - yy)
+            - joint / 2;
+          let d = Math.min(dx, dy);
+          if (dx < rad && dy < rad) {
+            d = rad - Math.hypot(rad - dx, rad - dy);
+          }
+          if (d <= 0) continue;
+          const px = ((xx % N) + N) % N;
+          const k = yy * N + px;
+          const g = nz(px + sx, yy, 16, 4);
+          const fine = nz(px, yy, 128, 2);
+          const edge = Math.min(1, d / 6);
+          const big = nz(px, yy, 2, 2);
+          let lum = v * (0.8 + 0.28 * g + 0.1 * fine)
+            * (0.9 + 0.1 * edge) * (0.88 + 0.24 * big);
+          if (stain) {
+            const t = (yy - y0) / rh;
+            const streak = nz(px * 4, yy * 0.2, 8, 2);
+            lum *= 1 - stain * (1 - t) * (0.6 + streak);
+          }
+          col[k * 3] = base[0] * lum;
+          col[k * 3 + 1] = base[1] * lum;
+          col[k * 3 + 2] = base[2] * lum;
+          // high in the middle, worn at the edges
+          hgt[k] = 0.35 + 0.55 * Math.sqrt(edge)
+            + 0.1 * g;
+        }
+      }
       x += w;
     }
   }
-  // grain
-  for (let i = 0; i < 2500; i++) {
-    g.fillStyle = r() < 0.5 ? "rgba(0,0,0,0.06)"
-      : "rgba(255,255,255,0.05)";
-    g.fillRect(r() * 256, r() * 256, 2, 2);
+  // lichen and dirt, a few spots
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      const k = y * N + x;
+      const sp = nz(x + 900, y + 300, 24, 3);
+      if (sp > 0.68) {
+        const a = Math.min(1, (sp - 0.68) * 6)
+          * (o.moss || 0.25);
+        col[k * 3] = col[k * 3] * (1 - a) + 110 * a;
+        col[k * 3 + 1] = col[k * 3 + 1] * (1 - a)
+          + 104 * a;
+        col[k * 3 + 2] = col[k * 3 + 2] * (1 - a)
+          + 70 * a;
+      }
+    }
   }
+  const [c, g] = canvas(N, N);
+  const img = g.createImageData(N, N);
+  const [c2, g2] = canvas(N, N);
+  const nimg = g2.createImageData(N, N);
+  const H = (x, y) => hgt[((y + N) % N) * N
+    + (x + N) % N];
+  const str = o.relief || 3;
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      const k = y * N + x;
+      for (let i = 0; i < 3; i++) {
+        img.data[k * 4 + i] = Math.max(0,
+          Math.min(255, col[k * 3 + i]));
+      }
+      img.data[k * 4 + 3] = 255;
+      // the slope of the relief, as a normal
+      const ddx = (H(x - 1, y) - H(x + 1, y)) * str;
+      const ddy = (H(x, y + 1) - H(x, y - 1)) * str;
+      const l = Math.hypot(ddx, ddy, 1);
+      nimg.data[k * 4] = (ddx / l * 0.5 + 0.5) * 255;
+      nimg.data[k * 4 + 1] = (ddy / l * 0.5 + 0.5) * 255;
+      nimg.data[k * 4 + 2] = (1 / l * 0.5 + 0.5) * 255;
+      nimg.data[k * 4 + 3] = 255;
+    }
+  }
+  g.putImageData(img, 0, 0);
+  g2.putImageData(nimg, 0, 0);
+  const tex = (cv, srgb) => {
+    const t = new THREE.CanvasTexture(cv);
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    if (srgb) t.colorSpace = THREE.SRGBColorSpace;
+    t.anisotropy = 8;
+    t.repeat.set(1 / o.size, 1 / o.size);
+    return t;
+  };
+  return { map: tex(c, true), normalMap: tex(c2, false) };
+}
+
+// the ground's grain: grass, earth and stones, grey
+// round 1, to multiply the colors of the slopes
+function groundTex() {
+  const N = 512;
+  const nz = noiser(61, N);
+  const r = rnd(62);
+  const [c, g] = canvas(N, N);
+  const img = g.createImageData(N, N);
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      const k = (y * N + x) * 4;
+      const big = nz(x, y, 4, 3);
+      const fine = nz(x, y, 96, 2);
+      const blade = r() * 0.16;
+      let l = 0.78 + 0.25 * big + 0.2 * fine + blade;
+      let warm = 1 + (big - 0.5) * 0.25;
+      // bare earth and stones in patches
+      if (nz(x + 500, y, 12, 3) > 0.62) {
+        l *= 0.92;
+        warm *= 1.08;
+      }
+      img.data[k] = Math.min(255, 200 * l * warm);
+      img.data[k + 1] = Math.min(255, 200 * l);
+      img.data[k + 2] = Math.min(255,
+        200 * l / warm * 0.94);
+      img.data[k + 3] = 255;
+    }
+  }
+  g.putImageData(img, 0, 0);
   const t = new THREE.CanvasTexture(c);
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   t.colorSpace = THREE.SRGBColorSpace;
-  t.anisotropy = 4;
-  t.repeat.set(1 / o.size, 1 / o.size);
+  t.anisotropy = 8;
   return t;
 }
 
@@ -89,25 +276,28 @@ function shade(hex, v) {
 
 // the materials a model takes by name
 function materials() {
-  const m = (map, o = {}) => new THREE.MeshStandardMaterial(
-    { map, roughness: 0.92, metalness: 0, ...o });
+  const m = (t, o = {}) => new THREE.MeshStandardMaterial(
+    { map: t.map, normalMap: t.normalMap,
+      normalScale: new THREE.Vector2(1, 1),
+      roughness: 0.95, metalness: 0, ...o });
   return {
     // dressed grey stone, the walls of the churches
     stone: m(stoneTex({ rows: 6, size: 3,
-      light: "#857d71", dark: "#655e55", vary: 0.22,
-      mortar: "#9b9285", seed: 3 })),
+      light: "#857d71", dark: "#655e55", vary: 0.16,
+      mortar: "#625b52", seed: 3 })),
     // lighter ashlar: the porch and the belfry
     ashlar: m(stoneTex({ rows: 5, size: 3,
-      light: "#a0988a", dark: "#7d7569", vary: 0.16,
-      mortar: "#b5ac9d", seed: 11 })),
+      light: "#a0988a", dark: "#7d7569", vary: 0.12,
+      mortar: "#7a7266", seed: 11 })),
     // light and dark stones in turn: the drums
     band: m(stoneTex({ rows: 6, size: 3, check: true,
       light: "#b5ab98", dark: "#4f4840", vary: 0.15,
       mortar: "#a49a8a", seed: 5 })),
     // rough rubble: the walls of the enclosure
     rubble: m(stoneTex({ rows: 9, size: 4,
-      light: "#8e8270", dark: "#6c6152", vary: 0.3,
-      mortar: "#a09482", seed: 17 })),
+      rough: true, moss: 0.35, relief: 4,
+      light: "#8e8270", dark: "#6c6152", vary: 0.35,
+      mortar: "#a39784", seed: 17 })),
     // stone slabs of the cones and roofs
     roof: m(stoneTex({ rows: 10, size: 2.5,
       light: "#5b5650", dark: "#3e3a36", vary: 0.25,
@@ -124,13 +314,15 @@ function materials() {
       color: 0x9a7a3c, roughness: 0.45,
       metalness: 0.6 }),
     // the paving of the court
-    court: m(stoneTex({ rows: 8, size: 4,
-      light: "#a99c86", dark: "#8f846f", vary: 0.12,
-      mortar: "#8a7f6b", seed: 31 })),
+    court: m(stoneTex({ rows: 10, size: 4,
+      rough: true, moss: 0.2,
+      light: "#a39682", dark: "#8f846f", vary: 0.2,
+      mortar: "#7d735f", seed: 31 })),
     // a flat roof of earth with grass on it
-    earth: m(stoneTex({ rows: 14, size: 5,
-      light: "#7d7a4e", dark: "#6a6844", vary: 0.25,
-      mortar: "#6f6a48", seed: 37 })),
+    earth: m(stoneTex({ rows: 16, size: 5,
+      rough: true, moss: 0.6, relief: 1.2,
+      light: "#86794f", dark: "#6a6844", vary: 0.3,
+      mortar: "#77704c", seed: 37 })),
     leaf: new THREE.MeshStandardMaterial({
       color: 0x5d6b34, roughness: 1,
       flatShading: true }),
@@ -299,8 +491,10 @@ function ground(kit, terrain) {
   geo.setAttribute("color",
     new THREE.BufferAttribute(col, 3));
   geo.computeVertexNormals();
+  const grain = groundTex();
+  grain.repeat.set(size / 12, size / 12);
   const m = new THREE.Mesh(geo,
-    new THREE.MeshStandardMaterial({
+    new THREE.MeshStandardMaterial({ map: grain,
       vertexColors: true, roughness: 1 }));
   m.receiveShadow = true;
   return m;
@@ -346,7 +540,7 @@ export async function start(view, mod, opts) {
     0x6a5a44, 1.5));
   const sun = new THREE.DirectionalLight(0xfff1d6, 2.6);
   // the afternoon sun, from the south-west
-  sun.position.set(-70, 90, 60);
+  sun.position.set(-75, 62, 55);
   sun.castShadow = true;
   const sh = model.shadow || 80;
   Object.assign(sun.shadow.camera, { left: -sh,
@@ -547,8 +741,14 @@ export async function start(view, mod, opts) {
     scene.traverse((o) => {
       if (o.geometry) o.geometry.dispose();
     });
+    scene.traverse((o) => {
+      if (o.material && o.material.map) {
+        o.material.map.dispose();
+      }
+    });
     for (const m of Object.values(kit.mats)) {
       if (m.map) m.map.dispose();
+      if (m.normalMap) m.normalMap.dispose();
       m.dispose();
     }
     if (scene.background) scene.background.dispose();
