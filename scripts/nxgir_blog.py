@@ -5,9 +5,10 @@ its date and slug.
 Drafts are in blog/drafts/, which is not read.
 
 A post can name its theme on the line after the
-title: "theme: site", "theme: authors" or "theme:
-books" (THEMES; one version is enough). The Blog
-page has a sub page for each theme.
+title: "theme: site", "theme: authors", "theme:
+books" or "theme: tech" (THEMES; one version is
+enough). The Blog page has a sub page for each
+theme.
 
 A post can also name the places it is about, on a
 line "place: ani, duin" after the title: ids of
@@ -35,7 +36,7 @@ BLOG = ROOT / "blog"
 LANGS = ("hy", "en", "ru")
 # the themes of the posts, in the order the page
 # offers them: app.js has their names (BLOG_THEMES)
-THEMES = ("site", "authors", "books")
+THEMES = ("site", "authors", "books", "tech")
 THEME_RE = re.compile(r"theme: *([a-z]+)")
 # "place: ani, duin": ids of map/places.tsv
 PLACE_RE = re.compile(r"place: *(.+)")

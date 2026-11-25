@@ -2698,6 +2698,8 @@ const BLOG_THEMES = {
     en: "About authors", ru: "Об авторах" },
   books: { hy: "Գրքերի մասին", en: "About books",
     ru: "О книгах" },
+  tech: { hy: "Տեխնիկական", en: "Technical",
+    ru: "Техническое" },
 };
 
 const MONTHS_HY = ["հունվարի", "փետրվարի",

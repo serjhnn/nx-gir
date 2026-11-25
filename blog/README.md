@@ -10,9 +10,9 @@ read by `scripts/nxgir_blog.py`. Content, not code.
   (`2026-11-07-welcome.hy.md`). The versions of a
   post share the date and the slug; the slug is its
   address, `/blog/welcome`.
-- Themes: a line `theme: site`, `theme: authors` or
-  `theme: books` right after the title puts the
-  post in a theme; the line is not shown. One
+- Themes: a line `theme: site`, `theme: authors`,
+  `theme: books` or `theme: tech` (how things are
+  made) right after the title puts the post in a theme; the line is not shown. One
   version of a post is enough (the others must
   not differ). The Blog page has a sub page for
   each (`/blog/theme/authors`) with tabs between
