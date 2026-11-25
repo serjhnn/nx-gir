@@ -2706,6 +2706,8 @@ const BLOG_THEMES = {
     en: "About authors", ru: "Об авторах" },
   books: { hy: "Գրքերի մասին", en: "About books",
     ru: "О книгах" },
+  tech: { hy: "Տեխնիկական", en: "Technical",
+    ru: "Техническое" },
 };
 
 const MONTHS_HY = ["հունվարի", "փետրվարի",
@@ -2794,9 +2796,42 @@ function placeChips(item, names, lang) {
         names.get(id)[lang])])));
 }
 
+// a YouTube video in a post: its still (a file of
+// ours) and a play button; YouTube is loaded only
+// when it is played, from its no-cookie address,
+// and the link opens it on YouTube
+function videoBlock(id, alt, still) {
+  const watch = "https://www.youtube.com/watch?v=" + id;
+  const play = h("button", { type: "button",
+    class: "video-play", "aria-label":
+      t("video.play") + ": " + alt },
+  h("img", { src: "img/" + still, alt,
+    loading: "lazy" }),
+  h("span", { class: "video-icon",
+    "aria-hidden": "true" }));
+  const box = h("div", { class: "video" }, play);
+  play.addEventListener("click", () => {
+    const f = h("iframe", {
+      src: "https://www.youtube-nocookie.com/embed/"
+        + id + "?autoplay=1&rel=0",
+      title: alt,
+      allow: "autoplay; encrypted-media;"
+        + " picture-in-picture; fullscreen",
+      allowfullscreen: "",
+      referrerpolicy:
+        "strict-origin-when-cross-origin" });
+    play.replaceWith(f);
+  });
+  return h("figure", { class: "video-fig" }, box,
+    h("figcaption", {},
+      t("video.note") + " ",
+      h("a", { href: watch, target: "_blank",
+        rel: "noopener" }, t("video.youtube"))));
+}
+
 // one post: its date, title and text (parse()
-// in nxgir_blog.py: ["p", text], ["h", text] or
-// ["img", file, alt])
+// in nxgir_blog.py: ["p", text], ["h", text],
+// ["img", file, alt] or ["video", id, alt, still])
 function postItem(p, lang) {
   const v = version(p, lang);
   return h("article", { class: "post p-" + p.slug,
@@ -2806,8 +2841,10 @@ function postItem(p, lang) {
   h("h2", {},
     h("a", { href: "#/blog/" + p.slug },
       named(v.title))),
-  v.blocks.map(([kind, text, alt]) =>
-    kind === "img"
+  v.blocks.map(([kind, text, alt, still]) =>
+    kind === "video"
+      ? videoBlock(text, alt, still)
+      : kind === "img"
       ? h("img", { src: "img/" + text, alt,
         loading: "lazy" })
       : h(kind === "h" ? "h3" : "p",
@@ -2963,8 +3000,10 @@ function comicItem(s, lang) {
   h("time", { datetime: s.date },
     longDay(s.date, v.lang)),
   h("h2", {}, named(v.title)),
-  v.blocks.map(([kind, text, alt]) =>
-    kind === "img"
+  v.blocks.map(([kind, text, alt, still]) =>
+    kind === "video"
+      ? videoBlock(text, alt, still)
+      : kind === "img"
       ? h("img", { src: "img/" + text, alt,
         loading: "lazy" })
       : h(kind === "h" ? "h3" : "p",

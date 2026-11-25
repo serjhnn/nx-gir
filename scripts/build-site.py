@@ -722,6 +722,18 @@ def post_page(slug, lang, kind="blog"):
 def blog_block(block):
     """One block of a blog post as HTML."""
     kind, text, *alt = block
+    if kind == "video":
+        # the still, a link to the video on YouTube
+        src = htm.escape(url(f"img/{alt[1]}"))
+        watch = htm.escape(
+            f"https://www.youtube.com/watch?v={text}"
+        )
+        return (
+            f'<p><a href="{watch}"><img'
+            ' style="max-width:100%;height:auto"'
+            f' src="{src}" alt="{htm.escape(alt[0])}">'
+            "</a></p>"
+        )
     if kind == "img":
         src = htm.escape(url(f"img/{text}"))
         return (

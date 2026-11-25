@@ -488,7 +488,9 @@
   (no Russian yet). The Timeline's events and the
   limits on Statistics stay in English.
 - `web/`: the web pages (plain HTML, CSS, JS, no
-  build step, nothing loaded from other sites); the
+  build step, nothing loaded from other sites but a
+  blog post's YouTube video, only once it is played:
+  `videoBlock()`, `blog/README.md`); the
   60-character limit applies here too. `wordKey()`
   in `app.js` must match `normalize()` in the reader
   (a test checks it)

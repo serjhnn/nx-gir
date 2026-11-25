@@ -115,13 +115,31 @@ def test_note_under_picture():
     assert blocks[2] == ["p", "Text"]
 
 
+def test_video():
+    _, blocks = bl.parse(
+        "# T\n\n![A film](youtube:03_P9EoYrjE a.jpg)\n",
+        "t",
+    )
+    assert blocks == [
+        ["video", "03_P9EoYrjE", "A film", "a.jpg"]
+    ]
+    # no still, or a bad id: a paragraph, as text
+    for line in (
+        "![A](youtube:03_P9EoYrjE)",
+        "![A](youtube:short a.jpg)",
+    ):
+        _, blocks = bl.parse(f"# T\n\n{line}\n", "t")
+        assert blocks[0][0] == "p"
+
+
 def test_pictures_exist():
     for post in bl.read():
         for v in post["versions"]:
             for b in v["blocks"]:
-                if b[0] == "img":
+                f = {"img": 1, "video": 3}.get(b[0])
+                if f:
                     assert (
-                        bl.ROOT / "web/img" / b[1]
+                        bl.ROOT / "web/img" / b[f]
                     ).is_file()
 
 

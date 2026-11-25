@@ -181,6 +181,9 @@ const UI = {
     "theme.light": "Լուսավոր",
     "theme.dark": "Մուգ",
     "theme.black": "Սև",
+    "video.play": "Դիտել տեսանյութը",
+    "video.note": "Տեսանյութը բեռնվում է YouTube-ից միայն սեղմելուց հետո։",
+    "video.youtube": "Դիտել YouTube-ում",
     "theme.title": (now, next) => "Ոճ՝ " + now
       + " (սեղմեք՝ " + next + ")",
     "phone": "Հեռախոսի տեսք",
@@ -663,6 +666,9 @@ const UI = {
     "theme.light": "Light",
     "theme.dark": "Dark",
     "theme.black": "Black",
+    "video.play": "Play the video",
+    "video.note": "The video loads from YouTube only when you play it.",
+    "video.youtube": "Watch on YouTube",
     "theme.title": (now, next) => "Theme: " + now
       + " (click for " + next.toLowerCase() + ")",
     "phone": "Phone view",
@@ -1142,6 +1148,9 @@ const UI = {
     "theme.light": "Светлая",
     "theme.dark": "Тёмная",
     "theme.black": "Чёрная",
+    "video.play": "Смотреть видео",
+    "video.note": "Видео загружается с YouTube только после нажатия.",
+    "video.youtube": "Смотреть на YouTube",
     "theme.title": (now, next) => "Тема: " + now
       + " (нажмите: " + next.toLowerCase() + ")",
     "phone": "Вид телефона",

@@ -5,8 +5,9 @@ its date and slug.
 Drafts are in blog/drafts/, which is not read.
 
 A post can name its theme on the line after the
-title: "theme: site", "theme: authors" or "theme:
-books" (THEMES; one version is enough). The Blog
+title: "theme: site", "theme: authors", "theme:
+books" or "theme: tech" (THEMES; one version is
+enough). The Blog
 page has a sub page for each theme.
 
 A post can also name the places it is about, on a
@@ -17,8 +18,10 @@ shows. The line is not shown.
 A post is a "# Title" line, then paragraphs split
 by empty lines; "## " starts a subheading; a line
 ![alt](name.jpg) alone is a picture, a file of
-web/img/; lines starting "> " are a note under
-it. read()
+web/img/; ![alt](youtube:ID name.jpg) alone is a
+YouTube video, name.jpg its still in web/img/
+(the page loads YouTube only when it is played);
+lines starting "> " are a note under it. read()
 checks every file and stops on a bad one, so a
 mistake shows when the site is built. Tested in
 tests/test_blog.py.
@@ -35,7 +38,7 @@ BLOG = ROOT / "blog"
 LANGS = ("hy", "en", "ru")
 # the themes of the posts, in the order the page
 # offers them: app.js has their names (BLOG_THEMES)
-THEMES = ("site", "authors", "books")
+THEMES = ("site", "authors", "books", "tech")
 THEME_RE = re.compile(r"theme: *([a-z]+)")
 # "place: ani, duin": ids of map/places.tsv
 PLACE_RE = re.compile(r"place: *(.+)")
@@ -48,6 +51,12 @@ NAME_RE = re.compile(
 
 IMG_RE = re.compile(
     r"!\[([^\]]*)\]\(([A-Za-z0-9_-]+\.(?:jpg|png|webp))\)"
+)
+
+
+VIDEO_RE = re.compile(
+    r"!\[([^\]]*)\]\(youtube:([A-Za-z0-9_-]{11})"
+    r" ([A-Za-z0-9_-]+\.(?:jpg|png|webp))\)"
 )
 
 
@@ -95,7 +104,8 @@ def split_meta(text, name):
 def parse(text, name):
     """The title and blocks of a post: blocks are
     ["p", text], ["h", text], ["cap", text] (a note,
-    lines starting "> ") and ["img", file, alt],
+    lines starting "> "), ["img", file, alt] and
+    ["video", YouTube id, alt, still],
     a paragraph's lines joined by spaces."""
     lines = text.splitlines()
     while lines and not lines[0].strip():
@@ -120,6 +130,12 @@ def parse(text, name):
                 blocks[-1][1] += " " + line[2:].strip()
             else:
                 blocks.append(["cap", line[2:].strip()])
+        elif VIDEO_RE.fullmatch(line):
+            end()
+            alt, vid, still = VIDEO_RE.fullmatch(
+                line
+            ).groups()
+            blocks.append(["video", vid, alt, still])
         elif IMG_RE.fullmatch(line):
             end()
             alt, src = IMG_RE.fullmatch(line).groups()

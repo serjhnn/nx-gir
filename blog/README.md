@@ -10,8 +10,9 @@ read by `scripts/nxgir_blog.py`. Content, not code.
   (`2026-11-07-welcome.hy.md`). The versions of a
   post share the date and the slug; the slug is its
   address, `/blog/welcome`.
-- Themes: a line `theme: site`, `theme: authors` or
-  `theme: books` right after the title puts the
+- Themes: a line `theme: site`, `theme: authors`,
+  `theme: books` or `theme: tech` right after the
+  title puts the
   post in a theme; the line is not shown. One
   version of a post is enough (the others must
   not differ). The Blog page has a sub page for
@@ -31,6 +32,15 @@ read by `scripts/nxgir_blog.py`. Content, not code.
 - A line `![alt](name.jpg)` on its own is a
   picture: the file is in `web/img/` (jpg, png or
   webp, about 1000 px wide, under 300 KB).
+- A line `![alt](youtube:ID still.jpg)` on its own
+  is a YouTube video (ID the 11 letters after
+  `v=` or `youtu.be/`): the page shows the still, a
+  file in `web/img/` like a picture, with a play
+  button, and loads the player from
+  youtube-nocookie.com only when it is clicked (the
+  one exception to "nothing from other sites"; the
+  CSP's `frame-src`). The site's page for search
+  engines shows the still as a link to the video.
 - First line: `# Title`. Then paragraphs, split by
   empty lines; `## ` starts a subheading. No other
   Markdown for now: the text is shown as it is.

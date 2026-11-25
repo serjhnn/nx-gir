@@ -132,9 +132,12 @@ NOT_COUNTED = ("grabar/bible/",) + tuple(
     for d in ("4", "7", "8", "13", "14", "16", "18")
 )
 # pages load only their own files: no inline scripts
-# or styles, nothing from other sites
+# or styles, nothing from other sites, but for a
+# YouTube video in a blog post, framed only when the
+# reader plays it
 CSP = (
     "default-src 'self'; img-src 'self' data:;"
+    " frame-src https://www.youtube-nocookie.com;"
     " frame-ancestors 'none'"
 )
 
