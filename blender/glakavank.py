@@ -2309,6 +2309,21 @@ def enclosure():
     holes.cut(*outer, *towers)
 
 
+def railing(a, b, z, h=1.0, step=0.5):
+    """A wooden railing on a gallery's upper floor,
+    from a to b (x, y) at the height z of the floor:
+    a hand rail, a lower rail, upright bars."""
+    a = Vector((*a, z))
+    b = Vector((*b, z))
+    up = Vector((0, 0, 1))
+    rod("rail", a + up * h, b + up * h, 0.05, "wood")
+    rod("rail", a + up * 0.12, b + up * 0.12, 0.04, "wood")
+    k = max(1, round((b - a).length / step))
+    for i in range(k + 1):
+        p = a + (b - a) * (i / k)
+        rod("baluster", p, p + up * h, 0.025, "wood")
+
+
 def ranges():
     sx0, sx1 = W + 1, E - 1
     sw = sx1 - sx0
@@ -2331,15 +2346,16 @@ def ranges():
     for i in range(16):
         x = sx0 + (i + 0.5) * sw / 16
         holes.add(
-            L.arch(2.6, 3.8), 1.5, L.face(x, -31.1, 0, 0)
+            L.arch(2.3, 3.3), 1.5, L.face(x, -31.1, 0, 0)
         )
         holes.add(
-            L.arch(2.4, 3.4), 1.5, L.face(x, -31.1, 5.8, 0)
+            L.arch(2.9, 3.9), 1.5, L.face(x, -31.1, 5.6, 0)
         )
         L.box("door", 1.0, 0.05, 2.1, "hole", x, -33.6)
         L.box("door", 0.6, 0.05, 1.0, "hole", x, -33.6, 6.6)
     holes.cut(gal)
     L.box("s-floor", sw, 3, 0.4, "porch", scx, -32.4, 5.2)
+    railing((sx0, -30.7), (sx1, -30.7), 5.6)
     L.box("s-roof", sw, 3.4, 0.5, "porch", scx, -32.4, 10)
     L.box(
         "s-roof-earth",
@@ -2362,14 +2378,15 @@ def ranges():
     for i in range(24):
         x = sx0 + (i + 0.5) * sw / 24
         holes.add(
-            L.arch(2.6, 3.2), 1.5, L.face(x, 31, 0, PI)
+            L.arch(2.3, 2.9), 1.5, L.face(x, 31, 0, PI)
         )
         holes.add(
-            L.arch(2.4, 2.8), 1.5, L.face(x, 31, 4.6, PI)
+            L.arch(2.9, 3.3), 1.5, L.face(x, 31, 4.4, PI)
         )
         L.box("door", 0.9, 0.05, 2.0, "hole", x, 32.08)
     holes.cut(gal)
     L.box("n-floor", sw, 3, 0.4, "porch", scx, 32.2, 4)
+    railing((sx0, 30.6), (sx1, 30.6), 4.4)
     L.box("n-roof", sw, 3, 0.5, "porch", scx, 32.2, 8)
     L.box(
         "n-roof-earth", sw, 3, 0.25, "earth", scx, 32.2, 8.5
@@ -2384,17 +2401,19 @@ def ranges():
     for i in range(9):
         y = 22 - 15 + (i + 0.5) * 30 / 9
         holes.add(
-            L.arch(2.4, 3.4),
+            L.arch(2.2, 3.1),
             1.5,
             L.face(W + 10.6, y, 0, PI / 2),
         )
         holes.add(
-            L.arch(2.2, 3.0),
+            L.arch(2.8, 3.6),
             1.5,
-            L.face(W + 10.6, y, 5.1, PI / 2),
+            L.face(W + 10.6, y, 4.9, PI / 2),
         )
     holes.cut(gal)
     L.box("w-roof", 3.4, 30, 0.5, "porch", W + 9.4, 22, 9)
+    L.box("w-floor", 3, 30, 0.4, "porch", W + 9.4, 22, 4.5)
+    railing((W + 10.95, 7.2), (W + 10.95, 36.8), 4.9)
     # Bishop Mampre's new building on the west
     mb = L.box("mampre", 12, 20, 12, "porch", W + 7, -22)
     holes = Holes("mampre")
@@ -2483,8 +2502,12 @@ def ranges():
 
 def trees():
     for kind, x, y, h, sd in (
-        ("poplar", 6, 25, 17, 1),
+        # the cypress seen over the hut behind the belfry
+        ("poplar", 8, 16.8, 16, 1),
+        # trees behind the belfry (photographs before
+        # 1915)
         ("walnut", -32, 22, 9, 2),
+        ("walnut", -38, 12, 8, 11),
         ("poplar", -52, -2, 15, 3),
         ("walnut", 30, -26, 8, 4),
         ("walnut", -78, -30, 10, 5),
@@ -2513,6 +2536,7 @@ VIEWS = {
     "belfry": ((-46, -24, 13), (-16.85, 0, 17.5), 38),
     "drums": ((-6, -3, 18), (23, -0.3, 16), 34),
     "south": ((-6, -122, 2), (-6, -44, 6), 25),
+    "court": ((-28, -8, 4), (-52, 24, 5), 32),
     "porch": ((-36, -21, 5), (-17, -1, 5.5), 32),
     "hall": ((-31, -29, 8), (-3, -10, 5), 30),
 }
