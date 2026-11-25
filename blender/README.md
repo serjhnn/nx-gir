@@ -40,6 +40,21 @@ Blender 4.2 LTS can be fetched from
 <https://download.blender.org/release/Blender4.2/>
 (`blender-4.2.*-linux-x64.tar.xz`).
 
+## On the web page
+
+`blender/web.sh glakavank` builds the buildings for the
+page `/3d/glakavank`: `web/models/glakavank/` holds a
+`.gltf`, its `.bin` and its textures (512 pixels,
+colour and relief maps), read by `web/model3d.js` with
+the loader `web/vendor/three/gltf.min.js`; the page
+draws its own ground and bushes (`height()` is the
+same in both). Not one `.glb`, and no Draco: the
+page's rules (CSP) forbid the `blob:` addresses and
+workers they need. The script then welds the vertices
+and stores them in fewer bits (gltf-transform,
+`KHR_mesh_quantization`): about 4.8 MB in all, loaded
+only on that page.
+
 ## Stone and sky (Poly Haven, CC0)
 
 `large_sandstone_blocks` (the church, tinted grey; the

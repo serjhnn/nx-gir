@@ -211,7 +211,13 @@
   and `modelList()` in `app.js`, the viewer
   `web/model3d.js`): monasteries and castles built in
   code from old photographs and plans, listed under
-  the 3D map. The viewer draws stone textures with
+  the 3D map. A model's buildings may be made in
+  Blender, by script (`blender/`, read
+  `blender/README.md` first; `blender/web.sh <id>`
+  writes `web/models/<id>/`, a `.gltf` with its `.bin`
+  and textures, given as `gltf` by the module; never
+  a `.glb` or Draco, the CSP forbids `blob:`); Glakavank
+  is. The viewer draws stone textures with
   relief in the browser (no image files) and soft
   shadows of corners (`vendor/three/fx.min.js`) once
   the view stands still; its kit has the shapes a

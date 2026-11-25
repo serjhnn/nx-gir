@@ -21,17 +21,17 @@
         "hy": [
           "Վանքը կանգնած էր Մշո դաշտից հյուսիս՝ լեռան լանջին, մոտ 1950 մետր բարձրության վրա, ամրոցի պես պարսպապատ։ Ավանդության համաձայն այն հիմնել է Գրիգոր Լուսավորիչը, իսկ առաջին վանահայրը եղել է Զենոբ Գլակը, որի անունով էլ կոչվել է Գլակավանք։ Նրա «Տարոնի պատմությունը» կա Գրադարանում։",
           "Գլխավոր եկեղեցին մեծ սրահ էր՝ տասնվեց սյունով և հարթ տանիքով։ Արևելքում չորս մատուռ կար. երկուսի վրա բարձր թմբուկներ էին՝ բաց ու մուգ քարերով և կոնաձև տանիքով։ Արևմուտքում՝ գավիթն էր ու նրա վրա բաց զանգակատունը, ճակատը զարդարված սպիտակ մարմարե քանդակազարդ սալերով։",
-          "1915 թվականից հետո վանքն ավերվեց, և այսօր գրեթե ոչինչ չի մնացել։ Այս մոդելը վերակազմություն է. հատակագիծը վերցված է Ռ. Հյուսենի ատլասից, ձևերն ու բարձրությունները՝ Հ. Ֆ. Բ. Լինչի 1893 թվականի և 1915-ից առաջ արված այլ լուսանկարներից։ Չափերը մոտավոր են, մանրամասները՝ պարզեցված։"
+          "1915 թվականից հետո վանքն ավերվեց, և այսօր գրեթե ոչինչ չի մնացել։ Այս մոդելը վերակազմություն է. հատակագիծը վերցված է Ռ. Հյուսենի ատլասից, ձևերն ու բարձրությունները՝ Հ. Ֆ. Բ. Լինչի 1893 թվականի և 1915-ից առաջ արված այլ լուսանկարներից։ Չափերը մոտավոր են, մանրամասները՝ պարզեցված։ Մոդելը պատրաստված է Blender-ում, քարը՝ լուսանկարներից (Poly Haven)։"
         ],
         "en": [
           "The monastery stood high on the mountain wall north of the plain of Mush, at about 1,950 metres, walled like a fortress. Tradition says Gregory the Illuminator founded it, and its first abbot was Zenob Glak, after whom it was called Glakavank. His History of Taron is in the Library.",
           "The main church was a large hall of sixteen columns with a flat roof. On the east were four chapels; two of them carried tall drums of light and dark stone with cone roofs. On the west stood the porch and the open belfry above it, its front set with slabs of white marble with reliefs.",
-          "After 1915 the monastery was destroyed, and almost nothing is left. This model is a reconstruction: the plan comes from R. Hewsen's atlas, the forms and heights from H. F. B. Lynch's photographs of 1893 and other photographs taken before 1915. The sizes are estimates and the details are simplified."
+          "After 1915 the monastery was destroyed, and almost nothing is left. This model is a reconstruction: the plan comes from R. Hewsen's atlas, the forms and heights from H. F. B. Lynch's photographs of 1893 and other photographs taken before 1915. The sizes are estimates and the details are simplified. The model was made in Blender, with stone from photographs (Poly Haven)."
         ],
         "ru": [
           "Монастырь стоял высоко на горной стене к северу от Мушской равнины, на высоте около 1950 метров, обнесённый стенами, как крепость. По преданию, его основал Григорий Просветитель, а первым настоятелем был Зеноб Глак, по имени которого он и назван Глакаванком. Его «История Тарона» есть в Библиотеке.",
           "Главная церковь была большим залом с шестнадцатью колоннами и плоской крышей. С востока к ней примыкали четыре часовни; над двумя поднимались высокие барабаны из светлого и тёмного камня с коническими крышами. С запада стоял притвор, а над ним открытая колокольня; её фасад был украшен плитами белого мрамора с рельефами.",
-          "После 1915 года монастырь был разрушен, от него почти ничего не осталось. Эта модель — реконструкция: план взят из атласа Р. Хьюсена, формы и высоты — с фотографий Г. Ф. Б. Линча 1893 года и других снимков, сделанных до 1915 года. Размеры приблизительны, детали упрощены."
+          "После 1915 года монастырь был разрушен, от него почти ничего не осталось. Эта модель — реконструкция: план взят из атласа Р. Хьюсена, формы и высоты — с фотографий Г. Ф. Б. Линча 1893 года и других снимков, сделанных до 1915 года. Размеры приблизительны, детали упрощены. Модель сделана в Blender, камень — по фотографиям (Poly Haven)."
         ]
       },
       "labels": {
@@ -127,6 +127,10 @@
         {
           "title": "Wikipedia: Surb Karapet Monastery",
           "url": "https://en.wikipedia.org/wiki/Surb_Karapet_Monastery"
+        },
+        {
+          "title": "The model: made in Blender (blender/glakavank.py); stone and sky from Poly Haven, CC0",
+          "url": "https://polyhaven.com"
         }
       ]
     }

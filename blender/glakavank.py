@@ -3,7 +3,7 @@ of Mush (Taron), as it stood in 1893: a model built
 in Blender, by script.
 
     blender -b --factory-startup -P blender/glakavank.py \\
-        -- [--quick] [--no-render] [--glb]
+        -- [--quick] [--no-render] [--glb] [--web]
 
 Writes blender/out/glakavank.blend, renders of the
 views of the old photographs (blender/out/*.jpg) and,
@@ -321,8 +321,8 @@ def rosette(x, y, z, rz, r=0.5, mat="marble"):
     for i in range(12):
         a = 2 * PI * i / 12
         lens = []
-        for j in range(9):
-            t = PI * j / 8
+        for j in range(5):
+            t = PI * j / 4
             lens.append(
                 (
                     0.1 + 0.32 * r * (1 - math.cos(t)),
@@ -1550,6 +1550,11 @@ def main():
             )
     if "--glb" in ARGS:
         L.export_glb(OUT / "glakavank.glb")
+    if "--web" in ARGS:
+        # the buildings for web/models/glakavank.js;
+        # the page draws its own ground and bushes
+        web = L.ROOT.parent / "web" / "models" / "glakavank"
+        L.export_web(web, skip=("ground", "scrub"))
 
 
 main()

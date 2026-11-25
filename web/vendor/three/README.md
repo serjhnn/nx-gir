@@ -34,3 +34,13 @@ into `./three.min.js`:
     sed -i 's#from"three"#from"./three.min.js"#g' fx.min.js
 
 Only the 3D models load it (`web/model3d.js`).
+
+`gltf.min.js` is three.js r187's GLTFLoader, bundled
+the same way, for the models made in Blender
+(`blender/`, `web/models/<id>/`):
+
+    echo 'export { GLTFLoader } from "./node_modules/three/examples/jsm/loaders/GLTFLoader.js";' > gl.js
+    npx esbuild gl.js --bundle --minify --format=esm \
+      --external:three --legal-comments=inline \
+      --outfile=gltf.min.js
+    sed -i 's#from"three"#from"./three.min.js"#g' gltf.min.js

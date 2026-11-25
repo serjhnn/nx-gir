@@ -14,6 +14,7 @@ on every wall.
 
 import json
 import math
+import os
 import urllib.request
 from pathlib import Path
 
@@ -204,7 +205,11 @@ def material(
         n = nt.nodes.new("ShaderNodeTexImage")
         n.image = bpy.data.images.load(str(path))
         # to find the smaller picture for the web
-        n.image["src"] = [pid, kind, list(tint or [])]
+        n.image["src"] = [
+            pid,
+            kind,
+            list(tint or []) if kind == "diff" else [],
+        ]
         if not color:
             n.image.colorspace_settings.name = "Non-Color"
         nt.links.new(mp.outputs[0], n.inputs[0])
@@ -495,7 +500,7 @@ def cut(target, cutters):
     return target
 
 
-def bevel(o, width=0.03, segs=2):
+def bevel(o, width=0.03, segs=1):
     m = o.modifiers.new("bevel", "BEVEL")
     m.width = width
     m.segments = segs
@@ -587,6 +592,19 @@ def finish(join=True):
         uv_set(o)
         if o.get("uv") == "round":
             smooth(o)
+    if os.environ.get("NXGIR_COUNT"):
+        top = sorted(
+            objs, key=lambda o: -len(o.data.vertices)
+        )
+        by = {}
+        for o in objs:
+            k = o.name.split(".")[0]
+            by[k] = by.get(k, 0) + len(o.data.vertices)
+        for k, n in sorted(by.items(), key=lambda x: -x[1])[
+            :25
+        ]:
+            print("COUNT", k, n)
+        del top
     if not join:
         return objs
     by = {}
@@ -633,4 +651,75 @@ def export_glb(path, res="1k"):
         export_image_format="JPEG",
         export_cameras=False,
         export_lights=False,
+    )
+
+
+def export_web(folder, skip=(), size=512, rough=0.9):
+    """The scene for the web page: a .gltf with its
+    .bin and its textures as separate files in folder
+    (the page's rules forbid the blob: addresses a
+    single .glb would need), no Draco (its decoder
+    runs in a blob: worker); textures size pixels
+    square, colour and relief only (a roughness of
+    rough instead of a map); the objects named in
+    skip left out (the page draws its own ground)."""
+    folder = Path(folder)
+    folder.mkdir(parents=True, exist_ok=True)
+    for f in folder.iterdir():
+        f.unlink()
+    for name in skip:
+        o = bpy.data.objects.get(name)
+        if o:
+            bpy.data.objects.remove(o)
+    for m in bpy.data.materials:
+        if not m.use_nodes:
+            continue
+        nt = m.node_tree
+        b = nt.nodes.get("Principled BSDF")
+        if not b:
+            continue
+        r = b.inputs["Roughness"]
+        for lk in list(r.links):
+            nt.links.remove(lk)
+        r.default_value = rough
+    done = {}
+    for im in list(bpy.data.images):
+        if "src" not in im:
+            continue
+        pid, kind, tint = im["src"]
+        if kind == "rough":
+            continue
+        key = (pid, kind, tuple(tint))
+        if key not in done:
+            src = texture(pid, "1k")[kind]
+            if tint:
+                src = tinted(src, list(tint))
+            small = bpy.data.images.load(str(src))
+            small.scale(size, size)
+            name = f"{pid}-{kind}"
+            if tint:
+                name += "-" + "-".join(
+                    f"{round(c * 100)}" for c in tint
+                )
+            out = CACHE / "web" / f"{name}.jpg"
+            out.parent.mkdir(parents=True, exist_ok=True)
+            small.filepath_raw = str(out)
+            small.file_format = "JPEG"
+            small.save()
+            bpy.data.images.remove(small)
+            done[key] = (out, name)
+        out, name = done[key]
+        im.filepath = str(out)
+        im.name = name
+        im.reload()
+    bpy.ops.export_scene.gltf(
+        filepath=str(folder / (folder.name + ".gltf")),
+        export_format="GLTF_SEPARATE",
+        export_texture_dir="",
+        export_apply=True,
+        export_image_format="JPEG",
+        export_jpeg_quality=82,
+        export_cameras=False,
+        export_lights=False,
+        export_extras=False,
     )

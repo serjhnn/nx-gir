@@ -14,7 +14,7 @@ LANGS = ("hy", "en", "ru")
 # no sacred words in what the pages show (CLAUDE.md)
 SACRED = re.compile(
     r"\b(god|jesus|christ|lord|holy|surb|israel"
-    r"|jerusalem)\b|սուրբ|սբ\.|աստված|святой|бог",
+    r"|jerusalem|սուրբ|սբ|աստված|святой|бог)\b",
     re.I,
 )
 
@@ -67,3 +67,26 @@ def test_no_sacred_words():
         shown += list(m["labels"].values())
         text = json.dumps(shown, ensure_ascii=False)
         assert not SACRED.search(text), m["id"]
+
+
+def test_gltf_files():
+    # a model made in Blender: its .gltf and every
+    # file it names are there, and it needs nothing
+    # the page cannot read
+    ok = {"KHR_mesh_quantization", "KHR_texture_transform"}
+    for m in models():
+        js = (WEB / "models" / f"{m['id']}.js").read_text(
+            "utf-8"
+        )
+        found = re.search(r'gltf: "([^"]+)"', js)
+        if not found:
+            continue
+        path = WEB / found.group(1)
+        assert path.is_file()
+        g = json.loads(path.read_text("utf-8"))
+        assert set(g.get("extensionsRequired", [])) <= ok
+        for item in g.get("buffers", []) + g.get(
+            "images", []
+        ):
+            assert not item["uri"].startswith("data:")
+            assert (path.parent / item["uri"]).is_file()

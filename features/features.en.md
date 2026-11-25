@@ -58,7 +58,7 @@ The Map page shows the Armenian Highland on a painted map, with a pin on each pl
 
 The 3D map lays the painted map on a relief: the mountains rise, the lakes lie flat, and the same pins and panels are on it. Drag to move it; with two fingers (or the right button) turn and tilt it; the buttons zoom, turn and look from above or from the side. It has its own page, reached from the 3D badge on the map banner of the home page and from the Map page, and it loads only when you open it.
 
-Under the 3D map is a list of monasteries and castles rebuilt in 3D from old photographs and plans. The first is Glakavank, the monastery of Karapet above Mush, as H. F. B. Lynch photographed it in 1893: the walls, the hall church, the two chapels with their cones and the belfry over the porch. Turn round it, tap a name to go closer, and read how it was made and from which sources. The sizes are estimates; the page says so.
+Under the 3D map is a list of monasteries and castles rebuilt in 3D from old photographs and plans. The first is Glakavank, the monastery of Karapet above Mush, as H. F. B. Lynch photographed it in 1893: the walls, the hall church, the two chapels with their cones and the belfry over the porch. Its buildings are a model made in Blender, with stone from photographs. Turn round it, tap a name to go closer, and read how it was made and from which sources. The sizes are estimates; the page says so.
 
 ## Report an error
 

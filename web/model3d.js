@@ -7,7 +7,8 @@
 //
 // A model's module exports build(kit), which gives
 // { group, labels, view }: the buildings (metres, y
-// up, x to the east, z to the south), the names
+// up, x to the east, z to the south), or gltf, the
+// address of a model made in Blender, the names
 // shown over them ([{ id, at: [x, y, z], names }]),
 // and the first view ({ target, dist, tilt, turn }).
 // kit has three.js and helpers for stone and roofs
@@ -758,6 +759,24 @@ export async function start(view, mod, opts) {
 
   const kit = makeKit(materials());
   const model = mod.build(kit);
+  // a model made in Blender (blender/): a .gltf with
+  // its .bin and textures beside it, read with the
+  // loader of vendor/three/gltf.min.js
+  if (model.gltf) {
+    const G = await import("./vendor/three/gltf.min.js");
+    const g = await new G.GLTFLoader()
+      .loadAsync(model.gltf);
+    g.scene.traverse((o) => {
+      if (!o.isMesh) return;
+      o.castShadow = true;
+      o.receiveShadow = true;
+      const m = o.material;
+      for (const t of [m.map, m.normalMap]) {
+        if (t) t.anisotropy = 8;
+      }
+    });
+    model.group.add(g.scene);
+  }
   const scene = new THREE.Scene();
   const sky = model.sky || ["#8fb3d9", "#e9e3d3"];
   scene.background = skyTex(sky[0], sky[1]);
