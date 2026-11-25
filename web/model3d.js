@@ -94,12 +94,12 @@ function materials() {
   return {
     // dressed grey stone, the walls of the churches
     stone: m(stoneTex({ rows: 6, size: 3,
-      light: "#9a9184", dark: "#6f675d", vary: 0.22,
-      mortar: "#b9b0a2", seed: 3 })),
+      light: "#857d71", dark: "#655e55", vary: 0.22,
+      mortar: "#9b9285", seed: 3 })),
     // lighter ashlar: the porch and the belfry
     ashlar: m(stoneTex({ rows: 5, size: 3,
-      light: "#b8ae9c", dark: "#8d8475", vary: 0.16,
-      mortar: "#d2c9b8", seed: 11 })),
+      light: "#a0988a", dark: "#7d7569", vary: 0.16,
+      mortar: "#b5ac9d", seed: 11 })),
     // light and dark stones in turn: the drums
     band: m(stoneTex({ rows: 6, size: 3, check: true,
       light: "#b5ab98", dark: "#4f4840", vary: 0.15,
@@ -127,6 +127,10 @@ function materials() {
     court: m(stoneTex({ rows: 8, size: 4,
       light: "#a99c86", dark: "#8f846f", vary: 0.12,
       mortar: "#8a7f6b", seed: 31 })),
+    // a flat roof of earth with grass on it
+    earth: m(stoneTex({ rows: 14, size: 5,
+      light: "#7d7a4e", dark: "#6a6844", vary: 0.25,
+      mortar: "#6f6a48", seed: 37 })),
     leaf: new THREE.MeshStandardMaterial({
       color: 0x5d6b34, roughness: 1,
       flatShading: true }),

@@ -147,6 +147,8 @@ from, copied on 2026-11-25:
 | `lynch-1901-fig155-south.jpg` | H. F. B. Lynch, *Armenia: Travels and Studies*, vol. 2 (1901), Fig. 155, "Monastery of Surb Karapet from the South" (PDF page 242): the walls, the round tower, the two cones, the slope |
 | `lynch-1901-church-south-west.jpg` | the same book, "Church of Surb Karapet from South-West" (PDF page 243): the belfry over the porch, the hall, the graves |
 | `lynch-1901-fig158-two-chapels.jpg` | the same book, Fig. 158, "The Two Chapels at Surb Karapet" (PDF page 251): the banded drums, the cones, the cross roofs |
+| `before-1915-church-south-west.jpg` | a photograph before 1915 (photographer not named), the church from high in the south-west: the two stages of the belfry, the checkered base, the earth roof, the slender drums; from Nune Movsisyan's blog (below) |
+| `before-1915-church-three-views.jpg` | three photographs before 1915 put together on the same blog page: the church from the south-west and twice from the west (the belfry and the cones) |
 | `plan-hewsen-2001-commons.png` | the plan, drawn by Yerevantsi after R. Hewsen, *Armenia: A Historical Atlas* (2001), p. 206; Wikimedia Commons, `File:Surb_Karapet_Monastery_plan.png`, CC BY-SA 4.0 |
 
 Lynch's book (public domain) is the scan on the
@@ -161,9 +163,21 @@ polygonal towers and conical roofs", the flat roof of
 the church, the terrace and cemetery outside the walls,
 the height (about 6400 feet).
 
+The two photographs above come from the page «Մշո Ս.
+Կարապետ» (2013) of Nune Movsisyan's blog,
+<https://movsisyannune.com/2013/08/13/%D5%B4%D5%B7%D5%B8-%D5%BD-%D5%AF%D5%A1%D6%80%D5%A1%D5%BA%D5%A5%D5%BF-%D5%BE%D5%A1%D5%B6%D6%84%D5%A8/>
+(copied on 2026-11-25; its text is not copied). Its
+text, from the book «Տարոնի պատմական հուշարձանները»,
+adds: the belfry domed on eight columns, with four
+bells; the martyrium 10 by 6 m and 15 m high; the
+cells of two floors on the north and the west; the
+cross-yard (Խաչբակ) behind the church, the graves of
+the abbots; the Harutyun chapel in the south-west
+court, walled with stone.
+
 Measured from the plan at about 0.085 m a pixel: the
 hall 23 by 28 m (16 columns), the chapels 20 m deep.
 Not in any source, estimated from the photographs: the
 heights, the size of the enclosure (about 104 by 84 m),
-the buildings on the north and the round towers at the
-corners.
+the round towers at the corners, where in the court
+the Harutyun chapel stood.

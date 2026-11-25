@@ -14,7 +14,15 @@
 //   the monastery from the south (the walls, the
 //   round tower, the slope), the church from the
 //   south-west (the belfry, the porch, the graves)
-//   and the two chapels (banded drums, cones).
+//   and the two chapels (banded drums, cones);
+// - the photographs before 1915 on the page "Մշո Ս.
+//   Կարապետ" of Nune Movsisyan's blog (2013), with
+//   its text from «Տարոնի պատմական հուշարձանները»:
+//   the church from the south-west and from the
+//   west (the belfry's two stages, the checkered
+//   base, the earth roof, the slender drums), the
+//   cells on the north and west, the cross-yard
+//   behind the church, the Harutyun chapel.
 // Sizes the sources do not give (heights, the
 // enclosure) are estimated from the photographs.
 // Copies: sources/glakavank/ (see its README).
@@ -32,24 +40,33 @@ export function build(k) {
 
   // the hall: 16 columns inside, a flat roof
   add(box(23.4, 10, 28.5, "stone", -0.2, 0, 0.25));
+  // its roof of earth, and the band of light and
+  // dark stone at the foot of its walls
+  add(box(23.2, 0.25, 28.3, "earth", -0.2, 10, 0.25),
+    box(23.6, 1.6, 28.7, "band", -0.2, 0, 0.25));
   // its parapet
   add(box(23.8, 0.7, 0.5, "stone", -0.2, 10, -14.2),
     box(23.8, 0.7, 0.5, "stone", -0.2, 10, 14.7),
     box(0.5, 0.7, 28.5, "stone", -12.1, 10, 0.25));
   // windows on the south and north
+  // (small: two rows, as in the photographs)
   for (const x of [-8, -2.5, 3, 8.5]) {
-    add(hole(1, 2.2, x, 5, 14.53),
-      hole(1, 2.2, x, 5, -14.03));
+    for (const y of [3.2, 6.8]) {
+      add(hole(0.6, 1, x + (y > 5 ? 1.2 : 0), y,
+        14.53),
+      hole(0.6, 1, x, y, -14.03));
+    }
   }
   // and on the west, beside the porch
   for (const z of [-10, -7, 7, 10]) {
-    add(hole(1, 2.2, -11.93, 5, z, PI / 2));
+    add(hole(0.6, 1, -11.93, 6.8, z, PI / 2));
   }
 
   // the chapels on the east, north to south
   const chapels = [
     // north (Astvatsatsin on the plan)
-    { z0: -25.5, z1: -14.5, x1: 31, h: 9 },
+    { z0: -25.5, z1: -14.5, x1: 31, h: 9,
+      house: true },
     // Stepanos, with a drum
     { z0: -14.5, z1: 2.1, x1: 32.3, h: 10,
       drum: [23, -6.4] },
@@ -72,6 +89,12 @@ export function build(k) {
     if (!c.drum) {
       // a low roof of two slopes
       add(gable(w, 1.6, d, "roof", cx, c.h, cz));
+      if (c.house) {
+        // the small house with a gable on the roof
+        add(box(7, 3, 5, "stone", cx - 4, c.h, cz),
+          gable(7.4, 1.6, 5.4, "roof", cx - 4,
+            c.h + 3, cz));
+      }
       continue;
     }
     const [dx, dz] = c.drum;
@@ -80,13 +103,13 @@ export function build(k) {
       gable(9.4, 2.4, 9.6, "roof", dx, c.h, dz,
         PI / 2));
     // the drum: twelve sides, light and dark stone
-    add(cyl(2.8, 5.6, 12, "band", dx, c.h + 1, dz),
-      cyl(3.05, 0.4, 12, "ashlar", dx, c.h + 1, dz),
-      cyl(3.05, 0.45, 12, "ashlar", dx, c.h + 6.4,
+    add(cyl(2.7, 6.4, 16, "band", dx, c.h + 1, dz),
+      cyl(2.95, 0.4, 16, "ashlar", dx, c.h + 1, dz),
+      cyl(2.95, 0.45, 16, "ashlar", dx, c.h + 7.2,
         dz));
     if (c.band) {
       // the band of blind arches round the drum
-      add(cyl(2.9, 1.7, 12, "ashlar", dx, c.h + 4.1,
+      add(cyl(2.8, 2.2, 16, "ashlar", dx, c.h + 4.6,
         dz));
     }
     for (let i = 0; i < 4; i++) {
@@ -96,22 +119,24 @@ export function build(k) {
         PI / 2 - a));
     }
     // the cone of stone slabs, and its cross
-    add(cone(3.25, 7.6, 12, "roof", dx, c.h + 6.85,
+    add(cone(3.1, 5.2, 16, "roof", dx, c.h + 7.65,
       dz));
     add(box(0.14, 1.1, 0.14, "bronze", dx,
-      c.h + 14.4, dz),
-    box(0.6, 0.12, 0.12, "bronze", dx, c.h + 15.1,
+      c.h + 12.8, dz),
+    box(0.6, 0.12, 0.12, "bronze", dx, c.h + 13.5,
       dz));
   }
 
   // -- the porch (gavit) and the belfry, on the west --
 
   const gx = -16.85;
-  add(box(9.9, 10.4, 9.4, "ashlar", gx, 0, 0));
+  add(box(9.9, 10.4, 9.4, "ashlar", gx, 0, 0),
+    box(10.2, 1.6, 9.7, "band", gx, 0, 0));
   // the west front: the door, white marble slabs
   // with reliefs, four windows above
   const fx = gx - 4.95;
-  add(box(0.3, 4.4, 3.2, "ashlar", fx - 0.12, 0, 0),
+  add(box(0.3, 6.2, 3.4, "ashlar", fx - 0.12, 0, 0),
+    gable(0.3, 1.4, 3.4, "ashlar", fx - 0.12, 6.2, 0),
     hole(2.2, 3.4, fx - 0.3, 0, 0, PI / 2));
   for (const [z, y, w, h] of [[-3.2, 1.2, 1.4, 2.4],
     [3.2, 1.2, 1.4, 2.4], [0, 4.7, 3.4, 1.2],
@@ -119,7 +144,7 @@ export function build(k) {
     add(box(0.1, h, w, "marble", fx - 0.05, y, z));
   }
   for (const z of [-3.3, -1.1, 1.1, 3.3]) {
-    add(hole(0.8, 1.5, fx - 0.03, 7, z, PI / 2));
+    add(hole(0.6, 1.1, fx - 0.03, 7.6, z, PI / 2));
   }
   // the cornice of the porch
   add(box(10.5, 0.5, 10, "ashlar", gx, 10.4, 0));
@@ -144,6 +169,16 @@ export function build(k) {
     gable(0.8, 1.6, s, "ashlar", gx + g, gy, 0),
     gable(0.8, 1.6, s, "ashlar", gx, gy, -g, PI / 2),
     gable(0.8, 1.6, s, "ashlar", gx, gy, g, PI / 2));
+  // clustered columns at the corners, and a small
+  // spire on each
+  for (const [cx2, cz2] of [[-1, -1], [1, -1],
+    [1, 1], [-1, 1]]) {
+    const x = gx + cx2 * (s / 2 - 0.1);
+    const z = cz2 * (s / 2 - 0.1);
+    add(cyl(0.32, sh, 8, "marble", x, by, z),
+      cone(0.38, 1.6, 8, "ashlar", x, by + sh + 0.6,
+        z));
+  }
   // the great bell
   add(cyl(1.05, 1.5, 16, "bronze", gx, by + 2.6, 0,
     0.45));
@@ -151,19 +186,19 @@ export function build(k) {
   // second stage: eight columns round a bell, a
   // roof of eight sides, a cross
   const uy = gy;
-  add(cyl(2.4, 0.7, 8, "ashlar", gx, uy, 0));
+  add(cyl(2.9, 0.7, 8, "ashlar", gx, uy, 0));
   for (let i = 0; i < 8; i++) {
     const a = i * PI / 4 + PI / 8;
-    add(cyl(0.22, 4.2, 8, "marble",
-      gx + 1.95 * Math.cos(a), uy + 0.7,
-      1.95 * Math.sin(a)));
+    add(cyl(0.24, 4.6, 8, "marble",
+      gx + 2.45 * Math.cos(a), uy + 0.7,
+      2.45 * Math.sin(a)));
   }
-  add(cyl(0.55, 0.8, 12, "bronze", gx, uy + 1.9, 0,
-    0.25));
-  add(cyl(2.55, 0.6, 8, "ashlar", gx, uy + 4.9, 0));
-  add(cone(2.8, 4.4, 8, "roof", gx, uy + 5.5, 0));
-  add(box(0.16, 1.4, 0.16, "bronze", gx, uy + 9.8, 0),
-    box(0.8, 0.14, 0.14, "bronze", gx, uy + 10.6, 0));
+  add(cyl(0.6, 0.9, 12, "bronze", gx, uy + 2.2, 0,
+    0.28));
+  add(cyl(3, 0.7, 8, "ashlar", gx, uy + 5.3, 0));
+  add(cone(3.2, 5.4, 8, "roof", gx, uy + 6, 0));
+  add(box(0.16, 1.4, 0.16, "bronze", gx, uy + 11.4, 0),
+    box(0.8, 0.14, 0.14, "bronze", gx, uy + 12.2, 0));
 
   // the graves before the porch: stelae in two rows
   const r = k.rnd(41);
@@ -233,6 +268,39 @@ export function build(k) {
     scx, 0, -31),
   arcade(sw, 4, 0.6, 24, 2.4, 2.8, "ashlar",
     scx, 4, -31, 0, 0.6));
+  // the cells on the west, two floors, a gallery
+  // on the court (the gate between them)
+  add(box(7, 9, 30, "rubble", W + 4.4, 0, -22),
+    box(3, 0.5, 30, "ashlar", W + 9.4, 4.5, -22),
+    box(3.4, 0.6, 30, "ashlar", W + 9.4, 9, -22));
+  add(arcade(30, 4.5, 0.6, 9, 2.4, 3.4, "ashlar",
+    W + 10.6, 0, -22, PI / 2),
+  arcade(30, 4.5, 0.6, 9, 2.2, 3, "ashlar",
+    W + 10.6, 4.5, -22, PI / 2, 0.6));
+  // the Harutyun chapel in the south-west court,
+  // in a yard of its own walled with stone
+  const hx = -40;
+  const hz = 22;
+  add(box(5, 4.5, 6.5, "stone", hx, 0, hz),
+    gable(5.4, 1.8, 7, "roof", hx, 4.5, hz, PI / 2),
+    box(12, 1.6, 0.6, "rubble", hx, 0, hz - 6),
+    box(12, 1.6, 0.6, "rubble", hx, 0, hz + 6),
+    box(0.6, 1.6, 12, "rubble", hx + 6, 0, hz),
+    box(0.6, 1.6, 4, "rubble", hx - 6, 0, hz - 4),
+    box(0.6, 1.6, 4, "rubble", hx - 6, 0, hz + 4));
+  // the cross-yard (Khachbak) behind the church:
+  // the graves of the abbots, cross-stones
+  const kq = k.rnd(53);
+  for (let i = 0; i < 16; i++) {
+    const z = -30 + i * 3.4 + kq();
+    const x = 34.5 + (i % 3) * 2;
+    if (i % 4 === 0) {
+      add(box(0.3, 2.2, 1.2, "ashlar", x, 0, z),
+        box(0.4, 0.3, 1.4, "ashlar", x, 2.2, z));
+    } else {
+      add(box(1, 0.35, 2, "marble", x, 0, z));
+    }
+  }
   // the new buildings on the west, by Bishop
   // Mampre: for a printing press and a library
   add(box(12, 12, 20, "ashlar", W + 7, 0, 22));
@@ -269,11 +337,11 @@ export function build(k) {
       turn: -0.82 },
     limits: { dist: [12, 340], far: 170 },
     labels: [
-      { id: "belfry", at: [gx, 31.5, 0] },
+      { id: "belfry", at: [gx, 33.2, 0] },
       { id: "gavit", at: [fx - 0.5, 8.5, 0] },
       { id: "church", at: [-2, 10.8, 0] },
-      { id: "stepanos", at: [23, 26, -6.4] },
-      { id: "karapet", at: [23, 26, 7] },
+      { id: "stepanos", at: [23, 24.4, -6.4] },
+      { id: "karapet", at: [23, 24.4, 7] },
       { id: "north", at: [21, 10.2, -20] },
       { id: "gevorg", at: [18, 10.2, 17] },
       { id: "gate", at: [W - 1, 10.5, 0] },
@@ -281,6 +349,9 @@ export function build(k) {
       { id: "cells", at: [-10, 10.5, 39] },
       { id: "tower", at: [-22, 13.5, S + 1] },
       { id: "cemetery", at: [-73, 1.5, 59] },
+      { id: "harutyun", at: [-40, 7, 22] },
+      { id: "khachbak", at: [37, 3, -8] },
+      { id: "westcells", at: [W + 6, 10, -22] },
     ],
   };
 }
