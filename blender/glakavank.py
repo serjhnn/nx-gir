@@ -91,6 +91,7 @@ def materials():
     L.material("earth", "aerial_grass_rock", 9.0, None, res)
     L.plain("hole", (0.015, 0.013, 0.012), 1.0)
     L.plain("wood", (0.22, 0.13, 0.07), 0.7)
+    L.plain("clay", (0.34, 0.2, 0.12), 0.85)
     L.plain("iron", (0.05, 0.05, 0.05), 0.5, 0.6)
     L.plain("bronze", (0.45, 0.32, 0.13), 0.35, 1.0)
     L.plain("leaf", (0.1, 0.12, 0.04), 0.9)
@@ -119,6 +120,65 @@ def n_of(rz):
     return Vector((math.sin(rz), math.cos(rz), 0))
 
 
+def outline(w, h, shape):
+    """An opening: shape "rect", True (pointed) or
+    False (round)."""
+    if shape == "rect":
+        return [
+            (-w / 2, 0),
+            (w / 2, 0),
+            (w / 2, h),
+            (-w / 2, h),
+        ]
+    return L.arch(w, h, shape)
+
+
+def grille(x, y, z, rz, w, h, deep=0.2):
+    """Iron bars across a window, set in from the
+    face."""
+    n = n_of(rz)
+    t = Vector((n.y, -n.x, 0))
+    c = Vector((x, y, z)) - n * deep
+    k = max(2, round(w / 0.14))
+    for i in range(1, k):
+        p = c + t * (-w / 2 + w * i / k)
+        rod("bar", p, p + Vector((0, 0, h)), 0.015, "iron")
+    for j in (0.33, 0.66):
+        a = c - t * w / 2 + Vector((0, 0, h * j))
+        rod("bar", a, a + t * w, 0.015, "iron")
+
+
+def plaque(x, y, z, rz, w=0.6, h=0.8):
+    """A carved slab set in a wall, a cross in
+    relief on it, as over the hall's windows."""
+    n = n_of(rz)
+    p = Vector((x, y, z)) + n * 0.04
+    L.box("plaque", w, 0.08, h, "porch", p.x, p.y, z, -rz)
+    f = Vector((x, y, z)) + n * 0.09
+    a, b = 0.05, 0.22 * min(w, h) / 0.6
+    pts = [
+        (-a, 0.1),
+        (a, 0.1),
+        (a, h / 2 - a),
+        (b, h / 2 - a),
+        (b, h / 2 + a),
+        (a, h / 2 + a),
+        (a, h - 0.12),
+        (-a, h - 0.12),
+        (-a, h / 2 + a),
+        (-b, h / 2 + a),
+        (-b, h / 2 - a),
+        (-a, h / 2 - a),
+    ]
+    L.prism(
+        "plaque-cross",
+        pts,
+        0.04,
+        "porch",
+        L.face(f.x, f.y, z, rz),
+    )
+
+
 def window(
     holes,
     x,
@@ -135,7 +195,7 @@ def window(
     x, y that looks to rz: cut deep into the wall, a
     dark back, a frame of dressed stone, a sill."""
     n = n_of(rz)
-    pts = L.arch(w, h, pointed)
+    pts = outline(w, h, pointed)
     holes.add(pts, deep * 2, L.face(x, y, z, rz))
     b = Vector((x, y, z)) - n * (deep - 0.02)
     L.box("win-back", w, 0.02, h, "hole", b.x, b.y, z, -rz)
@@ -143,7 +203,7 @@ def window(
         f = Vector((x, y, z - 0.12)) + n * 0.06
         fr = L.prism(
             "frame",
-            L.arch(w + 0.38, h + 0.3, pointed),
+            outline(w + 0.38, h + 0.3, pointed),
             0.12,
             frame,
             L.face(f.x, f.y, f.z, rz),
@@ -217,9 +277,9 @@ def rod(name, a, b, r, mat, sides=4):
     return L.obj(name, bm, mat)
 
 
-def spire(name, x, y, z, r, h, n, cross=True):
+def spire(name, x, y, z, r, h, n, cross=True, ribs=True):
     """A cone of n sides of stone slabs, a rib on each
-    edge, a ball and a cross."""
+    edge (unless not ribs), a ball and a cross."""
     L.lathe(
         name,
         [(r + 0.15, -0.2), (r + 0.15, 0), (r, 0), (0, h)],
@@ -229,7 +289,7 @@ def spire(name, x, y, z, r, h, n, cross=True):
         y,
         z,
     )
-    for i in range(n):
+    for i in range(n if ribs else 0):
         a = 2 * PI * i / n
         rod(
             name + "-rib",
@@ -561,7 +621,98 @@ def ground():
 # -- the church --
 
 
+def band(a, b, z, h, mat, out=0.04, gaps=()):
+    """A course of stone h high at z along a wall from
+    a to b (x, y), standing out by out; gaps
+    [(t0, t1), ...] (0 to 1 along it) left out."""
+    a, b = Vector(a), Vector(b)
+    d = b - a
+    t = d.normalized()
+    n = Vector((-t.y, t.x))
+    rz = math.atan2(n.x, n.y)
+    spans, t0 = [], 0.0
+    for g0, g1 in sorted(gaps):
+        spans.append((t0, g0))
+        t0 = g1
+    spans.append((t0, 1.0))
+    for u0, u1 in spans:
+        if u1 - u0 < 0.01:
+            continue
+        c = a + d * ((u0 + u1) / 2) + n * (out / 2)
+        L.box(
+            "course",
+            d.length * (u1 - u0),
+            0.1 + out,
+            h,
+            mat,
+            c.x,
+            c.y,
+            z,
+            -rz,
+        )
+
+
+def diamonds(a, b, z, h):
+    """The band of light lozenges on dark stone at the
+    foot of the hall's west front."""
+    a, b = Vector(a), Vector(b)
+    d = b - a
+    t = d.normalized()
+    n = Vector((-t.y, t.x))
+    rz = math.atan2(n.x, n.y)
+    band(a, b, z, h, "basalt", 0.08)
+    k = max(1, round(d.length / (h * 0.9)))
+    step = d.length / k
+    q = h * 0.42
+    items = []
+    for i in range(k):
+        c = a + t * (step * (i + 0.5)) + n * 0.15
+        items.append(
+            (
+                [(0, -q), (q, 0), (0, q), (-q, 0)],
+                0.06,
+                L.face(c.x, c.y, z + h / 2, rz),
+            )
+        )
+    L.prisms("lozenges", items, "porch")
+
+
+def mottle(a, b, z0, z1, k, seed):
+    """Dark stones scattered in a wall from a to b,
+    between z0 and z1, as on the hall."""
+    import random
+
+    r = random.Random(seed)
+    a, b = Vector(a), Vector(b)
+    d = b - a
+    t = d.normalized()
+    n = Vector((-t.y, t.x))
+    rz = math.atan2(n.x, n.y)
+    for _ in range(k):
+        c = a + d * r.uniform(0.03, 0.97) + n * 0.015
+        L.box(
+            "dark-stone",
+            r.choice((0.8, 1.1, 1.4, 1.7)),
+            0.04,
+            0.45,
+            "basalt",
+            c.x,
+            c.y,
+            z0 + 0.5 * r.randrange(int((z1 - z0) / 0.5)),
+            -rz,
+        )
+
+
 def church():
+    """The hall, after the photographs from the
+    south-west: few windows, set as they came (small
+    rectangles with iron bars, two in framed panels
+    with a carved slab over them, a tall narrow
+    arched one to the east), three thin courses of
+    dark stone (one broken), dark stones scattered,
+    lozenges at the foot of the west front, a plain
+    step at the foot of the others, a thin slab for a
+    cornice, the earth roof with no parapet."""
     hw, hd, hh = 23.4, 28.5, 10.0
     hx, hy = -0.2, -0.25
     hall = L.box("hall", hw, hd, hh, "ashlar", hx, hy)
@@ -570,43 +721,118 @@ def church():
     south = hy - hd / 2
     north = hy + hd / 2
     west = hx - hw / 2
-    for x in (-8.5, -3, 2.5, 8):
-        frames.append(
-            window(holes, x, south, 3.2, PI, 0.55, 0.95)
-        )
+    east = hx + hw / 2
+    grilles = []
+    # south: (x, sill, w, h, shape, framed panel)
+    for x, z, w, h, shape, panel in (
+        (-9.0, 7.0, 0.45, 0.6, "rect", False),
+        (-5.5, 3.4, 0.55, 0.85, "rect", True),
+        (1.5, 4.0, 0.55, 0.85, "rect", True),
+        (6.0, 6.4, 0.45, 0.6, "rect", False),
+        (9.6, 6.2, 0.32, 1.5, False, False),
+    ):
         frames.append(
             window(
-                holes, x + 1.4, south, 7.1, PI, 0.55, 0.95
+                holes,
+                x,
+                south,
+                z,
+                PI,
+                w,
+                h,
+                shape,
+                0.45,
+                "porch" if panel else None,
             )
         )
+        grilles.append((x, south, z, PI, w, h))
+        if panel:
+            plaque(x, south, z + h + 0.5, PI)
+    # west, either side of the porch: (y, sill, ...)
+    for y, z, w, h, shape, panel in (
+        (-6.8, 6.6, 0.45, 0.6, "rect", False),
+        (-10.6, 6.0, 0.45, 0.6, "rect", False),
+        (-9.6, 2.6, 0.6, 0.95, "rect", True),
+        (-13.2, 2.2, 0.45, 1.0, False, False),
+        (6.8, 6.6, 0.45, 0.6, "rect", False),
+        (10.6, 3.0, 0.6, 0.95, "rect", True),
+    ):
         frames.append(
-            window(holes, x, north, 7.1, 0, 0.55, 0.95)
+            window(
+                holes,
+                west,
+                y,
+                z,
+                -PI / 2,
+                w,
+                h,
+                shape,
+                0.45,
+                "porch" if panel else None,
+            )
         )
-    for y in (-10, -7, 7, 10):
-        frames.append(
-            window(holes, west, y, 7.1, -PI / 2, 0.55, 0.95)
+        grilles.append((west, y, z, -PI / 2, w, h))
+    # north
+    for x, z in ((-7.5, 6.8), (-1.0, 4.2), (6.5, 6.8)):
+        window(
+            holes,
+            x,
+            north,
+            z,
+            0,
+            0.45,
+            0.6,
+            "rect",
+            0.45,
+            None,
         )
-    holes.cut(hall, *frames)
-    out = L.rect(hx, hy, hw, hd)
-    checker(out, 0.0)
-    # a string course, the cornice, the parapet and
-    # the earth roof
+        grilles.append((x, north, z, 0, 0.45, 0.6))
+    holes.cut(hall, *[f for f in frames if f])
+    for g in grilles:
+        grille(*g)
+    # the foot: lozenges on the west, a step elsewhere
+    sw, se = (west, south), (east, south)
+    nw, ne = (west, north), (east, north)
+    diamonds(sw, (west, -4.7), 0.0, 1.5)
+    diamonds((west, 4.7), nw, 0.0, 1.5)
+    band(se, sw, 0.0, 1.0, "ashlar", 0.14)
+    band(nw, ne, 0.0, 1.0, "ashlar", 0.14)
     L.mould(
-        "hall-course",
-        out,
-        [(0.0, 5.55), (0.1, 5.6), (0.1, 5.75), (0.0, 5.8)],
-        "porch",
+        "hall-step",
+        [
+            (east - 0.2, south),
+            (east, south),
+            (east, north),
+            (east - 0.2, north),
+        ],
+        [(0.0, 0.0), (0.14, 0.0), (0.14, 1.0), (0.0, 1.0)],
+        "ashlar",
     )
+    # three thin courses of dark stone, one broken
+    for z, gs, gw in (
+        (2.6, (), ()),
+        (5.1, ((0.55, 0.72),), ((0.1, 0.25),)),
+        (7.9, (), ()),
+    ):
+        band(se, sw, z, 0.2, "basalt", 0.03, gs)
+        band(sw, (west, -4.7), z, 0.2, "basalt", 0.03, gw)
+        band((west, 4.7), nw, z, 0.2, "basalt", 0.03)
+        band(nw, ne, z, 0.2, "basalt", 0.03)
+    mottle(se, sw, 1.4, 8.8, 40, 5)
+    mottle(sw, (west, -4.7), 1.6, 8.8, 14, 6)
+    mottle((west, 4.7), nw, 1.6, 8.8, 14, 7)
+    mottle(nw, ne, 1.4, 8.8, 35, 8)
+    # the cornice: a thin slab standing out
+    out = L.rect(hx, hy, hw, hd)
     L.mould(
         "hall-cornice",
         out,
         [
-            (0.0, 9.3),
-            (0.08, 9.35),
-            (0.12, 9.5),
-            (0.3, 9.65),
-            (0.4, 9.85),
-            (0.4, 10.0),
+            (0.0, 9.55),
+            (0.3, 9.62),
+            (0.32, 9.72),
+            (0.32, 9.9),
+            (0.22, 10.0),
         ],
         "porch",
     )
@@ -620,20 +846,119 @@ def church():
         hy,
         hh,
     )
-    for x, y, w, d in (
-        (hx, south - 0.1, hw + 0.6, 0.45),
-        (hx, north + 0.1, hw + 0.6, 0.45),
-        (west - 0.1, hy, 0.45, hd),
-    ):
-        L.box("parapet", w, d, 0.6, "ashlar", x, y, hh)
     L.bevel(hall, 0.03)
+    # the big clay jars lying along the south wall
+    for i in range(10):
+        x = -1.5 + i * 1.2
+        jar(x, south - 1.0, 0.0)
+
+
+def jar(x, y, z):
+    """A big clay jar (karas) lying on its side, its
+    mouth to the south."""
+    o = L.lathe(
+        "jar",
+        [
+            (0.12, 0),
+            (0.3, 0.1),
+            (0.42, 0.45),
+            (0.44, 0.8),
+            (0.34, 1.25),
+            (0.22, 1.42),
+            (0.24, 1.5),
+            (0.0, 1.5),
+        ],
+        14,
+        "clay",
+        0,
+        0,
+        0,
+    )
+    m = Matrix.Translation(
+        (x, y + 0.75, z + 0.42)
+    ) @ Matrix.Rotation(PI / 2, 4, "X")
+    o.data.transform(m)
+
+
+def arm(x, y, z, length, span, rise, rz, wall=1.6):
+    """An arm of the cross round a drum: low walls
+    standing on the flat roof, a gable wall of stone
+    at the end with a small window, a roof of slabs
+    overhanging it."""
+    place = L.face(x, y, z, rz)
+    # the walls and the gable, one solid of stone
+    w = span / 2
+    L.prism(
+        "arm",
+        [
+            (-w, 0),
+            (w, 0),
+            (w, wall),
+            (0, wall + rise),
+            (-w, wall),
+        ],
+        length,
+        "porch",
+        place,
+    )
+    # the roof slabs, overhanging
+    o, t = w + 0.35, 0.22
+    k = rise / w
+    L.prism(
+        "arm-roof",
+        [
+            (-o, wall - 0.35 * k),
+            (0, wall + rise),
+            (o, wall - 0.35 * k),
+            (o, wall - 0.35 * k + t),
+            (0, wall + rise + t),
+            (-o, wall - 0.35 * k + t),
+        ],
+        length + 0.5,
+        "slate",
+        place,
+    )
+    # a small window in each end
+    n = n_of(rz)
+    for sg in (-1, 1):
+        c = Vector((x, y, 0)) + n * sg * (length / 2 + 0.02)
+        L.box(
+            "arm-win",
+            0.06 if rz % PI else 0.5,
+            0.5 if rz % PI else 0.06,
+            0.75,
+            "hole",
+            c.x,
+            c.y,
+            z + wall - 0.05,
+        )
+        f = Vector((x, y, 0)) + n * sg * (length / 2 + 0.01)
+        L.box(
+            "arm-frame",
+            0.05 if rz % PI else 0.8,
+            0.8 if rz % PI else 0.05,
+            1.05,
+            "marble",
+            f.x,
+            f.y,
+            z + wall - 0.2,
+        )
 
 
 def chapels():
+    """The four chapels on the east. Stepanos and
+    Karapet carry the drums, each on a cross of low
+    gabled arms (stone gables with a small window,
+    Lynch Fig. 158 and the photograph from the
+    west); Gevorg, standing out to the south, has a
+    flat earth roof at the height of the hall and
+    tall round-arched windows with bars (Fig. 158).
+    The north chapel's roof is not in a photograph:
+    a gable, as before. On the hall's roof, by the
+    belfry, a small flat-roofed hut with a door."""
     specs = [
-        # north (Astvatsatsin on the plan), a small
-        # house with a gable on its roof
-        dict(y0=14.5, y1=25.5, x1=31, h=9, house=True),
+        # north (Astvatsatsin on the plan)
+        dict(y0=14.5, y1=25.5, x1=31, h=9),
         # Stepanos, with a drum
         dict(
             y0=-2.1, y1=14.5, x1=32.3, h=10, drum=(23, 6.4)
@@ -647,8 +972,8 @@ def chapels():
             drum=(23, -7.0),
             band=True,
         ),
-        # Gevorg
-        dict(y0=-21.7, y1=-11.9, x1=25.2, h=9),
+        # Gevorg, a flat roof
+        dict(y0=-21.7, y1=-11.9, x1=25.2, h=10, flat=True),
     ]
     for c in specs:
         x0 = 11.3
@@ -659,31 +984,105 @@ def chapels():
         h = c["h"]
         body = L.box("chapel", w, d, h, "ashlar", cx, cy)
         holes = Holes("chapel")
-        fr = window(
-            holes,
-            c["x1"],
-            cy,
-            h - 4,
-            PI / 2,
-            0.4,
-            1.3,
-            True,
-        )
-        holes.cut(body, fr)
+        frames = [
+            window(
+                holes,
+                c["x1"],
+                cy,
+                h - 4,
+                PI / 2,
+                0.4,
+                1.3,
+                True,
+            )
+        ]
+        if c.get("flat"):
+            for x, z in ((14.0, 6.6), (21.0, 3.8)):
+                frames.append(
+                    window(
+                        holes,
+                        x,
+                        c["y0"],
+                        z,
+                        PI,
+                        0.5,
+                        1.2,
+                        False,
+                    )
+                )
+                grille(x, c["y0"], z, PI, 0.5, 0.95, 0.25)
+            frames.append(
+                window(
+                    holes,
+                    x0,
+                    -18.5,
+                    5.0,
+                    -PI / 2,
+                    0.4,
+                    1.1,
+                    False,
+                )
+            )
+            grille(x0, -18.5, 5.0, -PI / 2, 0.4, 0.85, 0.25)
+        holes.cut(body, *frames)
         out = L.rect(cx, cy, w, d)
-        checker(out, 0.0)
         L.mould(
-            "ch-cornice",
+            "ch-step",
             out,
             [
-                (0.0, h - 0.6),
-                (0.12, h - 0.45),
-                (0.35, h - 0.2),
-                (0.35, h),
+                (0.0, 0.0),
+                (0.14, 0.0),
+                (0.14, 1.0),
+                (0.0, 1.0),
             ],
-            "porch",
+            "ashlar",
         )
+        mottle(
+            (x0, c["y0"]),
+            (c["x1"], c["y0"]),
+            1.4,
+            h - 1.2,
+            int(w * 1.5),
+            int(cy * 10),
+        )
+        if c.get("flat"):
+            L.mould(
+                "ch-cornice",
+                out,
+                [
+                    (0.0, h - 0.45),
+                    (0.3, h - 0.38),
+                    (0.32, h - 0.28),
+                    (0.32, h - 0.1),
+                    (0.22, h),
+                ],
+                "porch",
+            )
+        else:
+            L.mould(
+                "ch-cornice",
+                out,
+                [
+                    (0.0, h - 0.6),
+                    (0.12, h - 0.45),
+                    (0.35, h - 0.2),
+                    (0.35, h),
+                ],
+                "porch",
+            )
         L.bevel(body, 0.03)
+        if c.get("flat"):
+            L.box(
+                "ch-roof",
+                w + 0.4,
+                d + 0.4,
+                0.3,
+                "earth",
+                cx,
+                cy,
+                h,
+            )
+            continue
         if "drum" not in c:
             L.gable(
                 "ch-roof",
@@ -696,166 +1095,334 @@ def chapels():
                 h,
                 PI / 2,
             )
-            if c.get("house"):
-                hb = L.box(
-                    "house",
-                    7,
-                    5,
-                    3,
-                    "ashlar",
-                    cx - 4,
-                    cy,
-                    h,
-                )
-                L.gable(
-                    "house-roof",
-                    7.6,
-                    5.8,
-                    1.7,
-                    "slate",
-                    cx - 4,
-                    cy,
-                    h + 3,
-                    PI / 2,
-                )
-                L.bevel(hb, 0.03)
             continue
         dx, dy = c["drum"]
         L.box("ch-roof", w, d, 0.3, "earth", cx, cy, h)
-        L.gable(
-            "ch-gable",
-            10,
-            9.8,
-            2.5,
-            "slate",
-            dx,
-            dy,
-            h,
-            PI / 2,
-        )
-        L.gable(
-            "ch-gable", 10, 9.8, 2.5, "slate", dx, dy, h, 0
-        )
+        arm(dx, dy, h, 10.0, 6.6, 1.9, PI / 2, 1.0)
+        arm(dx, dy, h, 9.6, 6.6, 1.9, 0, 1.0)
         drum(dx, dy, h + 1, c.get("band", False))
+    # right behind the belfry
+    hut(-8.0, -2.6, 10.3)
 
 
-def drum(dx, dy, b, band):
-    """A drum of sixteen sides in courses of light and
-    dark stone, a blind arcade round it, narrow
-    windows, a moulded cornice and a ribbed cone."""
-    r, n, hgt = 2.7, 16, 6.4
-    L.lathe(
-        "drum-plinth",
-        [(2.98, -0.55), (2.98, -0.1), (2.75, 0.0)],
-        n,
+def hut(x, y, z):
+    """The small flat-roofed hut on the hall's roof,
+    right behind the belfry:
+    a door and a window to the west, one to the
+    south, an earth roof on a thin slab."""
+    w, d, h = 5.0, 3.6, 2.6
+    L.box("hut", w, d, h, "porch", x, y, z)
+    L.box(
+        "hut-slab",
+        w + 0.4,
+        d + 0.4,
+        0.2,
         "porch",
-        dx,
-        dy,
-        b,
+        x,
+        y,
+        z + h,
     )
+    L.box(
+        "hut-earth",
+        w + 0.2,
+        d + 0.2,
+        0.2,
+        "earth",
+        x,
+        y,
+        z + h + 0.2,
+    )
+    fx = x - w / 2 - 0.03
+    L.box(
+        "hut-door", 0.06, 0.9, 1.8, "wood", fx, y - 0.6, z
+    )
+    L.box(
+        "hut-win",
+        0.06,
+        0.6,
+        0.6,
+        "hole",
+        fx,
+        y + 0.9,
+        z + 1.0,
+    )
+    L.box(
+        "hut-win",
+        0.6,
+        0.06,
+        0.6,
+        "hole",
+        x + 0.8,
+        y - d / 2 - 0.03,
+        z + 1.0,
+    )
+
+
+def patch_lathe(
+    name,
+    prof,
+    n,
+    mats,
+    dark,
+    seed,
+    x,
+    y,
+    z,
+    rows=None,
+    light=None,
+):
+    """A shape turned from prof (as L.lathe) in
+    stones of mats[0] and, by chance dark, mats[1]:
+    the irregular light and dark patchwork of the
+    drums. rows: rows of stones in each step of prof;
+    light(i, k) may name a cell to give mats[2]."""
+    import random
+
+    rnd = random.Random(seed)
     bm = bmesh.new()
-    rows = 14
-    ch = hgt / rows
-    for row in range(rows):
-        lo = []
-        hi = []
+    pts = []
+    for (r0, h0), (r1, h1) in zip(prof, prof[1:]):
+        k = rows or max(1, round(abs(h1 - h0) / 0.34))
+        for j in range(k):
+            t = j / k
+            pts.append(
+                (r0 + (r1 - r0) * t, h0 + (h1 - h0) * t)
+            )
+    pts.append(prof[-1])
+    rings = []
+    for r, h in pts:
+        ring = []
         for i in range(n):
             a = 2 * PI * i / n
-            p = (dx + r * math.sin(a), dy + r * math.cos(a))
-            lo.append(bm.verts.new((*p, b + row * ch)))
-            hi.append(
-                bm.verts.new((*p, b + (row + 1) * ch))
+            ring.append(
+                bm.verts.new(
+                    (
+                        x + r * math.sin(a),
+                        y + r * math.cos(a),
+                        z + h,
+                    )
+                )
             )
+        rings.append(ring)
+    for k, (lo, hi) in enumerate(zip(rings, rings[1:])):
         for i in range(n):
             j = (i + 1) % n
             f = bm.faces.new((lo[i], lo[j], hi[j], hi[i]))
-            f.material_index = (i + row) % 2
-    o = L.obj("drum", bm, "porch", "round")
-    o.data.materials.append(L.MATS["basalt"])
+            m = 1 if rnd.random() < dark else 0
+            if light and light(i, k, pts[k][1]):
+                m = 2
+            f.material_index = m
+    bm.faces.new(list(reversed(rings[0])))
+    if pts[-1][0] > 0:
+        bm.faces.new(rings[-1])
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-5)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    o = L.obj(name, bm, mats[0], "round")
+    for m in mats[1:]:
+        o.data.materials.append(L.MATS[m])
+    return o
+
+
+def iron_cross(x, y, z):
+    """A small knob and an iron cross on a cone."""
+    L.lathe(
+        "knob",
+        [(0.0, 0), (0.16, 0.1), (0.12, 0.3), (0.0, 0.4)],
+        8,
+        "slate",
+        x,
+        y,
+        z - 0.15,
+    )
+    L.box("cross", 0.06, 0.06, 0.9, "iron", x, y, z + 0.2)
+    L.box("cross", 0.4, 0.06, 0.06, "iron", x, y, z + 0.8)
+
+
+def drum(dx, dy, b, band):
+    """A drum as in Lynch's Fig. 158 and the photograph
+    before 1915 from the west. Stepanos (not band):
+    an irregular patchwork of light and dark stone, a
+    light ring, a dark band of small light squares, a
+    framed window, a straight cone in patchwork too.
+    Karapet (band): a blind arcade of eight tall
+    pointed arches low on the drum, light plastered
+    panels in them, a plain band and a frieze of
+    small dark squares above, a cone curved like a
+    bell. Both flare out at the foot."""
+    r, n, hgt = 2.7, 32, 6.4
+    seed = 7 if band else 3
+    # the foot, flaring out to the roofs
+    patch_lathe(
+        "drum-foot",
+        [(3.7, -1.3), (3.05, -0.2), (r, 0.3)],
+        n,
+        ["porch", "basalt"],
+        0.3,
+        seed + 1,
+        dx,
+        dy,
+        b,
+        rows=3,
+    )
+    z0a, ha, na = 0.55, 3.7, 8
+
+    def panel(i, k, h):
+        # inside an arch of the arcade?
+        if not band:
+            return False
+        if not (z0a + 0.1 < h < z0a + ha - 0.25):
+            return False
+        a = (i + 0.5) / n * na
+        u = (a - math.floor(a) - 0.5) * 2 * PI * r / na
+        w = PI * r / na - 0.35
+        if h - z0a > ha - w - 0.25:
+            # in the pointed head
+            t = (h - z0a - (ha - w - 0.25)) / (w + 0.25)
+            return abs(u) < w * (1 - t) ** 0.6
+        return abs(u) < w
+
+    o = patch_lathe(
+        "drum",
+        [(r, 0.3), (r, hgt)],
+        n,
+        ["porch", "basalt", "marble"],
+        0.22 if band else 0.45,
+        seed,
+        dx,
+        dy,
+        b,
+        light=panel,
+    )
     holes = Holes("drum")
-    rin = r * math.cos(PI / n)
-    for i in range(4):
-        f = i * PI / 2 + PI / n
-        x = dx + rin * math.sin(f)
-        y = dy + rin * math.cos(f)
-        window(
-            holes,
-            x,
-            y,
-            b + 1.2,
-            f,
-            0.3,
-            1.25,
-            True,
-            0.4,
-            None,
-        )
-    holes.cut(o)
-    # the blind arcade
-    z0 = b + (2.6 if band else 3.4)
-    hc = 2.6 if band else 2.0
-    half = r * math.sin(PI / n)
-    bm = bmesh.new()
-    for i in range(n):
-        a = 2 * PI * i / n
-        f = a + PI / n
-        cxy = Vector(
-            (
-                dx + (rin + 0.07) * math.sin(f),
-                dy + (rin + 0.07) * math.cos(f),
-                z0 + hc,
+    frames = []
+    if band:
+        for i in (1, 3, 5, 7):
+            f = (i + 0.5) * 2 * PI / na
+            window(
+                holes,
+                dx + r * math.sin(f),
+                dy + r * math.cos(f),
+                b + 1.5,
+                f,
+                0.22,
+                1.2,
+                True,
+                0.4,
+                None,
+            )
+    else:
+        # a framed window to the west, slits round it
+        f = -PI / 2 + PI / n
+        frames.append(
+            window(
+                holes,
+                dx + r * math.sin(f),
+                dy + r * math.cos(f),
+                b + 2.4,
+                f,
+                0.55,
+                0.8,
+                "rect",
+                0.4,
+                "marble",
             )
         )
-        u = Vector((math.cos(f), -math.sin(f), 0))
-        v = Vector((0, 0, 1))
-        w = u.cross(v)
-        R = half - 0.05
-        segs, sides, t = 10, 5, 0.075
-        rings = []
-        for k in range(segs + 1):
-            th = PI * k / segs
-            nrm = u * math.cos(th) + v * math.sin(th)
-            p = cxy + nrm * R
-            ring = []
-            for s in range(sides):
-                ph = 2 * PI * s / sides
-                ring.append(
-                    bm.verts.new(
-                        p
-                        + (
-                            nrm * math.cos(ph)
-                            + w * math.sin(ph)
-                        )
-                        * t
-                    )
-                )
-            rings.append(ring)
-        for lo, hi in zip(rings, rings[1:]):
-            for s in range(sides):
-                q = (s + 1) % sides
-                bm.faces.new((lo[s], lo[q], hi[q], hi[s]))
-    L.obj("arcade-arches", bm, "porch")
-    for i in range(n):
-        a = 2 * PI * i / n
-        L.cyl(
-            "arcade-col",
-            0.09,
-            hc,
-            8,
-            "porch",
-            dx + (r + 0.05) * math.sin(a),
-            dy + (r + 0.05) * math.cos(a),
-            z0,
-        )
+        for f in (PI / n, PI / 2 + PI / n, PI + PI / n):
+            window(
+                holes,
+                dx + r * math.sin(f),
+                dy + r * math.cos(f),
+                b + 2.0,
+                f,
+                0.18,
+                1.0,
+                False,
+                0.4,
+                None,
+            )
+    holes.cut(o, *[fr for fr in frames if fr])
     if band:
+        # the rolls of the arcade, following the drum
+        rr = r + 0.06
+        for j in range(na):
+            ac = (j + 0.5) * 2 * PI / na
+            w = PI * r / na - 0.2
+            pts = L.arch(2 * w, ha, True, 10)
+            path = [pts[1], *pts[2:], pts[0]]
+            L.tube(
+                "arcade-roll",
+                [
+                    (
+                        dx + rr * math.sin(ac + u / rr),
+                        dy + rr * math.cos(ac + u / rr),
+                        b + z0a + v,
+                    )
+                    for u, v in path
+                ],
+                0.08,
+                "porch",
+                8,
+            )
+        for j in range(na):
+            a = j * 2 * PI / na
+            L.cyl(
+                "arcade-col",
+                0.1,
+                ha - 0.9,
+                8,
+                "porch",
+                dx + (r + 0.08) * math.sin(a),
+                dy + (r + 0.08) * math.cos(a),
+                b + z0a,
+            )
+        # a plain band over the arcade
         L.lathe(
             "drum-band",
-            [(2.79, 0), (2.79, 0.18)],
+            [(r + 0.06, 0), (r + 0.06, 0.25)],
             n,
             "porch",
             dx,
             dy,
-            z0 - 0.18,
+            b + z0a + ha + 0.25,
+        )
+    else:
+        # the light ring
+        L.lathe(
+            "drum-ring",
+            [
+                (r + 0.05, 0),
+                (r + 0.12, 0.1),
+                (r + 0.05, 0.3),
+            ],
+            n,
+            "porch",
+            dx,
+            dy,
+            b + 4.3,
+        )
+    # the frieze of small squares under the cornice
+    fz = b + hgt - 1.0
+    L.lathe(
+        "frieze",
+        [(r + 0.02, 0), (r + 0.02, 0.8)],
+        n,
+        "porch" if band else "basalt",
+        dx,
+        dy,
+        fz,
+    )
+    for i in range(n):
+        a = (i + 0.5) * 2 * PI / n
+        L.box(
+            "frieze-sq",
+            0.26,
+            0.08,
+            0.26,
+            "basalt" if band else "porch",
+            dx + (r + 0.03) * math.sin(a),
+            dy + (r + 0.03) * math.cos(a),
+            fz + 0.27,
+            -a,
         )
     top = b + hgt
     L.lathe(
@@ -874,7 +1441,29 @@ def drum(dx, dy, b, band):
         dy,
         top,
     )
-    spire("drum-cone", dx, dy, top + 0.7, 3.15, 5.2, n)
+    # the cone: straight on Stepanos, curved like a
+    # bell on Karapet; its slabs light and dark
+    cr, chh = 3.2, 5.6
+    prof = [(cr + 0.1, -0.15), (cr + 0.1, 0.0)]
+    for k in range(9):
+        t = k / 8
+        rad = cr * (1 - t**1.3) if band else cr * (1 - t)
+        prof.append((max(rad, 0.0), chh * t))
+    patch_lathe(
+        "drum-cone",
+        prof,
+        n,
+        ["slate", "basalt"]
+        if band
+        else ["basalt", "porch"],
+        0.3 if band else 0.2,
+        seed + 2,
+        dx,
+        dy,
+        top + 0.7,
+        rows=2,
+    )
+    iron_cross(dx, dy, top + 0.7 + chh)
 
 
 # -- the porch and the belfry --
@@ -1003,119 +1592,292 @@ def porch():
             )
 
 
-def belfry(gx):
-    """First stage: a square of stone opened by a
-    pointed arch on each side, clustered columns, a
-    gable with a rosette over each arch, a spire on
-    each corner. Second: eight columns under pointed
-    arches round a bell, a ribbed roof, a cross."""
-    by, s, sh = 10.9, 7.6, 7.6
+def shaft(name, x, y, z, h, r, mat="porch"):
+    """A slender shaft with a base, two rings round
+    it and a capital, as on the belfry's piers."""
+    prof = [
+        (r * 1.6, 0),
+        (r * 1.6, 0.12),
+        (r, 0.25),
+    ]
+    for f in (0.36, 0.68):
+        z0 = h * f
+        prof += [
+            (r, z0 - 0.06),
+            (r * 1.45, z0),
+            (r * 1.45, z0 + 0.06),
+            (r, z0 + 0.12),
+        ]
+    prof += [
+        (r, h - 0.32),
+        (r * 1.3, h - 0.22),
+        (r * 1.8, h - 0.08),
+        (r * 1.8, h),
+    ]
+    L.lathe(name, prof, 10, mat, x, y, z)
+
+
+def arch_rolls(c, rz, z, orders, pointed=True):
+    """Roll mouldings round an arched opening at c
+    on a face that looks to rz: orders [(w, h,
+    out), ...], each an arch w by h standing out
+    from the face by out."""
+    place = L.face(c.x, c.y, z, rz)
+    for w, h, out in orders:
+        pts = L.arch(w, h, pointed, 16)
+        # the arch from one foot to the other, the
+        # sill left out
+        path = [pts[1], *pts[2:], pts[0]]
+        L.tube(
+            "roll",
+            L.on_face(path, place, out),
+            0.09,
+            "porch",
+            8,
+        )
+
+
+def octagon(x, y, s, c):
+    """A square s wide round x, y with its corners cut
+    off c along each side: four wide faces and four
+    narrow ones, counter-clockwise."""
+    h = s / 2
+    return [
+        (x - h + c, y - h),
+        (x + h - c, y - h),
+        (x + h, y - h + c),
+        (x + h, y + h - c),
+        (x + h - c, y + h),
+        (x - h + c, y + h),
+        (x - h, y + h - c),
+        (x - h, y - h + c),
+    ]
+
+
+def shrine(x, y, z, rz):
+    """The little gabled shrine standing at the foot
+    of each corner niche: a base, a body with a
+    small arched opening, a steep gable."""
+    n = n_of(rz)
+    L.box("tab-base", 0.9, 0.4, 0.3, "porch", x, y, z, -rz)
     L.box(
-        "bel-plinth",
-        s + 0.7,
-        s + 0.7,
-        0.5,
+        "tab-body",
+        0.75,
+        0.35,
+        1.2,
         "porch",
-        gx,
-        0,
-        by - 0.5,
+        x,
+        y,
+        z + 0.3,
+        -rz,
     )
-    block = L.box("belfry", s, s, sh, "porch", gx, 0, by)
+    f = Vector((x, y, z)) + n * 0.18
+    L.prism(
+        "tab-niche",
+        L.arch(0.3, 0.75, True),
+        0.03,
+        "hole",
+        L.face(f.x, f.y, z + 0.55, rz),
+    )
+    L.prism(
+        "tab-gable",
+        [(-0.48, 0), (0.48, 0), (0, 0.85)],
+        0.42,
+        "porch",
+        L.face(x, y, z + 1.5, rz),
+    )
+
+
+def belfry(gx):
+    """First stage, after the photographs before 1915:
+    an octagon in plan, four wide faces each opened
+    by a pointed arch with roll mouldings stepping
+    in, and four narrow corners cut off, each with a
+    tall gabled niche carved into it, a small shrine
+    at its foot and a shaft either side; a steep gable
+    over each arch with crockets and a finial, small
+    pinnacles over the corners. Second: eight columns
+    under cusped (five-lobed) arches, a high plain
+    frieze, a roof of plain slabs."""
+    by, s, sh = 10.9, 7.6, 7.6
+    c8 = 1.25
+    oct8 = octagon(gx, 0, s, c8)
+    L.mould(
+        "bel-plinth",
+        oct8,
+        [(0.35, -0.5), (0.35, 0.0)],
+        "porch",
+        by,
+    )
+    block = L.mould(
+        "belfry", oct8, [(0.0, 0.0), (0.0, sh)], "porch", by
+    )
     holes = Holes("belfry")
+    aw, ah = 3.5, 6.75
     for rz in (0, PI / 2):
         holes.add(
-            L.arch(4.2, 6.6, True),
+            L.arch(aw, ah, True),
             s + 2,
             L.face(gx, 0, by, rz),
         )
+    orders = ((4.1, 7.25, 0.22), (3.8, 7.0, 0.4))
+    for rz in (0, PI / 2, PI, -PI / 2):
+        n = n_of(rz)
+        c = Vector((gx, 0, 0)) + n * (s / 2)
+        for w, h, dp in orders:
+            holes.add(
+                L.arch(w, h, True),
+                dp * 2,
+                L.face(c.x, c.y, by, rz),
+            )
+    # the tall gabled niches in the cut-off corners
+    hd = (s / 2 - c8 / 2) * math.sqrt(2)
+    corners = []
+    for cx, cy in ((-1, -1), (1, -1), (1, 1), (-1, 1)):
+        rz = math.atan2(cx, cy)
+        n = n_of(rz)
+        cc = Vector((gx, 0, 0)) + n * hd
+        corners.append((cc, rz, n))
+        holes.add(
+            [
+                (-0.5, 0),
+                (0.5, 0),
+                (0.5, 5.3),
+                (0, 6.2),
+                (-0.5, 5.3),
+            ],
+            0.9,
+            L.face(cc.x, cc.y, by + 0.35, rz),
+        )
     holes.cut(block)
     L.bevel(block, 0.03)
+    for cc, rz, n in corners:
+        p = cc - n * 0.25
+        shrine(p.x, p.y, by + 0.35, rz)
+        t = Vector((n.y, -n.x, 0))
+        for sg in (-1, 1):
+            q = cc + t * sg * 0.7 + n * 0.06
+            shaft("bel-shaft", q.x, q.y, by, 6.4, 0.09)
+        # its gable mould, a roll round the niche
+        L.tube(
+            "roll",
+            L.on_face(
+                [(-0.62, 5.25), (0, 6.35), (0.62, 5.25)],
+                L.face(cc.x, cc.y, by + 0.35, rz),
+                0.05,
+            ),
+            0.08,
+            "porch",
+            8,
+        )
     for rz in (0, PI / 2, PI, -PI / 2):
         n = n_of(rz)
         t = Vector((n.y, -n.x, 0))
         c = Vector((gx, 0, 0)) + n * (s / 2)
+        arch_rolls(
+            c,
+            rz,
+            by,
+            [
+                (
+                    orders[0][0] + 0.1,
+                    orders[0][1] + 0.05,
+                    -0.2,
+                ),
+                (
+                    orders[1][0] + 0.1,
+                    orders[1][1] + 0.05,
+                    -0.38,
+                ),
+                (aw + 0.1, ah + 0.05, -0.55),
+            ],
+        )
+        # the hood over the arch
+        arch_rolls(c, rz, by, [(4.5, 7.5, 0.06)])
+        # the clustered shafts beside the arch
         for sg in (-1, 1):
-            for off in (2.35, 2.72):
-                p = c + t * sg * off + n * 0.14
-                column("bel-col", p.x, p.y, by, 5.8, 0.12)
-        # the gable and its rosette
+            for off in (2.28, 2.46):
+                p = c + t * sg * off + n * 0.1
+                shaft("bel-shaft", p.x, p.y, by, 5.0, 0.08)
+        # the gable, its crockets and its finial
         g = c - n * 0.25
+        top = by + sh + 0.25
+        gw = s / 2 - c8 + 0.25
         L.prism(
             "bel-gable",
-            [(-s / 2 + 0.2, 0), (s / 2 - 0.2, 0), (0, 2.8)],
+            [(-gw, 0), (gw, 0), (0, 3.4)],
             0.5,
             "porch",
-            L.face(g.x, g.y, by + sh + 0.45, rz),
+            L.face(g.x, g.y, top, rz),
         )
-        rp = c + n * 0.02
-        rosette(rp.x, rp.y, by + sh + 1.3, rz, 0.5)
-        # its raking cornice
+        apex = c + n * 0.05
         for sg in (-1, 1):
-            a = c + t * sg * (s / 2 + 0.1) + n * 0.05
-            rod(
-                "bel-rake",
-                (a.x, a.y, by + sh + 0.45),
-                (
-                    c.x + n.x * 0.05,
-                    c.y + n.y * 0.05,
-                    by + sh + 3.35,
-                ),
-                0.12,
-                "porch",
-            )
+            a = c + t * sg * gw + n * 0.05
+            a = Vector((a.x, a.y, top))
+            b = Vector((apex.x, apex.y, top + 3.45))
+            rod("bel-rake", a, b, 0.11, "porch")
+            for k in range(1, 6):
+                q = a + (b - a) * (k / 6.0)
+                L.box(
+                    "crocket",
+                    0.22,
+                    0.22,
+                    0.22,
+                    "porch",
+                    q.x,
+                    q.y,
+                    q.z + 0.08,
+                    -rz,
+                )
+        spire(
+            "bel-fin",
+            apex.x,
+            apex.y,
+            top + 3.4,
+            0.16,
+            0.75,
+            4,
+            False,
+            False,
+        )
     L.mould(
         "bel-cornice",
-        L.rect(gx, 0, s, s),
+        oct8,
         [
-            (0.0, sh - 0.1),
-            (0.15, sh + 0.05),
-            (0.35, sh + 0.25),
-            (0.35, sh + 0.45),
+            (0.0, sh - 0.05),
+            (0.12, sh + 0.05),
+            (0.2, sh + 0.15),
+            (0.2, sh + 0.25),
         ],
         "porch",
         by,
     )
-    for cx, cy in ((-1, -1), (1, -1), (1, 1), (-1, 1)):
-        x = gx + cx * (s / 2 - 0.15)
-        y = cy * (s / 2 - 0.15)
+    for cc, rz, n in corners:
+        # a small pinnacle over each corner
+        p = cc - n * 0.35
+        z = by + sh + 0.25
         L.box(
             "pinnacle",
-            0.8,
-            0.8,
-            1.7,
+            0.45,
+            0.45,
+            0.7,
             "porch",
-            x,
-            y,
-            by + sh + 0.45,
+            p.x,
+            p.y,
+            z,
+            -rz,
         )
         spire(
             "pin-spire",
-            x,
-            y,
-            by + sh + 2.15,
-            0.55,
-            2.0,
+            p.x,
+            p.y,
+            z + 0.7,
+            0.28,
+            1.0,
             4,
             False,
+            False,
         )
-    # the great bell
-    L.lathe(
-        "bell",
-        [
-            (0.0, 0),
-            (1.05, 0),
-            (1.0, 0.2),
-            (0.75, 0.6),
-            (0.55, 1.2),
-            (0.45, 1.5),
-            (0.0, 1.55),
-        ],
-        24,
-        "bronze",
-        gx,
-        0,
-        by + 2.6,
-    )
     # the second stage
     uy = by + sh + 0.5
     ur = 2.5
@@ -1134,7 +1896,7 @@ def belfry(gx):
         uy,
     )
     top = uy + 0.85
-    ch = 3.6
+    ch = 3.3
     for i in range(8):
         a = i * PI / 4
         column(
@@ -1144,57 +1906,64 @@ def belfry(gx):
             top,
             ch,
             0.18,
+            "porch",
         )
+    band = 2.3
+    z0 = top + ch - 0.9
     ring = L.lathe(
         "ring-arch",
-        [(2.85, 0), (2.85, 1.6)],
+        [(2.85, 0), (2.85, band)],
         8,
         "porch",
         gx,
         0,
-        top + ch - 0.9,
+        z0,
     )
     inner = L.lathe(
         "ring-in",
-        [(2.2, -1), (2.2, 3)],
+        [(2.2, -1), (2.2, band + 1)],
         8,
         "porch",
         gx,
         0,
-        top + ch - 0.9,
+        z0,
     )
     holes = Holes("ring")
     for i in range(8):
         f = i * PI / 4 + PI / 8
         holes.add(
-            L.arch(1.6, 1.4, True),
+            L.foil(1.7, 1.75),
             2.0,
             L.face(
                 gx + 2.6 * math.sin(f),
                 2.6 * math.cos(f),
-                top + ch - 0.92,
+                z0 - 0.02,
                 f,
             ),
         )
     holes.cut(ring)
     L.cut(ring, [inner])
-    L.lathe(
-        "bell2",
-        [
-            (0.0, 0),
-            (0.6, 0),
-            (0.55, 0.12),
-            (0.4, 0.4),
-            (0.3, 0.8),
-            (0.0, 0.85),
-        ],
-        16,
-        "bronze",
-        gx,
-        0,
-        top + 1.4,
-    )
-    ry = top + ch + 0.7
+    # a ladder up to the bells
+    for sg in (-1, 1):
+        rod(
+            "ladder",
+            (gx - 1.2, sg * 0.25, top),
+            (gx + 0.4, sg * 0.25, top + ch + 0.6),
+            0.04,
+            "wood",
+        )
+    for k in range(1, 9):
+        f = k / 9
+        x = gx - 1.2 + 1.6 * f
+        z = top + (ch + 0.6) * f
+        rod(
+            "rung",
+            (x, -0.25, z),
+            (x, 0.25, z),
+            0.025,
+            "wood",
+        )
+    ry = z0 + band
     L.lathe(
         "ring-cornice",
         [
@@ -1210,7 +1979,17 @@ def belfry(gx):
         0,
         ry,
     )
-    spire("bel-roof", gx, 0, ry + 0.65, 3.25, 5.6, 8)
+    spire(
+        "bel-roof",
+        gx,
+        0,
+        ry + 0.65,
+        3.25,
+        5.6,
+        8,
+        True,
+        False,
+    )
 
 
 # -- the enclosure and the buildings round the court --
@@ -1520,6 +2299,10 @@ VIEWS = {
     "overview": ((-95, -125, 75), (-6, 0, 4), 32),
     # the chapels from the east
     "east": ((60, -22, 22), (20, 0, 12), 35),
+    # close views, to check the details
+    "belfry": ((-46, -24, 13), (-16.85, 0, 17.5), 38),
+    "drums": ((-6, -3, 18), (23, -0.3, 16), 34),
+    "hall": ((-31, -29, 8), (-3, -10, 5), 30),
 }
 
 
@@ -1543,7 +2326,14 @@ def main():
     if "--no-render" not in ARGS:
         size = (800, 600) if QUICK else (1600, 1200)
         samples = 24 if QUICK else 96
+        only = [
+            a.split("=", 1)[1].split(",")
+            for a in ARGS
+            if a.startswith("--views=")
+        ]
         for name, (eye, look, lens) in VIEWS.items():
+            if only and name not in only[0]:
+                continue
             cam = L.camera(name, eye, look, lens)
             L.render(
                 cam, OUT / f"{name}.jpg", size, samples

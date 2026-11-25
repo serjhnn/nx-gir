@@ -19,14 +19,16 @@ model of `web/models/glakavank.js`.
   and sizes as `web/models/glakavank.js` (copies in
   `sources/glakavank/`).
 - `renders/`: renders kept to compare with the old
-  photographs.
+  photographs; `renders/fixes/` the photographs and
+  the model side by side, one picture per part
+  fixed.
 
 ## Running
 
 Blender 4.2 LTS (`blender` on the path), headless:
 
     blender -b --factory-startup -P blender/glakavank.py \
-        -- [--quick] [--no-render] [--glb]
+        -- [--quick] [--no-render] [--glb] [--views=a,b]
 
 It writes `blender/out/`: `glakavank.blend` (open it
 in Blender to look round), a render of each view of
@@ -34,7 +36,10 @@ the photographs (`VIEWS` in `glakavank.py`) and, with
 `--glb`, `glakavank.glb` (1K textures, Draco). With
 `--quick`: 1K textures, small renders, a few
 samples: about 1.5 minutes on 4 cores; the full one
-takes about 20 minutes.
+takes about 20 minutes. `--views=belfry,drums`
+renders only those views; besides the views of the
+photographs there are close views to check the
+details: `belfry`, `drums`, `hall`.
 
 Blender 4.2 LTS can be fetched from
 <https://download.blender.org/release/Blender4.2/>
@@ -91,3 +96,53 @@ web: smaller pictures (512 for the far materials, no
 roughness map where it adds little), a lighter ground
 (it is 300x300 squares), better trees and slopes
 (grass and rock mixed, not one texture).
+
+## Compared with the photographs, part by part (2026-11-25)
+
+Fixed, each with a picture in `renders/fixes/`:
+
+1. The belfry: cusped (five-lobed) arches, a high
+   frieze and a plain roof above. The lower stage
+   is an octagon in plan, four wide faces and four
+   narrow corners cut off; roll mouldings stepping
+   in round its arches, ringed shafts, steep gables
+   with crockets and a finial (no rosettes); in each
+   corner a tall gabled niche carved in, a small
+   shrine at its foot; small pinnacles; no bell
+   (none is seen), a ladder.
+2. The drums, each its own: Stepanos in a patchwork
+   of light and dark stone with a ring, a band of
+   squares and a framed window; Karapet with eight
+   tall pointed blind arches, light panels in them,
+   a cone curved like a bell. Both flare at the foot;
+   an iron cross, no gilt ball.
+3. The hall: few windows, set as in the photographs
+   (rectangles with bars, framed panels with a carved
+   slab over them, one tall arched); three thin dark
+   courses; dark stones scattered; lozenges at the
+   foot of the west front; a thin slab cornice, no
+   parapet; the clay jars along the south wall.
+4. The roofs: low gabled arms round the drums with
+   stone gables and windows; Gevorg's flat earth
+   roof and barred windows; a flat-roofed hut on the
+   hall's roof, right behind the belfry.
+
+Still to do, in this order:
+
+- The porch front: one tall pointed portal in a
+  frame, three small arched openings over it between
+  two light slabs (the marble slabs of the text?),
+  tall blind niches with carved crowns on each side;
+  a corner shaft and panels on its south face; a
+  slab roof. The rosette slabs low by the door are
+  not seen in a photograph.
+- The enclosure (Lynch Fig. 155): buildings of
+  different heights, wall tops stepping down the
+  slope to the east, chimneys, one great round
+  tower. The four corner towers are not seen in a
+  photograph.
+- The court: a wooden railing on the upper gallery,
+  its arches larger than the lower ones; a cypress
+  by the hut, trees behind the belfry.
+- The web page (`web.sh`) still has the model
+  before these fixes.

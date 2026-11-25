@@ -352,6 +352,80 @@ def arch(w, h, pointed=False, n=12):
     return pts
 
 
+def foil(w, h, lobes=5, n=8):
+    """The outline of a cusped (many-lobed) arch w
+    wide and h high, from its sill: a round arch
+    whose head is cut into lobes, points between."""
+    r = w / 2
+    sy = h - r
+    pts = [(-r, 0.0), (r, 0.0)]
+    k = lobes * n
+    for i in range(k + 1):
+        a = math.pi * i / k
+        f = math.sin(math.pi * (i % n) / n)
+        rr = r * (0.78 + 0.22 * f)
+        if i in (0, k):
+            rr = r
+        pts.append(
+            (rr * math.cos(a), sy + rr * math.sin(a))
+        )
+    return pts
+
+
+def tube(name, pts, r, mat, sides=6, closed=False):
+    """A round moulding (a roll) swept along the
+    points pts [(x, y, z), ...]."""
+    bm = bmesh.new()
+    pts = [Vector(p) for p in pts]
+    k = len(pts)
+    rings = []
+    for i, p in enumerate(pts):
+        if closed:
+            a, b = pts[i - 1], pts[(i + 1) % k]
+        else:
+            a = pts[max(i - 1, 0)]
+            b = pts[min(i + 1, k - 1)]
+        t = (b - a).normalized()
+        up = Vector((0, 0, 1))
+        if abs(t.dot(up)) > 0.9:
+            up = Vector((1, 0, 0))
+        u = t.cross(up).normalized()
+        v = u.cross(t).normalized()
+        rings.append(
+            [
+                bm.verts.new(
+                    p
+                    + (
+                        u
+                        * math.cos(2 * math.pi * s / sides)
+                        + v
+                        * math.sin(2 * math.pi * s / sides)
+                    )
+                    * r
+                )
+                for s in range(sides)
+            ]
+        )
+    pairs = list(zip(rings, rings[1:]))
+    if closed:
+        pairs.append((rings[-1], rings[0]))
+    for lo, hi in pairs:
+        for s in range(sides):
+            q = (s + 1) % sides
+            bm.faces.new((lo[s], lo[q], hi[q], hi[s]))
+    if not closed:
+        bm.faces.new(list(reversed(rings[0])))
+        bm.faces.new(rings[-1])
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return obj(name, bm, mat)
+
+
+def on_face(pts, place, out=0.0):
+    """The points [(u, v)] of an outline on a face
+    (as in prism) in the world, out from the face."""
+    return [place @ Vector((u, out, v)) for u, v in pts]
+
+
 def prism(name, pts, depth, mat, place, uv="box"):
     """The outline pts [(u, v), ...] made solid, depth
     thick (from -depth/2 to depth/2), then put in the
