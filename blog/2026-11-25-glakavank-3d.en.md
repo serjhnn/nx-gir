@@ -35,3 +35,5 @@ The two drums looked alike in the first model, but they are not: one is a patchw
 ## What is guessed
 
 This is a reconstruction. The sizes are estimates, the inside of the church is not built, and where no photograph shows a part (the north corners of the walls, for one), we had to guess. If you know of other photographs or drawings of Glakavank, write to us: every new picture makes the model truer.
+
+[Open the 3D model of Glakavank](#/3d/glakavank)

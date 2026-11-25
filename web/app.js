@@ -2831,7 +2831,8 @@ function videoBlock(id, alt, still) {
 
 // one post: its date, title and text (parse()
 // in nxgir_blog.py: ["p", text], ["h", text],
-// ["img", file, alt] or ["video", id, alt, still])
+// ["img", file, alt], ["video", id, alt, still] or
+// ["link", text, "#/page"])
 function postItem(p, lang) {
   const v = version(p, lang);
   return h("article", { class: "post p-" + p.slug,
@@ -2844,6 +2845,9 @@ function postItem(p, lang) {
   v.blocks.map(([kind, text, alt, still]) =>
     kind === "video"
       ? videoBlock(text, alt, still)
+      : kind === "link"
+      ? h("p", { class: "post-link" },
+        h("a", { href: alt }, named(text)))
       : kind === "img"
       ? h("img", { src: "img/" + text, alt,
         loading: "lazy" })
@@ -3003,6 +3007,9 @@ function comicItem(s, lang) {
   v.blocks.map(([kind, text, alt, still]) =>
     kind === "video"
       ? videoBlock(text, alt, still)
+      : kind === "link"
+      ? h("p", { class: "post-link" },
+        h("a", { href: alt }, named(text)))
       : kind === "img"
       ? h("img", { src: "img/" + text, alt,
         loading: "lazy" })

@@ -132,6 +132,17 @@ def test_video():
         assert blocks[0][0] == "p"
 
 
+def test_link():
+    _, blocks = bl.parse(
+        "# T\n\n[Open](#/3d/glakavank)\n", "t"
+    )
+    assert blocks == [["link", "Open", "#/3d/glakavank"]]
+    _, blocks = bl.parse(
+        "# T\n\n[Open](https://x.org)\n", "t"
+    )
+    assert blocks[0][0] == "p"
+
+
 def test_pictures_exist():
     for post in bl.read():
         for v in post["versions"]:

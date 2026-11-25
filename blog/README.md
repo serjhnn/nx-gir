@@ -42,6 +42,9 @@ read by `scripts/nxgir_blog.py`. Content, not code.
   one exception to "nothing from other sites"; the
   CSP's `frame-src`). The site's page for search
   engines shows the still as a link to the video.
+- A line `[text](#/3d/glakavank)` on its own is a
+  link to a page of the site (a path as `h()` takes
+  it, starting `#/`).
 - First line: `# Title`. Then paragraphs, split by
   empty lines; `## ` starts a subheading. No other
   Markdown for now: the text is shown as it is.

@@ -21,7 +21,8 @@ by empty lines; "## " starts a subheading; a line
 web/img/; ![alt](youtube:ID name.jpg) alone is a
 YouTube video, name.jpg its still in web/img/
 (the page loads YouTube only when it is played);
-lines starting "> " are a note under it. read()
+a line [text](#/3d/id) alone is a link to a page of
+the site; lines starting "> " are a note under it. read()
 checks every file and stops on a bad one, so a
 mistake shows when the site is built. Tested in
 tests/test_blog.py.
@@ -49,6 +50,8 @@ NAME_RE = re.compile(
 )
 
 
+# a link to a page of the site: [text](#/3d/id)
+LINK_RE = re.compile(r"\[([^\]]+)\]\((#/[A-Za-z0-9/_-]+)\)")
 IMG_RE = re.compile(
     r"!\[([^\]]*)\]\(([A-Za-z0-9_-]+\.(?:jpg|png|webp))\)"
 )
@@ -105,7 +108,8 @@ def parse(text, name):
     """The title and blocks of a post: blocks are
     ["p", text], ["h", text], ["cap", text] (a note,
     lines starting "> "), ["img", file, alt] and
-    ["video", YouTube id, alt, still],
+    ["video", YouTube id, alt, still] and
+    ["link", text, "#/page"],
     a paragraph's lines joined by spaces."""
     lines = text.splitlines()
     while lines and not lines[0].strip():
@@ -136,6 +140,10 @@ def parse(text, name):
                 line
             ).groups()
             blocks.append(["video", vid, alt, still])
+        elif LINK_RE.fullmatch(line):
+            end()
+            text, href = LINK_RE.fullmatch(line).groups()
+            blocks.append(["link", text, href])
         elif IMG_RE.fullmatch(line):
             end()
             alt, src = IMG_RE.fullmatch(line).groups()

@@ -719,9 +719,16 @@ def post_page(slug, lang, kind="blog"):
     return f"{lang}/{kind}/{slug}"
 
 
-def blog_block(block):
+def blog_block(block, lang="hy"):
     """One block of a blog post as HTML."""
     kind, text, *alt = block
+    if kind == "link":
+        # "#/3d/id" is the page /<lang>/3d/id
+        href = route_url(f"{lang}/{alt[0][2:]}")
+        return (
+            f'<p><a href="{htm.escape(href)}">'
+            f"{named(htm.escape(text))}</a></p>"
+        )
     if kind == "video":
         # the still, a link to the video on YouTube
         src = htm.escape(url(f"img/{alt[1]}"))
@@ -775,7 +782,8 @@ def post_pages(out, app, comics=False):
         for v in vs:
             path = page_of(v)
             text = "\n".join(
-                blog_block(b) for b in v["blocks"]
+                blog_block(b, v["lang"])
+                for b in v["blocks"]
             )
             paras = [
                 b[1] for b in v["blocks"] if b[0] == "p"
