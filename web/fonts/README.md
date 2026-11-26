@@ -16,6 +16,7 @@ text of the books only.
 | `geghagrutyun-*` | Armeniapedia Geghagrutyun, by Raffi Kojian (2016) | no license file; fonter.am: "free to download and free to use, personally or commercially" |
 | `tumanian-*` | Tumanian's Handwriting, by Ruben Tarumian (2005) | no license file; the author (tarumian.am/?p=2243): "Տառատեսակը կարող եք ազատորեն ներբեռնել եւ անվճար գործածել" (free to download and use) |
 | `freeserif-*` | GNU FreeSerif, Armenian letters only | GPL 3+ with the font exception, `FreeFont-license.txt` |
+| `bolorgir-*` | nxGir Bolorgir, our own, made from Noto Serif Armenian and Noto Serif | SIL OFL 1.1, `OFL-bolorgir.txt` |
 
 The Arian fonts are the .ttf files of
 `arian-grqi.zip` and `arian-amu-serif.zip` from
@@ -66,3 +67,18 @@ pyftsubset FreeSerif.ttf --flavor=woff2 \
   --layout-features='*' \
   --output-file=freeserif-400-normal.woff2
 ```
+
+nxGir Bolorgir is made by `scripts/render-font.py`
+(run it again after changing it; it takes about a
+minute and a half): each letter of Noto Serif
+Armenian (and the Latin letters, digits and
+punctuation of Noto Serif, from the files here) is
+drawn big, made wider and lower, thinned to its
+middle line and written again with a broad pen at
+35°, as in a bolorgir manuscript; the picture is
+traced back to curves with potrace. Being made
+from Noto, it is under the OFL like Noto, with a
+name of its own (Noto has no Reserved Font Name).
+The script needs scipy, scikit-image, fonttools,
+brotli and potracer (pip), and nothing else here
+does.

@@ -565,6 +565,13 @@
   pages change. The video is not kept in git. How to
   run it and the pitfalls: `notes/video.md` (read it
   first)
+- `scripts/render-font.py`: makes nxGir Bolorgir
+  (`web/fonts/bolorgir-400-normal.woff2`), our own
+  calligraphic font: Noto's letters written again
+  with a broad pen and traced to curves (scipy,
+  scikit-image, fonttools, brotli, potracer, only
+  there; see `web/fonts/README.md`). OFL, like Noto.
+  `bolorgir` in `FONTS` in `app.js`
 - `scripts/render-og.py`: regenerates
   `web/og-image.png`, the link preview image
   (`og:image` in `web/index.html`, for LinkedIn

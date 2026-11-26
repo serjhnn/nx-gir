@@ -145,6 +145,14 @@
     "nx Noto Serif Armenian", Georgia, serif;
 }
 
+/* our own calligraphic face, a heavy bolorgir
+   written with a broad pen (scripts/render-font.py);
+   Cyrillic from Noto */
+:root[data-font="bolorgir"] {
+  --book: "nx Bolorgir", "nx Noto Serif Armenian",
+    "Noto Serif Armenian", Georgia, serif;
+}
+
 *,
 *::before,
 *::after {

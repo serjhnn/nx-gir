@@ -423,6 +423,31 @@ def test_fonts_match_app_js():
     assert book.split(",")[0].endswith('"nx Arian Grqi"')
 
 
+def test_bolorgir_font():
+    """Our own font (scripts/render-font.py): every
+    Armenian letter, and a name of its own, not
+    Noto's (the OFL asks a changed font to be
+    renamed)."""
+    pytest.importorskip("brotli")
+    ttlib = pytest.importorskip("fontTools.ttLib")
+    f = ttlib.TTFont(
+        web.static_file("/fonts/bolorgir-400-normal.woff2")
+    )
+    cmap = f.getBestCmap()
+    letters = [
+        *range(0x531, 0x557),
+        *range(0x561, 0x588),
+        0x589,
+        0x55D,
+    ]
+    missing = [chr(c) for c in letters if c not in cmap]
+    assert not missing, missing
+    name = f["name"].getDebugName(1)
+    assert name == "nxGir Bolorgir"
+    assert "Noto" not in name
+    assert "Open Font License" in f["name"].getDebugName(13)
+
+
 def js_key(w):
     """wordKey() in web/app.js."""
     return (

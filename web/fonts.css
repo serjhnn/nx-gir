@@ -412,3 +412,18 @@
   src: url("fonts/tumanian-400-normal.ttf")
     format("truetype");
 }
+
+/* nxGir Bolorgir: our own, written with a broad
+   pen from Noto Serif Armenian by
+   scripts/render-font.py; Armenian, Latin letters,
+   digits and punctuation. Its letters are low and
+   wide, so drawn a little bigger */
+@font-face {
+  font-family: "nx Bolorgir";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  size-adjust: 108%;
+  src: url("fonts/bolorgir-400-normal.woff2")
+    format("woff2");
+}
