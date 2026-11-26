@@ -7,11 +7,13 @@ Every letter is the scribe's: traced from its
 picture, the average of its copies in the
 manuscript (sources/w541/README.md). The capitals,
 which the text hardly has, are his small letters
-drawn bigger; և is his ե and ւ side by side, ։ two
-of his dots. What he never wrote (Latin letters,
-digits, most punctuation) is not in the font: the
-reader shows it in its next font. Typed ե and ւ
-become his և (liga), as he writes them. OFL.
+drawn bigger; և is his own sign, ։ two of his
+dots. Punctuation he does not give is drawn with a
+round pen of his weight (sources/w541/marks/).
+What he never wrote (Latin letters, digits) is not
+in the font: the reader shows it in its next font.
+Typed ե and ւ become his և (liga), as he writes
+them. OFL.
 
 Needs numpy, scipy, Pillow, fonttools, brotli and
 potracer (pip), only here:
@@ -58,6 +60,7 @@ XH = 450  # the x-height in font units
 U = XH / PX  # font units per pixel
 SIDE = 55  # space each side of a letter, units
 SPACE = 340
+MARK_SIDE = 15  # space each side of a drawn mark
 CAP = 1.2  # capitals: the small letter, bigger
 COLON = 0.55  # ։ the upper dot, in x-heights
 CORE = 3  # a thinned letter keeps this much round
@@ -86,14 +89,22 @@ def render_font():
 
 
 def letters():
-    """{character: picture path} from letters.tsv."""
+    """{character: picture path}: the scribe's letters
+    (letters.tsv), then the marks drawn in his weight
+    that the manuscript does not give (marks.tsv)."""
     out = {}
-    text = (SRC / "letters.tsv").read_text()
-    for line in text.split("\n"):
-        if not line or line.startswith("#"):
+    for tsv, folder in (
+        ("letters.tsv", "letters"),
+        ("marks.tsv", "marks"),
+    ):
+        path = SRC / tsv
+        if not path.exists():
             continue
-        ch, name = line.split("\t")[:2]
-        out[ch] = SRC / "letters" / name
+        for line in path.read_text().split("\n"):
+            if not line or line.startswith("#"):
+                continue
+            ch, name = line.split("\t")[:2]
+            out.setdefault(ch, SRC / folder / name)
     return out
 
 
@@ -158,7 +169,7 @@ def thinned(ink, px):
     return ndimage.gaussian_filter(out * 1.0, 1.2) > 0.5
 
 
-def scanned(path, thin=0):
+def scanned(path, thin=0, side=SIDE):
     """A letter from its picture: (contours, width).
     The width is the body's, in the middle of the
     x-height: tails on the baseline and hooks on top
@@ -172,8 +183,8 @@ def scanned(path, thin=0):
     if not len(xs):
         xs = np.nonzero(ink.any(0))[0]
     left, right = xs[0], xs[-1] + 1
-    contours = trace(thinned(ink, thin), left - SIDE / U)
-    width = round((right - left) * U + 2 * SIDE)
+    contours = trace(thinned(ink, thin), left - side / U)
+    width = round((right - left) * U + 2 * side)
     return contours, width
 
 
@@ -199,7 +210,13 @@ def glyphs(thin=0):
     """{codepoint: (contours, width)}."""
     out = {}
     for ch, path in letters().items():
-        out[ord(ch)] = scanned(path, thin)
+        # marks sit close to the letter before them
+        side = (
+            MARK_SIDE
+            if path.parent.name == "marks"
+            else SIDE
+        )
+        out[ord(ch)] = scanned(path, thin, side)
     for c in range(0x561, 0x587):
         if c in out:
             cont, w = out[c]
@@ -217,6 +234,7 @@ def glyphs(thin=0):
         dot, dw = out[0x2E]
         up = moved(dot, dy=round(COLON * XH))
         out[0x589] = (dot + up, dw)
+        out[0x3A] = out[0x589]  # : as his ։
     return out
 
 

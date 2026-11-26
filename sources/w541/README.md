@@ -69,6 +69,14 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    the user among the copies found (ծ from image
    120, թ from image 290), its edge only smoothed.
 
+9. Punctuation. The manuscript gives only the dot
+   (`.`, and ։ as two of them). The other marks of
+   the font, ՝ ՛ ՞ ՜ , ; « » - ֊ ( ), are not the
+   scribe's: Claude drew them with a round pen of
+   his weight, so they are as heavy as his letters
+   (`marks/`, listed in `marks.tsv`). The ASCII
+   colon is drawn as his ։.
+
 `letters.tsv` gives the copies and pages of each,
 and `.` the scribe's dot. օ (the scribe writes աւ)
 and ֆ are not in the manuscript, so not in the font.

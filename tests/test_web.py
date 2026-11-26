@@ -479,6 +479,9 @@ def test_dzeragir_font():
     assert ord("a") not in cmap
     # the scribe's և for a typed ե ւ
     assert 0x587 in cmap
+    # heavy marks of its own, not Noto's
+    for ch in "՝՛՞՜,;«»-֊():։":
+        assert ord(ch) in cmap, ch
     tags = [
         r.FeatureTag
         for r in f["GSUB"].table.FeatureList.FeatureRecord

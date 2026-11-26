@@ -95,9 +95,13 @@ beside it, as written. Every letter in it is the
 scribe's: the capitals are his small letters drawn
 bigger, ։ two of his dots, and his և (the word եւ
 as one sign) stands for a typed ե ւ (liga). What he
-never wrote (օ, ֆ, Latin letters, digits, most
-punctuation) is not in the font; the reader shows
-it in Noto, the next font in the stack.
+never wrote (օ, ֆ, Latin letters, digits) is not in
+the font; the reader shows it in Noto, the next
+font in the stack. The punctuation he does not
+give (՝ ՛ ՞ ՜ , ; « » - ֊ ( ), and : as his ։) is
+drawn with a round pen of his weight
+(`sources/w541/marks/`), so it is as heavy as his
+letters.
 
 nxGir Dzeragir Thin is made in the same run: each
 letter picture loses `THIN` (10) pixels off each side
