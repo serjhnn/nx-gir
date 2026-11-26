@@ -18,6 +18,8 @@ potracer (pip), only here:
 
     python3 scripts/render-scan-font.py
     python3 scripts/render-scan-font.py --sample a.png
+    python3 scripts/render-scan-font.py --thin 10 \\
+        --out /tmp/thin.woff2  # a lighter weight
 
 Writes web/fonts/dzeragir-400-normal.woff2.
 """
@@ -30,6 +32,7 @@ import numpy as np
 import potrace
 from PIL import Image, ImageDraw, ImageFont
 from scipy import ndimage
+from skimage.morphology import skeletonize
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "sources" / "w541"
@@ -50,6 +53,8 @@ SIDE = 55  # space each side of a letter, units
 SPACE = 340
 CAP = 1.2  # capitals: the small letter, bigger
 COLON = 0.55  # ։ the upper dot, in x-heights
+CORE = 3  # a thinned letter keeps this much round
+# its middle line, in pixels, so hairlines stay
 
 # the scribe writes ե and ւ as one sign, և
 FEATURES = """
@@ -129,11 +134,30 @@ def trace(ink, ox):
     return out
 
 
-def scanned(path):
+def disk(r):
+    yy, xx = np.mgrid[-r : r + 1, -r : r + 1]
+    return xx * xx + yy * yy <= r * r
+
+
+def thinned(ink, px):
+    """The strokes px pixels thinner each side; the
+    middle line kept, so thin ends do not vanish."""
+    if not px:
+        return ink
+    core = skeletonize(ink)
+    core = ndimage.binary_dilation(core, disk(CORE))
+    shaved = ndimage.binary_erosion(ink, disk(px))
+    out = (shaved | core) & ink
+    return ndimage.gaussian_filter(out * 1.0, 1.2) > 0.5
+
+
+def scanned(path, thin=0):
     """A letter from its picture: (contours, width).
     The width is the body's, in the middle of the
     x-height: tails on the baseline and hooks on top
-    reach over the neighbours, as written."""
+    reach over the neighbours, as written. thin:
+    pixels taken off each side of the strokes (the
+    width stays the full letter's)."""
     ink = np.array(Image.open(path).convert("L")) < 128
     ink = no_specks(ink)
     band = ink[BASE - int(0.9 * PX) : BASE - int(0.3 * PX)]
@@ -141,7 +165,7 @@ def scanned(path):
     if not len(xs):
         xs = np.nonzero(ink.any(0))[0]
     left, right = xs[0], xs[-1] + 1
-    contours = trace(ink, left - SIDE / U)
+    contours = trace(thinned(ink, thin), left - SIDE / U)
     width = round((right - left) * U + 2 * SIDE)
     return contours, width
 
@@ -164,11 +188,11 @@ def moved(contours, dx=0, dy=0, k=1.0):
     return out
 
 
-def glyphs():
+def glyphs(thin=0):
     """{codepoint: (contours, width)}."""
     out = {}
     for ch, path in letters().items():
-        out[ord(ch)] = scanned(path)
+        out[ord(ch)] = scanned(path, thin)
     for c in range(0x561, 0x587):
         if c in out:
             cont, w = out[c]
@@ -189,17 +213,17 @@ def glyphs():
     return out
 
 
-def build():
-    g = glyphs()
+def build(thin=0, out=None, family=FAMILY, ps=PS_NAME):
+    g = glyphs(thin)
     for c in sorted(g):
         print(chr(c), end=" ")
     print()
     render_font().save(
-        OUT,
+        out or OUT,
         g,
         SPACE,
-        family=FAMILY,
-        ps_name=PS_NAME,
+        family=family,
+        ps_name=ps,
         copyright=COPYRIGHT,
         features=FEATURES if 0x587 in g else "",
     )
@@ -221,11 +245,20 @@ def main():
     ap.add_argument(
         "--text", default="Նախագիր թագաւոր վարդապետ։"
     )
+    ap.add_argument(
+        "--thin",
+        type=int,
+        default=0,
+        metavar="PX",
+        help="take PX pixels off each side of the"
+        " strokes (a lighter weight)",
+    )
+    ap.add_argument("--out", type=Path)
     a = ap.parse_args()
     if a.sample:
         sample(a.sample, a.text)
     else:
-        build()
+        build(thin=a.thin, out=a.out)
 
 
 if __name__ == "__main__":
