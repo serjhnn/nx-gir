@@ -75,7 +75,8 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    scribe's: Claude drew them with a round pen of
    his weight, so they are as heavy as his letters
    (`marks/`, listed in `marks.tsv`). The ASCII
-   colon is drawn as his ։.
+   colon is drawn as his ։. The digits 0-9 are
+   drawn the same way, leaning with his hand.
 
 `letters.tsv` gives the copies and pages of each,
 and `.` the scribe's dot. օ (the scribe writes աւ)

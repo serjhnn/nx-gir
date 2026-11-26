@@ -480,7 +480,7 @@ def test_dzeragir_font():
     # the scribe's և for a typed ե ւ
     assert 0x587 in cmap
     # heavy marks of its own, not Noto's
-    for ch in "՝՛՞՜,;«»-֊():։":
+    for ch in "՝՛՞՜,;«»-֊():։0123456789":
         assert ord(ch) in cmap, ch
     tags = [
         r.FeatureTag

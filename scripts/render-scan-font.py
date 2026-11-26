@@ -8,10 +8,11 @@ picture, the average of its copies in the
 manuscript (sources/w541/README.md). The capitals,
 which the text hardly has, are his small letters
 drawn bigger; և is his own sign, ։ two of his
-dots. Punctuation he does not give is drawn with a
-round pen of his weight (sources/w541/marks/).
-What he never wrote (Latin letters, digits) is not
-in the font: the reader shows it in its next font.
+dots. Punctuation he does not give and the digits
+are drawn with a round pen of his weight
+(sources/w541/marks/). What he never wrote (Latin
+letters) is not in the font: the reader shows it
+in its next font.
 Typed ե and ւ become his և (liga), as he writes
 them. OFL.
 
@@ -210,12 +211,11 @@ def glyphs(thin=0):
     """{codepoint: (contours, width)}."""
     out = {}
     for ch, path in letters().items():
-        # marks sit close to the letter before them
-        side = (
-            MARK_SIDE
-            if path.parent.name == "marks"
-            else SIDE
-        )
+        # marks sit close to the letter before them;
+        # digits are spaced as letters
+        mark = path.parent.name == "marks"
+        tight = mark and not ch.isdigit()
+        side = MARK_SIDE if tight else SIDE
         out[ord(ch)] = scanned(path, thin, side)
     for c in range(0x561, 0x587):
         if c in out:
