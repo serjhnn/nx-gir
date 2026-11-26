@@ -477,6 +477,13 @@ def test_dzeragir_font():
             assert ord(ch) in cmap, ch
             assert (tsv.parent / "letters" / name).exists()
     assert ord("a") not in cmap
+    # the scribe's և for a typed ե ւ
+    assert 0x587 in cmap
+    tags = [
+        r.FeatureTag
+        for r in f["GSUB"].table.FeatureList.FeatureRecord
+    ]
+    assert "liga" in tags
 
 
 def js_key(w):

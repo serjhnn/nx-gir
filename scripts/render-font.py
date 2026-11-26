@@ -25,6 +25,9 @@ from pathlib import Path
 
 import numpy as np
 import potrace
+from fontTools.feaLib.builder import (
+    addOpenTypeFeaturesFromString,
+)
 from fontTools.fontBuilder import FontBuilder
 from fontTools.pens.t2CharStringPen import (
     T2CharStringPen,
@@ -315,9 +318,11 @@ def save(
     family=FAMILY,
     ps_name=PS_NAME,
     copyright=COPYRIGHT,
+    features="",
 ):
     """Write the font: glyphs is {codepoint:
-    (contours, advance width)}."""
+    (contours, advance width)}; features, OpenType
+    feature text (glyphs named uniXXXX)."""
     order = [".notdef", "space"]
     cmap = {0x20: "space", 0xA0: "space"}
     metrics = {".notdef": (500, 0), "space": (space, 0)}
@@ -370,6 +375,8 @@ def save(
         achVendID="NXGR",
     )
     fb.setupPost()
+    if features:
+        addOpenTypeFeaturesFromString(fb.font, features)
     fb.font.flavor = "woff2"
     fb.save(str(out))
     print(out, out.stat().st_size, "bytes")

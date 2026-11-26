@@ -46,6 +46,17 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    averaged: բ գ թ ժ ծ ճ չ ջ ռ (one to six copies
    each; ճ has only one).
 
+6. ե and և. The six copies first taken for ե have a
+   small upturned hook on the foot: they are the
+   scribe's և, the word «եւ» written as one sign
+   (compare «= եւ ի ժամանակի» on image 70). The
+   plain ե (a tall stem, an arm in the middle, a
+   foot on the baseline, as in «ձեր» and
+   «ամենայն») was cut like the joined letters: 220
+   cuts where the text has ե but not եւ; the 23
+   that agree best in shape were averaged. The font
+   draws a typed ե ւ as his և (an OpenType liga).
+
 `letters.tsv` gives the copies and pages of each,
 and `.` the scribe's dot. օ (the scribe writes աւ)
 and ֆ are not in the manuscript, so not in the font.

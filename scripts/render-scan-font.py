@@ -10,7 +10,8 @@ which the text hardly has, are his small letters
 drawn bigger; և is his ե and ւ side by side, ։ two
 of his dots. What he never wrote (Latin letters,
 digits, most punctuation) is not in the font: the
-reader shows it in its next font. OFL.
+reader shows it in its next font. Typed ե and ւ
+become his և (liga), as he writes them. OFL.
 
 Needs numpy, scipy, Pillow, fonttools, brotli and
 potracer (pip), only here:
@@ -49,6 +50,15 @@ SIDE = 55  # space each side of a letter, units
 SPACE = 340
 CAP = 1.2  # capitals: the small letter, bigger
 COLON = 0.55  # ։ the upper dot, in x-heights
+
+# the scribe writes ե and ւ as one sign, և
+FEATURES = """
+languagesystem DFLT dflt;
+languagesystem armn dflt;
+feature liga {
+  sub uni0565 uni0582 by uni0587;
+} liga;
+"""
 
 
 def render_font():
@@ -166,7 +176,9 @@ def glyphs():
                 moved(cont, k=CAP),
                 round(w * CAP),
             )
-    if 0x565 in out and 0x582 in out:
+    # և is the scribe's own sign (letters.tsv); only
+    # without it, his ե and ւ side by side
+    if 0x587 not in out and 0x565 in out and 0x582 in out:
         e, ew = out[0x565]
         v, vw = out[0x582]
         out[0x587] = (e + moved(v, dx=ew), ew + vw)
@@ -189,6 +201,7 @@ def build():
         family=FAMILY,
         ps_name=PS_NAME,
         copyright=COPYRIGHT,
+        features=FEATURES if 0x587 in g else "",
     )
 
 
