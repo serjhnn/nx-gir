@@ -181,3 +181,43 @@ Not in any source, estimated from the photographs: the
 heights, the size of the enclosure (about 104 by 84 m),
 the round towers at the corners, where in the court
 the Harutyun chapel stood.
+
+## yeghvard/
+
+Photographs taken by the user on 2026-06-28 (09:53 to
+10:02), for a 3D model of the two-storey church of
+1301 in Yeghvard (Kotayk; still to be confirmed by
+the user): a burial chapel below, a church above
+entered by a high door (once by stairs), a drum of
+columns on top. Shrunk to 1000 pixels and without
+their metadata; the names follow the walk round the
+building. The sides are named by what is carved on
+them; which side faces where is not yet known (the
+lion-and-arch side is in shade and has the front on
+its right, so it may be the north).
+
+| File | What it shows |
+|------|---------------|
+| `01-front-gable-figures.jpg` | the front's gable: two figures in relief beside a cross of interlaced bands (a woman with a child, and a man) |
+| `02-front-gable-cornice.jpg` | the eaves of a gable: the star rosettes of the cornice, a carved triangle, the foot of the drum's columns |
+| `03-front-blind-arch-inscription.jpg` | a blind arch beside the upper door: pointed arch of interlace, a rosette, twin shafts, the inscription below |
+| `04-front-inscription-khachkars.jpg` | the inscription and four small khachkars set in the wall |
+| `05-upper-door-vault.jpg` | through the upper door: the stalactite (muqarnas) vault inside |
+| `06-upper-door-lions.jpg` | the upper door: frames of stars and chains, a stalactite head, two lions attacking bulls above it, the corbel below (where the stairs were) |
+| `07-front-corner-from-side.jpg` | the corner of the front, from below: the setback of the roofs, the drum's columns, the inscriptions |
+| `08-lion-arch-gable.jpg` | the lion-and-arch side, its upper storey: a large arch of interlace over a cross-shaped frame, a lion on a bull, a slit window, two blind arches |
+| `09-lion-arch-whole-far.jpg` | the whole church from this side, with the front on the right (the lower door) |
+| `10-lion-arch-whole.jpg` | the same, nearer: the two storeys, the cross-shaped window below, the drum |
+| `11-lion-arch-gable-oblique.jpg` | the upper storey of this side, from the left |
+| `12-lion-arch-relief.jpg` | the lion on the bull, close |
+| `13-eagle-gable-oblique.jpg` | the eagle side, its upper storey: a frame of chains, an eagle holding a lamb, a window split by a column, two blind arches, a knot below |
+| `14-eagle-window-column.jpg` | that window and its column, close |
+| `15-eagle-relief-left.jpg`, `16-eagle-relief.jpg`, `19-eagle-relief-close.jpg` | the eagle and the lamb, close |
+| `17-eagle-whole.jpg` | the whole church from the eagle side: the cross-shaped window below, the drum of columns |
+| `18-eagle-gable.jpg` | the eagle side's gable, near the front |
+| `20-lion-quatrefoil-relief.jpg` | a third side: a lion on a bull over a quatrefoil frame with a slit window, a rosette above |
+
+Not yet seen, to look for: the plan and the sizes
+(a published survey), the side of the quatrefoil as
+a whole, the roof and the drum's top from afar, the
+lower door and the inside of the lower storey.
