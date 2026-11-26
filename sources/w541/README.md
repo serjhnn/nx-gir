@@ -64,13 +64,10 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    (pieces of that shape were also չ and լ, left
    out): 16 copies from 11 pages.
 
-8. ծ and թ, made again the same way, from their cut
-   copies and pieces of the same shape among the
-   unread ones: ծ from 13 copies (8 pages); թ from
-   the median of the 6 of 11 copies that fit best,
-   each moved and scaled onto the clearest, because
-   a plain average of copies of different sizes
-   filled its open bowl.
+8. ծ and թ: averages of their copies came out
+   unclear, so each is one copy, chosen by eye by
+   the user among the copies found (ծ from image
+   120, թ from image 290), its edge only smoothed.
 
 `letters.tsv` gives the copies and pages of each,
 and `.` the scribe's dot. օ (the scribe writes աւ)
