@@ -57,6 +57,13 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    that agree best in shape were averaged. The font
    draws a typed ե ւ as his և (an OpenType liga).
 
+7. շ, made again: the first had four copies, one
+   of them wrong. Now nine cuts where the text has
+   շ, and seven more pieces of the same shape found
+   among the pieces the alignment did not read
+   (pieces of that shape were also չ and լ, left
+   out): 16 copies from 11 pages.
+
 `letters.tsv` gives the copies and pages of each,
 and `.` the scribe's dot. օ (the scribe writes աւ)
 and ֆ are not in the manuscript, so not in the font.
