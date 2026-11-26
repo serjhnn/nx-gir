@@ -18,6 +18,15 @@ model of `web/models/glakavank.js`.
   above Mush, as it stood in 1893. The same sources
   and sizes as `web/models/glakavank.js` (copies in
   `sources/glakavank/`).
+- `yeghvard.py`: the two-storey church of 1301 at
+  Yeghvard, from the user's photographs
+  (`sources/yeghvard/`). No size is known: all are
+  estimated from one guess (the lower storey 5.6 m
+  wide), the rest in proportion, measured on the
+  photographs. Its carvings (the eagle, the lions,
+  the figures) are crops of the photographs on a
+  relief raised from their light. See "Yeghvard"
+  below.
 - `renders/`: renders kept to compare with the old
   photographs; `renders/fixes/` the photographs and
   the model side by side, one picture per part
@@ -154,3 +163,44 @@ Still to do:
   photograph; kept for now.
 - The ground is flat round the walls; Fig. 155 has
   the slope steeper on the south.
+
+## Yeghvard (2026-11-26)
+
+    blender -b --factory-startup -P blender/yeghvard.py \
+        -- [--quick] [--no-render] [--views=a,b]
+
+Writes `blender/out/yeghvard.blend` and
+`yeghvard-<view>.jpg` (`VIEWS`: `east`, `north`,
+`south`, `west`, `overview`, `drum`, and the close
+views `north-low`, `south-up`). `--quick`: about 35
+seconds for two views on 4 cores.
+
+The sizes (all estimated; `W`, `LOW`, `EAVE`, `RISE`,
+... at the top of the script): the lower storey 5.6 m
+square and 5 m high, the band, the upper storey a
+cross of arms 4.2 m wide to the eaves at 9.2 m,
+gables 2.4 m high, a drum of twelve columns (2 m),
+its arcade and a cone of 3.4 m: about 20 m to the
+cross. One measured size (a wall, a door, a course of
+stone) would set them all; the proportions come from
+`02-approach-path.jpg`, the east side seen whole.
+
+Which side is which: `sources/README.md`.
+
+To do:
+
+- a measured size, or the plan of Donabédian and
+  Porter (2017), to set the scale;
+- the carvings: the photographs are lit by their own
+  sun and taken from below; carve them in Blender
+  instead (or crop straighter photographs);
+- the lattice of the cross windows, the stars round
+  the west door, the interlace of the arches (now
+  plain rolls), the inscriptions;
+- the dome inside the drum (now a dark cylinder);
+- the stone: the texture shows long dark seams that
+  the walls do not have;
+- the paving, the steps and the trees round it, and
+  the export for the web page (`/3d/yeghvard`, with a
+  place in `map/places.tsv`, a card and texts in
+  `web/models/models.json`).

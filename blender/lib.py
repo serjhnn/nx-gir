@@ -595,12 +595,16 @@ def apply_all(o):
 def uv_set(o):
     """Texture coordinates in metres: box (each face
     from the axis it faces most) or round (around a
-    vertical axis through the object's middle)."""
+    vertical axis through the object's middle);
+    "keep" leaves the object's own."""
+    mode = o.get("uv", "box")
+    if mode == "keep":
+        # its own coordinates (a picture laid on it)
+        return
     me = o.data
     bm = bmesh.new()
     bm.from_mesh(me)
     lay = bm.loops.layers.uv.verify()
-    mode = o.get("uv", "box")
     if mode == "round":
         xs = [v.co.x for v in bm.verts]
         ys = [v.co.y for v in bm.verts]
