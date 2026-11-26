@@ -30,15 +30,25 @@ How they were taken:
    the baseline, shifted to fit, and averaged; the
    ink most copies share was kept (`letters/`).
 
-27 small letters were found well enough:
-ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո պ ս վ տ ր ց ւ փ ք
-(`letters.tsv` gives the copies and pages of each).
-The others (բ գ թ ժ ծ ճ չ ջ ռ օ ֆ), which this
-scribe mostly joins to the letters beside them,
-and the capitals, which the text hardly has, are
-written with the pen of `scripts/render-font.py`
-for now. More pages, or cutting joined pieces by
-hand, would give them too.
+27 small letters came out whole this way, from
+eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
+պ ս վ տ ր ց ւ փ ք.
+
+5. The rest this scribe joins to the letters beside
+   them. With sixteen more pages (images 50 to 350,
+   every twentieth; 27 pages in all, 460 lines found
+   in the Gospels), a piece whose text is known and
+   holds the letter at its start or end next to
+   letters already found was cut: the widths of the
+   found letters say where, and the cut goes at the
+   thinnest column near there (the joining stroke).
+   The cuts were checked by eye and the good ones
+   averaged: բ գ թ ժ ծ ճ չ ջ ռ (one to six copies
+   each; ճ has only one).
+
+`letters.tsv` gives the copies and pages of each,
+and `.` the scribe's dot. օ (the scribe writes աւ)
+and ֆ are not in the manuscript, so not in the font.
 
 The pictures are 120 pixels per x-height, the
 baseline at row 288, black ink on white.

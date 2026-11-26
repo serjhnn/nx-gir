@@ -1,7 +1,6 @@
-Copyright 2026 the nxGir project (nxGir Dzeragir: the small letters
-after Walters Art Museum Ms. W.541, whose images are CC0; the rest made
-from Noto Serif Armenian and Noto Serif by scripts/render-font.py)
-Copyright 2022 The Noto Project Authors (https://github.com/notofonts/armenian)
+Copyright 2026 the nxGir project (nxGir Dzeragir: the letters of
+Walters Art Museum Ms. W.541, whose images are CC0, traced by
+scripts/render-scan-font.py)
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:

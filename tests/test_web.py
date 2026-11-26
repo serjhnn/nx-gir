@@ -449,15 +449,24 @@ def test_bolorgir_font():
 
 
 def test_dzeragir_font():
-    """The scribe's font: every Armenian letter, and
-    the ones taken from the manuscript are there."""
+    """The scribe's font: every Armenian letter of
+    the manuscript, and only those (no pen letters:
+    nothing Latin)."""
     pytest.importorskip("brotli")
     ttlib = pytest.importorskip("fontTools.ttLib")
     f = ttlib.TTFont(
         web.static_file("/fonts/dzeragir-400-normal.woff2")
     )
     cmap = f.getBestCmap()
-    letters = [*range(0x531, 0x557), *range(0x561, 0x587)]
+    # օ and ֆ are not in the manuscript
+    letters = [
+        c
+        for c in [
+            *range(0x531, 0x557),
+            *range(0x561, 0x587),
+        ]
+        if c not in (0x555, 0x556, 0x585, 0x586)
+    ]
     missing = [chr(c) for c in letters if c not in cmap]
     assert not missing, missing
     assert f["name"].getDebugName(1) == "nxGir Dzeragir"
@@ -467,6 +476,7 @@ def test_dzeragir_font():
             ch, name = line.split("\t")[:2]
             assert ord(ch) in cmap, ch
             assert (tsv.parent / "letters" / name).exists()
+    assert ord("a") not in cmap
 
 
 def js_key(w):

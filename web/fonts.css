@@ -429,10 +429,10 @@
 }
 
 /* nxGir Dzeragir: the hand of the scribe of
-   Walters Ms. W.541 (17th c.), its small letters
-   traced from the manuscript, the rest written with
-   the pen (scripts/render-scan-font.py); low letters,
-   so drawn bigger */
+   Walters Ms. W.541 (17th c.), every letter traced
+   from the manuscript (scripts/render-scan-font.py);
+   Armenian letters only, the rest from Noto; low
+   letters, so drawn bigger */
 @font-face {
   font-family: "nx Dzeragir";
   font-style: normal;
