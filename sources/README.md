@@ -184,40 +184,61 @@ the Harutyun chapel stood.
 
 ## yeghvard/
 
-Photographs taken by the user on 2026-06-28 (09:53 to
-10:02), for a 3D model of the two-storey church of
-1301 in Yeghvard (Kotayk; still to be confirmed by
-the user): a burial chapel below, a church above
-entered by a high door (once by stairs), a drum of
-columns on top. Shrunk to 1000 pixels and without
-their metadata; the names follow the walk round the
-building. The sides are named by what is carved on
-them; which side faces where is not yet known (the
-lion-and-arch side is in shade and has the front on
-its right, so it may be the north).
+Photographs taken by the user on 2026-06-28 (09:48 to
+10:02) of the two-storey church of 1301 in Yeghvard
+(Kotayk), for a 3D model: a burial chapel below, a
+church above entered by a high door on the west (once
+by wooden stairs), a drum of columns and a cone on
+top. Shrunk to 1000 pixels, without their metadata,
+numbered in the order they were taken (the walk round
+the building).
+
+The sides: the high door is on the west, the front
+(Wikipedia below: the bird on the right side, the goat
+on the left, the cat on the goat at the back). The
+user's shadow in `01` and `02`, at about ten in the
+morning, points at the back, so it faces east; the
+left side (north) is in shade.
 
 | File | What it shows |
 |------|---------------|
-| `01-front-gable-figures.jpg` | the front's gable: two figures in relief beside a cross of interlaced bands (a woman with a child, and a man) |
-| `02-front-gable-cornice.jpg` | the eaves of a gable: the star rosettes of the cornice, a carved triangle, the foot of the drum's columns |
-| `03-front-blind-arch-inscription.jpg` | a blind arch beside the upper door: pointed arch of interlace, a rosette, twin shafts, the inscription below |
-| `04-front-inscription-khachkars.jpg` | the inscription and four small khachkars set in the wall |
-| `05-upper-door-vault.jpg` | through the upper door: the stalactite (muqarnas) vault inside |
-| `06-upper-door-lions.jpg` | the upper door: frames of stars and chains, a stalactite head, two lions attacking bulls above it, the corbel below (where the stairs were) |
-| `07-front-corner-from-side.jpg` | the corner of the front, from below: the setback of the roofs, the drum's columns, the inscriptions |
-| `08-lion-arch-gable.jpg` | the lion-and-arch side, its upper storey: a large arch of interlace over a cross-shaped frame, a lion on a bull, a slit window, two blind arches |
-| `09-lion-arch-whole-far.jpg` | the whole church from this side, with the front on the right (the lower door) |
-| `10-lion-arch-whole.jpg` | the same, nearer: the two storeys, the cross-shaped window below, the drum |
-| `11-lion-arch-gable-oblique.jpg` | the upper storey of this side, from the left |
-| `12-lion-arch-relief.jpg` | the lion on the bull, close |
-| `13-eagle-gable-oblique.jpg` | the eagle side, its upper storey: a frame of chains, an eagle holding a lamb, a window split by a column, two blind arches, a knot below |
-| `14-eagle-window-column.jpg` | that window and its column, close |
-| `15-eagle-relief-left.jpg`, `16-eagle-relief.jpg`, `19-eagle-relief-close.jpg` | the eagle and the lamb, close |
-| `17-eagle-whole.jpg` | the whole church from the eagle side: the cross-shaped window below, the drum of columns |
-| `18-eagle-gable.jpg` | the eagle side's gable, near the front |
-| `20-lion-quatrefoil-relief.jpg` | a third side: a lion on a bull over a quatrefoil frame with a slit window, a rosette above |
+| `01-approach-from-gate.jpg`, `02-approach-path.jpg` | the church at the end of the path from the gate: the east side, the drum and the cone |
+| `03-east-whole.jpg` | the east side, whole, from the south-east corner: the dark lower courses, a small stepped window and two slits below, a double rosette, the upper frame |
+| `04-east-gable.jpg` | the east upper storey: a large arch of interlace, a frame of chains, a lion on a goat over a quatrefoil with a slit window, two blind arches |
+| `05`-`08` | the eaves of the east gable: star rosettes, carved triangles, the corner capitals; the gable's top at the foot of the drum, with a ball |
+| `09-eaves-drum-column.jpg`, `10-eaves-drum-column-2.jpg` | the drum's columns, their bases and capitals, over the eaves |
+| `11-blind-arch-rosette.jpg` | a blind arch: pointed, of interlace, a rosette, twin shafts |
+| `12-lower-cross-window.jpg` | a cross-shaped window of the lower storey, carved with a lattice (north or south) |
+| `13-west-upper-storey.jpg` | the west upper storey, whole: the high door with its stalactite head, two lions on bulls, the inscriptions and khachkars, the corbel |
+| `14-west-gable-drum.jpg` | the west gable and the drum: the cross of interlaced bands, the two figures, the twelve columns, the cone |
+| `15-west-gable-figures.jpg` | the two figures in the west gable (a woman with a child, a man) |
+| `16-west-gable-cornice.jpg` | the eaves of the west gable and the foot of the drum |
+| `17-west-blind-arch-inscription.jpg`, `18-west-inscription-khachkars.jpg` | the blind arch left of the door, the inscription and the small khachkars |
+| `19-west-upper-door-vault.jpg` | through the high door: the stalactite vault inside |
+| `20-west-upper-door-lions.jpg` | the high door and the corbel under it |
+| `21-west-corner-from-north.jpg` | the north-west corner from below: the setback of the roofs, the drum, the inscriptions |
+| `22-north-gable.jpg`, `25-north-gable-oblique.jpg` | the north upper storey: a large arch, a cross-shaped frame, the relief, a slit window, two blind arches |
+| `23-north-whole-far.jpg`, `24-north-whole.jpg` | the whole church from the north, the west on the right (its lower door) |
+| `26-north-relief.jpg` | the north relief, close |
+| `27-south-gable-oblique.jpg`, `32-south-gable.jpg` | the south upper storey: a frame of chains, the eagle with a lamb, a window split by a column, a knot below |
+| `28-south-window-column.jpg` | that window and its column |
+| `29`, `30`, `33` | the eagle, close |
+| `31-south-whole.jpg` | the whole church from the south |
+| `34-east-relief.jpg` | the east relief (a lion on a goat), close |
 
-Not yet seen, to look for: the plan and the sizes
-(a published survey), the side of the quatrefoil as
-a whole, the roof and the drum's top from afar, the
-lower door and the inside of the lower storey.
+No sizes: none were measured, and none are in the
+sources read so far. Wikipedia, «Holy Mother of God
+Church, Yeghvard»
+(<https://en.wikipedia.org/wiki/Holy_Mother_of_God_Church,_Yeghvard>,
+read 2026-11-26, CC BY-SA 4.0) gives: finished 1301,
+architect Shahik Vardapet; cruciform inside, almost
+square outside; a drum of twelve columns with arches
+and a cone; one small window on the north and east of
+the upper storey, a larger one with a column on the
+south; the lower storey's portal on the west, a small
+window on each other side. The study with the plan,
+P. Donabédian, Y. Porter, «Eghvard (Arménie, début
+XIVe siècle), La chapelle de l'alliance», *Hortus
+Artium Medievalium* 23 (2), 2017, pp. 837-855
+(HAL `halshs-01592491`), could not be fetched from
+here.
