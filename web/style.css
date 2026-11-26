@@ -160,6 +160,12 @@
     "Noto Serif Armenian", Georgia, serif;
 }
 
+/* the same hand, a thinner pen */
+:root[data-font="dzeragirthin"] {
+  --book: "nx Dzeragir Thin", "nx Noto Serif Armenian",
+    "Noto Serif Armenian", Georgia, serif;
+}
+
 *,
 *::before,
 *::after {

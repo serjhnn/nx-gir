@@ -18,6 +18,7 @@ text of the books only.
 | `freeserif-*` | GNU FreeSerif, Armenian letters only | GPL 3+ with the font exception, `FreeFont-license.txt` |
 | `bolorgir-*` | nxGir Bolorgir, our own, made from Noto Serif Armenian and Noto Serif | SIL OFL 1.1, `OFL-bolorgir.txt` |
 | `dzeragir-*` | nxGir Dzeragir, our own: the letters of a scribe (Walters Ms. W.541, CC0 images) | SIL OFL 1.1, `OFL-dzeragir.txt` |
+| `dzeragirthin-*` | nxGir Dzeragir Thin: the same letters, the strokes thinner | the same, `OFL-dzeragir.txt` |
 
 The Arian fonts are the .ttf files of
 `arian-grqi.zip` and `arian-amu-serif.zip` from
@@ -97,3 +98,10 @@ as one sign) stands for a typed ե ւ (liga). What he
 never wrote (օ, ֆ, Latin letters, digits, most
 punctuation) is not in the font; the reader shows
 it in Noto, the next font in the stack.
+
+nxGir Dzeragir Thin is made in the same run: each
+letter picture loses `THIN` (10) pixels off each side
+of its strokes before tracing, keeping a thin core of
+every stroke so hairlines and tail ends stay; the
+widths are the full letters', so the spacing is the
+same.

@@ -486,6 +486,34 @@ def test_dzeragir_font():
     assert "liga" in tags
 
 
+def test_dzeragir_thin_font():
+    """The thin one: the same letters as the regular,
+    a name of its own, and less ink."""
+    pytest.importorskip("brotli")
+    ttlib = pytest.importorskip("fontTools.ttLib")
+    pens = pytest.importorskip("fontTools.pens.areaPen")
+    reg = ttlib.TTFont(
+        web.static_file("/fonts/dzeragir-400-normal.woff2")
+    )
+    thin = ttlib.TTFont(
+        web.static_file(
+            "/fonts/dzeragirthin-400-normal.woff2"
+        )
+    )
+    assert set(thin.getBestCmap()) == set(reg.getBestCmap())
+    name = thin["name"].getDebugName(1)
+    assert name == "nxGir Dzeragir Thin"
+
+    def ink(f, ch):
+        g = f.getGlyphSet()[f.getBestCmap()[ord(ch)]]
+        p = pens.AreaPen(f.getGlyphSet())
+        g.draw(p)
+        return abs(p.value)
+
+    for ch in "աբնր":
+        assert ink(thin, ch) < 0.85 * ink(reg, ch), ch
+
+
 def js_key(w):
     """wordKey() in web/app.js."""
     return (

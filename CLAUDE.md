@@ -578,7 +578,10 @@
   `sources/w541/letters/` (Walters Ms. W.541, how
   they were taken in `sources/w541/README.md`);
   capitals are the small letters bigger; no pen
-  letters (`render-font.py`'s `save()` writes it)
+  letters (`render-font.py`'s `save()` writes it).
+  The same run makes nxGir Dzeragir Thin
+  (`dzeragirthin`), the strokes `THIN` pixels
+  thinner a side (`--thin PX` tries other weights)
 - `scripts/render-og.py`: regenerates
   `web/og-image.png`, the link preview image
   (`og:image` in `web/index.html`, for LinkedIn

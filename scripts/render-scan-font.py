@@ -21,7 +21,8 @@ potracer (pip), only here:
     python3 scripts/render-scan-font.py --thin 10 \\
         --out /tmp/thin.woff2  # a lighter weight
 
-Writes web/fonts/dzeragir-400-normal.woff2.
+Writes web/fonts/dzeragir-400-normal.woff2 and the
+thin one, dzeragirthin-400-normal.woff2 (THIN).
 """
 
 import argparse
@@ -40,6 +41,12 @@ OUT = ROOT / "web" / "fonts" / "dzeragir-400-normal.woff2"
 
 FAMILY = "nxGir Dzeragir"
 PS_NAME = "nxGirDzeragir-Regular"
+# the thin one: the same letters, THIN pixels off
+# each side of the strokes
+THIN = 10
+OUT_THIN = OUT.with_name("dzeragirthin-400-normal.woff2")
+FAMILY_THIN = "nxGir Dzeragir Thin"
+PS_THIN = "nxGirDzeragirThin-Regular"
 COPYRIGHT = (
     "Copyright 2026 the nxGir project; the letters"
     " after Walters Art Museum Ms. W.541 (CC0)"
@@ -258,7 +265,11 @@ def main():
     if a.sample:
         sample(a.sample, a.text)
     else:
-        build(thin=a.thin, out=a.out)
+        if a.thin or a.out:
+            build(thin=a.thin, out=a.out)
+        else:  # both fonts of the reader
+            build()
+            build(THIN, OUT_THIN, FAMILY_THIN, PS_THIN)
 
 
 if __name__ == "__main__":

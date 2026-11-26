@@ -6027,7 +6027,7 @@ const LINES = [1.75, 2.1, 2.5];
 const FONTS = ["grqi", "arianserif", "noto",
   "faulmann", "geghagrutyun", "tumanian",
   "garamond", "oldstandard", "bolorgir",
-  "dzeragir"];
+  "dzeragir", "dzeragirthin"];
 const FONT_NAMES = { grqi: "Arian Grqi",
   noto: "Noto Serif",
   arianserif: "Arian AMU Serif",
@@ -6037,7 +6037,8 @@ const FONT_NAMES = { grqi: "Arian Grqi",
   garamond: "EB Garamond",
   oldstandard: "Old Standard",
   bolorgir: "nxGir Bolorgir",
-  dzeragir: "nxGir Dzeragir" };
+  dzeragir: "nxGir Dzeragir",
+  dzeragirthin: "nxGir Dzeragir Thin" };
 const view = { size: SIZE, center: false, line: 0,
   font: 0, parallel: true, sentences: false,
   full: false, stacked: false,

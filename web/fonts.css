@@ -442,3 +442,15 @@
   src: url("fonts/dzeragir-400-normal.woff2")
     format("woff2");
 }
+
+/* nxGir Dzeragir Thin: the same letters, the
+   strokes thinner (THIN in render-scan-font.py) */
+@font-face {
+  font-family: "nx Dzeragir Thin";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  size-adjust: 112%;
+  src: url("fonts/dzeragirthin-400-normal.woff2")
+    format("woff2");
+}
