@@ -17,6 +17,7 @@ text of the books only.
 | `tumanian-*` | Tumanian's Handwriting, by Ruben Tarumian (2005) | no license file; the author (tarumian.am/?p=2243): "Տառատեսակը կարող եք ազատորեն ներբեռնել եւ անվճար գործածել" (free to download and use) |
 | `freeserif-*` | GNU FreeSerif, Armenian letters only | GPL 3+ with the font exception, `FreeFont-license.txt` |
 | `bolorgir-*` | nxGir Bolorgir, our own, made from Noto Serif Armenian and Noto Serif | SIL OFL 1.1, `OFL-bolorgir.txt` |
+| `dzeragir-*` | nxGir Dzeragir, our own: the small letters of a scribe (Walters Ms. W.541, CC0 images), the rest as nxGir Bolorgir | SIL OFL 1.1, `OFL-dzeragir.txt` |
 
 The Arian fonts are the .ttf files of
 `arian-grqi.zip` and `arian-amu-serif.zip` from
@@ -82,3 +83,14 @@ name of its own (Noto has no Reserved Font Name).
 The script needs scipy, scikit-image, fonttools,
 brotli and potracer (pip), and nothing else here
 does.
+
+nxGir Dzeragir is made by
+`scripts/render-scan-font.py` from the letters in
+`sources/w541/` (how they were taken from the
+manuscript is in `sources/w541/README.md`): each is
+traced with potrace, its width measured on its body
+so that tails and hooks reach over the letters
+beside it, as written. Letters the manuscript did
+not give are written with the pen of
+`render-font.py`, set to the scribe's weight and
+slant (`PEN` in the script).

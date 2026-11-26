@@ -153,6 +153,13 @@
     "Noto Serif Armenian", Georgia, serif;
 }
 
+/* a scribe's hand: Walters Ms. W.541, 17th c.
+   (scripts/render-scan-font.py); Cyrillic from Noto */
+:root[data-font="dzeragir"] {
+  --book: "nx Dzeragir", "nx Noto Serif Armenian",
+    "Noto Serif Armenian", Georgia, serif;
+}
+
 *,
 *::before,
 *::after {

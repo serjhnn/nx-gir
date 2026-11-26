@@ -181,3 +181,21 @@ Not in any source, estimated from the photographs: the
 heights, the size of the enclosure (about 104 by 84 m),
 the round towers at the corners, where in the court
 the Harutyun chapel stood.
+
+## w541/
+
+Walters Art Museum, Baltimore, Ms. W.541, Gospels,
+on paper, early 17th century: the hand behind the
+font nxGir Dzeragir (`scripts/render-scan-font.py`).
+The page images (600 dpi masters) are on OPenn,
+<https://openn.library.upenn.edu/Data/0020/Data/WaltersManuscripts/W541/>;
+the Walters waived all rights to them (CC0, 6
+February 2013; the older CC BY-NC-SA line inside
+the files is replaced by that). `w541/README.md`
+tells how the letters were taken.
+
+| File | What it is |
+|------|------------|
+| `page-163.jpg` | image 163, a whole page, made smaller |
+| `letters/<hex>.png` | each small letter, the average of its copies |
+| `letters.tsv` | the letters, how many copies, from which pages |

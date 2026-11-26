@@ -274,26 +274,60 @@ def draw(contours, width):
     return pen.getCharString()
 
 
+class Pen:
+    """Letters written with the pen, one at a time:
+    (contours, advance width) in font units."""
+
+    def __init__(self):
+        self.nib = nib()
+        self.srcs = {
+            p: TTFont(p) for p in (ARMENIAN, LATIN)
+        }
+        self.chars = chars()
+
+    def space(self):
+        adv = advance(self.srcs[ARMENIAN], 0x20)
+        return round(adv * WIDE)
+
+    def glyph(self, c):
+        path = self.chars[c]
+        adv = advance(self.srcs[path], c)
+        width = round(adv * WIDE) + TRACK if adv else 0
+        cov, ox, base = write(chr(c), path, self.nib)
+        if cov is None:
+            return [], width
+        return trace(cov, ox, base), width
+
+
 def build(out=OUT):
-    pen = nib()
-    srcs = {p: TTFont(p) for p in (ARMENIAN, LATIN)}
+    pen = Pen()
+    glyphs = {}
+    for c in sorted(pen.chars):
+        glyphs[c] = pen.glyph(c)
+        print(chr(c), len(glyphs[c][0]), flush=True)
+    save(out, glyphs, pen.space())
+
+
+def save(
+    out,
+    glyphs,
+    space,
+    family=FAMILY,
+    ps_name=PS_NAME,
+    copyright=COPYRIGHT,
+):
+    """Write the font: glyphs is {codepoint:
+    (contours, advance width)}."""
     order = [".notdef", "space"]
     cmap = {0x20: "space", 0xA0: "space"}
-    space = round(advance(srcs[ARMENIAN], 0x20) * WIDE)
     metrics = {".notdef": (500, 0), "space": (space, 0)}
     strings = {
         ".notdef": draw([], 500),
         "space": draw([], space),
     }
     top, bottom = 0, 0
-    for c, path in sorted(chars().items()):
+    for c, (contours, width) in sorted(glyphs.items()):
         name = f"uni{c:04X}"
-        adv = advance(srcs[path], c)
-        width = round(adv * WIDE) + TRACK if adv else 0
-        cov, ox, base = write(chr(c), path, pen)
-        contours = (
-            trace(cov, ox, base) if cov is not None else []
-        )
         for segs in contours:
             for s in segs:
                 for p in s[1:]:
@@ -303,13 +337,12 @@ def build(out=OUT):
         cmap[c] = name
         strings[name] = draw(contours, width)
         metrics[name] = (width, 0)
-        print(f"{chr(c)} {len(contours)}", flush=True)
     fb = FontBuilder(UPM, isTTF=False)
     fb.setupGlyphOrder(order)
     fb.setupCharacterMap(cmap)
     fb.setupCFF(
-        PS_NAME,
-        {"FullName": FAMILY, "version": VERSION},
+        ps_name,
+        {"FullName": family, "version": VERSION},
         strings,
         {},
     )
@@ -317,13 +350,13 @@ def build(out=OUT):
     fb.setupHorizontalHeader(ascent=top, descent=bottom)
     fb.setupNameTable(
         {
-            "copyright": COPYRIGHT,
-            "familyName": FAMILY,
+            "copyright": copyright,
+            "familyName": family,
             "styleName": "Regular",
-            "uniqueFontIdentifier": f"{PS_NAME};{VERSION}",
-            "fullName": FAMILY,
+            "uniqueFontIdentifier": f"{ps_name};{VERSION}",
+            "fullName": family,
             "version": f"Version {VERSION}",
-            "psName": PS_NAME,
+            "psName": ps_name,
             "licenseDescription": LICENSE,
             "licenseInfoURL": LICENSE_URL,
         }

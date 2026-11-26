@@ -66,7 +66,7 @@ See a mistake in the Grabar text or in a translation? Tap the word, press Report
 
 ## Text settings
 
-Make the text bigger or smaller, set it on the left or in the center, change the line spacing, put each sentence on its own line, read in a column or across the whole width, and choose the font. When the buttons do not fit in one row, on a phone or a tablet, these are behind the settings button and open in a column. The site remembers your choice. One of the fonts, nxGir Bolorgir, is our own: the letters written again with a broad pen, like a bolorgir manuscript.
+Make the text bigger or smaller, set it on the left or in the center, change the line spacing, put each sentence on its own line, read in a column or across the whole width, and choose the font. When the buttons do not fit in one row, on a phone or a tablet, these are behind the settings button and open in a column. The site remembers your choice. One of the fonts, nxGir Bolorgir, is our own: the letters written again with a broad pen, like a bolorgir manuscript. Another, nxGir Dzeragir, is the hand of a 17th-century scribe: its letters are traced from a manuscript of the Walters Art Museum.
 
 ## Pages for a long part
 

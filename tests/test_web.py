@@ -448,6 +448,27 @@ def test_bolorgir_font():
     assert "Open Font License" in f["name"].getDebugName(13)
 
 
+def test_dzeragir_font():
+    """The scribe's font: every Armenian letter, and
+    the ones taken from the manuscript are there."""
+    pytest.importorskip("brotli")
+    ttlib = pytest.importorskip("fontTools.ttLib")
+    f = ttlib.TTFont(
+        web.static_file("/fonts/dzeragir-400-normal.woff2")
+    )
+    cmap = f.getBestCmap()
+    letters = [*range(0x531, 0x557), *range(0x561, 0x587)]
+    missing = [chr(c) for c in letters if c not in cmap]
+    assert not missing, missing
+    assert f["name"].getDebugName(1) == "nxGir Dzeragir"
+    tsv = web.ROOT / "sources" / "w541" / "letters.tsv"
+    for line in tsv.read_text().splitlines():
+        if line and not line.startswith("#"):
+            ch, name = line.split("\t")[:2]
+            assert ord(ch) in cmap, ch
+            assert (tsv.parent / "letters" / name).exists()
+
+
 def js_key(w):
     """wordKey() in web/app.js."""
     return (

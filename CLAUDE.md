@@ -572,6 +572,12 @@
   scikit-image, fonttools, brotli, potracer, only
   there; see `web/fonts/README.md`). OFL, like Noto.
   `bolorgir` in `FONTS` in `app.js`
+- `scripts/render-scan-font.py`: makes nxGir
+  Dzeragir (`dzeragir` in `FONTS`), a scribe's
+  hand: the small letters traced from
+  `sources/w541/letters/` (Walters Ms. W.541, how
+  they were taken in `sources/w541/README.md`), the
+  rest from `render-font.py`'s pen (`Pen`, `save()`)
 - `scripts/render-og.py`: regenerates
   `web/og-image.png`, the link preview image
   (`og:image` in `web/index.html`, for LinkedIn
