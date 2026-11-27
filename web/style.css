@@ -5218,36 +5218,55 @@ body.home .search-wrap {
   }
 }
 
-/* the reader's panels float above the text: rounded,
-   a little see-through and blurred, with a shadow */
+/* the panels float above the text on a phone: the tab
+   bar, the reader's toolbar, the top bar and the
+   search box of the top page, the Library's tabs.
+   Rounded, a little see-through and blurred, with a
+   shadow and a line (--panel-line) */
 @media (max-width: 40rem) {
-  body.reading .tools,
-  body.reading .tabbar {
-    background: color-mix(in srgb, var(--bg) 88%,
+  :root {
+    --tabbar: calc(64px + env(safe-area-inset-bottom));
+    --panel-line: color-mix(in srgb,
+      var(--text) 45%, transparent);
+    --panel-bg: color-mix(in srgb, var(--bg) 88%,
       transparent);
+  }
+  .tools,
+  .tabbar,
+  body.home .bar,
+  .lib-tabs,
+  .search-wrap .sbox {
+    background: var(--panel-bg);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    border: 1px solid color-mix(in srgb,
-      var(--text) 45%, transparent);
+    border: 1px solid var(--panel-line);
     border-radius: 12px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
   }
-  /* dark themes keep the soft line */
-  :root[data-theme="dark"] body.reading .tools,
-  :root[data-theme="dark"] body.reading .tabbar,
-  :root[data-theme="black"] body.reading .tools,
-  :root[data-theme="black"] body.reading .tabbar {
-    border-color: var(--rule);
-  }
-  body.reading .tools::before {
+  /* the page-coloured layers behind the bars */
+  .tools::before,
+  .search-wrap::before,
+  .lib-tabs::before {
     display: none;
   }
-  body.reading .tools {
+  .search-wrap {
+    background: none;
+  }
+  body.home .bar {
+    top: 6px;
+    width: auto;
+    margin: 6px 16px 0;
+    padding: 10px 12px;
+  }
+  .lib-tabs {
+    overflow: hidden;
+  }
+  .tools {
     top: calc(var(--stick, 0px) + 6px);
     margin: 0 -8px 1rem;
     padding: 8px 10px;
   }
-  body.reading .tabbar {
+  .tabbar {
     left: 8px;
     right: 8px;
     bottom: calc(8px + env(safe-area-inset-bottom));
@@ -5263,7 +5282,7 @@ body.home .search-wrap {
     transform: translateY(
       calc(100% + 16px + env(safe-area-inset-bottom)));
   }
-  body.reading .tools .readbar {
+  .tools .readbar {
     right: 16px;
     bottom: 0;
     left: 16px;
@@ -5272,11 +5291,16 @@ body.home .search-wrap {
     overflow: hidden;
   }
 }
-
+/* dark themes keep the soft line */
+@media (max-width: 40rem) {
+  :root[data-theme="dark"],
+  :root[data-theme="black"] {
+    --panel-line: var(--rule);
+  }
+}
 @media (max-width: 40rem) and (prefers-color-scheme: dark) {
-  :root:not([data-theme]) body.reading .tools,
-  :root:not([data-theme]) body.reading .tabbar {
-    border-color: var(--rule);
+  :root:not([data-theme]) {
+    --panel-line: var(--rule);
   }
 }
 
