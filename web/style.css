@@ -5218,6 +5218,93 @@ body.home .search-wrap {
   }
 }
 
+/* the panels float above the text on a phone: the tab
+   bar, the reader's toolbar, the top bar and the
+   search box of the top page, the Library's tabs.
+   Rounded, a little see-through and blurred, with a
+   shadow and a line (--panel-line) */
+@media (max-width: 40rem) {
+  :root {
+    --tabbar: calc(64px + env(safe-area-inset-bottom));
+    --panel-line: color-mix(in srgb,
+      var(--text) 45%, transparent);
+    --panel-bg: color-mix(in srgb, var(--bg) 88%,
+      transparent);
+  }
+  .tools,
+  .tabbar,
+  body.home .bar,
+  .lib-tabs,
+  .search-wrap .sbox {
+    background: var(--panel-bg);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--panel-line);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  }
+  /* the page-coloured layers behind the bars */
+  body.home .bar::before,
+  .tools::before,
+  .search-wrap::before,
+  .lib-tabs::before {
+    display: none;
+  }
+  .search-wrap {
+    background: none;
+  }
+  body.home .bar {
+    top: 6px;
+    width: auto;
+    margin: 6px 16px 0;
+    padding: 10px 12px;
+  }
+  .lib-tabs {
+    overflow: hidden;
+  }
+  .tools {
+    top: calc(var(--stick, 0px) + 6px);
+    margin: 0 -8px 1rem;
+    padding: 8px 10px;
+  }
+  .tabbar {
+    left: 8px;
+    right: 8px;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    height: 56px;
+    padding-bottom: 0;
+  }
+  body.reading:not(.peek):not(.bars-fixed)
+    .tools.stuck:not(.open) {
+    transform: translateY(
+      calc(-100% - var(--stick, 0px) - 16px));
+  }
+  body.reading:not(.peek):not(.bars-fixed) .tabbar {
+    transform: translateY(
+      calc(100% + 16px + env(safe-area-inset-bottom)));
+  }
+  .tools .readbar {
+    right: 16px;
+    bottom: 0;
+    left: 16px;
+    height: 2px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+}
+/* dark themes keep the soft line */
+@media (max-width: 40rem) {
+  :root[data-theme="dark"],
+  :root[data-theme="black"] {
+    --panel-line: var(--rule);
+  }
+}
+@media (max-width: 40rem) and (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --panel-line: var(--rule);
+  }
+}
+
 /* -- the Reference: the book cards (#/reference) -- */
 
 /* a grid of cards, two across where they fit; each
