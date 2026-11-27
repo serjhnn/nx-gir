@@ -960,6 +960,48 @@ body.home .bar {
   z-index: 20;
   background: var(--bg);
 }
+
+/* the bars that stay in view on scrolling: their
+   background runs to the edges of the screen, a
+   shadow of their color cut to their height. The
+   bars and what is in them stay where they are.
+   In the phone view only to the column's edge,
+   main's padding (--bleed). */
+:root {
+  --bleed: 100vmax;
+}
+
+.phone {
+  --bleed: 16px;
+}
+
+/* the top bar is the column's width already */
+.phone body.home .bar {
+  --bleed: 0px;
+}
+
+body.home .bar::before,
+.tools::before,
+.search-wrap::before,
+.lib-tabs::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  box-shadow: 0 0 0 var(--bleed) var(--bg);
+  clip-path: inset(0 calc(-1 * var(--bleed)));
+}
+
+/* over their borders too */
+.tools::before {
+  bottom: -1px;
+}
+
+.lib-tabs::before {
+  top: -1px;
+  bottom: -1px;
+}
 .scrolled body.home .bar {
   box-shadow: 0 1px 0 var(--rule);
 }
