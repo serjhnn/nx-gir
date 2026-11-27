@@ -102,7 +102,12 @@
 :root[data-paper] body::before {
   content: "";
   position: fixed;
-  inset: 0;
+  inset: 0 0 auto;
+  /* the large viewport: a phone's browser hides its
+     bar on scrolling and the page grows; 100% would
+     leave a bare strip at the bottom */
+  height: 100vh;
+  height: 100lvh;
   z-index: -1;
   pointer-events: none;
   background-image: var(--paper-img);
