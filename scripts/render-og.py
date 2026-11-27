@@ -50,7 +50,7 @@ body {{
     radial-gradient(ellipse at center,
       #fbf6e9 40%, #efe3c6 100%);
   color: #141413;
-  font-family: system-ui, sans-serif;
+  font-family: "nx EB Garamond", serif;
   border-bottom: 14px solid #d97757;
 }}
 .top {{
@@ -67,7 +67,7 @@ svg {{
   stroke-linejoin: round;
 }}
 .name {{
-  font: 400 50px "nx Arian Grqi", serif;
+  font: 400 48px "nx Dzeragir", serif;
 }}
 .en {{
   font-size: 24px;
@@ -76,8 +76,8 @@ svg {{
   margin-left: 6px;
 }}
 .grabar {{
-  margin-top: 78px;
-  font: 400 50px "nx Arian Grqi", serif;
+  margin-top: 70px;
+  font: 400 42px "nx Bolorgir", serif;
   line-height: 1.25;
   color: #3b2a1a;
 }}
@@ -98,7 +98,7 @@ mark {{
   border-radius: 10px;
   background: #141413;
   color: #faf9f5;
-  font: 500 22px system-ui, sans-serif;
+  font: 400 24px "nx EB Garamond", serif;
 }}
 .word b {{ color: #e8a185; font-weight: 600; }}
 .modern {{
