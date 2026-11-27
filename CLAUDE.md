@@ -590,6 +590,12 @@
   The same run makes nxGir Dzeragir Thin
   (`dzeragirthin`), the strokes `THIN` pixels
   thinner a side (`--thin PX` tries other weights)
+- `reel/`: the Instagram Reel on how the fonts
+  were made (`nxgir-fonts-reel.mp4`, kept in git at
+  the user's asking), drawn on a canvas and recorded
+  by `reel/make.sh`; read `reel/README.md` first.
+  Captions stay in the top band (Instagram's buttons
+  cover the bottom and right)
 - `scripts/render-og.py`: makes
   `web/og-image.png`, the link preview image
   (`og:image` in `web/index.html`, for LinkedIn
