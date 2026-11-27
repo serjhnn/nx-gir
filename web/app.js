@@ -4149,24 +4149,16 @@ function contactRows() {
   ];
 }
 
-// one contact table, in a style picked by v
-function contactTable(v) {
-  const link = (r) => r[3]
-    ? h("a", { href: r[3], rel: "noopener me" }, r[2])
-    : r[2];
-  const rows = contactRows().map((r) => h("tr", {},
-    h("th", { scope: "row" },
-      icon(ICONS[r[1]]), t("ct." + r[0])),
-    h("td", {}, link(r))));
+// the contact tiles: an icon, a label, the handle
+function contactTable() {
   const tile = (r) => h("li", {},
     icon(ICONS[r[1]]),
     h("small", {}, t("ct." + r[0])),
-    link(r));
-  return h("section", { class: "contact ct-" + v },
+    r[3] ? h("a", { href: r[3], rel: "noopener me" },
+      r[2]) : r[2]);
+  return h("section", { class: "contact" },
     h("h2", {}, t("ct.h")),
-    v === "b"
-      ? h("ul", {}, contactRows().map(tile))
-      : h("table", {}, h("tbody", {}, rows)));
+    h("ul", {}, contactRows().map(tile)));
 }
 
 function aboutPage() {
@@ -4191,7 +4183,7 @@ function aboutPage() {
       h("a", { href: "#/contribute" },
         t("foot.join")),
       h("a", { href: REPO }, t("co.gh"))),
-    contactTable(window.CT || "a"));
+    contactTable());
 }
 
 // -- announcements --
