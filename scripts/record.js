@@ -171,11 +171,17 @@ async function steps(p) {
   await click(big);
   await wait(3000);
 
-  await cap("Light, dark and black themes");
+  await cap("Themes, and papers like an old book");
+  // the theme menu: dark, black, a paper, and
+  // back to light
   const th = p.locator("#theme");
-  for (let i = 0; i < 3; i++) {
+  for (const pick of ["dark", "black",
+    "paper:parchment", "paper:plain", "light"]) {
     await click(th);
-    await wait(i < 2 ? 1700 : 900);
+    await wait(500);
+    await click(p.locator(
+      `.theme-list [data-pick="${pick}"]`));
+    await wait(1400);
   }
 
   await cap("The map of the Armenian Highland");

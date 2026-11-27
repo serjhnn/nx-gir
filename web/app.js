@@ -804,10 +804,20 @@ function crumbs(path, last, above) {
 
 // -- theme --
 
+// The theme button opens a menu: the themes (the
+// system's, light, dark, black) and the papers
+// behind the page (PAPERS, as in the text
+// settings once). themeMenu holds the button and
+// the menu; it moves to the reading tools and back.
 const button = document.getElementById("theme");
 const topBar = button.parentNode;
+const themeMenu = h("div",
+  { class: "font-menu theme-menu" });
+button.replaceWith(themeMenu);
+themeMenu.append(button);
+button.setAttribute("aria-haspopup", "menu");
+button.setAttribute("aria-expanded", "false");
 
-// light, dark, black, and around again
 const THEMES = ["light", "dark", "black"];
 const THEME_ICONS = {
   light: "sun", dark: "moon", black: "night" };
@@ -817,28 +827,151 @@ function theme() {
   return THEMES.includes(t) ? t : "light";
 }
 
-function nextTheme(t) {
-  return THEMES[(THEMES.indexOf(t) + 1) %
-    THEMES.length];
+// the one picked, or "system" if none was
+function themePicked() {
+  let t = null;
+  try {
+    t = localStorage.getItem("nxgir-theme");
+  } catch (e) {}
+  return THEMES.includes(t) ? t : "system";
+}
+
+function systemTheme() {
+  return matchMedia("(prefers-color-scheme: dark)")
+    .matches ? "dark" : "light";
+}
+
+function setTheme(t) {
+  try {
+    if (t === "system") {
+      localStorage.removeItem("nxgir-theme");
+    } else {
+      localStorage.setItem("nxgir-theme", t);
+    }
+  } catch (e) {}
+  document.documentElement.dataset.theme =
+    t === "system" ? systemTheme() : t;
+  drawTheme();
+}
+
+// the system's theme followed while none is picked
+matchMedia("(prefers-color-scheme: dark)")
+  .addEventListener("change", () => {
+    if (themePicked() === "system") {
+      setTheme("system");
+    }
+  });
+
+function paperNow() {
+  return document.documentElement.dataset.paper
+    || "plain";
 }
 
 function drawTheme() {
-  const now = theme();
-  const other = nextTheme(now);
   button.replaceChildren(
-    icon(ICONS[THEME_ICONS[now]]));
-  button.title = t("theme.title",
-    t("theme." + now), t("theme." + other));
+    icon(ICONS[THEME_ICONS[theme()]]));
+  const p = paperNow();
+  button.title = t("theme.pick",
+    t("theme." + themePicked()),
+    p === "plain" ? "" : t("paper." + p));
   button.setAttribute("aria-label", button.title);
+  themeMenu.querySelectorAll("[data-pick]")
+    .forEach((o) => o.setAttribute("aria-checked",
+      String(o.dataset.pick === themePicked()
+        || o.dataset.pick === "paper:" + p)));
 }
 
-button.addEventListener("click", () => {
-  const t = nextTheme(theme());
-  document.documentElement.dataset.theme = t;
-  try {
-    localStorage.setItem("nxgir-theme", t);
-  } catch (e) {}
-  drawTheme();
+// the menu, made when first opened (PAPERS and the
+// words are not ready while this file loads), and
+// again in another language
+let themeList = null;
+function themeItems() {
+  const opt = (key, sample, name, pick) => {
+    const o = h("button", { class: "font-opt",
+      type: "button", role: "menuitemradio",
+      "data-pick": key }, sample, h("span",
+      { class: "font-name" }, name));
+    o.addEventListener("click", () => {
+      pick();
+      themeOpen(false);
+      button.focus();
+    });
+    return o;
+  };
+  const group = (name, opts) => h("div",
+    { class: "theme-group", role: "group",
+      "aria-label": name },
+    h("p", { class: "theme-head" }, name), opts);
+  const themes = ["system"].concat(THEMES)
+    .map((k) => opt(k, h("span", {
+      class: "theme-sample", "data-sample": k,
+      lang: "hy" }, "Աա"), t("theme." + k),
+    () => setTheme(k)));
+  const papers = PAPERS.map((p, i) => opt(
+    "paper:" + p, h("span", {
+      class: "paper-sample", "data-paper": p,
+      lang: "hy" }, "Աա"), t("paper." + p),
+    () => setPaper(i)));
+  return [group(t("theme.themes"), themes),
+    group(t("r.paper"), papers)];
+}
+
+function themeAway(e) {
+  if (!themeMenu.contains(e.target)) {
+    themeOpen(false);
+  }
+}
+
+function themeKeys(e) {
+  const opts = [...themeList.querySelectorAll(
+    ".font-opt")];
+  const k = opts.indexOf(document.activeElement);
+  if (e.key === "Escape") {
+    themeOpen(false);
+    button.focus();
+  } else if (e.key === "ArrowDown"
+    || e.key === "ArrowUp") {
+    e.preventDefault();
+    const d = e.key === "ArrowDown" ? 1 : -1;
+    const n = k < 0 ? 0
+      : (k + d + opts.length) % opts.length;
+    opts[n].focus();
+  }
+}
+
+// listeners only while open
+function themeOpen(on) {
+  if (on && !themeList) {
+    themeList = h("div", {
+      class: "font-list theme-list", role: "menu",
+      "aria-label": t("theme.menu") },
+    themeItems());
+    themeMenu.append(themeList);
+    drawTheme();
+  }
+  if (!themeList) return;
+  themeList.hidden = !on;
+  button.setAttribute("aria-expanded", String(on));
+  const go = on ? "addEventListener"
+    : "removeEventListener";
+  document[go]("pointerdown", themeAway);
+  document[go]("keydown", themeKeys);
+  if (on) {
+    (themeList.querySelector(
+      "[aria-checked='true']")
+      || themeList.querySelector(".font-opt"))
+      .focus({ preventScroll: true });
+  }
+}
+
+button.addEventListener("click", () =>
+  themeOpen(!themeList || themeList.hidden));
+
+// another language: the menu is made again
+window.addEventListener("langchange", () => {
+  themeOpen(false);
+  themeList?.remove();
+  themeList = null;
 });
 
 // -- the phone view --
@@ -6163,6 +6296,29 @@ function setView(change) {
   const i = R.ready && R.hi > R.lo ? topWord() : -1;
   const before = i >= 0 ? wordRect(i).top : 0;
   Object.assign(view, change);
+  saveView();
+  applyView();
+  if ("paged" in change) {
+    R.pages = pagesOf();
+    showPage(pageOfWord(Math.max(i, 0)), false);
+  }
+  if (i >= 0) {
+    const r = wordRect(i);
+    if (r) window.scrollBy(0, r.top - before);
+  }
+  decorate();
+}
+
+// the paper behind the pages, from the theme menu:
+// on every page, the reader's or not
+function setPaper(i) {
+  view.paper = i;
+  saveView();
+  applyView();
+  drawTheme();
+}
+
+function saveView() {
   try {
     localStorage.setItem("nxgir-view",
       JSON.stringify({ rem: SIZES[view.size],
@@ -6176,16 +6332,6 @@ function setView(change) {
         stacked: view.stacked,
         paged: view.paged }));
   } catch (e) {}
-  applyView();
-  if ("paged" in change) {
-    R.pages = pagesOf();
-    showPage(pageOfWord(Math.max(i, 0)), false);
-  }
-  if (i >= 0) {
-    const r = wordRect(i);
-    if (r) window.scrollBy(0, r.top - before);
-  }
-  decorate();
 }
 
 function viewTools() {
@@ -6232,9 +6378,8 @@ function viewTools() {
     "aria-pressed": String(paged()),
     title: paged() ? t("r.inpages") : t("r.long") }),
   fontPick(),
-  paperPick(),
-  // the theme button joins the row while reading
-  button);
+  // the theme menu joins the row while reading
+  themeMenu);
 }
 
 // the book fonts: a button with the font's name and
@@ -6253,24 +6398,8 @@ function fontPick() {
     sample: (f) => sample(f, t("r.fontsample")) });
 }
 
-// the paper behind the pages: a button with a bit
-// of the paper, and a panel of them (style.css,
-// data-paper)
-function paperPick() {
-  const sample = (p, text) => h("span", {
-    class: "paper-sample", "data-paper": p,
-    lang: "hy" }, text);
-  return listPick({ items: PAPERS,
-    label: t("r.paper"),
-    name: (p) => t("paper." + p),
-    now: () => view.paper,
-    set: (i) => setView({ paper: i }),
-    face: (p) => sample(p, "Աա"),
-    sample: (p) => sample(p, t("r.fontsample")) });
-}
-
-// a button that opens a list to pick one from: the
-// fonts and the papers. face(item) is drawn on the
+// a button that opens a list to pick one from (the
+// fonts). face(item) is drawn on the
 // button, sample(item) above the name in the list.
 function listPick(o) {
   const name = h("span", { class: "font-name" });
@@ -8352,8 +8481,9 @@ async function route() {
   document.body.classList.remove("home");
   // back to the top bar from the reading tools
   // (in its place: before the language globe)
-  if (button.parentNode !== topBar) {
-    topBar.insertBefore(button,
+  if (themeMenu.parentNode !== topBar) {
+    themeMenu.remove();
+    topBar.insertBefore(themeMenu,
       topBar.querySelector(".lang-globe"));
   }
   try {

@@ -184,8 +184,11 @@ const UI = {
     "video.play": "Դիտել տեսանյութը",
     "video.note": "Տեսանյութը բեռնվում է YouTube-ից միայն սեղմելուց հետո։",
     "video.youtube": "Դիտել YouTube-ում",
-    "theme.title": (now, next) => "Ոճ՝ " + now
-      + " (սեղմեք՝ " + next + ")",
+    "theme.pick": (now, paper) => "Ոճ՝ " + now
+      + (paper ? " · " + paper : ""),
+    "theme.system": "Ինչպես համակարգում",
+    "theme.themes": "Ոճ",
+    "theme.menu": "Ոճ և թուղթ",
     "phone": "Հեռախոսի տեսք",
     "phone.on": "Հեռախոսի տեսք՝ միացված (սեղմեք՝"
       + " լայն տեսքի համար)",
@@ -676,8 +679,11 @@ const UI = {
     "video.play": "Play the video",
     "video.note": "The video loads from YouTube only when you play it.",
     "video.youtube": "Watch on YouTube",
-    "theme.title": (now, next) => "Theme: " + now
-      + " (click for " + next.toLowerCase() + ")",
+    "theme.pick": (now, paper) => "Theme: " + now
+      + (paper ? " · " + paper : ""),
+    "theme.system": "As the system",
+    "theme.themes": "Theme",
+    "theme.menu": "Theme and paper",
     "phone": "Phone view",
     "phone.on": "Phone view: on (click for the"
       + " wide view)",
@@ -1165,8 +1171,11 @@ const UI = {
     "video.play": "Смотреть видео",
     "video.note": "Видео загружается с YouTube только после нажатия.",
     "video.youtube": "Смотреть на YouTube",
-    "theme.title": (now, next) => "Тема: " + now
-      + " (нажмите: " + next.toLowerCase() + ")",
+    "theme.pick": (now, paper) => "Тема: " + now
+      + (paper ? " · " + paper : ""),
+    "theme.system": "Как в системе",
+    "theme.themes": "Тема",
+    "theme.menu": "Тема и бумага",
     "phone": "Вид телефона",
     "phone.on": "Вид телефона: включён (нажмите для"
       + " широкого вида)",

@@ -843,13 +843,26 @@ h1 {
   .bar .top-btns {
     display: contents;
   }
-  .top-btns > #theme,
+  .top-btns > .theme-menu,
   .top-btns > .lang-globe {
     order: 2;
   }
   /* the two buttons together, at the right */
-  .top-btns > #theme {
+  .top-btns > .theme-menu {
     margin-left: auto;
+  }
+  /* the menu across the bar, not off its left */
+  .bar {
+    position: relative;
+  }
+  .top-btns > .theme-menu {
+    position: static;
+  }
+  .top-btns > .theme-menu > .theme-list {
+    top: 3.4rem;
+    left: 16px;
+    right: 16px;
+    width: auto;
   }
   .lang-slider {
     order: 3;
@@ -2603,11 +2616,13 @@ body.reading .bar {
 }
 
 /* the chosen one: a check and the accent */
-.font-opt[aria-selected="true"] .font-name {
+.font-opt:is([aria-selected="true"],
+  [aria-checked="true"]) .font-name {
   color: var(--accent-ink);
 }
 
-.font-opt[aria-selected="true"]::before {
+.font-opt:is([aria-selected="true"],
+  [aria-checked="true"])::before {
   content: "";
   position: absolute;
   left: 0.85rem;
@@ -3503,13 +3518,111 @@ body.reading.full .bar {
 }
 
 .tools.collapsed.open .view
-  .font-opt[aria-selected="true"] {
+  .font-opt:is([aria-selected="true"],
+    [aria-checked="true"]) {
   background: var(--hover);
 }
 
 .tools.collapsed.open .view
-  .font-opt[aria-selected="true"]::before {
+  .font-opt:is([aria-selected="true"],
+  [aria-checked="true"])::before {
   left: 0.75rem;
+}
+
+/* the theme menu: the theme button opens it, the
+   themes and the papers in two groups (themeMenu in
+   app.js; .font-list and .font-opt above) */
+.theme-menu {
+  display: inline-flex;
+}
+
+.theme-head {
+  margin: 0.35rem 0.8rem 0.2rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.theme-group + .theme-group {
+  margin-top: 0.3rem;
+  padding-top: 0.3rem;
+  border-top: 1px solid var(--panel-rule);
+}
+
+.theme-list .font-opt {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.theme-list .font-name {
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+/* a bit of each theme, in its own colors, the same
+   in every theme (the tokens above) */
+.theme-sample,
+.theme-list .paper-sample {
+  display: inline-block;
+  flex: none;
+  width: 2.6rem;
+  padding: 0;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  font-family: var(--book);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.theme-sample[data-sample="light"] {
+  border-color: #e3e0d6;
+  background: #faf9f5;
+  color: #141413;
+}
+
+.theme-sample[data-sample="dark"] {
+  border-color: #3a3936;
+  background: #1f1e1d;
+  color: #f0eee6;
+}
+
+.theme-sample[data-sample="black"] {
+  border-color: #262624;
+  background: #000000;
+  color: #e8e6de;
+}
+
+/* the system's: half light, half dark */
+.theme-sample[data-sample="system"] {
+  border-color: #8a8880;
+  background: linear-gradient(135deg,
+    #faf9f5 50%, #1f1e1d 50%);
+  color: #8a8880;
+}
+
+/* in the settings column it opens in place */
+.tools.collapsed.open .view .theme-menu {
+  display: block;
+  width: 100%;
+}
+
+.tools.collapsed.open .view
+  .theme-list:not([hidden]) {
+  display: block;
+}
+
+.tools.collapsed.open .view .theme-group {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.25rem;
+}
+
+.tools.collapsed.open .view .theme-head {
+  grid-column: 1 / -1;
 }
 
 /* -- the phone view --

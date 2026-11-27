@@ -66,15 +66,15 @@ See a mistake in the Grabar text or in a translation? Tap the word, press Report
 
 ## Text settings
 
-Make the text bigger or smaller, set it on the left or in the center, change the line spacing, put each sentence on its own line, read in a column or across the whole width, and choose the font. When the buttons do not fit in one row, on a phone or a tablet, these are behind the settings button and open in a column. The site remembers your choice. One of the fonts, nxGir Bolorgir, is our own: the letters written again with a broad pen, like a bolorgir manuscript. Another, nxGir Dzeragir, is the hand of a 17th-century scribe: its letters are traced from a manuscript of the Walters Art Museum; nxGir Dzeragir Thin is the same hand with a finer pen. You can also choose the paper behind the page: plain, papyrus, an old book, vellum, or an old book by candlelight for reading at night.
+Make the text bigger or smaller, set it on the left or in the center, change the line spacing, put each sentence on its own line, read in a column or across the whole width, and choose the font. When the buttons do not fit in one row, on a phone or a tablet, these are behind the settings button and open in a column. The site remembers your choice. One of the fonts, nxGir Bolorgir, is our own: the letters written again with a broad pen, like a bolorgir manuscript. Another, nxGir Dzeragir, is the hand of a 17th-century scribe: its letters are traced from a manuscript of the Walters Art Museum; nxGir Dzeragir Thin is the same hand with a finer pen.
 
 ## Pages for a long part
 
 A long part can be read a page at a time: the text is cut into pages of a few minutes each, with ‹ Previous and Next › above and below, and ‹ 3/15 › in the tools. The reader then holds only one page, so it works on an old phone with little memory; the progress bar still shows how far you are in the whole part. This is how every long part opens; the ▤ button in the text settings turns it off, to read one long text.
 
-## Light, dark and black
+## Themes and papers
 
-The theme button switches between a light page, a dark one and a black one for reading at night.
+The theme button opens a menu: a light page, a dark one, a black one for reading at night, or as your system is set. Below them, the paper behind the page: plain, papyrus, an old book, vellum, or an old book by candlelight. While reading, the menu is with the text settings.
 
 ## How far you have read
 
