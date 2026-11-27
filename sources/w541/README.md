@@ -1,6 +1,8 @@
 # The letters of W.541
 
-The small letters of nxGir Dzeragir, taken from
+The letters of nxGir Dzeragir: the small letters
+(steps 1-9) and the capitals (step 10). The small
+letters were taken from
 eleven pages of Walters Ms. W.541 (images 40, 80,
 100, 120, 163, 180, 260, 280, 300, 320 and 420 of
 the OPenn set; see `../README.md`).
@@ -78,9 +80,48 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    colon is drawn as his ։. The digits 0-9 are
    drawn the same way, leaning with his hand.
 
+10. Capitals (`capitals/`, `capitals.tsv`). The
+   text has no black capitals: its sentences open
+   with a red initial, written large at the start
+   of a line. 185 pages (images 20 to 480, every
+   fifth and every fifth plus two) were read
+   again for the red ink alone: red over green
+   well above the paper's, smoothed, kept where it
+   touches clearly red ink, so the pale hairlines
+   stay. Its pieces of initial size (about 1040)
+   were grouped by shape. Each page's run of
+   initials was lined up with the capitals that
+   open sentences in the 1895 Gospels, all pages at
+   once and in order (a page only moves the text
+   forward); a group took the letter the text gives
+   most. Where the text could not say (rare
+   letters, a print that starts its sentences
+   otherwise), the word after the initial was read
+   on the page: «Բայց ասեմ ձեզ», «Դուք էք աղ
+   երկրի», «Որ ընդունի», «Վասն այդորիկ», «Մարդ
+   բարի», «Գնացին աշակերտքն». This corrected two
+   names: the shape like Կ is his Վ, the U with a
+   flag his Մ. For each letter the copies whose
+   shape and text agree were scaled to one height,
+   fitted on the medoid (the copy most like the
+   others) by size and place, and the 8 closest
+   averaged, as in step 4; Ձ, with five copies, is
+   the medoid alone. 15 capitals so far: Ա Բ Գ Դ
+   Ե Զ Ի Հ Ձ Մ Յ Ն Ո Պ Վ. Not found yet (rare at
+   the head of a sentence, or not told apart):
+   Կ, Ս, Տ, Ք, Թ, Լ and the rest; the font keeps
+   his small letters bigger for those. The
+   pictures are as large as written (the ink
+   alone); the initials are written finer than the
+   text, so the font scales them alike and widens
+   their strokes to his weight
+   (`scripts/render-scan-font.py`).
+
 `letters.tsv` gives the copies and pages of each,
 and `.` the scribe's dot. օ (the scribe writes աւ)
 and ֆ are not in the manuscript, so not in the font.
 
-The pictures are 120 pixels per x-height, the
-baseline at row 288, black ink on white.
+The pictures in `letters/` are 120 pixels per
+x-height, the baseline at row 288, black ink on
+white; those in `capitals/` are the red ink of the
+initials, as large as written, in black.

@@ -199,4 +199,6 @@ tells how the letters were taken.
 | `page-163.jpg` | image 163, a whole page, made smaller |
 | `letters/<hex>.png` | each small letter, the average of its copies |
 | `letters.tsv` | the letters, how many copies, from which pages |
+| `capitals/<hex>.png` | each capital: the red initials, the average of their copies |
+| `capitals.tsv` | the capitals, how many copies, from which pages |
 | `marks/`, `marks.tsv` | punctuation and digits the manuscript does not give, drawn by Claude in the scribe's weight |

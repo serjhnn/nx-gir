@@ -479,6 +479,17 @@ def test_dzeragir_font():
             ch, name = line.split("\t")[:2]
             assert ord(ch) in cmap, ch
             assert (tsv.parent / "letters" / name).exists()
+    # the capitals found: his red initials
+    caps = tsv.with_name("capitals.tsv")
+    found = [
+        line.split("\t")[:2]
+        for line in caps.read_text().splitlines()
+        if line and not line.startswith("#")
+    ]
+    assert len(found) >= 15
+    for ch, name in found:
+        assert ord(ch) in cmap, ch
+        assert (caps.parent / "capitals" / name).exists()
     assert ord("a") not in cmap
     # the scribe's և for a typed ե ւ
     assert 0x587 in cmap

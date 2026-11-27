@@ -92,8 +92,13 @@ manuscript is in `sources/w541/README.md`): each is
 traced with potrace, its width measured on its body
 so that tails and hooks reach over the letters
 beside it, as written. Every letter in it is the
-scribe's: the capitals are his small letters drawn
-bigger, ։ two of his dots, and his և (the word եւ
+scribe's: the capitals are the red initials that
+open his sentences (`sources/w541/capitals/`), all
+scaled by one factor and set on the baseline, their
+strokes widened to the weight of his text (the
+initials are written finer); the capitals not
+found yet are his small letters drawn bigger. ։ is
+two of his dots, and his և (the word եւ
 as one sign) stands for a typed ե ւ (liga). What he
 never wrote (օ, ֆ, Latin letters) is not in the
 font; the reader shows it in Noto, the next font in
