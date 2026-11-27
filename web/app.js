@@ -758,7 +758,7 @@ const BY_SA = "https://creativecommons.org/"
 function siteFooter() {
   const pages = ["library", "reference", "blog",
     "comics", "map", "features", "timeline",
-    "about", "stats", "recent"];
+    "about", "recent"];
   return h("footer", { class: "site-foot" },
     h("p", { class: "foot-name" },
       h("span", { lang: "hy" }, "Նախագիր"),
@@ -1418,7 +1418,6 @@ const MORE = [
     ["#/news", "horn", "nav.news"],
     ["#/timeline", "scroll", "nav.timeline"],
     ["#/features", "tick", "nav.features"],
-    ["#/stats", "sliders", "nav.stats"],
   ],
   [
     ["#/about", "info", "nav.about"],
@@ -5331,7 +5330,10 @@ async function statsPage() {
   document.title = t("nav.stats") + " · " + NAME;
   const head = [
     h("p", { class: "crumbs" },
-      h("a", { href: "#/" }, t("home"))),
+      h("a", { href: "#/" }, t("home")),
+      h("span", { class: "sep" }, "/"),
+      h("a", { href: "#/settings" },
+        t("nav.settings"))),
     h("h1", {}, t("nav.stats")),
   ];
   if (data.error) {
@@ -5565,6 +5567,14 @@ function settingsPage() {
         sw(t("r.bars"), view.hideBars,
           () => set({ hideBars: !view.hideBars }),
           t("set.barsnote"))),
+      // the site's numbers: its own page
+      part(t("set.site"),
+        h("a", { class: "set-row",
+          href: "#/stats" },
+        h("span", { class: "set-name" },
+          t("nav.stats"),
+          h("small", {}, t("set.statsnote"))),
+        h("span", { "aria-hidden": "true" }, "›"))),
       h("p", { class: "local-hint" }, t("set.kept")));
   };
   draw();
@@ -6674,13 +6684,6 @@ function viewTools() {
       "aria-pressed": String(view.full),
       title: view.full ? t("r.whole")
         : t("r.column") }),
-  // a long part in pages: a page at a time is in
-  // the browser, a few MB instead of hundreds
-  btn("▤", () => setView({ paged: !paged() }), {
-    ...tile("paged"),
-    "aria-label": t("r.paged"),
-    "aria-pressed": String(paged()),
-    title: paged() ? t("r.inpages") : t("r.long") }),
   // on a wide screen, with the translation beside:
   // each line under its pair, as on a phone
   R.par && view.parallel ? btn(icon(ICONS[
@@ -7302,7 +7305,8 @@ function parHead(name, other) {
 const PAGE_CHARS = 5000;
 
 // Read in pages? Yes, unless the reader turned it
-// off in the text settings (the ▤ button).
+// off on the Settings page: a page at a time is in
+// the browser, a few MB instead of hundreds
 function paged() {
   return view.paged !== false;
 }

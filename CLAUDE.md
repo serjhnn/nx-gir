@@ -581,15 +581,27 @@
   hand: every letter traced from
   `sources/w541/letters/` (Walters Ms. W.541, how
   they were taken in `sources/w541/README.md`);
-  capitals are the small letters bigger; no pen
+  capitals are his red initials
+  (`sources/w541/capitals/`, step 10 of its
+  README), scaled alike (`CAP_H`) and widened to
+  his weight; those not found yet are the small
+  letters bigger; no pen
   letters (`render-font.py`'s `save()` writes it).
   The same run makes nxGir Dzeragir Thin
   (`dzeragirthin`), the strokes `THIN` pixels
   thinner a side (`--thin PX` tries other weights)
-- `scripts/render-og.py`: regenerates
+- `reel/`: the Instagram Reel on how the fonts
+  were made (`nxgir-fonts-reel.mp4`, kept in git at
+  the user's asking), drawn on a canvas and recorded
+  by `reel/make.sh`; read `reel/README.md` first.
+  Captions stay in the top band (Instagram's buttons
+  cover the bottom and right)
+- `scripts/render-og.py`: makes
   `web/og-image.png`, the link preview image
   (`og:image` in `web/index.html`, for LinkedIn
-  and others) after changing the logo or colors
+  and others), from the user's poster
+  `docs/og-poster.png` (art: kept as given),
+  scaled and cut to 1200x630
 - Linux and Termux only, no Windows support for now.
 
 ## Git

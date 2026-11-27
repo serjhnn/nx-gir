@@ -1,0 +1,56 @@
+# The capitals of Walters Ms. W.541: the red initials that
+# open its sentences, each the average of its copies on the
+# pages named (one copy: the one most like the others),
+# named by the text (sources/w541/README.md, step 10).
+# Pictures: the ink alone, as large as written; the font
+# scales them (render-scan-font.py, CAP_H).
+# Ո: its top edge smoothed of a mark written above it.
+# Տ: one copy, a smudge at its top end cleaned. Ը, Ծ, Ձ:
+# one copy each, ragged edges smoothed. Ձ has a stroke
+# across its foot; Չ, the same 2 without it. Խ, Ճ, Է, Ժ, Շ: one
+# copy each, found on the pages where the Gospels have a
+# sentence that starts with them. Ռ and Ց are not in W.541
+# as initials: they are from W.542 (../w542/, pages of that
+# book), named by the user. Ղ Ջ Ր are found in neither:
+# Claude composed them from his own capitals (copies 0):
+# Ր his Ո with the right leg ended short, Ղ his Լ with the
+# hump of his Ի. Ջ (no form of his comes close) is the
+# printed Ջ as nxGir Bolorgir writes it with a broad pen,
+# leaned like his hand (the user asked for the printed
+# form); the font widens it to his weight.
+# letter	file	copies	pages
+Ա	0531.png	8	27 257 305 317 382 395 400 422
+Բ	0532.png	8	45 60 115 132 270 295 297 360
+Գ	0533.png	8	20 80 177 372 380 415 470
+Դ	0534.png	8	32 65 102 317 355 377 410
+Ե	0535.png	8	25 57 145 152 212 360 395 447
+Զ	0536.png	8	25 240 262 377 390 392 452
+Է	0537.png	1	371
+Ը	0538.png	1	410
+Թ	0539.png	1	77
+Ժ	053a.png	1	394
+Ի	053b.png	8	42 102 262 287 310 352 385 395
+Լ	053c.png	6	36 38 156 277
+Խ	053d.png	1	44
+Ծ	053e.png	1	64
+Կ	053f.png	7	43 64 80 107 447
+Հ	0540.png	8	42 270 300 337 382 450 452
+Ձ	0541.png	1	30
+Ղ	0542.png	0	-
+Ճ	0543.png	1	294
+Մ	0544.png	8	25 100 195 272 285 392 450 475
+Յ	0545.png	8	25 27 130 440 450 460 462
+Ն	0546.png	8	67 70 80 130 210 222 415 430
+Շ	0547.png	1	419
+Ո	0548.png	8	132 217 260 297 312 380 402 437
+Չ	0549.png	2	118 192
+Պ	054a.png	8	75 282 295 350 395 405 415 420
+Ջ	054b.png	0	-
+Ռ	../../w542/capitals/054c.png	1	34
+Ս	054d.png	6	24 146 250 372 475
+Վ	054e.png	8	42 60 110 295 297 432
+Տ	054f.png	1	212
+Ր	0550.png	0	-
+Ց	../../w542/capitals/0551.png	1	415
+Փ	0553.png	1	475
+Ք	0554.png	1	160

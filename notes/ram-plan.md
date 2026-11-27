@@ -84,8 +84,8 @@ How (`web/app.js`, `web/style.css`):
   `wordAt()`, `wordsOf()`, `snippet()`.
 - `pagesOf()` decides the pages; `paged()` says if
   they are on: always, unless the reader turned them
-  off with the ▤ button in the text settings (beside
-  the font list). Kept in the `nxgir-view` setting
+  off with the "In pages" switch on the Settings
+  page. Kept in the `nxgir-view` setting
   as `paged` (null = on, the default).
 - The reader's tools show ‹ n/N › for the pages
   (`pagesBtn()`), where the parts buttons were (the

@@ -479,11 +479,22 @@ def test_dzeragir_font():
             ch, name = line.split("\t")[:2]
             assert ord(ch) in cmap, ch
             assert (tsv.parent / "letters" / name).exists()
+    # the capitals found: his red initials
+    caps = tsv.with_name("capitals.tsv")
+    found = [
+        line.split("\t")[:2]
+        for line in caps.read_text().splitlines()
+        if line and not line.startswith("#")
+    ]
+    assert len(found) >= 35
+    for ch, name in found:
+        assert ord(ch) in cmap, ch
+        assert (caps.parent / "capitals" / name).exists()
     assert ord("a") not in cmap
     # the scribe's և for a typed ե ւ
     assert 0x587 in cmap
-    # heavy marks of its own, not Noto's
-    for ch in "՝՛՞՜,;«»-֊():։0123456789":
+    # heavy marks of its own, not Noto's, and օ Օ
+    for ch in "՝՛՞՜,;«»-֊():։0123456789օՕ":
         assert ord(ch) in cmap, ch
     tags = [
         r.FeatureTag

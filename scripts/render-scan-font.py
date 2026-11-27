@@ -5,11 +5,13 @@ century), from the letters in sources/w541/.
 
 Every letter is the scribe's: traced from its
 picture, the average of its copies in the
-manuscript (sources/w541/README.md). The capitals,
-which the text hardly has, are his small letters
-drawn bigger; և is his own sign, ։ two of his
-dots. Punctuation he does not give and the digits
-are drawn with a round pen of his weight
+manuscript (sources/w541/README.md). The capitals
+are the red initials that open his sentences
+(sources/w541/capitals/), all scaled alike; those
+not found yet are his small letters drawn bigger.
+և is his own sign, ։ two of his dots.
+Punctuation he does not give and the digits are
+drawn with a round pen of his weight
 (sources/w541/marks/). What he never wrote (Latin
 letters) is not in the font: the reader shows it
 in its next font.
@@ -62,7 +64,12 @@ U = XH / PX  # font units per pixel
 SIDE = 55  # space each side of a letter, units
 SPACE = 340
 MARK_SIDE = 15  # space each side of a drawn mark
-CAP = 1.2  # capitals: the small letter, bigger
+CAP = 1.2  # capitals not found: the small letter,
+# bigger
+# the initials, all scaled alike: the middle one this
+# many x-heights tall, none outside CAP_MIN..CAP_MAX
+CAP_H = 2.3
+CAP_MIN, CAP_MAX = 1.9, 2.6
 COLON = 0.55  # ։ the upper dot, in x-heights
 CORE = 3  # a thinned letter keeps this much round
 # its middle line, in pixels, so hairlines stay
@@ -119,14 +126,14 @@ def no_specks(ink):
     return np.isin(lab, keep)
 
 
-def trace(ink, ox):
+def trace(ink, ox, base=BASE):
     """Curves of the ink in font units, x from the
-    column ox, y up from the baseline."""
+    column ox, y up from the baseline (row base)."""
 
     def unit(p):
         return (
             round((p.x - ox) * U),
-            round((BASE - p.y) * U),
+            round((base - p.y) * U),
         )
 
     bm = potrace.Bitmap(~ink)  # True is paper
@@ -189,6 +196,89 @@ def scanned(path, thin=0, side=SIDE):
     return contours, width
 
 
+def capitals():
+    """{character: picture path}: the initials
+    (capitals.tsv)."""
+    out = {}
+    path = SRC / "capitals.tsv"
+    if not path.exists():
+        return out
+    for line in path.read_text().split("\n"):
+        if line and not line.startswith("#"):
+            ch, name = line.split("\t")[:2]
+            out[ch] = SRC / "capitals" / name
+    return out
+
+
+def cap_scale(pics):
+    """Pixels of each initial's picture to pixels of
+    the letters' pictures: one factor for all, so the
+    middle initial is CAP_H x-heights tall, then each
+    kept within CAP_MIN..CAP_MAX."""
+    hs = {
+        ch: Image.open(p).size[1] for ch, p in pics.items()
+    }
+    k = CAP_H * PX / float(np.median(list(hs.values())))
+    lo, hi = CAP_MIN * PX, CAP_MAX * PX
+    return {
+        ch: min(max(h * k, lo), hi) / h
+        for ch, h in hs.items()
+    }
+
+
+def stroke(ink):
+    """The width of the thick strokes: twice the
+    distance to the edge along the middle line, 85th
+    percentile, in pixels."""
+    d = ndimage.distance_transform_edt(ink)
+    return float(np.percentile(2 * d[skeletonize(ink)], 85))
+
+
+def widened(ink, g):
+    """Every stroke g times as wide: the middle line
+    drawn again with disks g times its own radius,
+    so the hairlines stay thin beside the stems."""
+    d = ndimage.distance_transform_edt(ink)
+    sk = skeletonize(ink)
+    r = np.round(d * g).astype(int)
+    pad = int(r.max()) + 2
+    out = np.zeros(
+        (ink.shape[0] + 2 * pad, ink.shape[1] + 2 * pad),
+        bool,
+    )
+    for rad in np.unique(r[sk]):
+        pts = np.zeros_like(out)
+        ys, xs = np.nonzero(sk & (r == rad))
+        pts[ys + pad, xs + pad] = True
+        far = ndimage.distance_transform_edt(~pts)
+        out |= far <= max(int(rad), 1)
+    out = ndimage.gaussian_filter(out * 1.0, 1.5) > 0.5
+    return out[pad:-pad, pad:-pad] | ink
+
+
+def initial(path, k, weight, thin=0):
+    """A capital from its initial: scaled by k, on
+    the baseline, the width its whole ink. The red
+    initials are drawn finer than the black text;
+    their strokes are widened to his weight (the
+    thick strokes of the small letters)."""
+    im = Image.open(path).convert("L")
+    w, h = im.size
+    im = im.resize(
+        (round(w * k), round(h * k)), Image.LANCZOS
+    )
+    ink = np.pad(no_specks(np.array(im) < 128), 40)
+    ink = widened(ink, weight / stroke(ink))
+    ys = np.nonzero(ink.any(1))[0]
+    xs = np.nonzero(ink.any(0))[0]
+    base = ys[-1] + 1
+    contours = trace(
+        thinned(ink, thin), xs[0] - SIDE / U, base
+    )
+    width = round((xs[-1] + 1 - xs[0]) * U + 2 * SIDE)
+    return contours, width
+
+
 def moved(contours, dx=0, dy=0, k=1.0):
     """Contours scaled by k from the origin, then
     moved."""
@@ -212,13 +302,29 @@ def glyphs(thin=0):
     out = {}
     for ch, path in letters().items():
         # marks sit close to the letter before them;
-        # digits are spaced as letters
+        # digits and the drawn letters (օ) are spaced
+        # as letters
         mark = path.parent.name == "marks"
-        tight = mark and not ch.isdigit()
+        tight = mark and not ch.isalnum()
         side = MARK_SIDE if tight else SIDE
         out[ord(ch)] = scanned(path, thin, side)
+    pics = capitals()
+    weight = float(
+        np.median(
+            [
+                stroke(
+                    np.array(Image.open(p).convert("L"))
+                    < 128
+                )
+                for p in letters().values()
+                if p.parent.name == "letters"
+            ]
+        )
+    )
+    for ch, k in cap_scale(pics).items():
+        out[ord(ch)] = initial(pics[ch], k, weight, thin)
     for c in range(0x561, 0x587):
-        if c in out:
+        if c in out and c - 0x30 not in out:
             cont, w = out[c]
             out[c - 0x30] = (
                 moved(cont, k=CAP),

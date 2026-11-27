@@ -92,12 +92,24 @@ manuscript is in `sources/w541/README.md`): each is
 traced with potrace, its width measured on its body
 so that tails and hooks reach over the letters
 beside it, as written. Every letter in it is the
-scribe's: the capitals are his small letters drawn
-bigger, ։ two of his dots, and his և (the word եւ
-as one sign) stands for a typed ե ւ (liga). What he
-never wrote (օ, ֆ, Latin letters) is not in the
-font; the reader shows it in Noto, the next font in
-the stack. The punctuation he does not give (՝ ՛ ՞
+scribe's: the capitals are the red initials that
+open his sentences (`sources/w541/capitals/`; Ռ
+and Ց, which he never writes as initials, from
+the Silver Gospels, W.542, `sources/w542/`; Ղ Ջ
+Ր, in neither, composed from his Ո, Լ and Ի, and
+Ջ from nxGir Bolorgir's, leaned like his hand),
+all
+scaled by one factor and set on the baseline, their
+strokes widened to the weight of his text (the
+initials are written finer); the capitals not
+found yet are his small letters drawn bigger. ։ is
+two of his dots, and his և (the word եւ
+as one sign) stands for a typed ե ւ (liga). օ and Օ,
+which he never wrote (he writes աւ), are drawn
+with a broad pen in his weight and slant, like the
+marks below. What else he never wrote (ֆ, Latin
+letters) is not in the font; the reader shows it
+in Noto, the next font in the stack. The punctuation he does not give (՝ ՛ ՞
 ՜ , ; « » - ֊ ( ), and : as his ։) and the digits
 0-9 are drawn with a round pen of his weight and
 slant

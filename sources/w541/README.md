@@ -1,6 +1,8 @@
 # The letters of W.541
 
-The small letters of nxGir Dzeragir, taken from
+The letters of nxGir Dzeragir: the small letters
+(steps 1-9) and the capitals (step 10). The small
+letters were taken from
 eleven pages of Walters Ms. W.541 (images 40, 80,
 100, 120, 163, 180, 260, 280, 300, 320 and 420 of
 the OPenn set; see `../README.md`).
@@ -78,9 +80,89 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    colon is drawn as his ։. The digits 0-9 are
    drawn the same way, leaning with his hand.
 
+10. Capitals (`capitals/`, `capitals.tsv`). The
+   text has no black capitals: its sentences open
+   with a red initial, written large at the start
+   of a line. 185 pages (images 20 to 480, every
+   fifth and every fifth plus two) were read
+   again for the red ink alone: red over green
+   well above the paper's, smoothed, kept where it
+   touches clearly red ink, so the pale hairlines
+   stay. Its pieces of initial size (about 1040)
+   were grouped by shape. Each page's run of
+   initials was lined up with the capitals that
+   open sentences in the 1895 Gospels, all pages at
+   once and in order (a page only moves the text
+   forward); a group took the letter the text gives
+   most. Where the text could not say (rare
+   letters, a print that starts its sentences
+   otherwise), the word after the initial was read
+   on the page: «Բայց ասեմ ձեզ», «Դուք էք աղ
+   երկրի», «Որ ընդունի», «Վասն այդորիկ», «Մարդ
+   բարի», «Գնացին աշակերտքն». This corrected two
+   names: the shape like Կ is his Վ, the U with a
+   flag his Մ. For each letter the copies whose
+   shape and text agree were scaled to one height,
+   fitted on the medoid (the copy most like the
+   others) by size and place, and the 8 closest
+   averaged, as in step 4; Ձ, with five copies, is
+   the medoid alone. Then 265 pages (every other
+   page from 14 to 480): the initials far from all
+   named shapes were grouped, shown to the user
+   with their line, and named by them: Կ («Կամ
+   զիա՞րդ»), Ս (a plain U, «Սաղմովն ծնաւ»; his Մ
+   has a flag), Ք, Փ, Թ and Տ (an S); an Ո with a
+   hook is Ո՞, not Ռ. Then those the text points
+   at, among the initials still unnamed: Լ
+   («Լուարուք»), Ը (an L with a loop), Ծ
+   («Ծնունդք իժից»), Չ («Չոգաւ», «Չոգան»: a plain
+   2) and Ձ («Ձայն»: the 2 with a stroke across its
+   foot; the first Ձ, a plain 2, was his Չ). Their
+   copies were found by shape and averaged, or one
+   copy taken where only one is clean (Թ, Ը, Ծ, Ձ,
+   Ք, Փ, Տ). Last, for the rare ones, the pages
+   where the Gospels have a sentence starting with
+   them were worked out from the pages already
+   lined up, and only those fetched (27 more):
+   Խ («Խնդրեցէք եւ տացի ձեզ»), Ճ («Ճրագ
+   մարմնոյ») and Է («Էր Անդրէաս», a Ե with a
+   foot), then, with 31 pages more, Ժ («Ժողովեցին
+   եւ լցին», John 6:13) and Շ («Շուրջ եղեն
+   զնովաւ», John 10:24); one copy each. 30
+   capitals: Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ճ
+   Մ Յ Ն Շ Ո Չ Պ Ս Վ Տ Փ Ք. At every sentence of
+   the Gospels that starts with Ղ Ջ Ռ Ր Ց, the
+   place between the initials around it was looked
+   at: W.541 writes no initial there. Ռ and Ց were
+   then taken from another book of the same kind,
+   W.542 (`../w542/README.md`). Ղ Ջ Ր are in
+   neither (nor were they found in a hymnal, W.547),
+   so, at the user's asking, Claude composed them
+   from his own capitals: Ր is his Ո with the right
+   leg ended short, Ղ his Լ with the hump of his Ի
+   on its stem; Ջ, which none of his forms gave
+   well, is the printed Ջ as nxGir Bolorgir writes
+   it with a broad pen (Noto's letter, OFL),
+   leaned like his hand (copies 0 in
+   `capitals.tsv`). 35
+   capitals in all; Ւ and Ֆ, which open no
+   sentence, are not; Օ is drawn, as օ (below);
+   the font keeps his small letters bigger for
+   those. The pictures are as large as written
+   (the ink alone); the initials are written finer
+   than the text, so the font scales them alike
+   and widens their strokes to his weight
+   (`scripts/render-scan-font.py`).
+
 `letters.tsv` gives the copies and pages of each,
 and `.` the scribe's dot. օ (the scribe writes աւ)
-and ֆ are not in the manuscript, so not in the font.
+and ֆ are not in the manuscript. օ and Օ are drawn
+by Claude, with a broad nib moved along a leaning
+oval, as heavy as his letters (`marks/0585.png`,
+`0555.png`, in `marks.tsv`, at the user's asking);
+ֆ is not in the font.
 
-The pictures are 120 pixels per x-height, the
-baseline at row 288, black ink on white.
+The pictures in `letters/` are 120 pixels per
+x-height, the baseline at row 288, black ink on
+white; those in `capitals/` are the red ink of the
+initials, as large as written, in black.

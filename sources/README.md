@@ -199,4 +199,18 @@ tells how the letters were taken.
 | `page-163.jpg` | image 163, a whole page, made smaller |
 | `letters/<hex>.png` | each small letter, the average of its copies |
 | `letters.tsv` | the letters, how many copies, from which pages |
+| `capitals/<hex>.png` | each capital: the red initials, the average of their copies |
+| `capitals.tsv` | the capitals, how many copies, from which pages |
 | `marks/`, `marks.tsv` | punctuation and digits the manuscript does not give, drawn by Claude in the scribe's weight |
+
+## w542/
+
+Walters Art Museum, Ms. W.542, the Silver Gospels,
+on OPenn like W.541 (the same terms): two capitals
+of nxGir Dzeragir that W.541 never writes as
+initials, Ռ and Ց. `w542/README.md` tells how they
+were found.
+
+| File | What it is |
+|------|------------|
+| `capitals/<hex>.png` | Ռ and Ց, one copy each, the red ink of the page |
