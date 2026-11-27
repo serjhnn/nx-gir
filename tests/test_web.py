@@ -486,7 +486,7 @@ def test_dzeragir_font():
         for line in caps.read_text().splitlines()
         if line and not line.startswith("#")
     ]
-    assert len(found) >= 15
+    assert len(found) >= 21
     for ch, name in found:
         assert ord(ch) in cmap, ch
         assert (caps.parent / "capitals" / name).exists()

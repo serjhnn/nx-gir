@@ -106,18 +106,23 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    fitted on the medoid (the copy most like the
    others) by size and place, and the 8 closest
    averaged, as in step 4; Ձ, with five copies, is
-   the medoid alone. 15 capitals so far: Ա Բ Գ Դ
-   Ե Զ Ի Հ Ձ Մ Յ Ն Ո Պ Վ. Ս is his Ո turned
-   upside down: in this hand they are the same
-   shape (the user's reading); the top of Ո was
-   smoothed of a mark written above it. Not found
-   yet (rare at the head of a sentence, or not told
-   apart): Կ, Տ, Ք, Թ, Լ and the rest; the font keeps
-   his small letters bigger for those. The
-   pictures are as large as written (the ink
-   alone); the initials are written finer than the
-   text, so the font scales them alike and widens
-   their strokes to his weight
+   the medoid alone. Then 265 pages (every other
+   page from 14 to 480): the initials far from all
+   named shapes were grouped, shown to the user
+   with their line, and named by them: Կ («Կամ
+   զիա՞րդ»), Ս (a plain U, «Սաղմովն ծնաւ»; his Մ
+   has a flag), Ք, Փ, Թ and Տ (an S); an Ո with a
+   hook is Ո՞, not Ռ. Their copies were found by
+   shape and averaged, or one copy taken where
+   only one is clean (Թ, Ձ, Ք, Փ, Տ). 21 capitals
+   so far: Ա Բ Գ Դ Ե Զ Թ Ի Կ Հ Ձ Մ Յ Ն Ո Պ Ս Վ
+   Տ Փ Ք. Not found yet (rare at the head of a
+   sentence): Է Ը Ժ Լ Խ Ծ Ղ Ճ Շ Չ Ջ Ռ Ր Ց Ւ Օ Ֆ;
+   the font keeps his small letters bigger for
+   those. The pictures are as large as written
+   (the ink alone); the initials are written finer
+   than the text, so the font scales them alike
+   and widens their strokes to his weight
    (`scripts/render-scan-font.py`).
 
 `letters.tsv` gives the copies and pages of each,
