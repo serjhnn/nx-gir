@@ -6643,13 +6643,6 @@ function viewTools() {
       "aria-pressed": String(view.full),
       title: view.full ? t("r.whole")
         : t("r.column") }),
-  // a long part in pages: a page at a time is in
-  // the browser, a few MB instead of hundreds
-  btn("▤", () => setView({ paged: !paged() }), {
-    ...tile("paged"),
-    "aria-label": t("r.paged"),
-    "aria-pressed": String(paged()),
-    title: paged() ? t("r.inpages") : t("r.long") }),
   // on a wide screen, with the translation beside:
   // each line under its pair, as on a phone
   R.par && view.parallel ? btn(icon(ICONS[
@@ -7271,7 +7264,8 @@ function parHead(name, other) {
 const PAGE_CHARS = 5000;
 
 // Read in pages? Yes, unless the reader turned it
-// off in the text settings (the ▤ button).
+// off on the Settings page: a page at a time is in
+// the browser, a few MB instead of hundreds
 function paged() {
   return view.paged !== false;
 }

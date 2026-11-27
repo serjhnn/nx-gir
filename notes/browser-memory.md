@@ -202,8 +202,8 @@ and on land where they did.
 
 ## In pages (2026-11-16)
 
-A part is read a page at a time (the default; the ▤
-button in the text settings turns it off): about 5,000
+A part is read a page at a time (the default; a switch
+on the Settings page turns it off): about 5,000
 characters of Grabar are in the page, the rest is
 only data (`showPage()` in `app.js`; plan:
 `notes/ram-plan.md`). Same part, phone screen:
