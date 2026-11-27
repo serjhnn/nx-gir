@@ -5987,3 +5987,14 @@ body.home .search-wrap {
 a.set-row {
   text-decoration: none;
 }
+
+/* the button on top of About: to the contacts */
+button.cta-main {
+  border: 0;
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+.contact {
+  scroll-margin-top: 4rem;
+}

@@ -174,6 +174,7 @@ const UI = {
       + "Հարցերը, ուղղումներն ու գաղափարները "
       + "ողջունվում են GitHub-ում։",
     "ab.contact": "Գրել հեղինակին GitHub-ում",
+    "ab.jump": "Կապ ↓",
     "ct.h": "Կապ",
     "ct.email": "Էլ. փոստ",
     "ct.github": "GitHub",
@@ -690,6 +691,7 @@ const UI = {
       + "Questions, corrections and ideas are "
       + "welcome on GitHub.",
     "ab.contact": "Write to the author on GitHub",
+    "ab.jump": "Contact ↓",
     "ct.h": "Contact",
     "ct.email": "Email",
     "ct.github": "GitHub",
@@ -1205,6 +1207,7 @@ const UI = {
       + "Вопросы, исправления и идеи приветствуются "
       + "на GitHub.",
     "ab.contact": "Написать автору на GitHub",
+    "ab.jump": "Контакты ↓",
     "ct.h": "Контакты",
     "ct.email": "Почта",
     "ct.github": "GitHub",

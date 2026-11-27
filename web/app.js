@@ -782,7 +782,8 @@ function siteFooter() {
       h("a", { href: REPO }, "GitHub"),
       offlineLink()),
     h("p", { class: "foot-keep" }, t("foot.by1"),
-      h("a", { href: "#/about" }, t("foot.name")),
+      h("a", { href: "#/about/contacts" },
+        t("foot.name")),
       t("foot.by2")));
 }
 
@@ -4160,8 +4161,14 @@ function contactTable() {
     h("ul", {}, contactRows().map(tile)));
 }
 
-function aboutPage() {
+function aboutPage(at) {
   document.title = t("ab.title") + " · " + NAME;
+  const contacts = contactTable();
+  const jump = h("button", {
+    type: "button", class: "cta-main" }, t("ab.jump"));
+  jump.addEventListener("click", () =>
+    contacts.scrollIntoView(
+      { behavior: "smooth", block: "start" }));
   const part = (k) => h("li", {},
     h("h2", {}, t("ab." + k + ".h")),
     h("p", {}, named(t("ab." + k + ".t"))));
@@ -4170,6 +4177,7 @@ function aboutPage() {
       h("a", { href: "#/" }, t("home"))),
     h("h1", {}, t("ab.title")),
     h("p", { class: "sub" }, named(t("ab.sub"))),
+    h("p", { class: "cta" }, jump),
     devBanner(),
     h("ul", { class: "features" },
       ["what", "name", "do", "open", "author"]
@@ -4182,7 +4190,9 @@ function aboutPage() {
       h("a", { href: "#/contribute" },
         t("foot.join")),
       h("a", { href: REPO }, t("co.gh"))),
-    contactTable());
+    contacts);
+  // from the footer: straight to the contacts
+  if (at === "contacts") contacts.scrollIntoView();
 }
 
 // -- announcements --
@@ -8914,8 +8924,9 @@ async function route() {
       await referencePage();
     } else if (hash === "contribute") {
       contributePage();
-    } else if (hash === "about") {
-      aboutPage();
+    } else if (hash === "about"
+      || hash === "about/contacts") {
+      aboutPage(hash.slice(6));
     } else if (hash === "news"
       || hash.startsWith("news/")) {
       newsPage(decodeURIComponent(hash.slice(5)));
