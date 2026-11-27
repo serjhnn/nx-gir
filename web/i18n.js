@@ -506,12 +506,18 @@ const UI = {
     "r.tile.sent": "Տողատել",
     "r.tile.width": "Լայնք",
     "r.tile.paged": "Էջերով",
-    "r.tile.bars": "Թաքցնել",
+    "nav.settings": "Կարգավորումներ",
+    "set.sub": "Ինչպես են երևում գրքերը այս սարքում",
+    "set.size": "Տառերի չափը",
+    "set.spacing": "Տողերի միջակայք",
+    "set.reading": "Կարդալիս",
+    "set.kept": "Կարգավորումները պահվում են այս զննարկչում։",
+    "set.back": "Վերադառնալ գրքին",
+    "set.undernote": "Թարգմանությունը կողքին՝ լայն էկրանին",
+    "set.barsnote": "Ներքև ոլորելիս վերևի գործիքները և"
+      + " ներքևի ներդիրները հեռանում են, վերև ոլորելիս՝"
+      + " վերադառնում",
     "r.bars": "Թաքցնել վերևի և ներքևի վահանակները ոլորելիս",
-    "r.barshide": "Վահանակները թաքնվում են ներքև ոլորելիս"
-      + " (սեղմեք՝ միշտ երևան)",
-    "r.barsfixed": "Վահանակները միշտ երևում են (սեղմեք՝"
-      + " թաքցնել ոլորելիս)",
     "r.tile.layout": "Իրար տակ",
     "r.saved": "Էջանիշներ և նշումներ",
     "r.paper": "Էջի թուղթը",
@@ -1012,13 +1018,20 @@ const UI = {
     "r.tile.sent": "Sentences",
     "r.tile.width": "Width",
     "r.tile.paged": "Pages",
-    "r.tile.bars": "Hide bars",
+    "nav.settings": "Settings",
+    "set.sub": "How the books look on this device",
+    "set.size": "Text size",
+    "set.spacing": "Line spacing",
+    "set.reading": "While reading",
+    "set.kept": "The settings are kept in this browser.",
+    "set.back": "Back to the book",
+    "set.undernote": "With the translation beside, on a"
+      + " wide screen",
+    "set.barsnote": "Scrolling down, the tools at the top"
+      + " and the tabs at the bottom step aside; scrolling"
+      + " up brings them back",
     "r.bars": "Hide the top and bottom bars while"
       + " scrolling",
-    "r.barshide": "The bars hide as you scroll down"
-      + " (click: always shown)",
-    "r.barsfixed": "The bars always stay (click: hide"
-      + " them while scrolling)",
     "r.tile.layout": "Stacked",
     "r.saved": "Bookmarks and notes",
     "r.paper": "Paper of the page",
@@ -1528,13 +1541,19 @@ const UI = {
     "r.tile.sent": "Фразы",
     "r.tile.width": "Ширина",
     "r.tile.paged": "Страницы",
-    "r.tile.bars": "Скрывать",
+    "nav.settings": "Настройки",
+    "set.sub": "Как выглядят книги на этом устройстве",
+    "set.size": "Размер текста",
+    "set.spacing": "Межстрочный интервал",
+    "set.reading": "При чтении",
+    "set.kept": "Настройки хранятся в этом браузере.",
+    "set.back": "Вернуться к книге",
+    "set.undernote": "С переводом рядом, на широком экране",
+    "set.barsnote": "При прокрутке вниз инструменты сверху"
+      + " и вкладки снизу убираются, при прокрутке вверх"
+      + " возвращаются",
     "r.bars": "Скрывать верхнюю и нижнюю панели при"
       + " прокрутке",
-    "r.barshide": "Панели скрываются при прокрутке вниз"
-      + " (нажмите: всегда видны)",
-    "r.barsfixed": "Панели всегда видны (нажмите:"
-      + " скрывать при прокрутке)",
     "r.tile.layout": "Стопкой",
     "r.saved": "Закладки и заметки",
     "r.paper": "Бумага страницы",

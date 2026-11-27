@@ -287,6 +287,16 @@ const ICONS = {
   rows: ["M4 4h16v7H4zM4 13h16v7H4z"],
   // arrows out to both sides: full width
   width: ["M3 12h18M7 8l-4 4l4 4M17 8l4 4l-4 4"],
+  // a cog wheel: all the settings
+  gear: ["M18.9 10.0L21.4 10.2L21.4 13.8L18.9 14.0"
+    + "L18.3 15.5L20.0 17.4L17.4 20.0L15.5 18.3"
+    + "L14.0 18.9L13.8 21.4L10.2 21.4L10.0 18.9"
+    + "L8.5 18.3L6.6 20.0L4.0 17.4L5.7 15.5"
+    + "L5.1 14.0L2.6 13.8L2.6 10.2L5.1 10.0"
+    + "L5.7 8.5L4.0 6.6L6.6 4.0L8.5 5.7"
+    + "L10.0 5.1L10.2 2.6L13.8 2.6L14.0 5.1"
+    + "L15.5 5.7L17.4 4.0L20.0 6.6L18.3 8.5z",
+    "M12 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6z"],
   // a screen with a bar at the top and the
   // bottom: the bars hide on scrolling
   bars: ["M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1"
@@ -1153,6 +1163,7 @@ const MENU = [
   ["#/features", "tick", "nav.features"],
   ["#/contribute", "join", "nav.contribute"],
   ["#/news", "horn", "nav.news"],
+  ["#/settings", "gear", "nav.settings"],
 ];
 
 function menuLink([href, ic, label]) {
@@ -1403,6 +1414,7 @@ const MORE = [
   [
     ["#/about", "info", "nav.about"],
     ["#/contribute", "join", "nav.contribute"],
+    ["#/settings", "gear", "nav.settings"],
   ],
 ];
 
@@ -1436,6 +1448,9 @@ try {
   tabPlace = {};
 }
 let shownHash = null;
+// the page before this one (#/settings leads back
+// to the book it was opened from)
+let prevHash = "";
 let restoreY = 0;
 
 function rememberTab(hash, y) {
@@ -5390,6 +5405,138 @@ function startWorker() {
 // button stays); SAVE in sw.js must match
 const OFFLINE_SAVE = false;
 
+// #/settings: every setting of the reader on one
+// page, with a few lines of a book that show them:
+// the text (as in the reader's settings card), the
+// font, the theme and the paper, and what only this
+// page has (the bars while scrolling). Kept in this
+// browser, as in the reader (saveView).
+const SAMPLE = ["Էր թագաւորս այս քաջ, բարետեսիլ"
+  + " եւ ահարկու, ողորմած եւ քաղցր ի վերայ"
+  + " ամենեցուն։", "Որ էր որդի Աշոտոյ, եւ Աշոտ՝"
+  + " որդի Աբասայ, եւ Աբաս՝ որդի Սմբատայ։"];
+
+function settingsPage() {
+  document.title = t("nav.settings") + " · " + NAME;
+  const box = h("div", { class: "settings" });
+  // a change: kept, shown on the page, drawn again
+  const set = (change) => {
+    Object.assign(view, change);
+    saveView();
+    applyView();
+    draw();
+  };
+  // a switch: its name, and on or off
+  const sw = (label, on, flip, note) => {
+    const b = h("button", { type: "button",
+      class: "set-row", role: "switch",
+      "aria-checked": String(on) },
+    h("span", { class: "set-name" }, label,
+      note ? h("small", {}, note) : null),
+    h("span", { class: "set-switch",
+      "aria-hidden": "true" }));
+    b.addEventListener("click", flip);
+    return b;
+  };
+  // one of a few, side by side (the fonts, themes)
+  const card = (sample, name, on, pick) => {
+    const b = h("button", { type: "button",
+      class: "font-opt set-opt", role: "radio",
+      "aria-checked": String(on) }, sample,
+    h("span", { class: "font-name" }, name));
+    b.addEventListener("click", pick);
+    return b;
+  };
+  const part = (title, ...kids) => h("section",
+    { class: "set-part" }, h("h2", {}, title),
+    ...kids);
+  const draw = () => {
+    const n = view.size;
+    const sample = h("div", { class: "text"
+      + " set-sample" + (view.center ? " centered"
+      : ""), lang: "hy" },
+    SAMPLE.map((l) => h("p", {}, l)));
+    sample.style.setProperty("--text-size",
+      SIZES[n] + "rem");
+    sample.style.setProperty("--text-line",
+      LINES[view.line]);
+    const spacing = h("div", { class: "seg",
+      role: "group", "aria-label": t("set.spacing") });
+    LINES.forEach((_, i) => spacing.append(btn(
+      String(i + 1), () => set({ line: i }), {
+        "aria-pressed": String(view.line === i) })));
+    const fonts = h("div", { class: "set-grid",
+      role: "radiogroup", "aria-label": t("r.font") },
+    FONTS.map((f, i) => card(h("span", {
+      class: "font-sample", "data-font": f,
+      lang: "hy" }, t("r.fontsample")),
+    FONT_NAMES[f], view.font === i,
+    () => set({ font: i }))));
+    const picked = themePicked();
+    const themes = h("div", { class: "set-grid",
+      role: "radiogroup",
+      "aria-label": t("theme.themes") },
+    ["system"].concat(THEMES).map((k) => card(
+      h("span", { class: "theme-sample",
+        "data-sample": k, lang: "hy" }, "Աա"),
+      t("theme." + k), picked === k,
+      () => { setTheme(k); draw(); })));
+    const papers = h("div", { class: "set-grid",
+      role: "radiogroup", "aria-label": t("r.paper") },
+    PAPERS.map((k, i) => card(h("span", {
+      class: "paper-sample", "data-paper": k,
+      lang: "hy" }, "Աա"), t("paper." + k),
+    view.paper === i, () => setPaper(i) || draw())));
+    box.replaceChildren(
+      sample,
+      part(t("r.text"),
+        h("div", { class: "set-line" },
+          h("span", { class: "set-name" },
+            t("set.size")),
+          h("span", { class: "set-size" },
+            btn("A−", () => set({ size: n - 1 }), {
+              "aria-label": t("r.smaller"),
+              disabled: n === 0 ? "" : null }),
+            btn("A+", () => set({ size: n + 1 }), {
+              "aria-label": t("r.bigger"),
+              disabled: n === SIZES.length - 1
+                ? "" : null }))),
+        h("div", { class: "set-line" },
+          h("span", { class: "set-name" },
+            t("set.spacing")), spacing),
+        sw(t("r.center"), view.center,
+          () => set({ center: !view.center })),
+        sw(t("r.sent"), view.sentences,
+          () => set({ sentences: !view.sentences })),
+        sw(t("r.width"), view.full,
+          () => set({ full: !view.full })),
+        sw(t("r.paged"), paged(),
+          () => set({ paged: !paged() })),
+        sw(t("r.under"), view.stacked,
+          () => set({ stacked: !view.stacked }),
+          t("set.undernote"))),
+      part(t("r.font"), fonts),
+      part(t("theme.themes"), themes),
+      part(t("r.paper"), papers),
+      part(t("set.reading"),
+        sw(t("r.bars"), view.hideBars,
+          () => set({ hideBars: !view.hideBars }),
+          t("set.barsnote"))),
+      h("p", { class: "local-hint" }, t("set.kept")));
+  };
+  draw();
+  // back to the book, if the page came from it
+  const back = prevHash.startsWith("read/")
+    ? h("a", { class: "icon-btn set-back",
+      href: "#/" + prevHash }, icon(ICONS.back),
+    t("set.back")) : null;
+  show(h("p", { class: "crumbs" },
+    h("a", { href: "#/" }, t("home"))),
+  h("h1", {}, t("nav.settings")),
+  h("p", { class: "sub" }, t("set.sub")),
+  back, box);
+}
+
 // #/offline: install the app, save every book in
 // this browser, or download the site as a file
 async function offlinePage() {
@@ -6488,13 +6635,6 @@ function viewTools() {
     "aria-label": t("r.paged"),
     "aria-pressed": String(paged()),
     title: paged() ? t("r.inpages") : t("r.long") }),
-  btn(icon(ICONS.bars),
-    () => setView({ hideBars: !view.hideBars }), {
-      ...tile("bars"),
-      "aria-label": t("r.bars"),
-      "aria-pressed": String(view.hideBars),
-      title: view.hideBars ? t("r.barshide")
-        : t("r.barsfixed") }),
   // on a wide screen, with the translation beside:
   // each line under its pair, as on a phone
   R.par && view.parallel ? btn(icon(ICONS[
@@ -8657,6 +8797,7 @@ async function route() {
   if (shownHash !== null) {
     rememberTab(shownHash, window.scrollY);
   }
+  if (shownHash !== hash) prevHash = shownHash || "";
   shownHash = hash;
   document.body.classList.remove("peek");
   if (R.timer) savePos(true);
@@ -8730,6 +8871,8 @@ async function route() {
       await statsPage();
     } else if (hash === "offline") {
       await offlinePage();
+    } else if (hash === "settings") {
+      settingsPage();
     } else if (hash === "recent") {
       await recentPage();
     } else if (hash === "library"
