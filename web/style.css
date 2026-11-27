@@ -5227,9 +5227,17 @@ body.home .search-wrap {
       transparent);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    border: 1px solid var(--rule);
+    border: 1px solid color-mix(in srgb,
+      var(--text) 45%, transparent);
     border-radius: 22px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  }
+  /* dark themes keep the soft line */
+  :root[data-theme="dark"] body.reading .tools,
+  :root[data-theme="dark"] body.reading .tabbar,
+  :root[data-theme="black"] body.reading .tools,
+  :root[data-theme="black"] body.reading .tabbar {
+    border-color: var(--rule);
   }
   body.reading .tools {
     top: calc(var(--stick, 0px) + 6px);
@@ -5259,6 +5267,13 @@ body.home .search-wrap {
     height: 2px;
     border-radius: 2px;
     overflow: hidden;
+  }
+}
+
+@media (max-width: 40rem) and (prefers-color-scheme: dark) {
+  :root:not([data-theme]) body.reading .tools,
+  :root:not([data-theme]) body.reading .tabbar {
+    border-color: var(--rule);
   }
 }
 
