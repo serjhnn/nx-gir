@@ -1583,20 +1583,32 @@ function atEnd() {
   return window.scrollY > 50 && window.innerHeight
     + window.scrollY >= de.scrollHeight - 4;
 }
-window.addEventListener("scroll", () => {
+// and so does the top, until the text of the book
+// fills the screen: while the title and the tools
+// above it are still in sight
+function textBelow() {
+  if (!R.text?.isConnected) return false;
+  const tools = R.tools ? R.tools.offsetHeight : 0;
+  return R.text.getBoundingClientRect().top
+    > stickTop() + tools + 1;
+}
+function peekNow() {
   const y = window.scrollY;
   const body = document.body;
   if (!body.classList.contains("reading")) {
     body.classList.remove("peek");
-  } else if (y < lastY - 8 || atEnd()) {
+  } else if (y < lastY - 8 || atEnd()
+    || textBelow()) {
     body.classList.add("peek");
-  } else if (y > lastY + 8 || y < 50) {
+  } else if (y > lastY + 8) {
     body.classList.remove("peek");
   } else {
     return;
   }
   lastY = y;
-}, { passive: true });
+}
+window.addEventListener("scroll", peekNow,
+  { passive: true });
 
 // mark the tab of the page shown
 function markTab(hash) {
@@ -8829,6 +8841,8 @@ async function route() {
       const name = decodeURIComponent(path.slice(5));
       await book(name, line, foundOf(p.get("q"),
         Number(p.get("r")), name, line));
+      // opened at the top: the bars are there
+      requestAnimationFrame(peekNow);
     } else if (hash.startsWith("edit/")) {
       E.hash = hashNow();
       await edit(decodeURIComponent(hash.slice(5)));
