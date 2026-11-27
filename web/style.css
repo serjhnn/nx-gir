@@ -5223,17 +5223,17 @@ body.home .search-wrap {
 @media (max-width: 40rem) {
   body.reading .tools,
   body.reading .tabbar {
-    background: color-mix(in srgb, var(--bg) 78%,
+    background: color-mix(in srgb, var(--bg) 88%,
       transparent);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border: 1px solid var(--rule);
     border-radius: 22px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
   }
   body.reading .tools {
     top: calc(var(--stick, 0px) + 6px);
-    margin: 0 -0.25rem 1rem;
+    margin: 0 -8px 1rem;
     padding: 8px 10px;
   }
   body.reading .tabbar {
