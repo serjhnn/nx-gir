@@ -126,10 +126,13 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    lined up, and only those fetched (27 more):
    Խ («Խնդրեցէք եւ տացի ձեզ»), Ճ («Ճրագ
    մարմնոյ») and Է («Էր Անդրէաս», a Ե with a
-   foot), one copy each. 28 capitals: Ա Բ Գ Դ Ե
-   Զ Է Ը Թ Ի Լ Խ Ծ Կ Հ Ձ Ճ Մ Յ Ն Ո Չ Պ Ս Վ Տ Փ
-   Ք. Not found (none at the head of a sentence
-   on the pages looked at): Ժ Ղ Շ Ջ Ռ Ր Ց Ւ Օ Ֆ;
+   foot), then, with 31 pages more, Ժ («Ժողովեցին
+   եւ լցին», John 6:13) and Շ («Շուրջ եղեն
+   զնովաւ», John 10:24); one copy each. 30
+   capitals: Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ճ
+   Մ Յ Ն Շ Ո Չ Պ Ս Վ Տ Փ Ք. Not found (none at the
+   head of a sentence on the pages looked at): Ղ Ջ
+   Ռ Ր Ց Ւ Օ Ֆ (Օ drawn, as օ, see below);
    the font keeps his small letters bigger for
    those. The pictures are as large as written
    (the ink alone); the initials are written finer

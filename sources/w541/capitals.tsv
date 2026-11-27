@@ -7,7 +7,7 @@
 # Ո: its top edge smoothed of a mark written above it.
 # Տ: one copy, a smudge at its top end cleaned. Ը, Ծ, Ձ:
 # one copy each, ragged edges smoothed. Ձ has a stroke
-# across its foot; Չ, the same 2 without it. Խ, Ճ, Է: one
+# across its foot; Չ, the same 2 without it. Խ, Ճ, Է, Ժ, Շ: one
 # copy each, found on the pages where the Gospels have a
 # sentence that starts with them.
 # letter	file	copies	pages
@@ -20,6 +20,7 @@
 Է	0537.png	1	371
 Ը	0538.png	1	410
 Թ	0539.png	1	77
+Ժ	053a.png	1	394
 Ի	053b.png	8	42 102 262 287 310 352 385 395
 Լ	053c.png	6	36 38 156 277
 Խ	053d.png	1	44
@@ -31,6 +32,7 @@
 Մ	0544.png	8	25 100 195 272 285 392 450 475
 Յ	0545.png	8	25 27 130 440 450 460 462
 Ն	0546.png	8	67 70 80 130 210 222 415 430
+Շ	0547.png	1	419
 Ո	0548.png	8	132 217 260 297 312 380 402 437
 Չ	0549.png	2	118 192
 Պ	054a.png	8	75 282 295 350 395 405 415 420
