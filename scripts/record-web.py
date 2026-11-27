@@ -11,9 +11,11 @@ Node.js, ffmpeg and:
 
 Run:
 
-    scripts/record-web.py [out.mp4]
+    scripts/record-web.py [out.mp4] [story]
 
-The steps and captions are in scripts/record.js.
+The story is "tour" (the default) or "fonts" (the
+fonts, themes and papers); the steps and captions
+are in scripts/record.js.
 """
 
 import os
@@ -49,9 +51,9 @@ def main():
         if not shutil.which(tool):
             print(f"needs {tool}", file=sys.stderr)
             return 1
-    out = Path(
-        sys.argv[1] if len(sys.argv) > 1 else "tutorial.mp4"
-    ).resolve()
+    args = sys.argv[1:] + [None, None]
+    out = Path(args[0] or "tutorial.mp4").resolve()
+    story = args[1] or "tour"
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         State(tmp / "state.json").save()
@@ -67,6 +69,7 @@ def main():
                     str(ROOT / "scripts" / "record.js"),
                     f"http://localhost:{port}",
                     str(tmp / "vid"),
+                    story,
                 ],
                 env=dict(os.environ),
             )

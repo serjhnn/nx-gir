@@ -9,6 +9,10 @@ Claude, to pick it up again.
     NODE_PATH=/opt/node-tools/node_modules \
       python3 scripts/record-web.py out.mp4
 
+    # the short one: fonts, themes, papers
+    NODE_PATH=/opt/node-tools/node_modules \
+      python3 scripts/record-web.py fonts.mp4 fonts
+
 - Needs `node`, `ffmpeg` and Playwright for Node. In
   the cloud container Playwright is in
   `/opt/node-tools/node_modules` and Chromium is
@@ -33,7 +37,14 @@ Claude, to pick it up again.
   (`#rec-cap`). Both are made with `el.style.x = ...`
   (never a style attribute: the CSP forbids it) and
   are made again by a timer after each page load.
-- `steps(p)` is the story: `cap("text")` sets the
+- The stories are `tour` (the default) and `fonts`
+  (about 80 s: the font list, nxGir Bolorgir,
+  Dzeragir and Dzeragir Thin, the themes and the
+  four papers, then the Library in them), chosen by
+  the second argument of `record-web.py`. Their
+  moves come from `kit(p)`; a new story is a
+  function in `STORIES`.
+- A story is a list of steps: `cap("text")` sets the
   caption (`cap("")` hides it), `click(locator)`
   moves the mouse in 25 steps, then presses, `wait()`
   holds the shot, `scroll()` turns the wheel slowly.
@@ -54,9 +65,16 @@ Claude, to pick it up again.
   so open them first.
 - `Bookmark` also matches the toolbar's `★ 0`: scope
   it with `.panel`.
-- The text settings open as a wide list over the page;
-  keep that shot short. The font list changes the
-  layout badly (Faulmann): left out.
+- The text settings are a card under the "Text
+  settings" button. Scrolling the page shuts it, and
+  so may Playwright's own scroll into view: `fonts`
+  opens and shuts it with `settings(on)`, which looks
+  first. `go()` gives up scrolling into view after
+  1.5 s (a button in the card never counts as
+  stable).
+- On a wide screen the reader opens with the
+  Contents beside the text: shut it first
+  (`.panel .close`) and scroll to the text.
 - The init script runs before `documentElement`
   exists: guard it.
 - Use a book without sacred words (CLAUDE.md,
@@ -78,5 +96,5 @@ break with the UI; fix `record.js`, not the pages.
   table per language (the site's rule: no interface
   words in one language only).
 - A phone-sized version (390x760, the phone view).
-- Not shown yet: the font list, Features, Timeline,
+- Not shown yet: Features, Timeline,
   Blog, Comics, interpretations (Edit text).
