@@ -9,14 +9,15 @@ app.
 ## Make it again
 
     sh reel/make.sh            # the video, ~1.5 min
-    sh reel/make.sh 3,13.5     # stills, to look at
+    sh reel/make.sh 3,13.5     # stills in shots/
 
 Run from the repository root. Needs Pillow, numpy,
 scipy, ffmpeg and Playwright for Node (in the cloud
 container it is in `/opt/node-tools/node_modules`,
 which `make.sh` uses unless `NODE_PATH` is set).
 
-- `prep.py` writes `build/` (not in git): the
+- `prep.py` writes `build/` (kept in git, ~600 KB,
+  so the reel can be made again as it is): the
   letters (`sources/w541/letters/`) and red capitals
   (`sources/w541/capitals/`) as ink on transparent
   ground, page 163 of W.541 with the boxes of its
@@ -27,7 +28,8 @@ which `make.sh` uses unless `NODE_PATH` is set).
   itself and returns its opacity (fades go through
   black).
 - `record.js` calls `render()` for every frame and
-  pipes the screenshots into ffmpeg.
+  pipes the screenshots into ffmpeg. Stills go to
+  `shots/`, not in git.
 
 ## Rules for the picture
 

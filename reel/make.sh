@@ -3,7 +3,7 @@
 # Run from the repository root. Needs Pillow, numpy,
 # scipy, ffmpeg and Playwright for Node.
 #   sh reel/make.sh            the video
-#   sh reel/make.sh 3,13.5     stills in reel/build/
+#   sh reel/make.sh 3,13.5     stills in reel/shots/
 set -e
 python3 reel/prep.py
 : "${NODE_PATH:=/opt/node-tools/node_modules}"

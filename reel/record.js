@@ -1,9 +1,10 @@
 // Records reel.html into an mp4, frame by frame.
 //   node record.js DIR OUT.mp4    the video
-//   node record.js DIR - 3,13.5   stills shot-<t>.png
+//   node record.js DIR - 3,13.5   stills in DIR/shots/
 // DIR is the folder of reel.html (run prep.py first).
 const { chromium } = require("playwright");
 const { spawn } = require("child_process");
+const fs = require("fs");
 const [, , dir, out, only] = process.argv;
 const FPS = 30;
 
@@ -29,9 +30,10 @@ function ffmpeg(out) {
   await p.goto("file://" + dir + "/reel.html");
   await p.evaluate(() => init());
   if (only) {
+    fs.mkdirSync(dir + "/shots", { recursive: true });
     for (const t of only.split(",")) {
       await p.evaluate((t) => render(t), +t);
-      const path = `${dir}/build/shot-${t}.png`;
+      const path = `${dir}/shots/shot-${t}.png`;
       await p.screenshot({ path });
     }
     await b.close();

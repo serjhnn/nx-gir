@@ -1,6 +1,6 @@
 """Makes the pictures and data of the fonts reel.
 
-Writes reel/build/ (not in git): the letters and the
+Writes reel/build/ (kept in git): the letters and the
 red capitals of W.541 as ink on transparent ground,
 the page with its pieces of ink, and the two fonts.
 Run from the repository root:
