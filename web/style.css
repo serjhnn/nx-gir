@@ -3719,8 +3719,12 @@ body.reading.full .bar {
 .theme-list .paper-sample {
   display: inline-block;
   flex: none;
-  width: 2.6rem;
-  padding: 0;
+  /* as wide as the sample in the book's font
+     (Dzeragir's letters are wide), never less */
+  min-width: 2.6rem;
+  padding: 0 0.4rem;
+  white-space: nowrap;
+  box-sizing: border-box;
   border: 1px solid var(--rule);
   border-radius: 6px;
   font-family: var(--book);
