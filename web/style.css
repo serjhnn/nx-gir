@@ -5912,3 +5912,8 @@ body.home .search-wrap {
   margin: 0 0 1rem;
 }
 
+
+/* a link to a page of its own (Statistics) */
+a.set-row {
+  text-decoration: none;
+}

@@ -508,6 +508,8 @@ const UI = {
     "set.spacing": "Տողերի միջակայք",
     "set.reading": "Կարդալիս",
     "set.kept": "Կարգավորումները պահվում են այս զննարկչում։",
+    "set.site": "Կայքը",
+    "set.statsnote": "Որքան է պարունակում գրադարանը",
     "set.back": "Վերադառնալ գրքին",
     "set.undernote": "Թարգմանությունը կողքին՝ լայն էկրանին",
     "set.barsnote": "Ներքև ոլորելիս վերևի գործիքները և"
@@ -1016,6 +1018,8 @@ const UI = {
     "set.spacing": "Line spacing",
     "set.reading": "While reading",
     "set.kept": "The settings are kept in this browser.",
+    "set.site": "The site",
+    "set.statsnote": "How much the library holds",
     "set.back": "Back to the book",
     "set.undernote": "With the translation beside, on a"
       + " wide screen",
@@ -1535,6 +1539,8 @@ const UI = {
     "set.spacing": "Межстрочный интервал",
     "set.reading": "При чтении",
     "set.kept": "Настройки хранятся в этом браузере.",
+    "set.site": "Сайт",
+    "set.statsnote": "Сколько всего в библиотеке",
     "set.back": "Вернуться к книге",
     "set.undernote": "С переводом рядом, на широком экране",
     "set.barsnote": "При прокрутке вниз инструменты сверху"

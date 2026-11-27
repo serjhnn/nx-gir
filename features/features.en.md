@@ -100,7 +100,7 @@ The Reference page shows all the books as cards: what each book is, when it was 
 
 ## Blog, Timeline and Statistics
 
-The Blog tells what is new, in themes: about the site, about authors and about books. The Timeline shows the main steps of the project, and the Statistics page how big the library and the site are.
+The Blog tells what is new, in themes: about the site, about authors and about books. The Timeline shows the main steps of the project, and the Statistics page, opened from Settings, how big the library and the site are.
 
 ## Offline copy
 
