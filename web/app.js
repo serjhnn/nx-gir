@@ -4157,7 +4157,8 @@ function contactTable() {
     r[3] ? h("a", { href: r[3], rel: "noopener me" },
       r[2]) : r[2]);
   return h("section", { class: "contact" },
-    h("h2", {}, t("ct.h")),
+    h("h2", {}, t("ab.author.h")),
+    h("p", {}, named(t("ab.author.t"))),
     h("ul", {}, contactRows().map(tile)));
 }
 
@@ -4180,14 +4181,9 @@ function aboutPage(at) {
     h("p", { class: "cta" }, jump),
     devBanner(),
     h("ul", { class: "features" },
-      ["what", "name", "do", "open", "author"]
-        .map(part)),
+      ["what", "name", "do", "open"].map(part)),
     h("p", { class: "cta" },
-      h("a", { class: "cta-main", href: AUTHOR_URL },
-        t("ab.contact")),
-      h("a", { href: INSTAGRAM, rel: "noopener me" },
-        "Instagram"),
-      h("a", { href: "#/contribute" },
+      h("a", { class: "cta-main", href: "#/contribute" },
         t("foot.join")),
       h("a", { href: REPO }, t("co.gh"))),
     contacts);

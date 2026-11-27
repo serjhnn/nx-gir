@@ -5921,6 +5921,12 @@ body.home .search-wrap {
   font: 500 1.15rem/1.3 var(--serif);
   color: var(--accent-ink);
 }
+.contact > p {
+  margin: 0 0 0.9rem;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--text) 78%,
+    var(--bg));
+}
 .contact a {
   color: var(--text);
   text-decoration: none;
