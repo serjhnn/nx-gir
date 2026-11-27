@@ -590,10 +590,12 @@
   The same run makes nxGir Dzeragir Thin
   (`dzeragirthin`), the strokes `THIN` pixels
   thinner a side (`--thin PX` tries other weights)
-- `scripts/render-og.py`: regenerates
+- `scripts/render-og.py`: makes
   `web/og-image.png`, the link preview image
   (`og:image` in `web/index.html`, for LinkedIn
-  and others) after changing the logo or colors
+  and others), from the user's poster
+  `docs/og-poster.png` (art: kept as given),
+  scaled and cut to 1200x630
 - Linux and Termux only, no Windows support for now.
 
 ## Git
