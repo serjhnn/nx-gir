@@ -120,10 +120,16 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    foot; the first Ձ, a plain 2, was his Չ). Their
    copies were found by shape and averaged, or one
    copy taken where only one is clean (Թ, Ը, Ծ, Ձ,
-   Ք, Փ, Տ). 25 capitals so far: Ա Բ Գ Դ Ե Զ Ը Թ
-   Ի Լ Ծ Կ Հ Ձ Մ Յ Ն Ո Չ Պ Ս Վ Տ Փ Ք. Not found
-   yet (rare at the head of a sentence): Է Ժ Խ Ղ
-   Ճ Շ Ջ Ռ Ր Ց Ւ Օ Ֆ;
+   Ք, Փ, Տ). Last, for the rare ones, the pages
+   where the Gospels have a sentence starting with
+   them were worked out from the pages already
+   lined up, and only those fetched (27 more):
+   Խ («Խնդրեցէք եւ տացի ձեզ»), Ճ («Ճրագ
+   մարմնոյ») and Է («Էր Անդրէաս», a Ե with a
+   foot), one copy each. 28 capitals: Ա Բ Գ Դ Ե
+   Զ Է Ը Թ Ի Լ Խ Ծ Կ Հ Ձ Ճ Մ Յ Ն Ո Չ Պ Ս Վ Տ Փ
+   Ք. Not found (none at the head of a sentence
+   on the pages looked at): Ժ Ղ Շ Ջ Ռ Ր Ց Ւ Օ Ֆ;
    the font keeps his small letters bigger for
    those. The pictures are as large as written
    (the ink alone); the initials are written finer
