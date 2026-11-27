@@ -5957,11 +5957,8 @@ function decorate() {
       title: view.stacked ? t("r.stacked")
         : t("r.side") }) : null,
     // on a phone the text tools hide behind this
-    btn(icon(ICONS.sliders), () => {
-      const open = R.tools.classList.toggle("open");
-      more.setAttribute("aria-expanded",
-        String(open));
-    }, {
+    btn(icon(ICONS.sliders), () => settingsOpen(
+      !R.tools.classList.contains("open")), {
       class: "icon-btn more",
       "aria-expanded": String(
         R.tools.classList.contains("open")),
@@ -5970,8 +5967,61 @@ function decorate() {
     viewTools(),
     R.found ? foundStrip() : null,
   ].filter(Boolean));
-  const more = R.tools.querySelector(".more");
   fit();
+}
+
+// The text settings behind the settings button: open
+// or shut. While open, a tap or the wheel on the text,
+// or the page scrolling, shuts them; the listeners are
+// there only while they are open.
+let settingsOff = null;
+function settingsOpen(on) {
+  if (settingsOff) {
+    settingsOff();
+    settingsOff = null;
+  }
+  if (!R.tools) return;
+  R.tools.classList.toggle("open", on);
+  R.tools.querySelector(".more")
+    ?.setAttribute("aria-expanded", String(on));
+  if (!on) return;
+  let y0 = scrollY;
+  // the last time the settings themselves were used:
+  // opening them, a bigger letter size, the font
+  // panel may move the page, and that is no reason
+  let used = Date.now();
+  const away = (e) => {
+    if (R.tools && R.tools.contains(e.target)) {
+      used = Date.now();
+    } else {
+      settingsOpen(false);
+    }
+  };
+  const key = (e) => {
+    if (R.tools && R.tools.contains(e.target)) {
+      used = Date.now();
+    }
+  };
+  const moved = () => {
+    if (Date.now() - used < 800) {
+      y0 = scrollY;
+    } else if (Math.abs(scrollY - y0) > 8) {
+      settingsOpen(false);
+    }
+  };
+  const opt = { capture: true, passive: true };
+  document.addEventListener("pointerdown", away, opt);
+  document.addEventListener("wheel", away, opt);
+  document.addEventListener("keydown", key, opt);
+  window.addEventListener("scroll", moved,
+    { passive: true });
+  settingsOff = () => {
+    document.removeEventListener("pointerdown", away,
+      opt);
+    document.removeEventListener("wheel", away, opt);
+    document.removeEventListener("keydown", key, opt);
+    window.removeEventListener("scroll", moved);
+  };
 }
 
 // Do all the buttons fit in one row? If not, the text
@@ -6242,7 +6292,7 @@ function fontPick() {
       : "removeEventListener";
     document[go]("pointerdown", away);
     document[go]("keydown", keys);
-    if (on) opts[view.font].focus();
+    if (on) opts[view.font].focus({ preventScroll: true });
   };
   pick.addEventListener("click",
     () => open(list.hidden));

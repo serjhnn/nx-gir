@@ -3251,6 +3251,12 @@ body.reading.full .bar {
   overflow-y: auto;
 }
 
+/* scrolling the settings does not scroll the page
+   (which would shut them) */
+.tools.collapsed.open .view {
+  overscroll-behavior: contain;
+}
+
 .tools.collapsed.open .view .icon-btn,
 .tools.collapsed.open .view #theme {
   justify-content: flex-start;
