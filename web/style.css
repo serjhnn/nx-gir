@@ -109,20 +109,6 @@
   background-size: var(--paper-size);
 }
 
-/* the bars that stay in view on scrolling (and the
-   few boxes) have the page's color so the text
-   goes under them; with a paper they have its
-   texture too, fixed like the page's, so it lines
-   up with it and they do not show as boxes */
-:root[data-paper] :is(body.home .bar, .tools,
-  .search-wrap, .lib-tabs, .tabbar,
-  .library .shelf li.parts) {
-  background-color: var(--bg);
-  background-image: var(--paper-img);
-  background-size: var(--paper-size);
-  background-attachment: fixed;
-}
-
 /* papyrus: reeds laid across and down, a warm yellow,
    fibers and stains */
 :root[data-paper="papyrus"],
