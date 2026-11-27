@@ -6377,8 +6377,9 @@ const view = { size: SIZE, center: false, line: 0,
   // read in pages: null = yes (the default)
   paged: null,
   // the reader's toolbar and the phone's tab bar
-  // slide away on scrolling down (else stay)
-  hideBars: true };
+  // slide away on scrolling down; by default they
+  // stay (#/settings)
+  hideBars: false };
 try {
   const v = JSON.parse(
     localStorage.getItem("nxgir-view") || "{}");
@@ -6397,7 +6398,9 @@ try {
   view.stacked = v.stacked === true;
   view.paged = typeof v.paged === "boolean"
     ? v.paged : null;
-  view.hideBars = v.hideBars !== false;
+  // kept as bars: "hide"; an old hideBars was
+  // saved without being chosen, so it is left
+  view.hideBars = v.bars === "hide";
 } catch (e) {}
 
 // The paper's texture is noise from SVG filters in
@@ -6572,7 +6575,7 @@ function saveView() {
         full: view.full,
         stacked: view.stacked,
         paged: view.paged,
-        hideBars: view.hideBars }));
+        bars: view.hideBars ? "hide" : "fixed" }));
   } catch (e) {}
 }
 
