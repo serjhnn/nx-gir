@@ -498,6 +498,7 @@ const UI = {
     "r.long": "Մեկ երկար տեքստ (սեղմեք՝ էջերով, հեռախոսի"
       + " համար ավելի թեթև)",
     "r.font": "Տեքստի տառատեսակը",
+    "r.fontsample": "Նախագիր",
     "r.fail": "Չհաջողվեց պահել՝ ",
     "r.line": (n) => "տող " + n,
     "r.prevpage": "Նախորդ էջը",
@@ -981,6 +982,7 @@ const UI = {
     "r.long": "One long text (click for pages: lighter on"
       + " a phone)",
     "r.font": "Font of the text",
+    "r.fontsample": "Նախագիր",
     "r.fail": "Could not save: ",
     "r.line": (n) => "line " + n,
     "r.prevpage": "Previous page",
@@ -1473,6 +1475,7 @@ const UI = {
     "r.long": "Одним текстом (нажмите: по страницам,"
       + " легче для телефона)",
     "r.font": "Шрифт текста",
+    "r.fontsample": "Նախագիր",
     "r.fail": "Не удалось сохранить: ",
     "r.line": (n) => "строка " + n,
     "r.prevpage": "Предыдущая страница",

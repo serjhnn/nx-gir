@@ -417,6 +417,9 @@ def test_fonts_match_app_js():
     css = web.static_file("/style.css").read_text()
     for f in fonts[1:]:
         assert f'[data-font="{f}"]' in css, f
+    # each one's sample in the font panel
+    for f in fonts:
+        assert f'.font-sample[data-font="{f}"]' in css, f
     # and the CSS default is that font
     root = css[css.index(":root {") :]
     book = root[root.index("--book:") :]

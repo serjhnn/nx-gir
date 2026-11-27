@@ -2292,14 +2292,23 @@ body.reading .bar {
   padding-inline: 8px;
 }
 
-/* the list of book fonts, drawn like the buttons */
+/* the book fonts: a button like the others, with
+   the font's name and two letters in it, and a panel
+   of the fonts, each a line written in it */
+.font-menu {
+  position: relative;
+  min-width: 0;
+}
+
 .font-pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   /* a long name shrinks it, not the row */
   min-width: 0;
-  max-width: 10rem;
-  text-overflow: ellipsis;
+  max-width: 12rem;
   height: 2.1rem;
-  padding: 0 28px 0 12px;
+  padding: 0 28px 0 10px;
   border: 1px solid var(--rule);
   border-radius: 999px;
   background: transparent;
@@ -2307,7 +2316,6 @@ body.reading .bar {
   font: inherit;
   font-size: 0.85rem;
   cursor: pointer;
-  appearance: none;
   background-image: linear-gradient(
       45deg, transparent 50%, currentColor 50%),
     linear-gradient(
@@ -2318,14 +2326,147 @@ body.reading .bar {
   background-repeat: no-repeat;
 }
 
-.font-pick:hover {
+.font-pick .font-name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.font-pick .font-sample {
+  color: var(--text);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.font-pick:hover,
+.font-pick[aria-expanded="true"] {
   color: var(--text);
   background-color: var(--hover);
 }
 
-.font-pick option {
-  background: var(--bg);
+.font-list {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 30;
+  width: min(22rem, calc(100vw - 32px));
+  max-height: min(70vh, 34rem);
+  overflow-y: auto;
+  padding: 0.4rem;
+  border: 1px solid var(--panel-rule);
+  border-radius: 14px;
+  background: var(--panel);
+  box-shadow: 0 10px 28px var(--panel-shadow);
+}
+
+.font-list[hidden] {
+  display: none;
+}
+
+.font-opt {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+  width: 100%;
+  padding: 0.55rem 0.8rem 0.55rem 2.2rem;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
   color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+}
+
+.font-opt:hover,
+.font-opt:focus-visible {
+  background: var(--hover);
+  outline: none;
+}
+
+.font-opt .font-sample {
+  font-size: 1.35rem;
+  line-height: 1.5;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.font-opt .font-name {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* the chosen one: a check and the accent */
+.font-opt[aria-selected="true"] .font-name {
+  color: var(--accent-ink);
+}
+
+.font-opt[aria-selected="true"]::before {
+  content: "";
+  position: absolute;
+  left: 0.85rem;
+  top: 50%;
+  width: 0.45rem;
+  height: 0.8rem;
+  margin-top: -0.5rem;
+  border: solid var(--accent-ink);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* each sample in its own font (as --book in the
+   data-font rules above) */
+.font-sample[data-font="grqi"] {
+  font-family: "nx Arian Grqi", serif;
+}
+
+.font-sample[data-font="arianserif"] {
+  font-family: "nx Arian AMU Serif", serif;
+}
+
+.font-sample[data-font="noto"] {
+  font-family: "nx Noto Serif Armenian", serif;
+}
+
+.font-sample[data-font="faulmann"] {
+  font-family: "nx Faulmann", serif;
+  word-spacing: -0.7em;
+}
+
+.font-sample[data-font="geghagrutyun"] {
+  font-family: "nx Geghagrutyun",
+    "nx Noto Serif Armenian", serif;
+  word-spacing: -0.3em;
+}
+
+.font-sample[data-font="tumanian"] {
+  font-family: "nx Tumanian", serif;
+}
+
+.font-sample[data-font="garamond"] {
+  font-family: "nx EB Garamond",
+    "nx FreeSerif Armenian", serif;
+}
+
+.font-sample[data-font="oldstandard"] {
+  font-family: "nx Old Standard",
+    "nx FreeSerif Armenian", serif;
+}
+
+.font-sample[data-font="bolorgir"] {
+  font-family: "nx Bolorgir", serif;
+}
+
+.font-sample[data-font="dzeragir"] {
+  font-family: "nx Dzeragir", serif;
+}
+
+.font-sample[data-font="dzeragirthin"] {
+  font-family: "nx Dzeragir Thin", serif;
 }
 
 .text p {
@@ -3121,9 +3262,46 @@ body.reading.full .bar {
   font-size: 0.9rem;
 }
 
+.tools.collapsed.open .view .font-menu {
+  width: 100%;
+}
+
 .tools.collapsed.open .view .font-pick {
   max-width: none;
   width: 100%;
+}
+
+/* in the settings column the list opens in place,
+   the fonts side by side as small cards */
+.tools.collapsed.open .view .font-list:not([hidden]) {
+  position: static;
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.25rem;
+  width: 100%;
+  max-height: none;
+  margin-top: 0.4rem;
+  box-shadow: none;
+}
+
+.tools.collapsed.open .view .font-opt {
+  padding: 0.45rem 0.5rem 0.45rem 1.9rem;
+  justify-content: flex-start;
+}
+
+.tools.collapsed.open .view .font-opt .font-sample {
+  font-size: 1.1rem;
+}
+
+.tools.collapsed.open .view
+  .font-opt[aria-selected="true"] {
+  background: var(--hover);
+}
+
+.tools.collapsed.open .view
+  .font-opt[aria-selected="true"]::before {
+  left: 0.75rem;
 }
 
 /* -- the phone view --

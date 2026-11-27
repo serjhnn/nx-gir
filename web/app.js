@@ -6175,17 +6175,79 @@ function viewTools() {
   button);
 }
 
-// the book fonts by name
+// the book fonts: a button with the font's name and
+// a few letters in it, and a panel of the fonts, each
+// showing a line written in it (the faces are in
+// style.css, .font-opt[data-font])
 function fontPick() {
-  const pick = h("select", { class: "font-pick",
-    "aria-label": t("r.font"),
-    title: t("r.font") },
-  FONTS.map((f, i) => h("option", { value: String(i),
-    selected: i === view.font ? "" : null },
-  FONT_NAMES[f])));
-  pick.addEventListener("change", () =>
-    setView({ font: Number(pick.value) }));
-  return pick;
+  const sample = (f, text) => h("span", {
+    class: "font-sample", "data-font": f, lang: "hy" },
+  text);
+  const name = h("span", { class: "font-name" });
+  const face = h("span", { class: "font-face" });
+  const pick = h("button", { class: "font-pick",
+    type: "button", "aria-haspopup": "listbox",
+    "aria-expanded": "false", title: t("r.font"),
+    "aria-label": t("r.font") }, face, name);
+  const opts = FONTS.map((f, i) => {
+    const o = h("button", { class: "font-opt",
+      type: "button", role: "option",
+      "data-font": f },
+    sample(f, t("r.fontsample")),
+    h("span", { class: "font-name" }, FONT_NAMES[f]));
+    o.addEventListener("click", () => {
+      setView({ font: i });
+      show();
+      open(false);
+      pick.focus();
+    });
+    return o;
+  });
+  const list = h("div", { class: "font-list",
+    role: "listbox", "aria-label": t("r.font"),
+    hidden: "" }, opts);
+  const wrap = h("div", { class: "font-menu" },
+    pick, list);
+  // the chosen font on the button and in the list
+  const show = () => {
+    const f = FONTS[view.font];
+    name.textContent = FONT_NAMES[f];
+    face.replaceChildren(sample(f, "Աա"));
+    opts.forEach((o, i) => o.setAttribute(
+      "aria-selected", String(i === view.font)));
+  };
+  const away = (e) => {
+    if (!wrap.contains(e.target)) open(false);
+  };
+  const keys = (e) => {
+    const k = opts.indexOf(document.activeElement);
+    if (e.key === "Escape") {
+      open(false);
+      pick.focus();
+    } else if (e.key === "ArrowDown"
+      || e.key === "ArrowUp") {
+      e.preventDefault();
+      const d = e.key === "ArrowDown" ? 1 : -1;
+      const n = k < 0 ? view.font
+        : (k + d + opts.length) % opts.length;
+      opts[n].focus();
+    }
+  };
+  // listeners only while open, so none are left
+  // behind when the row is drawn again
+  const open = (on) => {
+    list.hidden = !on;
+    pick.setAttribute("aria-expanded", String(on));
+    const go = on ? "addEventListener"
+      : "removeEventListener";
+    document[go]("pointerdown", away);
+    document[go]("keydown", keys);
+    if (on) opts[view.font].focus();
+  };
+  pick.addEventListener("click",
+    () => open(list.hidden));
+  show();
+  return wrap;
 }
 
 function fail(e) {
