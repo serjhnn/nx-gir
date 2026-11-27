@@ -24,10 +24,12 @@ ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / "web"
 OUT = WEB / "og-image.png"
 
-# the light theme of style.css. LinkedIn crops
-# the sides (a Featured link shows about the
-# middle 960px), so all of it is centered and
-# kept in the middle 840px
+# the light theme of style.css, on the paper of
+# the reader: what the site does, shown once (a
+# line of Yeghishe, its translation below, and a
+# word's meaning). LinkedIn crops the sides (a
+# Featured link shows about the middle 960px), so
+# all of it is kept in the middle 840px
 CARD = """<!doctype html>
 <html lang="hy">
 <head>
@@ -44,7 +46,9 @@ body {{
   justify-content: center;
   padding: 0 180px;
   text-align: center;
-  background: #faf9f5;
+  background:
+    radial-gradient(ellipse at center,
+      #fbf6e9 40%, #efe3c6 100%);
   color: #141413;
   font-family: system-ui, sans-serif;
   border-bottom: 14px solid #d97757;
@@ -52,38 +56,67 @@ body {{
 .top {{
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 28px;
+  gap: 16px;
 }}
 svg {{
-  width: 116px;
-  height: 126px;
+  width: 52px;
+  height: 56px;
   fill: none;
   stroke: #d97757;
   stroke-linecap: round;
   stroke-linejoin: round;
 }}
-h1 {{
-  font: 400 100px "nx Arian Grqi", serif;
-  line-height: 1.1;
+.name {{
+  font: 400 50px "nx Arian Grqi", serif;
 }}
-h2 {{
-  margin-top: 32px;
-  font-size: 50px;
+.en {{
+  font-size: 24px;
   font-weight: 600;
-}}
-p {{
-  margin-top: 20px;
-  font-size: 30px;
   color: #6b6a65;
-  line-height: 1.35;
+  margin-left: 6px;
 }}
-.url {{
-  margin-top: 40px;
-  font-size: 30px;
-  font-weight: 600;
-  color: #b85c3e;
+.grabar {{
+  margin-top: 78px;
+  font: 400 50px "nx Arian Grqi", serif;
+  line-height: 1.25;
+  color: #3b2a1a;
 }}
+mark {{
+  position: relative;
+  background: #f3d3c4;
+  color: inherit;
+  border-radius: 6px;
+  padding: 0 6px;
+}}
+.word {{
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translate(-50%, -12px);
+  white-space: nowrap;
+  padding: 6px 16px;
+  border-radius: 10px;
+  background: #141413;
+  color: #faf9f5;
+  font: 500 22px system-ui, sans-serif;
+}}
+.word b {{ color: #e8a185; font-weight: 600; }}
+.modern {{
+  margin-top: 18px;
+  font: 400 26px "nx Noto Serif Armenian", serif;
+  color: #5a4a38;
+}}
+.who {{
+  margin-top: 16px;
+  font: 400 22px "nx Noto Serif Armenian", serif;
+  color: #8a7a66;
+}}
+.foot {{
+  margin-top: 34px;
+  font-size: 26px;
+  color: #6b6a65;
+}}
+.foot b {{ color: #b85c3e; }}
 </style>
 </head>
 <body>
@@ -96,13 +129,18 @@ p {{
     <path stroke-width="3.6"
       d="M9 5V19M16 13V19M23 13V27"/>
   </svg>
-  <h1>Նախագիր</h1>
+  <span class="name">Նախագիր</span>
+  <span class="en" lang="en">nxGir</span>
 </div>
-<h2 lang="en">Old Armenian Book Reader</h2>
-<p lang="en">Grabar books with Modern Armenian
-translations side by side, and the meaning of
-every word a tap away.</p>
-<div class="url" lang="en">nxgir.am</div>
+<p class="grabar">Մահ ոչ <mark>իմացեալ<span
+class="word" lang="en"><b>իմանամ</b> · to
+understand, to know</span></mark>՝ մահ է,<br>
+մահ իմացեալ՝ անմահութիւն է։</p>
+<p class="modern">Մահը չգիտակցված՝ մահ է,
+մահը գիտակցված՝ անմահություն է։</p>
+<p class="who">Եղիշէ, Վասն Վարդանայ</p>
+<p class="foot" lang="en">Old Armenian books,
+word by word · <b>nxgir.am</b></p>
 </body>
 </html>
 """
