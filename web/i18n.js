@@ -174,6 +174,10 @@ const UI = {
       + "Հարցերը, ուղղումներն ու գաղափարները "
       + "ողջունվում են GitHub-ում։",
     "ab.contact": "Գրել հեղինակին GitHub-ում",
+    "ct.h": "Կապ",
+    "ct.email": "Էլ. փոստ",
+    "ct.github": "GitHub",
+    "ct.instagram": "Instagram",
     "home": "← Գլխավոր",
     "back.library": "Վերադառնալ գրադարան",
     "error": "Ինչ-որ բան այն չէ",
@@ -688,6 +692,10 @@ const UI = {
       + "Questions, corrections and ideas are "
       + "welcome on GitHub.",
     "ab.contact": "Write to the author on GitHub",
+    "ct.h": "Contact",
+    "ct.email": "Email",
+    "ct.github": "GitHub",
+    "ct.instagram": "Instagram",
     "home": "← Home",
     "back.library": "Back to the library",
     "error": "Something went wrong",
@@ -1201,6 +1209,10 @@ const UI = {
       + "Вопросы, исправления и идеи приветствуются "
       + "на GitHub.",
     "ab.contact": "Написать автору на GitHub",
+    "ct.h": "Контакты",
+    "ct.email": "Почта",
+    "ct.github": "GitHub",
+    "ct.instagram": "Instagram",
     "home": "← Главная",
     "back.library": "Вернуться в библиотеку",
     "error": "Что-то пошло не так",

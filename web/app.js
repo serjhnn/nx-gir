@@ -157,6 +157,15 @@ function icon(paths, cls) {
 }
 
 const ICONS = {
+  // contacts: an envelope, a branch (GitHub),
+  // a camera (Instagram)
+  mail: ["M4 6h16v12H4z", "M4 7l8 6 8-6"],
+  branch: ["M7 4v12", "M17 8v1a4 4 0 0 1-4 4H9",
+    "M7 20a2 2 0 1 0 0-.01", "M17 4a2 2 0 1 0 0 .01"],
+  camera: [
+    "M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7"
+      + "a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4z",
+    "M12 8a4 4 0 1 0 .01 0", "M17.2 6.8h.01"],
   // a soft cross, drawn like a pen stroke: take off
   // the list
   tick: ["M5 12.5l4.5 4.5L19 7.5"],
@@ -4131,6 +4140,35 @@ function contributePage() {
 const AUTHOR_URL = "https://github.com/serjhnn";
 const INSTAGRAM = "https://www.instagram.com/srg77.h";
 
+// the contact rows: [key, icon, handle, link]
+function contactRows() {
+  return [
+    ["email", "mail", mail(), null],
+    ["github", "branch", "serjhnn", AUTHOR_URL],
+    ["instagram", "camera", "srg77.h", INSTAGRAM],
+  ];
+}
+
+// one contact table, in a style picked by v
+function contactTable(v) {
+  const link = (r) => r[3]
+    ? h("a", { href: r[3], rel: "noopener me" }, r[2])
+    : r[2];
+  const rows = contactRows().map((r) => h("tr", {},
+    h("th", { scope: "row" },
+      icon(ICONS[r[1]]), t("ct." + r[0])),
+    h("td", {}, link(r))));
+  const tile = (r) => h("li", {},
+    icon(ICONS[r[1]]),
+    h("small", {}, t("ct." + r[0])),
+    link(r));
+  return h("section", { class: "contact ct-" + v },
+    h("h2", {}, t("ct.h")),
+    v === "b"
+      ? h("ul", {}, contactRows().map(tile))
+      : h("table", {}, h("tbody", {}, rows)));
+}
+
 function aboutPage() {
   document.title = t("ab.title") + " · " + NAME;
   const part = (k) => h("li", {},
@@ -4152,7 +4190,8 @@ function aboutPage() {
         "Instagram"),
       h("a", { href: "#/contribute" },
         t("foot.join")),
-      h("a", { href: REPO }, t("co.gh"))));
+      h("a", { href: REPO }, t("co.gh"))),
+    contactTable(window.CT || "a"));
 }
 
 // -- announcements --
