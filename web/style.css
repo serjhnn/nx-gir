@@ -5218,6 +5218,50 @@ body.home .search-wrap {
   }
 }
 
+/* the reader's panels float above the text: rounded,
+   a little see-through and blurred, with a shadow */
+@media (max-width: 40rem) {
+  body.reading .tools,
+  body.reading .tabbar {
+    background: color-mix(in srgb, var(--bg) 78%,
+      transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--rule);
+    border-radius: 22px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  }
+  body.reading .tools {
+    top: calc(var(--stick, 0px) + 6px);
+    margin: 0 -0.25rem 1rem;
+    padding: 8px 10px;
+  }
+  body.reading .tabbar {
+    left: 8px;
+    right: 8px;
+    bottom: calc(8px + env(safe-area-inset-bottom));
+    height: 56px;
+    padding-bottom: 0;
+  }
+  body.reading:not(.peek):not(.bars-fixed)
+    .tools.stuck:not(.open) {
+    transform: translateY(
+      calc(-100% - var(--stick, 0px) - 16px));
+  }
+  body.reading:not(.peek):not(.bars-fixed) .tabbar {
+    transform: translateY(
+      calc(100% + 16px + env(safe-area-inset-bottom)));
+  }
+  body.reading .tools .readbar {
+    right: 16px;
+    bottom: 0;
+    left: 16px;
+    height: 2px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+}
+
 /* -- the Reference: the book cards (#/reference) -- */
 
 /* a grid of cards, two across where they fit; each
