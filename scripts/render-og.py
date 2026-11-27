@@ -139,8 +139,8 @@ understand, to know</span></mark>՝ մահ է,<br>
 <p class="modern">Մահը չգիտակցված՝ մահ է,
 մահը գիտակցված՝ անմահություն է։</p>
 <p class="who">Եղիշէ, Վասն Վարդանայ</p>
-<p class="foot" lang="en">Old Armenian books,
-word by word · <b>nxgir.am</b></p>
+<p class="foot" lang="en">Old Armenian books ·
+<b>nxgir.am</b></p>
 </body>
 </html>
 """
