@@ -130,9 +130,13 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    եւ լցին», John 6:13) and Շ («Շուրջ եղեն
    զնովաւ», John 10:24); one copy each. 30
    capitals: Ա Բ Գ Դ Ե Զ Է Ը Թ Ժ Ի Լ Խ Ծ Կ Հ Ձ Ճ
-   Մ Յ Ն Շ Ո Չ Պ Ս Վ Տ Փ Ք. Not found (none at the
-   head of a sentence on the pages looked at): Ղ Ջ
-   Ռ Ր Ց Ւ Օ Ֆ (Օ drawn, as օ, see below);
+   Մ Յ Ն Շ Ո Չ Պ Ս Վ Տ Փ Ք. At every sentence of
+   the Gospels that starts with Ղ Ջ Ռ Ր Ց, the
+   place between the initials around it was looked
+   at: W.541 writes no initial there. Ռ and Ց were
+   then taken from another book of the same kind,
+   W.542 (`../w542/README.md`): 32 capitals in all.
+   Not found: Ղ Ջ Ր Ւ Ֆ; Օ is drawn, as օ (below);
    the font keeps his small letters bigger for
    those. The pictures are as large as written
    (the ink alone); the initials are written finer
