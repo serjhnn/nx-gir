@@ -181,7 +181,12 @@ async function answer(req) {
     { ignoreSearch: true });
   if (hit) return hit;
   try {
-    const res = await fetch(req);
+    // asked again, not from the browser's own cache:
+    // a file kept here stays for the whole build, so a
+    // copy from before it (a font of the same name)
+    // must not get in; a page opened is fetched as is
+    const res = await fetch(req.mode === "navigate"
+      ? req : new Request(req, { cache: "no-cache" }));
     if (res.ok) {
       cache.put(req, res.clone()).catch(() => {});
     }
