@@ -506,6 +506,12 @@ const UI = {
     "r.tile.sent": "Տողատել",
     "r.tile.width": "Լայնք",
     "r.tile.paged": "Էջերով",
+    "r.tile.bars": "Թաքցնել",
+    "r.bars": "Թաքցնել վերևի և ներքևի վահանակները ոլորելիս",
+    "r.barshide": "Վահանակները թաքնվում են ներքև ոլորելիս"
+      + " (սեղմեք՝ միշտ երևան)",
+    "r.barsfixed": "Վահանակները միշտ երևում են (սեղմեք՝"
+      + " թաքցնել ոլորելիս)",
     "r.tile.layout": "Իրար տակ",
     "r.saved": "Էջանիշներ և նշումներ",
     "r.paper": "Էջի թուղթը",
@@ -1006,6 +1012,13 @@ const UI = {
     "r.tile.sent": "Sentences",
     "r.tile.width": "Width",
     "r.tile.paged": "Pages",
+    "r.tile.bars": "Hide bars",
+    "r.bars": "Hide the top and bottom bars while"
+      + " scrolling",
+    "r.barshide": "The bars hide as you scroll down"
+      + " (click: always shown)",
+    "r.barsfixed": "The bars always stay (click: hide"
+      + " them while scrolling)",
     "r.tile.layout": "Stacked",
     "r.saved": "Bookmarks and notes",
     "r.paper": "Paper of the page",
@@ -1515,6 +1528,13 @@ const UI = {
     "r.tile.sent": "Фразы",
     "r.tile.width": "Ширина",
     "r.tile.paged": "Страницы",
+    "r.tile.bars": "Скрывать",
+    "r.bars": "Скрывать верхнюю и нижнюю панели при"
+      + " прокрутке",
+    "r.barshide": "Панели скрываются при прокрутке вниз"
+      + " (нажмите: всегда видны)",
+    "r.barsfixed": "Панели всегда видны (нажмите:"
+      + " скрывать при прокрутке)",
     "r.tile.layout": "Стопкой",
     "r.saved": "Закладки и заметки",
     "r.paper": "Бумага страницы",

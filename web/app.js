@@ -287,6 +287,11 @@ const ICONS = {
   rows: ["M4 4h16v7H4zM4 13h16v7H4z"],
   // arrows out to both sides: full width
   width: ["M3 12h18M7 8l-4 4l4 4M17 8l4 4l-4 4"],
+  // a screen with a bar at the top and the
+  // bottom: the bars hide on scrolling
+  bars: ["M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1"
+    + "H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z",
+  "M4 8h16M4 16h16"],
   // a magnifying glass: search
   search: ["M11 4.5a6.5 6.5 0 1 0 0 13a6.5 6.5 0 1 0"
     + " 0-13z", "M16 16l4.5 4.5"],
@@ -1552,8 +1557,10 @@ function tabBar() {
 }
 const tabs = tabBar();
 
-// in the reader the bar shows on scrolling up, and
-// goes again on scrolling down (.peek, style.css)
+// in the reader the bars (the tab bar, the toolbar
+// at the top) show on scrolling up, and go again on
+// scrolling down (.peek, style.css), unless the
+// settings fix them (.bars-fixed)
 let lastY = 0;
 // the very bottom of the page also shows the bar
 function atEnd() {
@@ -5958,8 +5965,9 @@ function stickTop() {
 
 // the bottom of the toolbar stuck to the top
 function bar() {
-  return R.tools ? R.tools.offsetHeight + stickTop()
-    : 0;
+  if (!R.tools) return 0;
+  return (toolsHidden() ? 0 : R.tools.offsetHeight)
+    + stickTop();
 }
 
 // keep a word in view between the toolbar and the
@@ -6220,7 +6228,10 @@ const view = { size: SIZE, center: false, line: 0,
   font: 0, paper: 0, parallel: true, sentences: false,
   full: false, stacked: false,
   // read in pages: null = yes (the default)
-  paged: null };
+  paged: null,
+  // the reader's toolbar and the phone's tab bar
+  // slide away on scrolling down (else stay)
+  hideBars: true };
 try {
   const v = JSON.parse(
     localStorage.getItem("nxgir-view") || "{}");
@@ -6239,6 +6250,7 @@ try {
   view.stacked = v.stacked === true;
   view.paged = typeof v.paged === "boolean"
     ? v.paged : null;
+  view.hideBars = v.hideBars !== false;
 } catch (e) {}
 
 // The paper's texture is noise from SVG filters in
@@ -6343,6 +6355,10 @@ function applyView() {
     root.dataset.paper = PAPERS[view.paper];
   } else delete root.dataset.paper;
   bakePaper();
+  // the bars in the reader: fixed, or hiding on
+  // scrolling down (style.css, .bars-fixed)
+  document.body.classList.toggle("bars-fixed",
+    !view.hideBars);
   if (!R.text) return;
   R.text.style.setProperty("--text-size",
     SIZES[view.size] + "rem");
@@ -6408,7 +6424,8 @@ function saveView() {
         sentences: view.sentences,
         full: view.full,
         stacked: view.stacked,
-        paged: view.paged }));
+        paged: view.paged,
+        hideBars: view.hideBars }));
   } catch (e) {}
 }
 
@@ -6471,6 +6488,13 @@ function viewTools() {
     "aria-label": t("r.paged"),
     "aria-pressed": String(paged()),
     title: paged() ? t("r.inpages") : t("r.long") }),
+  btn(icon(ICONS.bars),
+    () => setView({ hideBars: !view.hideBars }), {
+      ...tile("bars"),
+      "aria-label": t("r.bars"),
+      "aria-pressed": String(view.hideBars),
+      title: view.hideBars ? t("r.barshide")
+        : t("r.barsfixed") }),
   // on a wide screen, with the translation beside:
   // each line under its pair, as on a phone
   R.par && view.parallel ? btn(icon(ICONS[
@@ -6961,9 +6985,22 @@ function savePos(keepalive) {
 // the home button
 function stick() {
   if (!R.tools) return;
+  // where it is without the slide that hides it
+  const m = new DOMMatrix(
+    getComputedStyle(R.tools).transform);
   R.tools.classList.toggle("stuck",
-    R.tools.getBoundingClientRect().top
+    R.tools.getBoundingClientRect().top - m.m42
       < stickTop() + 1);
+}
+
+// the toolbar slid away (style.css): scrolling
+// down with the bars not fixed
+function toolsHidden() {
+  const b = document.body.classList;
+  return !b.contains("peek")
+    && !b.contains("bars-fixed")
+    && R.tools.classList.contains("stuck")
+    && !R.tools.classList.contains("open");
 }
 
 // how much of the text has been scrolled past,

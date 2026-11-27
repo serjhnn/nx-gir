@@ -36,7 +36,7 @@ The site remembers where you stopped reading each book, in this browser. The hom
 
 ## Tabs at the bottom of a phone
 
-On a phone, a bar at the bottom of every page leads to the Home page, the Library, the book you read last (Continue) and the Reference; More opens the other pages (your Readings, the Blog, the Map, Comics, Features, Timeline and more). In the reader it steps aside, to leave the room to the text, and comes back when you scroll up. Each tab remembers where you were in it, and a second tap scrolls it to the top.
+On a phone, a bar at the bottom of every page leads to the Home page, the Library, the book you read last (Continue) and the Reference; More opens the other pages (your Readings, the Blog, the Map, Comics, Features, Timeline and more). In the reader it steps aside, to leave the room to the text, and comes back when you scroll up (or stays, if you fix the bars in the text settings). Each tab remembers where you were in it, and a second tap scrolls it to the top.
 
 ## Contents
 
@@ -66,7 +66,7 @@ See a mistake in the Grabar text or in a translation? Tap the word, press Report
 
 ## Text settings
 
-Make the text bigger or smaller, set it on the left or in the center, change the line spacing, put each sentence on its own line, read in a column or across the whole width, and choose the font. When the buttons do not fit in one row, on a phone or a tablet, these are behind the settings button and open in a column. The site remembers your choice. One of the fonts, nxGir Bolorgir, is our own: the letters written again with a broad pen, like a bolorgir manuscript. Another, nxGir Dzeragir, is the hand of a 17th-century scribe: its letters are traced from a manuscript of the Walters Art Museum; nxGir Dzeragir Thin is the same hand with a finer pen.
+Make the text bigger or smaller, set it on the left or in the center, change the line spacing, put each sentence on its own line, read in a column or across the whole width, and choose the font. When the buttons do not fit in one row, on a phone or a tablet, these are behind the settings button and open in a small card. There you can also choose whether the bars at the top and the bottom slide away while you scroll down, or always stay. The site remembers your choice. One of the fonts, nxGir Bolorgir, is our own: the letters written again with a broad pen, like a bolorgir manuscript. Another, nxGir Dzeragir, is the hand of a 17th-century scribe: its letters are traced from a manuscript of the Walters Art Museum; nxGir Dzeragir Thin is the same hand with a finer pen.
 
 ## Pages for a long part
 
