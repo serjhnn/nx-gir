@@ -325,7 +325,11 @@
   `notes/browser-memory.md`, measured with
   `scripts/measure-memory.js` (Playwright, with
   `nxgir web` running); measure it only when the
-  user asks, not with every new book
+  user asks, not with every new book. Why the
+  papers' texture is drawn once into a tile
+  (`bakePaper()` in `app.js`), and what scrolling
+  costs with each paper: `notes/paper-texture.md`,
+  measured with `scripts/measure-paper.js`
 - `interpretations/`: the user's own texts on the
   books, in Russian (`ru/`), English (`en/`) and
   Armenian (`hy/`);
