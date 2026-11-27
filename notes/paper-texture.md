@@ -148,7 +148,7 @@ on a desktop CPU; a phone paints a repeated bitmap
 on its GPU, where it is cheaper still, while the SVG
 filters stay costly there too.
 
-On the user's phone (Android, Chrome, the published
+On the user's phone (Android, the published
 site, 2026-11-27): scrolling with a paper is smooth
 now, as with none.
 
