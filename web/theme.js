@@ -1,9 +1,9 @@
-// Set the theme, the book font and the phone view
-// before the page is drawn, so they do not flash:
-// the theme picked with the button, or, until one
-// is picked, the system's; the font from the text
-// settings; the phone view from its button
-// (app.js).
+// Set the theme, the book font, the paper and the
+// phone view before the page is drawn, so they do
+// not flash: the theme picked with the button, or,
+// until one is picked, the system's; the font and
+// the paper from the text settings; the phone view
+// from its button (app.js).
 (function () {
   var t = null;
   try {
@@ -29,6 +29,13 @@
       localStorage.getItem("nxgir-view") || "{}");
     if (v.font) {
       document.documentElement.dataset.font = v.font;
+    }
+    // the paper behind the pages (PAPERS in app.js)
+    var papers = { papyrus: 1, parchment: 1,
+      vellum: 1, candle: 1 };
+    if (papers[v.paper]) {
+      document.documentElement.dataset.paper =
+        v.paper;
     }
   } catch (e) {}
 })();

@@ -6089,8 +6089,13 @@ const FONT_NAMES = { grqi: "Arian Grqi",
   bolorgir: "nxGir Bolorgir",
   dzeragir: "nxGir Dzeragir",
   dzeragirthin: "nxGir Dzeragir Thin" };
+// the paper behind the pages (style.css,
+// data-paper, also set early by theme.js); the
+// first is none: the theme's own colors
+const PAPERS = ["plain", "papyrus", "parchment",
+  "vellum", "candle"];
 const view = { size: SIZE, center: false, line: 0,
-  font: 0, parallel: true, sentences: false,
+  font: 0, paper: 0, parallel: true, sentences: false,
   full: false, stacked: false,
   // read in pages: null = yes (the default)
   paged: null };
@@ -6105,6 +6110,7 @@ try {
   view.center = v.center === true;
   view.line = Math.max(0, LINES.indexOf(v.line));
   view.font = Math.max(0, FONTS.indexOf(v.font));
+  view.paper = Math.max(0, PAPERS.indexOf(v.paper));
   view.parallel = v.parallel !== false;
   view.sentences = v.sentences === true;
   view.full = v.full === true;
@@ -6122,6 +6128,10 @@ function applyView() {
   const root = document.documentElement;
   if (view.font) root.dataset.font = FONTS[view.font];
   else delete root.dataset.font;
+  // the paper on every page, not only the text
+  if (view.paper) {
+    root.dataset.paper = PAPERS[view.paper];
+  } else delete root.dataset.paper;
   if (!R.text) return;
   R.text.style.setProperty("--text-size",
     SIZES[view.size] + "rem");
@@ -6159,6 +6169,7 @@ function setView(change) {
         center: view.center,
         line: LINES[view.line],
         font: FONTS[view.font],
+        paper: PAPERS[view.paper],
         parallel: view.parallel,
         sentences: view.sentences,
         full: view.full,
@@ -6221,6 +6232,7 @@ function viewTools() {
     "aria-pressed": String(paged()),
     title: paged() ? t("r.inpages") : t("r.long") }),
   fontPick(),
+  paperPick(),
   // the theme button joins the row while reading
   button);
 }
@@ -6228,43 +6240,70 @@ function viewTools() {
 // the book fonts: a button with the font's name and
 // a few letters in it, and a panel of the fonts, each
 // showing a line written in it (the faces are in
-// style.css, .font-opt[data-font])
+// style.css, .font-sample[data-font])
 function fontPick() {
   const sample = (f, text) => h("span", {
     class: "font-sample", "data-font": f, lang: "hy" },
   text);
+  return listPick({ items: FONTS, label: t("r.font"),
+    name: (f) => FONT_NAMES[f],
+    now: () => view.font,
+    set: (i) => setView({ font: i }),
+    face: (f) => sample(f, "Աա"),
+    sample: (f) => sample(f, t("r.fontsample")) });
+}
+
+// the paper behind the pages: a button with a bit
+// of the paper, and a panel of them (style.css,
+// data-paper)
+function paperPick() {
+  const sample = (p, text) => h("span", {
+    class: "paper-sample", "data-paper": p,
+    lang: "hy" }, text);
+  return listPick({ items: PAPERS,
+    label: t("r.paper"),
+    name: (p) => t("paper." + p),
+    now: () => view.paper,
+    set: (i) => setView({ paper: i }),
+    face: (p) => sample(p, "Աա"),
+    sample: (p) => sample(p, t("r.fontsample")) });
+}
+
+// a button that opens a list to pick one from: the
+// fonts and the papers. face(item) is drawn on the
+// button, sample(item) above the name in the list.
+function listPick(o) {
   const name = h("span", { class: "font-name" });
   const face = h("span", { class: "font-face" });
   const pick = h("button", { class: "font-pick",
     type: "button", "aria-haspopup": "listbox",
-    "aria-expanded": "false", title: t("r.font"),
-    "aria-label": t("r.font") }, face, name);
-  const opts = FONTS.map((f, i) => {
-    const o = h("button", { class: "font-opt",
-      type: "button", role: "option",
-      "data-font": f },
-    sample(f, t("r.fontsample")),
-    h("span", { class: "font-name" }, FONT_NAMES[f]));
-    o.addEventListener("click", () => {
-      setView({ font: i });
+    "aria-expanded": "false", title: o.label,
+    "aria-label": o.label }, face, name);
+  const opts = o.items.map((f, i) => {
+    const b = h("button", { class: "font-opt",
+      type: "button", role: "option" },
+    o.sample(f),
+    h("span", { class: "font-name" }, o.name(f)));
+    b.addEventListener("click", () => {
+      o.set(i);
       show();
       open(false);
       pick.focus();
     });
-    return o;
+    return b;
   });
   const list = h("div", { class: "font-list",
-    role: "listbox", "aria-label": t("r.font"),
+    role: "listbox", "aria-label": o.label,
     hidden: "" }, opts);
   const wrap = h("div", { class: "font-menu" },
     pick, list);
-  // the chosen font on the button and in the list
+  // the chosen one on the button and in the list
   const show = () => {
-    const f = FONTS[view.font];
-    name.textContent = FONT_NAMES[f];
-    face.replaceChildren(sample(f, "Աա"));
-    opts.forEach((o, i) => o.setAttribute(
-      "aria-selected", String(i === view.font)));
+    const f = o.items[o.now()];
+    name.textContent = o.name(f);
+    face.replaceChildren(o.face(f));
+    opts.forEach((b, i) => b.setAttribute(
+      "aria-selected", String(i === o.now())));
   };
   const away = (e) => {
     if (!wrap.contains(e.target)) open(false);
@@ -6278,7 +6317,7 @@ function fontPick() {
       || e.key === "ArrowUp") {
       e.preventDefault();
       const d = e.key === "ArrowDown" ? 1 : -1;
-      const n = k < 0 ? view.font
+      const n = k < 0 ? o.now()
         : (k + d + opts.length) % opts.length;
       opts[n].focus();
     }
@@ -6292,7 +6331,9 @@ function fontPick() {
       : "removeEventListener";
     document[go]("pointerdown", away);
     document[go]("keydown", keys);
-    if (on) opts[view.font].focus({ preventScroll: true });
+    if (on) {
+      opts[o.now()].focus({ preventScroll: true });
+    }
   };
   pick.addEventListener("click",
     () => open(list.hidden));

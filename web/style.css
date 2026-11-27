@@ -89,6 +89,208 @@
   --panel-shadow: rgba(0, 0, 0, 0.65);
 }
 
+/* -- the papers: a page like papyrus or an old
+   book, picked in the text settings (PAPERS in
+   app.js, data-paper on <html>, which theme.js
+   sets early, and on the samples in the list). A
+   paper sets its own colors over the theme's, and
+   its texture is drawn behind the page, fixed, so
+   it does not scroll: noise made by an SVG filter
+   in the browser (data: URLs, no image files) and
+   a darker edge. -- */
+
+:root[data-paper] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: var(--paper-img);
+  background-size: var(--paper-size);
+}
+
+/* papyrus: reeds laid across and down, a warm yellow,
+   fibers and stains */
+:root[data-paper="papyrus"],
+.paper-sample[data-paper="papyrus"] {
+  color-scheme: light;
+  --bg: #e6d29f;
+  --surface: #ddc68d;
+  --text: #2b2012;
+  --muted: #6a5535;
+  --rule: #c8ae76;
+  --hover: #dcc58c;
+  --mark: #d4ad6a;
+  --accent-ink: #8a4520;
+  --panel: #ecdcb0;
+  --panel-rule: #bfa36c;
+  --shadow: rgba(70, 45, 10, 0.16);
+  --paper-img:
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/\
+2000/svg' width='320' height='320'><filter id='n' x='0' y=\
+'0' width='1' height='1'><feTurbulence type='fractalNoise'\
+ baseFrequency='0.004 0.5' numOctaves='3' seed='3' stitchT\
+iles='stitch'/><feColorMatrix values='0 0 0 0 0.36 0 0 0 0\
+ 0.22 0 0 0 0 0.07 1.3 0 0 0 -0.6'/></filter><rect width='\
+100%' height='100%' filter='url(%23n)'/></svg>"),
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/\
+2000/svg' width='320' height='320'><filter id='n' x='0' y=\
+'0' width='1' height='1'><feTurbulence type='fractalNoise'\
+ baseFrequency='0.5 0.004' numOctaves='3' seed='7' stitchT\
+iles='stitch'/><feColorMatrix values='0 0 0 0 0.36 0 0 0 0\
+ 0.22 0 0 0 0 0.07 1.0 0 0 0 -0.56'/></filter><rect width=\
+'100%' height='100%' filter='url(%23n)'/></svg>"),
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/\
+2000/svg' width='700' height='700'><filter id='n' x='0' y=\
+'0' width='1' height='1'><feTurbulence type='fractalNoise'\
+ baseFrequency='0.006' numOctaves='4' seed='11' stitchTile\
+s='stitch'/><feColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.\
+22 0 0 0 0 0.07 0.9 0 0 0 -0.46'/></filter><rect width='10\
+0%' height='100%' filter='url(%23n)'/></svg>"),
+radial-gradient(ellipse at center,
+      transparent 55%, rgba(110, 70, 20, 0.28));
+  --paper-size: 320px 320px, 320px 320px, 700px 700px, auto;
+}
+
+/* an old book: yellowed paper, brown at the edges, spots
+   of age */
+:root[data-paper="parchment"],
+.paper-sample[data-paper="parchment"] {
+  color-scheme: light;
+  --bg: #efe0bd;
+  --surface: #e6d4aa;
+  --text: #33241a;
+  --muted: #715c44;
+  --rule: #d2bb8e;
+  --hover: #e7d6ae;
+  --mark: #e0bd8a;
+  --accent-ink: #94461f;
+  --panel: #f3e7ca;
+  --panel-rule: #c9b083;
+  --shadow: rgba(80, 50, 20, 0.16);
+  --paper-img:
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/\
+2000/svg' width='700' height='700'><filter id='n' x='0' y=\
+'0' width='1' height='1'><feTurbulence type='fractalNoise'\
+ baseFrequency='0.006' numOctaves='4' seed='11' stitchTile\
+s='stitch'/><feColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.\
+22 0 0 0 0 0.07 1.1 0 0 0 -0.48'/></filter><rect width='10\
+0%' height='100%' filter='url(%23n)'/></svg>"),
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/\
+2000/svg' width='180' height='180'><filter id='n' x='0' y=\
+'0' width='1' height='1'><feTurbulence type='fractalNoise'\
+ baseFrequency='0.85' numOctaves='2' seed='5' stitchTiles=\
+'stitch'/><feColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.22\
+ 0 0 0 0 0.07 0.7 0 0 0 -0.32'/></filter><rect width='100%\
+' height='100%' filter='url(%23n)'/></svg>"),
+radial-gradient(ellipse at center,
+      transparent 45%, rgba(120, 75, 30, 0.38));
+  --paper-size: 700px 700px, 180px 180px, auto;
+}
+
+/* vellum: a pale, smooth skin, barely marked */
+:root[data-paper="vellum"],
+.paper-sample[data-paper="vellum"] {
+  color-scheme: light;
+  --bg: #f5eedc;
+  --surface: #ece3cc;
+  --text: #2a241c;
+  --muted: #6d6352;
+  --rule: #ddd2b8;
+  --hover: #eee6d1;
+  --mark: #ead2b0;
+  --accent-ink: #9a5232;
+  --panel: #f8f3e6;
+  --panel-rule: #d3c6a8;
+  --shadow: rgba(60, 45, 20, 0.12);
+  --paper-img:
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/\
+2000/svg' width='700' height='700'><filter id='n' x='0' y=\
+'0' width='1' height='1'><feTurbulence type='fractalNoise'\
+ baseFrequency='0.006' numOctaves='4' seed='19' stitchTile\
+s='stitch'/><feColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.\
+22 0 0 0 0 0.07 0.8 0 0 0 -0.5'/></filter><rect width='100\
+%' height='100%' filter='url(%23n)'/></svg>"),
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/\
+2000/svg' width='180' height='180'><filter id='n' x='0' y=\
+'0' width='1' height='1'><feTurbulence type='fractalNoise'\
+ baseFrequency='0.85' numOctaves='2' seed='5' stitchTiles=\
+'stitch'/><feColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.22\
+ 0 0 0 0 0.07 0.5 0 0 0 -0.3'/></filter><rect width='100%'\
+ height='100%' filter='url(%23n)'/></svg>"),
+radial-gradient(ellipse at center,
+      transparent 60%, rgba(120, 90, 40, 0.16));
+  --paper-size: 700px 700px, 180px 180px, auto;
+}
+
+/* candlelight: an old book read at night, dark brown, a
+   warm glow in the middle */
+:root[data-paper="candle"],
+.paper-sample[data-paper="candle"] {
+  color-scheme: dark;
+  --bg: #241a12;
+  --surface: #2d2118;
+  --text: #ecdcbc;
+  --muted: #b19c7a;
+  --rule: #45362a;
+  --hover: #33261b;
+  --mark: #5a3a22;
+  --accent-ink: #e6a874;
+  --panel: #3a2c20;
+  --accent: #e08a6d;
+  --on-accent: #241a12;
+  --panel-rule: #5a4836;
+  --shadow: rgba(0, 0, 0, 0.45);
+  --paper-img:
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/\
+2000/svg' width='700' height='700'><filter id='n' x='0' y=\
+'0' width='1' height='1'><feTurbulence type='fractalNoise'\
+ baseFrequency='0.006' numOctaves='4' seed='23' stitchTile\
+s='stitch'/><feColorMatrix values='0 0 0 0 0.05 0 0 0 0 0.\
+03 0 0 0 0 0.01 1.6 0 0 0 -0.45'/></filter><rect width='10\
+0%' height='100%' filter='url(%23n)'/></svg>"),
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/\
+2000/svg' width='180' height='180'><filter id='n' x='0' y=\
+'0' width='1' height='1'><feTurbulence type='fractalNoise'\
+ baseFrequency='0.85' numOctaves='2' seed='5' stitchTiles=\
+'stitch'/><feColorMatrix values='0 0 0 0 0.05 0 0 0 0 0.03\
+ 0 0 0 0 0.01 0.9 0 0 0 -0.3'/></filter><rect width='100%'\
+ height='100%' filter='url(%23n)'/></svg>"),
+radial-gradient(ellipse at center,
+      rgba(255, 170, 80, 0.07), transparent 60%,
+      rgba(0, 0, 0, 0.5));
+  --paper-size: 700px 700px, 180px 180px, auto;
+}
+
+/* the samples in the paper list: each a bit of
+   its paper, in its colors (the rules above) */
+.paper-sample {
+  display: inline-block;
+  padding: 0 0.5em;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background-color: var(--bg);
+  background-image: var(--paper-img, none);
+  background-size: var(--paper-size, auto);
+  color: var(--text);
+  font-family: var(--book);
+}
+
+/* none: the theme's own colors, as they are with
+   no paper */
+.paper-sample[data-paper="plain"] {
+  border-color: #e3e0d6;
+  background: #faf9f5;
+  color: #141413;
+}
+
+:root:is([data-theme="dark"], [data-theme="black"])
+  .paper-sample[data-paper="plain"] {
+  border-color: #3a3936;
+  background: #1f1e1d;
+  color: #f0eee6;
+}
+
 /* the default, Arian Grqi, is in :root; Arian
    fonts are by Ruben Tarumian, with their own Latin
    and Cyrillic letters */
