@@ -95,7 +95,9 @@ beside it, as written. Every letter in it is the
 scribe's: the capitals are the red initials that
 open his sentences (`sources/w541/capitals/`; Ռ
 and Ց, which he never writes as initials, from
-the Silver Gospels, W.542, `sources/w542/`), all
+the Silver Gospels, W.542, `sources/w542/`; Ղ Ջ
+Ր, in neither, composed from his Ո, Լ and Ի, Չ),
+all
 scaled by one factor and set on the baseline, their
 strokes widened to the weight of his text (the
 initials are written finer); the capitals not

@@ -135,8 +135,15 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    place between the initials around it was looked
    at: W.541 writes no initial there. Ռ and Ց were
    then taken from another book of the same kind,
-   W.542 (`../w542/README.md`): 32 capitals in all.
-   Not found: Ղ Ջ Ր Ւ Ֆ; Օ is drawn, as օ (below);
+   W.542 (`../w542/README.md`). Ղ Ջ Ր are in
+   neither (nor were they found in a hymnal, W.547),
+   so, at the user's asking, Claude composed them
+   from his own capitals: Ր is his Ո with the right
+   leg ended short, Ղ his Լ with the hump of his Ի
+   on its stem, Ջ his Չ with a short stroke across
+   its descent (copies 0 in `capitals.tsv`). 35
+   capitals in all; Ւ and Ֆ, which open no
+   sentence, are not; Օ is drawn, as օ (below);
    the font keeps his small letters bigger for
    those. The pictures are as large as written
    (the ink alone); the initials are written finer

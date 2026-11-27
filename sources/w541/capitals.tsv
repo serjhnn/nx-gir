@@ -11,7 +11,10 @@
 # copy each, found on the pages where the Gospels have a
 # sentence that starts with them. Ռ and Ց are not in W.541
 # as initials: they are from W.542 (../w542/, pages of that
-# book), named by the user.
+# book), named by the user. Ղ Ջ Ր are found in neither:
+# Claude composed them from his own capitals (copies 0):
+# Ր his Ո with the right leg ended short, Ղ his Լ with the
+# hump of his Ի, Ջ his Չ with a short stroke across it.
 # letter	file	copies	pages
 Ա	0531.png	8	27 257 305 317 382 395 400 422
 Բ	0532.png	8	45 60 115 132 270 295 297 360
@@ -30,6 +33,7 @@
 Կ	053f.png	7	43 64 80 107 447
 Հ	0540.png	8	42 270 300 337 382 450 452
 Ձ	0541.png	1	30
+Ղ	0542.png	0	-
 Ճ	0543.png	1	294
 Մ	0544.png	8	25 100 195 272 285 392 450 475
 Յ	0545.png	8	25 27 130 440 450 460 462
@@ -38,10 +42,12 @@
 Ո	0548.png	8	132 217 260 297 312 380 402 437
 Չ	0549.png	2	118 192
 Պ	054a.png	8	75 282 295 350 395 405 415 420
+Ջ	054b.png	0	-
 Ռ	../../w542/capitals/054c.png	1	34
 Ս	054d.png	6	24 146 250 372 475
 Վ	054e.png	8	42 60 110 295 297 432
 Տ	054f.png	1	212
+Ր	0550.png	0	-
 Ց	../../w542/capitals/0551.png	1	415
 Փ	0553.png	1	475
 Ք	0554.png	1	160
