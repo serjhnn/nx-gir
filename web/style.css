@@ -3589,6 +3589,14 @@ body.reading.full .bar {
   font-size: 0.85rem;
 }
 
+/* the card is the panel's color: the buttons take
+   the panel's border, or in a dark theme they would
+   have none to see */
+.tools.collapsed.open .view :is(.icon-btn,
+  #theme, .font-pick):not([aria-pressed="true"]) {
+  border-color: var(--panel-rule);
+}
+
 .tools.collapsed.open .view .size {
   justify-content: center;
 }
