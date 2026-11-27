@@ -112,12 +112,18 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    with their line, and named by them: Կ («Կամ
    զիա՞րդ»), Ս (a plain U, «Սաղմովն ծնաւ»; his Մ
    has a flag), Ք, Փ, Թ and Տ (an S); an Ո with a
-   hook is Ո՞, not Ռ. Their copies were found by
-   shape and averaged, or one copy taken where
-   only one is clean (Թ, Ձ, Ք, Փ, Տ). 21 capitals
-   so far: Ա Բ Գ Դ Ե Զ Թ Ի Կ Հ Ձ Մ Յ Ն Ո Պ Ս Վ
-   Տ Փ Ք. Not found yet (rare at the head of a
-   sentence): Է Ը Ժ Լ Խ Ծ Ղ Ճ Շ Չ Ջ Ռ Ր Ց Ւ Օ Ֆ;
+   hook is Ո՞, not Ռ. Then those the text points
+   at, among the initials still unnamed: Լ
+   («Լուարուք»), Ը (an L with a loop), Ծ
+   («Ծնունդք իժից»), Չ («Չոգաւ», «Չոգան»: a plain
+   2) and Ձ («Ձայն»: the 2 with a stroke across its
+   foot; the first Ձ, a plain 2, was his Չ). Their
+   copies were found by shape and averaged, or one
+   copy taken where only one is clean (Թ, Ը, Ծ, Ձ,
+   Ք, Փ, Տ). 25 capitals so far: Ա Բ Գ Դ Ե Զ Ը Թ
+   Ի Լ Ծ Կ Հ Ձ Մ Յ Ն Ո Չ Պ Ս Վ Տ Փ Ք. Not found
+   yet (rare at the head of a sentence): Է Ժ Խ Ղ
+   Ճ Շ Ջ Ռ Ր Ց Ւ Օ Ֆ;
    the font keeps his small letters bigger for
    those. The pictures are as large as written
    (the ink alone); the initials are written finer
