@@ -6252,6 +6252,94 @@ try {
     ? v.paged : null;
 } catch (e) {}
 
+// The paper's texture is noise from SVG filters in
+// layers (style.css), slow to draw: a phone draws
+// it again for every new bit of page on scrolling.
+// So it is drawn once, with the paper's color, into
+// one opaque tile, which the page repeats; the
+// gradient at the edge stays as it is. Kept for
+// each paper; if the browser cannot, the SVG stays.
+const baked = {};
+let baking = "";
+
+function svgLayers(css) {
+  // url("data:image/svg+xml,...") layers, with the
+  // line breaks of style.css taken out
+  const re = /url\("(data:image\/svg\+xml[^"]*)"\)/g;
+  const nl = String.fromCharCode(92, 10);
+  return [...css.matchAll(re)].map(m => ({
+    css: m[0],
+    src: m[1].split(nl).join("")
+      .replace(/#/g, "%23"),
+  }));
+}
+
+async function bakeTile(root) {
+  const css = getComputedStyle(root);
+  const img = css.getPropertyValue("--paper-img");
+  const sizes = css.getPropertyValue("--paper-size")
+    .split(",").map(s => parseFloat(s));
+  const layers = svgLayers(img);
+  if (!layers.length) return null;
+  // one tile as wide as the biggest layer, which
+  // the smaller ones fill
+  const side = Math.max(...layers.map(
+    (l, i) => sizes[i] || 0));
+  const px = Math.min(2, devicePixelRatio || 1);
+  const c = document.createElement("canvas");
+  c.width = c.height = Math.round(side * px);
+  const g = c.getContext("2d");
+  g.fillStyle = css.getPropertyValue("--bg");
+  g.fillRect(0, 0, c.width, c.height);
+  // the first layer is on top: draw from the last
+  for (let i = layers.length - 1; i >= 0; i--) {
+    const w = sizes[i];
+    if (!w || side % w) return null;
+    const im = new Image();
+    im.src = layers[i].src;
+    await im.decode();
+    for (let x = 0; x < side; x += w) {
+      for (let y = 0; y < side; y += w) {
+        g.drawImage(im, x * px, y * px,
+          w * px, w * px);
+      }
+    }
+  }
+  const url = c.toDataURL("image/webp", 0.92);
+  // the rest of the layers (the gradient) after it
+  let rest = img;
+  layers.forEach(l => { rest = rest.replace(l.css,
+    ""); });
+  rest = rest.replace(/^[\s,]+/, "").trim();
+  return {
+    img: "url(" + url + ")" + (rest ? ", " + rest
+      : ""),
+    size: side + "px " + side + "px"
+      + (rest ? ", auto" : ""),
+  };
+}
+
+async function bakePaper() {
+  const root = document.documentElement;
+  const paper = root.dataset.paper || "";
+  if (paper === baking) return;
+  baking = paper;
+  root.style.removeProperty("--paper-img");
+  root.style.removeProperty("--paper-size");
+  if (!paper) return;
+  try {
+    if (!(paper in baked)) {
+      baked[paper] = await bakeTile(root);
+    }
+  } catch (e) {
+    baked[paper] = null;
+  }
+  const b = baked[paper];
+  if (!b || root.dataset.paper !== paper) return;
+  root.style.setProperty("--paper-img", b.img);
+  root.style.setProperty("--paper-size", b.size);
+}
+
 function applyView() {
   // on the page too: the word panel follows the size
   document.documentElement.style.setProperty(
@@ -6265,6 +6353,7 @@ function applyView() {
   if (view.paper) {
     root.dataset.paper = PAPERS[view.paper];
   } else delete root.dataset.paper;
+  bakePaper();
   if (!R.text) return;
   R.text.style.setProperty("--text-size",
     SIZES[view.size] + "rem");
