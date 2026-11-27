@@ -5239,6 +5239,9 @@ body.home .search-wrap {
   :root[data-theme="black"] body.reading .tabbar {
     border-color: var(--rule);
   }
+  body.reading .tools::before {
+    display: none;
+  }
   body.reading .tools {
     top: calc(var(--stick, 0px) + 6px);
     margin: 0 -8px 1rem;
