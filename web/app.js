@@ -1197,7 +1197,10 @@ function intro(news) {
         h("a", { href: "#/timeline" },
           t("intro.all")))] : null,
     qa("intro.q4", t("intro.a4")),
-    qa("intro.q5", t("intro.a5"), mail(), t("dot")));
+    qa("intro.q5", t("intro.a5"), mail(), t("dot")),
+    h("p", { class: "more" },
+      h("a", { href: "#/about/contacts" },
+        t("intro.contacts"))));
 }
 
 // a tip: a framed note with its label in a pill on

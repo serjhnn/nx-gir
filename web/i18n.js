@@ -268,6 +268,7 @@ const UI = {
     "intro.q5": "Ինչպե՞ս կապվել։",
     "intro.a5": "Հարցերի, առաջարկների կամ սխալների մասին"
       + " գրեք նախագծի հեղինակին՝ ",
+    "intro.contacts": "Բոլոր կոնտակտները →",
     "tip.label": "Հուշում",
     "tip.lib.a": "Գրադարանում սեղմեք",
     "tip.lib.b": "հեղինակի անվան կողքին՝ նրա մասին"
@@ -783,6 +784,7 @@ const UI = {
     "intro.q5": "How can I get in touch?",
     "intro.a5": "Write to the author of the project with"
       + " questions, ideas or mistakes found: ",
+    "intro.contacts": "All contacts →",
     "tip.label": "Tip",
     "tip.lib.a": "In the Library, tap",
     "tip.lib.b": "beside an author's name to read about"
@@ -1303,6 +1305,7 @@ const UI = {
     "intro.q5": "Как связаться?",
     "intro.a5": "С вопросами, предложениями или найденными"
       + " ошибками пишите автору проекта: ",
+    "intro.contacts": "Все контакты →",
     "tip.label": "Совет",
     "tip.lib.a": "В Библиотеке нажмите",
     "tip.lib.b": "рядом с именем автора, чтобы прочитать"
