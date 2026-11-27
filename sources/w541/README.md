@@ -139,7 +139,11 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
 
 `letters.tsv` gives the copies and pages of each,
 and `.` the scribe's dot. օ (the scribe writes աւ)
-and ֆ are not in the manuscript, so not in the font.
+and ֆ are not in the manuscript. օ and Օ are drawn
+by Claude, with a broad nib moved along a leaning
+oval, as heavy as his letters (`marks/0585.png`,
+`0555.png`, in `marks.tsv`, at the user's asking);
+ֆ is not in the font.
 
 The pictures in `letters/` are 120 pixels per
 x-height, the baseline at row 288, black ink on

@@ -1,6 +1,7 @@
 # Punctuation of nxGir Dzeragir that the manuscript does not
-# give: drawn by Claude with a round pen of the scribe's weight
-# (not the scribe's own; see README.md). Pictures as letters/.
+# give: drawn by Claude with a round pen of the scribe's weight;
+# օ and Օ, which he never wrote, with a broad nib (not the
+# scribe's own; see README.md). Pictures as letters/.
 # mark	file
 ՝	055d.png
 ՛	055b.png
@@ -24,3 +25,5 @@
 7	0037.png
 8	0038.png
 9	0039.png
+օ	0585.png
+Օ	0555.png

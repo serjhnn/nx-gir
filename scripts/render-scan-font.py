@@ -302,9 +302,10 @@ def glyphs(thin=0):
     out = {}
     for ch, path in letters().items():
         # marks sit close to the letter before them;
-        # digits are spaced as letters
+        # digits and the drawn letters (օ) are spaced
+        # as letters
         mark = path.parent.name == "marks"
-        tight = mark and not ch.isdigit()
+        tight = mark and not ch.isalnum()
         side = MARK_SIDE if tight else SIDE
         out[ord(ch)] = scanned(path, thin, side)
     pics = capitals()
