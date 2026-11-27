@@ -6423,20 +6423,30 @@ function saveView() {
   } catch (e) {}
 }
 
+// a toggle shown as a small tile in the settings
+// panel: its icon over a short name (style.css)
+function tile(k) {
+  return { class: "icon-btn tile",
+    "data-short": t("r.tile." + k) };
+}
+
 function viewTools() {
   const n = view.size;
   return h("div", { class: "view",
     role: "group", "aria-label": t("r.text") },
   btn("A−", () => setView({ size: n - 1 }), {
+    class: "icon-btn size",
     "aria-label": t("r.smaller"),
     title: t("r.smaller"),
     disabled: n === 0 ? "" : null }),
   btn("A+", () => setView({ size: n + 1 }), {
+    class: "icon-btn size",
     "aria-label": t("r.bigger"),
     title: t("r.bigger"),
     disabled: n === SIZES.length - 1 ? "" : null }),
   btn(icon(ICONS[view.center ? "center" : "left"]),
     () => setView({ center: !view.center }), {
+      ...tile("center"),
       "aria-label": t("r.center"),
       "aria-pressed": String(view.center),
       title: view.center ? t("r.centered")
@@ -6444,18 +6454,21 @@ function viewTools() {
   btn(icon(ICONS.spacing),
     () => setView({
       line: (view.line + 1) % LINES.length }), {
+      ...tile("spacing"),
       "aria-label": t("r.spacing", view.line + 1,
         LINES.length),
       title: view.line === LINES.length - 1
         ? t("r.widest") : t("r.more") }),
   btn("¶", () => setView({
     sentences: !view.sentences }), {
+    ...tile("sent"),
     "aria-label": t("r.sent"),
     "aria-pressed": String(view.sentences),
     title: view.sentences ? t("r.apart")
       : t("r.written") }),
   btn(icon(ICONS.width),
     () => setView({ full: !view.full }), {
+      ...tile("width"),
       "aria-label": t("r.width"),
       "aria-pressed": String(view.full),
       title: view.full ? t("r.whole")
@@ -6463,6 +6476,7 @@ function viewTools() {
   // a long part in pages: a page at a time is in
   // the browser, a few MB instead of hundreds
   btn("▤", () => setView({ paged: !paged() }), {
+    ...tile("paged"),
     "aria-label": t("r.paged"),
     "aria-pressed": String(paged()),
     title: paged() ? t("r.inpages") : t("r.long") }),

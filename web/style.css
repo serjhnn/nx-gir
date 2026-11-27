@@ -1863,7 +1863,23 @@ body.home .bar::before,
 /* ‹ n/N ›: the parts beside the one read */
 .part-tools {
   display: inline-flex;
-  gap: 0.25rem;
+  align-items: stretch;
+}
+
+/* one pill: the arrows and the number share a
+   border, which keeps the reading row short */
+.tools .part-tools {
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+}
+
+.tools .part-tools .icon-btn {
+  border-color: transparent;
+  padding-inline: 7px;
+}
+
+.tools .part-tools .part-step {
+  padding-inline: 9px;
 }
 .part-step.off {
   opacity: 0.35;
@@ -3499,13 +3515,27 @@ body.reading.full .bar {
   display: none;
 }
 
+/* open: a card under the settings button, over the
+   text. The size buttons in a row, the toggles as
+   small tiles (an icon over a short name, tile() in
+   app.js), then the font and the theme, full width;
+   a long list scrolls instead of covering the page */
 .tools.collapsed.open .view {
-  display: flex;
-  flex-basis: 100%;
-  flex-direction: column;
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
   gap: 0.4rem;
-  max-height: 60vh;
+  width: min(22rem, 100%);
+  max-height: min(70vh, 34rem);
+  margin: 0;
+  padding: 0.6rem;
   overflow-y: auto;
+  border: 1px solid var(--panel-rule);
+  border-radius: 14px;
+  background: var(--panel);
+  box-shadow: 0 10px 28px var(--panel-shadow);
 }
 
 /* scrolling the settings does not scroll the page
@@ -3514,18 +3544,56 @@ body.reading.full .bar {
   overscroll-behavior: contain;
 }
 
+/* the card over the word panel and the contents */
+.tools.collapsed.open {
+  z-index: 11;
+}
+
+.tools.collapsed.open .view > * {
+  grid-column: span 10;
+}
+
 .tools.collapsed.open .view .icon-btn,
 .tools.collapsed.open .view #theme {
   justify-content: flex-start;
   gap: 0.6rem;
+  min-width: 0;
 }
 
 .tools.collapsed.open .view .icon-btn::after {
   content: attr(aria-label);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+}
+
+.tools.collapsed.open .view .size {
+  grid-column: span 5;
+  justify-content: center;
+}
+
+.tools.collapsed.open .view .tile {
+  grid-column: span 2;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.45rem 0.1rem 0.35rem;
+  border-radius: 10px;
+  line-height: 1.2;
+}
+
+.tools.collapsed.open .view .tile::after {
+  content: attr(data-short);
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 0.68rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .tools.collapsed.open .view .font-menu {
+  width: 100%;
+}
+
+.tools.collapsed.open .view #theme {
   width: 100%;
 }
 
