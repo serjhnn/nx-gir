@@ -148,6 +148,10 @@ on a desktop CPU; a phone paints a repeated bitmap
 on its GPU, where it is cheaper still, while the SVG
 filters stay costly there too.
 
+On the user's phone (Android, Chrome, the published
+site, 2026-11-27): scrolling with a paper is smooth
+now, as with none.
+
 ### How it looks
 
 Each layer drawn by CSS and drawn into the canvas
@@ -174,8 +178,9 @@ side by side. Accepted.
 
 ## Next, if needed
 
-- Measure on a real phone (Chrome's DevTools over
-  USB, Performance panel, while scrolling).
+- Measure on a real phone in numbers (Chrome's
+  DevTools over USB, Performance panel), if it ever
+  feels slow again.
 - If drawing the tile at start is slow on a phone,
   make the tiles ahead of time (a `render-*.py`
   script, WebP files in `web/img/`), at the cost of
