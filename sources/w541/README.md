@@ -140,9 +140,11 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    so, at the user's asking, Claude composed them
    from his own capitals: Ր is his Ո with the right
    leg ended short, Ղ his Լ with the hump of his Ի
-   on its stem, Ջ his Չ with its top hook carried
-   on down across the descent, closing a loop, as
-   the printed Ջ (copies 0 in `capitals.tsv`). 35
+   on its stem; Ջ, which none of his forms gave
+   well, is the printed Ջ as nxGir Bolorgir writes
+   it with a broad pen (Noto's letter, OFL),
+   leaned like his hand (copies 0 in
+   `capitals.tsv`). 35
    capitals in all; Ւ and Ֆ, which open no
    sentence, are not; Օ is drawn, as օ (below);
    the font keeps his small letters bigger for
