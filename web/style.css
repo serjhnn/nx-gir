@@ -5261,6 +5261,11 @@ body.home .search-wrap {
   .lib-tabs {
     overflow: hidden;
   }
+  .lib-tabs .thumb {
+    top: 0;
+    bottom: 0;
+    border-radius: 11px;
+  }
   .tools {
     top: calc(var(--stick, 0px) + 6px);
     margin: 0 -8px 1rem;
