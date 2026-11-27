@@ -2545,6 +2545,13 @@ body.reading .bar {
   min-width: 0;
 }
 
+/* in the row, the groups are not there: only in
+   the card (.tools.collapsed.open below) */
+.view .sizes,
+.view .tiles {
+  display: contents;
+}
+
 @media (max-width: 30rem) {
   .tools .long {
     display: none;
@@ -3477,6 +3484,16 @@ body.reading.full .bar {
   height: 20px;
 }
 
+/* bookmarks and notes: ★ n · ✎ n */
+.tools .saved-btn .sep {
+  opacity: 0.5;
+}
+
+/* the switch between the two lists, in the panel */
+.saved-tabs {
+  margin-bottom: 0.6rem;
+}
+
 /* the text settings button: only on a phone */
 .tools .more {
   display: none;
@@ -3486,7 +3503,8 @@ body.reading.full .bar {
 }
 
 .tools .more[aria-expanded="true"],
-.tools .toc-btn[aria-expanded="true"] {
+.tools .toc-btn[aria-expanded="true"],
+.tools .saved-btn[aria-expanded="true"] {
   color: var(--accent-ink);
   border-color: var(--accent);
 }
@@ -3524,10 +3542,10 @@ body.reading.full .bar {
   position: absolute;
   top: calc(100% + 4px);
   right: 0;
-  display: grid;
-  grid-template-columns: repeat(10, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 0.4rem;
-  width: min(22rem, 100%);
+  width: min(26rem, 100%);
   max-height: min(70vh, 34rem);
   margin: 0;
   padding: 0.6rem;
@@ -3549,8 +3567,14 @@ body.reading.full .bar {
   z-index: 11;
 }
 
-.tools.collapsed.open .view > * {
-  grid-column: span 10;
+/* the size buttons in a row, the toggles as tiles
+   side by side, as many as there are */
+.tools.collapsed.open .view .sizes,
+.tools.collapsed.open .view .tiles {
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 0.4rem;
 }
 
 .tools.collapsed.open .view .icon-btn,
@@ -3566,12 +3590,10 @@ body.reading.full .bar {
 }
 
 .tools.collapsed.open .view .size {
-  grid-column: span 5;
   justify-content: center;
 }
 
 .tools.collapsed.open .view .tile {
-  grid-column: span 2;
   flex-direction: column;
   justify-content: center;
   gap: 0.2rem;

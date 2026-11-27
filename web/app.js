@@ -5700,6 +5700,9 @@ if (window.visualViewport) {
 function tocOpen(open) {
   R.tools?.querySelector(".toc-btn")
     ?.setAttribute("aria-expanded", String(open));
+  R.tools?.querySelector(".saved-btn")
+    ?.setAttribute("aria-expanded",
+      String(savedOpen()));
 }
 
 function langSwitch() {
@@ -6028,12 +6031,8 @@ function decorate() {
   for (const n of R.notes) {
     spanOf(n.at)?.classList.add("noted");
   }
-  // on a phone the names hide, the counts stay
-  const count = (sign, name, n) => [sign + " ",
-    h("span", { class: "long" }, name + " · "),
-    String(n)];
-  const marks = t("r.marks") + " · " + R.marks.length;
-  const notes = t("r.notes") + " · " + R.notes.length;
+  const saved = t("r.marks") + " · " + R.marks.length
+    + ", " + t("r.notes") + " · " + R.notes.length;
   // back to the folder the book is in
   const dir = dirOf(R.name || R.opening);
   R.tools.replaceChildren(...[
@@ -6063,15 +6062,15 @@ function decorate() {
       title: t("r.contents") + ": "
         + plural(R.contents.length, "heading") })
       : null,
-    btn(count("★", t("r.marks"),
-      R.marks.length), showMarks,
-    { "aria-label": marks, title: marks }),
-    btn(count("✎", t("r.notes"),
-      R.notes.length), showNotes,
-    { "aria-label": notes, title: notes }),
-    R.editable ? h("a", { class: "icon-btn",
-      href: "#/edit/" + enc(R.name || R.opening) },
-    t("r.edit")) : null,
+    // bookmarks and notes: one button, a panel
+    // with the two lists as tabs
+    btn(["★ " + R.marks.length,
+      h("span", { class: "sep",
+        "aria-hidden": "true" }, "·"),
+      "✎ " + R.notes.length], toggleSaved, {
+      class: "icon-btn saved-btn",
+      "aria-label": saved, title: saved,
+      "aria-expanded": String(savedOpen()) }),
     R.par ? btn(["⇆ ", h("span", { class: "long" },
       t("r.par"))],
     () => setView({ parallel: !view.parallel }), {
@@ -6079,16 +6078,6 @@ function decorate() {
       "aria-label": t("r.two"),
       title: t("r.beside", parLabel(R.par.name)) })
       : null,
-    // on a wide screen: each line under its pair,
-    // as on a phone, or beside it
-    R.par && view.parallel ? btn(icon(ICONS[
-      view.stacked ? "rows" : "columns"]),
-    () => setView({ stacked: !view.stacked }), {
-      class: "icon-btn par-layout",
-      "aria-label": t("r.under"),
-      "aria-pressed": String(view.stacked),
-      title: view.stacked ? t("r.stacked")
-        : t("r.side") }) : null,
     // on a phone the text tools hide behind this
     btn(icon(ICONS.sliders), () => settingsOpen(
       !R.tools.classList.contains("open")), {
@@ -6434,6 +6423,7 @@ function viewTools() {
   const n = view.size;
   return h("div", { class: "view",
     role: "group", "aria-label": t("r.text") },
+  h("div", { class: "sizes" },
   btn("A−", () => setView({ size: n - 1 }), {
     class: "icon-btn size",
     "aria-label": t("r.smaller"),
@@ -6443,7 +6433,8 @@ function viewTools() {
     class: "icon-btn size",
     "aria-label": t("r.bigger"),
     title: t("r.bigger"),
-    disabled: n === SIZES.length - 1 ? "" : null }),
+    disabled: n === SIZES.length - 1 ? "" : null })),
+  h("div", { class: "tiles" },
   btn(icon(ICONS[view.center ? "center" : "left"]),
     () => setView({ center: !view.center }), {
       ...tile("center"),
@@ -6480,9 +6471,24 @@ function viewTools() {
     "aria-label": t("r.paged"),
     "aria-pressed": String(paged()),
     title: paged() ? t("r.inpages") : t("r.long") }),
+  // on a wide screen, with the translation beside:
+  // each line under its pair, as on a phone
+  R.par && view.parallel ? btn(icon(ICONS[
+    view.stacked ? "rows" : "columns"]),
+  () => setView({ stacked: !view.stacked }), {
+    ...tile("layout"),
+    class: "icon-btn tile par-layout",
+    "aria-label": t("r.under"),
+    "aria-pressed": String(view.stacked),
+    title: view.stacked ? t("r.stacked")
+      : t("r.side") }) : null),
   fontPick(),
   // the theme menu joins the row while reading
-  themeMenu);
+  themeMenu,
+  // nxgir web only: the text of the part, to edit
+  R.editable ? h("a", { class: "icon-btn edit",
+    href: "#/edit/" + enc(R.name || R.opening) },
+  t("r.edit")) : null);
 }
 
 // the book fonts: a button with the font's name and
@@ -6695,10 +6701,53 @@ function localHint() {
     t("r.local")) : null;
 }
 
+// Bookmarks and notes share a panel: a switch on top
+// between the two lists. The button on the bar opens
+// the one used last (the bookmarks at first, the
+// notes if only they have something), a second click
+// shuts it.
+let savedTab = "";
+
+function savedOpen() {
+  return !!R.panel && !R.panel.hidden
+    && R.panel.dataset.kind === "saved";
+}
+
+function toggleSaved() {
+  if (savedOpen()) {
+    closePanel();
+    return;
+  }
+  const notes = savedTab ? savedTab === "notes"
+    : !R.marks.length && R.notes.length > 0;
+  if (notes) showNotes();
+  else showMarks();
+}
+
+// the panel with one list in it, and the switch
+function openSaved(tab, ...body) {
+  savedTab = tab;
+  const seg = h("div", { class: "seg saved-tabs" });
+  for (const [k, sign, name, n, show] of [
+    ["marks", "★", t("r.marks"), R.marks.length,
+      showMarks],
+    ["notes", "✎", t("r.notes"), R.notes.length,
+      showNotes]]) {
+    const b = h("button", { type: "button",
+      "aria-pressed": String(k === tab) },
+    sign + " " + name + " · " + n);
+    b.addEventListener("click", show);
+    seg.append(b);
+  }
+  openPanel(t("r.saved"), LANG, seg, ...body);
+  R.panel.dataset.kind = "saved";
+  tocOpen(false);
+}
+
 function showMarks() {
   closePanel();
   if (!R.marks.length) {
-    openPanel(t("r.marks"), LANG, h("p",
+    openSaved("marks", h("p",
       { class: "none" }, t("r.nomarks")));
     return;
   }
@@ -6722,13 +6771,13 @@ function showMarks() {
     }, { class: "link-btn" });
     list.append(h("li", {}, link, del));
   }
-  openPanel(t("r.marks"), LANG, localHint(), list);
+  openSaved("marks", localHint(), list);
 }
 
 function showNotes() {
   closePanel();
   if (!R.notes.length) {
-    openPanel(t("r.notes"), LANG, h("p",
+    openSaved("notes", h("p",
       { class: "none" }, t("r.nonotes")));
     return;
   }
@@ -6760,7 +6809,7 @@ function showNotes() {
     list.append(h("li", {}, link,
       h("div", { class: "item-btns" }, edit, del)));
   });
-  openPanel(t("r.notes"), LANG, localHint(), list);
+  openSaved("notes", localHint(), list);
 }
 
 // write a new note on the chosen word's sentence
