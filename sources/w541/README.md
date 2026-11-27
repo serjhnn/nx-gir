@@ -107,9 +107,12 @@ eleven pages: ա դ ե զ է ը ի լ խ կ հ ձ ղ մ յ ն շ ո
    others) by size and place, and the 8 closest
    averaged, as in step 4; Ձ, with five copies, is
    the medoid alone. 15 capitals so far: Ա Բ Գ Դ
-   Ե Զ Ի Հ Ձ Մ Յ Ն Ո Պ Վ. Not found yet (rare at
-   the head of a sentence, or not told apart):
-   Կ, Ս, Տ, Ք, Թ, Լ and the rest; the font keeps
+   Ե Զ Ի Հ Ձ Մ Յ Ն Ո Պ Վ. Ս is his Ո turned
+   upside down: in this hand they are the same
+   shape (the user's reading); the top of Ո was
+   smoothed of a mark written above it. Not found
+   yet (rare at the head of a sentence, or not told
+   apart): Կ, Տ, Ք, Թ, Լ and the rest; the font keeps
    his small letters bigger for those. The
    pictures are as large as written (the ink
    alone); the initials are written finer than the

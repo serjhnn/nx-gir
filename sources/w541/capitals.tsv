@@ -4,6 +4,9 @@
 # named by the text (sources/w541/README.md, step 10).
 # Pictures: the ink alone, as large as written; the font
 # scales them (render-scan-font.py, CAP_H).
+# Ս is his Ո turned upside down: the same letter in this
+# hand (the user's reading); its top edge smoothed of a
+# mark above it.
 # letter	file	copies	pages
 Ա	0531.png	8	27 257 305 317 382 395 400 422
 Բ	0532.png	8	45 60 115 132 270 295 297 360
@@ -18,5 +21,6 @@
 Յ	0545.png	8	25 27 130 440 450 460 462
 Ն	0546.png	8	67 70 80 130 210 222 415 430
 Ո	0548.png	8	132 217 260 297 312 380 402 437
+Ս	054d.png	8	132 217 260 297 312 380 402 437
 Պ	054a.png	8	75 282 295 350 395 405 415 420
 Վ	054e.png	8	42 60 110 295 297 432
