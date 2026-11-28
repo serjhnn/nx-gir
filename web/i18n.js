@@ -172,7 +172,7 @@ const UI = {
       + "բանականության օգնականը, որն օգնում է գրել "
       + "կոդը և թարգմանությունների առաջին սևագրերը։ "
       + "Հարցերը, ուղղումներն ու գաղափարները "
-      + "ողջունվում են GitHub-ում։",
+      + "ողջունվում են։",
     "ab.jump": "Կապ ↓",
     "ct.email": "Էլ. փոստ",
     "ct.github": "GitHub",
@@ -701,7 +701,7 @@ const UI = {
       + "Anthropic, which helps write the code and "
       + "the first drafts of the translations. "
       + "Questions, corrections and ideas are "
-      + "welcome on GitHub.",
+      + "welcome.",
     "ab.jump": "Contact ↓",
     "ct.email": "Email",
     "ct.github": "GitHub",
@@ -1228,8 +1228,7 @@ const UI = {
       "nxGir делают Сергей Оганян и Claude — "
       + "ИИ-помощник от Anthropic, который помогает "
       + "писать код и первые черновики переводов. "
-      + "Вопросы, исправления и идеи приветствуются "
-      + "на GitHub.",
+      + "Вопросы, исправления и идеи приветствуются.",
     "ab.jump": "Контакты ↓",
     "ct.email": "Почта",
     "ct.github": "GitHub",
