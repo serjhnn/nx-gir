@@ -5373,6 +5373,15 @@ body.home .search-wrap {
   .search-wrap {
     background: none;
   }
+  /* each panel above the one over it, so that its
+     shadow does not fall on the next (bar, search
+     box, Library tabs, top to bottom) */
+  .search-wrap {
+    z-index: 21;
+  }
+  .lib-tabs {
+    z-index: 22;
+  }
   body.home .bar {
     top: 6px;
     width: auto;
