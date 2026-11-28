@@ -756,8 +756,8 @@ const BY_SA = "https://creativecommons.org/"
   + "licenses/by-sa/4.0/";
 
 function siteFooter() {
-  const pages = ["library", "reference", "blog",
-    "comics", "map", "features", "timeline",
+  const pages = ["library", "search", "reference",
+    "blog", "comics", "map", "features", "timeline",
     "about", "recent"];
   return h("footer", { class: "site-foot" },
     h("p", { class: "foot-name" },
