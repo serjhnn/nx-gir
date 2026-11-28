@@ -34,7 +34,7 @@ credited with.
 No computer or git is needed: ChatGPT with its
 GitHub plugin can open the pull request for you.
 The steps, with screenshots, are in the blog post
-"Send a translation from your phone with ChatGPT"
+"Contributing with mobile"
 (`blog/2026-11-28-chatgpt-pull-request.en.md`,
 `/blog/chatgpt-pull-request` on the site).
 
