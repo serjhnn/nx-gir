@@ -5753,6 +5753,16 @@ body.home .search-wrap {
   max-width: 40rem;
 }
 
+/* the phone tutorial: its screenshots in a frame,
+   a little narrower than the text */
+.blog .post.p-chatgpt-pull-request img {
+  width: 86%;
+  max-width: 22rem;
+  border: 2px solid
+    color-mix(in srgb, var(--text) 35%, transparent);
+  border-radius: 12px;
+}
+
 /* a link line in a post: a narrow banner; the link
    to a 3D page has a spinning cube */
 .post-link a {
