@@ -29,6 +29,15 @@ Your name is shown above the part in the reader
 and on the site. Use the name you want to be
 credited with.
 
+## Sending a translation from a phone
+
+No computer or git is needed: ChatGPT with its
+GitHub plugin can open the pull request for you.
+The steps, with screenshots, are in the blog post
+"Send a translation from your phone with ChatGPT"
+(`blog/2026-11-28-chatgpt-pull-request.en.md`,
+`/blog/chatgpt-pull-request` on the site).
+
 ## License of contributions
 
 - **Translations** (`books/ashkharhabar/`, except

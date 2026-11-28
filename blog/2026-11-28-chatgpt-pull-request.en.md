@@ -1,0 +1,45 @@
+# Send a translation from your phone with ChatGPT
+
+theme: tech
+
+You do not need a computer, git or any command to help with the translations. If you have ChatGPT on your phone, it can open a pull request for you: a proposal to add your file to the nxGir repository. The owner reads it and, if it is good, adds it to the site. This is how to set it up, and a first test that changes nothing but one line.
+
+## 1. Add the GitHub plugin
+
+Open the menu of ChatGPT and tap Customize.
+
+![The ChatGPT menu, with Customize marked](chatgpt-pr-1.webp)
+
+Tap Plugins.
+
+![The Customize page, with Plugins marked](chatgpt-pr-2.webp)
+
+Search for "github" and tap the plus beside the GitHub plugin by OpenAI. Sign in to GitHub when it asks, and allow it to use your repositories.
+
+![Searching for github in the plugins, the plus marked](chatgpt-pr-3.webp)
+
+## 2. Ask for a test pull request
+
+Start a new chat and write:
+
+please make a test pull request with my name to the serjhnn/nx-gir project
+
+Use the name you want to be credited with: it is shown above the parts you work on.
+
+## 3. Press Allow
+
+ChatGPT asks before it does anything on GitHub. Here it wants to make a new branch, a separate copy of the files where your change waits, so nothing touches the main branch. Read what it asks and press Allow once (or Always allow, if you trust it for every such step).
+
+![ChatGPT asks to create a branch in serjhnn/nx-gir](chatgpt-pr-4.webp)
+
+## 4. The result
+
+After a moment you get a card: the number of the pull request, the repository, the branch it comes from, the files changed and a button, Open pull request, that shows it on GitHub. In a test it changes only one file by two lines, and nothing is merged into the main branch.
+
+![The pull request is created](chatgpt-pr-5.webp)
+
+## Now with a translation
+
+When the test works, do the same with a real part. Tell ChatGPT which part of which book to translate, and to follow TRANSLATION_GUIDE.md in the repository: one line of modern Armenian for each Grabar line, the chapter lines kept as they are. Ask it to put the file where the other translations are, in books/ashkharhabar/, with a new line in books/TRANSLATIONS.tsv marked machine, and to open a pull request. Then open the pull request, and read the result beside the Grabar before it is added: a draft is only a beginning, and the reviewers are what make it a book.
+
+Translations are published under CC BY-SA 4.0 (see CONTRIBUTING.md). By sending one you agree to that.
