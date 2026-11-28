@@ -4109,6 +4109,28 @@ const WAYS = {
   ],
 };
 
+// the ways to contribute, as a table: where you are,
+// how it goes, and the guide for it
+const WAY_ROWS = [
+  ["mobile", "#/blog/chatgpt-pull-request"],
+  ["pc", HOWTO],
+];
+
+function waysTable() {
+  const row = ([id, href]) => h("tr", {},
+    h("th", { scope: "row" }, t("co.w." + id)),
+    h("td", {}, h("p", {}, t("co.w." + id + ".how")),
+      h("a", { href }, t("co.w." + id + ".go"))));
+  return h("section", { class: "ways" },
+    h("h2", {}, t("co.ways")),
+    h("div", { class: "table-wrap" },
+      h("table", {},
+        h("thead", {}, h("tr", {},
+          h("th", { scope: "col" }, t("co.ways.where")),
+          h("th", { scope: "col" }, t("co.ways.how")))),
+        h("tbody", {}, WAY_ROWS.map(row)))));
+}
+
 function contributePage() {
   document.title = t("co.title") + " · " + NAME;
   const list = h("ul", { class: "features" },
@@ -4128,6 +4150,7 @@ function contributePage() {
     h("h1", {}, t("co.title")),
     h("p", { class: "sub" }, named(t("co.sub"))),
     list,
+    waysTable(),
     h("p", { class: "cta" },
       h("a", { class: "cta-main", href: HOWTO },
         t("co.start")),

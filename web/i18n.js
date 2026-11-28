@@ -337,6 +337,19 @@ const UI = {
       + " բառ առ բառ, և դրանց թարգմանությունները"
       + " ժամանակակից հայերենով, ազատ՝ յուրաքանչյուրի"
       + " համար։ Այն աճում է օգնողների շնորհիվ։",
+    "co.ways": "Ինչպես մասնակցել",
+    "co.ways.where": "Ինչով",
+    "co.ways.how": "Ինչպես",
+    "co.w.mobile": "Հեռախոս՝ ChatGPT հավելվածով",
+    "co.w.mobile.how": "Ավելացրեք GitHub հավելումը և"
+      + " խնդրեք ChatGPT-ին բացել pull request։"
+      + " Համակարգիչ և git պետք չեն։",
+    "co.w.mobile.go": "Քայլերը՝ նկարներով",
+    "co.w.pc": "Համակարգիչ",
+    "co.w.pc.how": "ChatGPT-ն դիտարկչով՝ նույն GitHub"
+      + " հավելումով, կամ git-ով. պատճենեք շտեմարանը,"
+      + " ավելացրեք ձեր ֆայլը և բացեք pull request։",
+    "co.w.pc.go": "Ձեռնարկ՝ CONTRIBUTING.md",
     "co.start": "Ինչպես սկսել",
     "co.gh": "Նախագիծը GitHub-ում",
     "co.lic1": "Թարգմանությունները տարածվում են ",
@@ -854,6 +867,19 @@ const UI = {
       + " translations into modern Armenian, free for"
       + " anyone to read. It grows with the people who"
       + " help.",
+    "co.ways": "Ways to contribute",
+    "co.ways.where": "Where",
+    "co.ways.how": "How",
+    "co.w.mobile": "Phone: the ChatGPT app",
+    "co.w.mobile.how": "Add the GitHub plugin and ask"
+      + " ChatGPT to open the pull request. No computer or"
+      + " git needed.",
+    "co.w.mobile.go": "Steps with screenshots",
+    "co.w.pc": "Computer",
+    "co.w.pc.how": "ChatGPT in the browser with the same"
+      + " GitHub plugin, or git: copy the repository, add"
+      + " your file and open a pull request.",
+    "co.w.pc.go": "Guide: CONTRIBUTING.md",
     "co.start": "How to start",
     "co.gh": "The project on GitHub",
     "co.lic1": "Translations are under ",
@@ -1374,6 +1400,19 @@ const UI = {
       + " армянские книги, слово за словом, и их переводы"
       + " на современный армянский, свободные для всех."
       + " Он растёт вместе с теми, кто помогает.",
+    "co.ways": "Как участвовать",
+    "co.ways.where": "Где",
+    "co.ways.how": "Как",
+    "co.w.mobile": "Телефон: приложение ChatGPT",
+    "co.w.mobile.how": "Добавьте плагин GitHub и"
+      + " попросите ChatGPT открыть pull request. Компьютер"
+      + " и git не нужны.",
+    "co.w.mobile.go": "Шаги со снимками",
+    "co.w.pc": "Компьютер",
+    "co.w.pc.how": "ChatGPT в браузере с тем же плагином"
+      + " GitHub или git: сделайте копию репозитория,"
+      + " добавьте файл и откройте pull request.",
+    "co.w.pc.go": "Руководство: CONTRIBUTING.md",
     "co.start": "Как начать",
     "co.gh": "Проект на GitHub",
     "co.lic1": "Переводы распространяются по лицензии ",
