@@ -5014,6 +5014,9 @@ const CARDS_UI = {
     parts: (n) => n + " մաս", done: "թարգմանված",
     none: "Ոչինչ չգտնվեց։",
     library: "Ցանկով՝ Գրադարան →",
+    tip: "Գրքերի մեջ տեքստ փնտրելու համար օգտվեք"
+      + " ամբողջական որոնումից։",
+    tipgo: "Բացել որոնումը",
     all: "Բոլորը", kind: "Տեսակ", ages: "Դար",
     age: (r) => r + " դ." },
   en: { title: "Reference", home: "← Home",
@@ -5023,6 +5026,9 @@ const CARDS_UI = {
     parts: (n) => plural(n, "part"),
     done: "translated", none: "Nothing found.",
     library: "As a list: Library →",
+    tip: "To search for text inside the books,"
+      + " use the full search.",
+    tipgo: "Open search",
     all: "All", kind: "Kind", ages: "Century",
     age: (r) => r + " c." },
   ru: { title: "Справочник", home: "← Главная",
@@ -5032,6 +5038,9 @@ const CARDS_UI = {
     parts: (n) => n + " ч.", done: "переведено",
     none: "Ничего не найдено.",
     library: "Списком: Библиотека →",
+    tip: "Чтобы искать текст внутри книг,"
+      + " используйте полный поиск.",
+    tipgo: "Открыть поиск",
     all: "Все", kind: "Жанр", ages: "Век",
     age: (r) => r + " в." },
 };
@@ -5216,6 +5225,8 @@ async function referencePage() {
       h("p", { class: "sub" },
         ui.count(data.books.length, n), " · ",
         h("a", { href: "#/library" }, ui.library)),
+      tip(ui.tip + " ", h("a", { href: "#/search" },
+        ui.tipgo + " →")),
       pick);
     drawChips();
     grid.replaceChildren(
