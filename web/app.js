@@ -3017,10 +3017,32 @@ function cube3d() {
     [0, 1, 2, 3, 4, 5].map(() => h("i"))));
 }
 
+// a prompt in a post: a panel apart from the text,
+// with a button that copies it
+function promptBlock(text) {
+  const b = h("button", { type: "button",
+    class: "prompt-copy" }, t("blog.copy"));
+  b.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+      b.textContent = t("r.copied");
+    } catch (e) {
+      // no clipboard: select it to copy by hand
+      const r = document.createRange();
+      r.selectNodeContents(b.previousSibling);
+      const sel = getSelection();
+      sel.removeAllRanges();
+      sel.addRange(r);
+    }
+  });
+  return h("div", { class: "prompt" },
+    h("pre", { lang: "en" }, text), b);
+}
+
 // one post: its date, title and text (parse()
 // in nxgir_blog.py: ["p", text], ["h", text],
 // ["img", file, alt], ["video", id, alt, still] or
-// ["link", text, "#/page"])
+// ["link", text, "#/page"] or ["prompt", text])
 function postItem(p, lang) {
   const v = version(p, lang);
   return h("article", { class: "post p-" + p.slug,
@@ -3042,6 +3064,8 @@ function postItem(p, lang) {
       : kind === "img"
       ? h("img", { src: "img/" + text, alt,
         loading: "lazy" })
+      : kind === "prompt"
+      ? promptBlock(text)
       : h(kind === "h" ? "h3" : "p",
         kind === "cap" ? { class: "cap" } : {},
         named(text))));
@@ -3207,6 +3231,8 @@ function comicItem(s, lang) {
       : kind === "img"
       ? h("img", { src: "img/" + text, alt,
         loading: "lazy" })
+      : kind === "prompt"
+      ? promptBlock(text)
       : h(kind === "h" ? "h3" : "p",
         kind === "cap" ? { class: "cap" } : {},
         named(text))));

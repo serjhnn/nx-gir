@@ -747,6 +747,8 @@ def blog_block(block, lang="hy"):
             '<p><img style="max-width:100%;height:auto"'
             f' src="{src}" alt="{htm.escape(alt[0])}"></p>'
         )
+    if kind == "prompt":
+        return f"<pre>{htm.escape(text)}</pre>"
     if kind == "cap":
         return f"<p><em>{named(htm.escape(text))}</em></p>"
     tag = "h2" if kind == "h" else "p"

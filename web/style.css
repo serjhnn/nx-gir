@@ -1063,6 +1063,32 @@ body.home .bar::before,
 }
 /* a YouTube video in a post: our still and a play
    button, the player only after a click */
+/* a prompt in a post: a panel to copy */
+.blog .post .prompt {
+  margin: 1rem 0;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  background: var(--surface);
+}
+.blog .post .prompt pre {
+  margin: 0 0 0.6rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: 0.9rem/1.5 var(--mono, monospace);
+  user-select: all;
+}
+.blog .post .prompt-copy {
+  padding: 0.3rem 0.9rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: none;
+  color: var(--accent-ink);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
 .blog .post .video-fig {
   margin: 1rem auto;
   max-width: 40rem;

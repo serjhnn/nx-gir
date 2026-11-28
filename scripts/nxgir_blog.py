@@ -22,7 +22,9 @@ web/img/; ![alt](youtube:ID name.jpg) alone is a
 YouTube video, name.jpg its still in web/img/
 (the page loads YouTube only when it is played);
 a line [text](#/3d/id) alone is a link to a page of
-the site; lines starting "> " are a note under it. read()
+the site; lines starting "> " are a note under it;
+lines between two lines of ``` are a prompt, a panel
+to copy. read()
 checks every file and stops on a bad one, so a
 mistake shows when the site is built. Tested in
 tests/test_blog.py.
@@ -109,8 +111,9 @@ def parse(text, name):
     ["p", text], ["h", text], ["cap", text] (a note,
     lines starting "> "), ["img", file, alt] and
     ["video", YouTube id, alt, still] and
-    ["link", text, "#/page"],
-    a paragraph's lines joined by spaces."""
+    ["link", text, "#/page"] and
+    ["prompt", text] (lines between two ``` lines, to
+    copy), a paragraph's lines joined by spaces."""
     lines = text.splitlines()
     while lines and not lines[0].strip():
         lines.pop(0)
@@ -118,6 +121,7 @@ def parse(text, name):
         raise BlogError(f"{name}: no # title first")
     title = lines[0][2:].strip()
     blocks, para = [], []
+    code = None
 
     def end():
         if para:
@@ -126,7 +130,16 @@ def parse(text, name):
 
     for line in lines[1:]:
         line = line.strip()
-        if not line:
+        if code is not None:
+            if line == "```":
+                blocks.append(["prompt", "\n".join(code)])
+                code = None
+            else:
+                code.append(line)
+        elif line == "```":
+            end()
+            code = []
+        elif not line:
             end()
         elif line.startswith("> "):
             end()
@@ -154,6 +167,8 @@ def parse(text, name):
         else:
             para.append(line)
     end()
+    if code is not None:
+        raise BlogError(f"{name}: a ``` is not closed")
     if not title or not blocks:
         raise BlogError(f"{name}: no title or text")
     return title, blocks

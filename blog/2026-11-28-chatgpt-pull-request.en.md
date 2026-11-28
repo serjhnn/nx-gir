@@ -26,7 +26,9 @@ Search for "github" and tap the plus beside the GitHub plugin by OpenAI. Sign in
 
 Start a new chat and write:
 
+```
 please make a test pull request with my name to the serjhnn/nx-gir project
+```
 
 Use the name you want to be credited with: it is shown above the parts you work on.
 

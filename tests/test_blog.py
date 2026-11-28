@@ -202,3 +202,21 @@ def test_themes_match_app():
     for t in bl.THEMES:
         assert f"  {t}: " in block
     assert block.count("hy:") == len(bl.THEMES)
+
+
+def test_prompt_panel():
+    _, blocks = bl.parse(
+        "# T\n\nText.\n\n```\nDo this\n\nthen that\n```\n"
+        "\nMore.\n",
+        "t",
+    )
+    assert blocks == [
+        ["p", "Text."],
+        ["prompt", "Do this\n\nthen that"],
+        ["p", "More."],
+    ]
+
+
+def test_prompt_not_closed():
+    with pytest.raises(bl.BlogError):
+        bl.parse("# T\n\n```\nDo this\n", "t")

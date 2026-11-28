@@ -42,6 +42,9 @@ read by `scripts/nxgir_blog.py`. Content, not code.
   one exception to "nothing from other sites"; the
   CSP's `frame-src`). The site's page for search
   engines shows the still as a link to the video.
+- Lines between two lines of ```` ``` ```` are a
+  prompt: a panel apart from the text with a Copy
+  button, for text a reader pastes elsewhere.
 - A line `[text](#/3d/glakavank)` on its own is a
   link to a page of the site (a path as `h()` takes
   it, starting `#/`).

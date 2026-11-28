@@ -26,7 +26,9 @@ Pull request живёт на GitHub, поэтому там нужна учётн
 
 Начните новый чат и напишите:
 
+```
 please make a test pull request with my name to the serjhnn/nx-gir project
+```
 
 Укажите имя, под которым вас нужно упомянуть: оно показывается над частями, с которыми вы работали.
 
