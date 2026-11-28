@@ -24,7 +24,7 @@ YouTube video, name.jpg its still in web/img/
 a line [text](#/3d/id) alone is a link to a page of
 the site; lines starting "> " are a note under it;
 lines between two lines of ``` are a prompt, a panel
-to copy. read()
+to copy; lines starting "- " are a list. read()
 checks every file and stops on a bad one, so a
 mistake shows when the site is built. Tested in
 tests/test_blog.py.
@@ -113,7 +113,8 @@ def parse(text, name):
     ["video", YouTube id, alt, still] and
     ["link", text, "#/page"] and
     ["prompt", text] (lines between two ``` lines, to
-    copy), a paragraph's lines joined by spaces."""
+    copy) and ["list", [item, ...]] (lines starting
+    "- "), a paragraph's lines joined by spaces."""
     lines = text.splitlines()
     while lines and not lines[0].strip():
         lines.pop(0)
@@ -139,6 +140,12 @@ def parse(text, name):
         elif line == "```":
             end()
             code = []
+        elif line.startswith("- "):
+            end()
+            if blocks and blocks[-1][0] == "list":
+                blocks[-1][1].append(line[2:].strip())
+            else:
+                blocks.append(["list", [line[2:].strip()]])
         elif not line:
             end()
         elif line.startswith("> "):

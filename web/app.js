@@ -3042,7 +3042,8 @@ function promptBlock(text) {
 // one post: its date, title and text (parse()
 // in nxgir_blog.py: ["p", text], ["h", text],
 // ["img", file, alt], ["video", id, alt, still] or
-// ["link", text, "#/page"] or ["prompt", text])
+// ["link", text, "#/page"], ["prompt", text] or
+// ["list", [item, ...]])
 function postItem(p, lang) {
   const v = version(p, lang);
   return h("article", { class: "post p-" + p.slug,
@@ -3066,6 +3067,8 @@ function postItem(p, lang) {
         loading: "lazy" })
       : kind === "prompt"
       ? promptBlock(text)
+      : kind === "list"
+      ? h("ul", {}, text.map((x) => h("li", {}, named(x))))
       : h(kind === "h" ? "h3" : "p",
         kind === "cap" ? { class: "cap" } : {},
         named(text))));
@@ -3233,6 +3236,8 @@ function comicItem(s, lang) {
         loading: "lazy" })
       : kind === "prompt"
       ? promptBlock(text)
+      : kind === "list"
+      ? h("ul", {}, text.map((x) => h("li", {}, named(x))))
       : h(kind === "h" ? "h3" : "p",
         kind === "cap" ? { class: "cap" } : {},
         named(text))));

@@ -45,6 +45,7 @@ read by `scripts/nxgir_blog.py`. Content, not code.
 - Lines between two lines of ```` ``` ```` are a
   prompt: a panel apart from the text with a Copy
   button, for text a reader pastes elsewhere.
+- Lines starting `- ` are a list (one item a line).
 - A line `[text](#/3d/glakavank)` on its own is a
   link to a page of the site (a path as `h()` takes
   it, starting `#/`).

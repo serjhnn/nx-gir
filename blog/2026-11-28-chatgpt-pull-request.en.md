@@ -44,8 +44,18 @@ After a moment you get a card: the number of the pull request, the repository, t
 
 ![The pull request is created](chatgpt-pr-5.webp)
 
-## Now with a translation
+## Now with a real translation
 
-When the test works, do the same with a real part. Tell ChatGPT which part of which book to translate, and to follow TRANSLATION_GUIDE.md in the repository: one line of modern Armenian for each Grabar line, the chapter lines kept as they are. Ask it to put the file where the other translations are, in books/ashkharhabar/, with a new line in books/TRANSLATIONS.tsv marked machine, and to open a pull request. Then open the pull request, and read the result beside the Grabar before it is added: a draft is only a beginning, and the reviewers are what make it a book.
+When the test works, you can go on the same way with a real translation.
 
-Translations are published under CC BY-SA 4.0 (see CONTRIBUTING.md). By sending one you agree to that.
+Tell ChatGPT which part of which book you want to translate, and ask it to follow the guide in the repository, "TRANSLATION_GUIDE.md". The main rules: write the modern Armenian for each Grabar line on one line, and leave the chapter headings and lines as they are.
+
+Ask ChatGPT to:
+
+- Put the translated file next to the other translations, in the "books/ashkharhabar/" folder.
+- Add a new line to "books/TRANSLATIONS.tsv" with the status "machine".
+- Create a pull request.
+
+Your translation appears on the site only after the author of the site has approved the pull request.
+
+Translations are published under the CC BY-SA 4.0 license (details in "CONTRIBUTING.md"). By sending a translation you agree to the terms of this license.

@@ -220,3 +220,14 @@ def test_prompt_panel():
 def test_prompt_not_closed():
     with pytest.raises(bl.BlogError):
         bl.parse("# T\n\n```\nDo this\n", "t")
+
+
+def test_list():
+    _, blocks = bl.parse(
+        "# T\n\nAsk:\n\n- One\n- Two\n\nDone.\n", "t"
+    )
+    assert blocks == [
+        ["p", "Ask:"],
+        ["list", ["One", "Two"]],
+        ["p", "Done."],
+    ]

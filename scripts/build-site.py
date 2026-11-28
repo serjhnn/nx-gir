@@ -747,6 +747,11 @@ def blog_block(block, lang="hy"):
             '<p><img style="max-width:100%;height:auto"'
             f' src="{src}" alt="{htm.escape(alt[0])}"></p>'
         )
+    if kind == "list":
+        items = "".join(
+            f"<li>{named(htm.escape(x))}</li>" for x in text
+        )
+        return f"<ul>{items}</ul>"
     if kind == "prompt":
         return f"<pre>{htm.escape(text)}</pre>"
     if kind == "cap":

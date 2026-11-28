@@ -5763,6 +5763,51 @@ body.home .search-wrap {
   border-radius: 12px;
 }
 
+/* the phone tutorial's last section: a heading with
+   a rule, a list with accent marks, the license as
+   a note */
+.blog .post.p-chatgpt-pull-request h3:last-of-type {
+  margin-top: 2.4rem;
+  padding-top: 1.2rem;
+  border-top: 2px solid var(--accent);
+  color: var(--accent-ink);
+  font-size: 1.35rem;
+}
+.blog .post.p-chatgpt-pull-request h3:last-of-type
+  ~ ul {
+  list-style: none;
+  margin: 0.8rem 0 1.2rem;
+  padding: 0;
+}
+.blog .post.p-chatgpt-pull-request h3:last-of-type
+  ~ ul li {
+  margin: 0 0 0.5rem;
+  padding: 0.6rem 0.8rem 0.6rem 2.2rem;
+  position: relative;
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  background: var(--surface);
+  line-height: 1.55;
+}
+.blog .post.p-chatgpt-pull-request h3:last-of-type
+  ~ ul li::before {
+  content: "→";
+  position: absolute;
+  left: 0.8rem;
+  color: var(--accent);
+  font-weight: 600;
+}
+.blog .post.p-chatgpt-pull-request > p:last-child {
+  margin-top: 1.4rem;
+  padding: 0.8rem 1rem;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
 /* a link line in a post: a narrow banner; the link
    to a 3D page has a spinning cube */
 .post-link a {
