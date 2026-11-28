@@ -1406,14 +1406,14 @@ const TABS = [
   ["#/", "logo", "nav.home", "home"],
   ["#/library", "book", "nav.library", "library"],
   ["#/recent", "resume", "nav.continue", "continue"],
-  ["#/reference", "cards", "nav.reference", "reference"],
+  ["#/search", "search", "nav.search", "search"],
 ];
 // the pages the More tab opens, in groups: what to
 // read, what is new, the project and its people
 const MORE = [
   [
     ["#/recent", "clock", "nav.recent"],
-    ["#/search", "search", "nav.search"],
+    ["#/reference", "cards", "nav.reference"],
     ["#/blog", "pen", "nav.blog"],
     ["#/comics", "panels", "nav.comics"],
     ["#/map", "map", "nav.map"],
@@ -1440,7 +1440,7 @@ function tabFor(hash) {
   if (["library", "b", "f"].includes(top)) {
     return "library";
   }
-  if (top === "reference") return "reference";
+  if (top === "search") return "search";
   return "more";
 }
 
@@ -1451,7 +1451,7 @@ function tabFor(hash) {
 // opens the book read last; the reader keeps its own
 // place. Tapping the tab shown scrolls to the top,
 // and from the top goes to the tab's first page.
-const REMEMBER = ["home", "library", "reference"];
+const REMEMBER = ["home", "library", "search"];
 let tabPlace = {};
 try {
   tabPlace = JSON.parse(
