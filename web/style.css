@@ -915,6 +915,8 @@ h1 {
   background: var(--hover);
 }
 .menu-panel {
+  /* over the sticky search box, tabs and tools */
+  z-index: 40;
   position: absolute;
   top: 100%;
   left: 16px;
