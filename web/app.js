@@ -1368,7 +1368,11 @@ function headerMenu() {
   const draw = () => {
     panel.lang = LANG;
     panel.setAttribute("aria-label", t("nav.menu"));
-    panel.replaceChildren(...MENU.map(menuLink));
+    panel.replaceChildren(
+      ...[["#/library", "book", "nav.library"],
+        ["#/search", "search", "nav.search"],
+        ...MORE.flat()].map(menuLink),
+      ...[sheetLinks()].filter(Boolean));
     more.title = t("nav.menu");
     more.setAttribute("aria-label", t("nav.menu"));
   };
@@ -1396,7 +1400,6 @@ function headerMenu() {
   topBar.append(more);
   bar.append(panel);
 }
-headerMenu();
 
 // the tab bar at the bottom of a phone (shown by
 // style.css under 40rem; hidden in the reader):
@@ -1583,6 +1586,9 @@ function tabBar() {
   return bar;
 }
 const tabs = tabBar();
+// the ☰ menu of the wider pages: every page of the tab
+// bar and its More sheet (MORE is defined above)
+headerMenu();
 
 // in the reader the bars (the tab bar, the toolbar
 // at the top) show on scrolling up, and go again on
