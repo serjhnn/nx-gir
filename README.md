@@ -489,6 +489,10 @@ them (needs Node.js and `npm install playwright`):
 scripts/render-web.py
 ```
 
+## Author
+
+S. O.
+
 ## Contributing
 
 Grabar texts, glossaries, and lists of abbreviations are especially welcome,
