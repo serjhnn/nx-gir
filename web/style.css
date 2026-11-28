@@ -5336,14 +5336,16 @@ body.home .search-wrap {
    bar, the reader's toolbar, the top bar and the
    search box of the top page, the Library's tabs.
    Rounded, a little see-through and blurred, with a
-   shadow and a line (--panel-line) */
+   glow and a terracotta line (--panel-line) */
 @media (max-width: 40rem) {
   :root {
     --tabbar: calc(64px + env(safe-area-inset-bottom));
-    --panel-line: color-mix(in srgb,
-      var(--text) 45%, transparent);
-    --panel-bg: color-mix(in srgb, var(--bg) 88%,
+    --panel-line: var(--accent);
+    --panel-bg: color-mix(in srgb, var(--bg) 92%,
       transparent);
+    --panel-glow: 0 4px 16px color-mix(in srgb,
+      var(--accent) 35%, transparent),
+      0 2px 6px rgba(0, 0, 0, 0.3);
   }
   .tools,
   .tabbar,
@@ -5353,13 +5355,13 @@ body.home .search-wrap {
     background: var(--panel-bg);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    border: 1px solid var(--panel-line);
+    border: 1.5px solid var(--panel-line);
     border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+    box-shadow: var(--panel-glow);
   }
   /* scrolled: no extra line under the floating bar */
   .scrolled body.home .bar {
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+    box-shadow: var(--panel-glow);
   }
   /* the page-coloured layers behind the bars */
   body.home .bar::before,
@@ -5410,19 +5412,6 @@ body.home .search-wrap {
     overflow: hidden;
   }
 }
-/* dark themes keep the soft line */
-@media (max-width: 40rem) {
-  :root[data-theme="dark"],
-  :root[data-theme="black"] {
-    --panel-line: var(--rule);
-  }
-}
-@media (max-width: 40rem) and (prefers-color-scheme: dark) {
-  :root:not([data-theme]) {
-    --panel-line: var(--rule);
-  }
-}
-
 /* -- the Reference: the book cards (#/reference) -- */
 
 /* a grid of cards, two across where they fit; each
