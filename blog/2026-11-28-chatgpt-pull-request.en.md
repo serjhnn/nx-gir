@@ -1,4 +1,4 @@
-# Contributing with mobile
+# Send a translation from your phone with ChatGPT
 
 theme: tech
 
