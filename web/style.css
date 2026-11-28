@@ -5323,6 +5323,7 @@ body.home .search-wrap {
   }
   body.panel-open .tabbar,
   body.panel-open .more-sheet,
+  body.kbd .tabbar,
   body:has(input:not([type="search"]):focus,
       textarea:focus) .tabbar {
     display: none;

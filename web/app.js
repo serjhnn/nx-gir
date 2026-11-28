@@ -5959,7 +5959,22 @@ function lift() {
     Math.max(120, v.height * 0.7) + "px";
 }
 
+// While the keyboard is up the tab bar is hidden (the
+// body class "kbd", style.css): it would sit on top
+// of the keyboard and take room from the text
+function keyboardUp() {
+  const v = window.visualViewport;
+  const f = document.activeElement;
+  const typing = f && f.matches?.("input, textarea");
+  const up = !!(v && typing &&
+    v.height < screen.height * 0.75);
+  document.body.classList.toggle("kbd", up);
+}
+
 if (window.visualViewport) {
+  visualViewport.addEventListener("resize", keyboardUp);
+  addEventListener("focusout", () => setTimeout(
+    keyboardUp, 50));
   visualViewport.addEventListener("resize", lift);
   visualViewport.addEventListener("scroll", lift);
 }
