@@ -5336,16 +5336,16 @@ body.home .search-wrap {
    bar, the reader's toolbar, the top bar and the
    search box of the top page, the Library's tabs.
    Rounded, a little see-through and blurred, with a
-   glow and a terracotta line (--panel-line) */
+   lifted shadow and a line (--panel-line) */
 @media (max-width: 40rem) {
   :root {
     --tabbar: calc(64px + env(safe-area-inset-bottom));
-    --panel-line: var(--accent);
-    --panel-bg: color-mix(in srgb, var(--bg) 92%,
+    --panel-line: color-mix(in srgb,
+      var(--text) 30%, transparent);
+    --panel-bg: color-mix(in srgb, var(--bg) 94%,
       transparent);
-    --panel-glow: 0 4px 16px color-mix(in srgb,
-      var(--accent) 35%, transparent),
-      0 2px 6px rgba(0, 0, 0, 0.3);
+    --panel-glow: 0 6px 20px rgba(0, 0, 0, 0.35),
+      0 1px 3px rgba(0, 0, 0, 0.4);
   }
   .tools,
   .tabbar,
@@ -5355,7 +5355,7 @@ body.home .search-wrap {
     background: var(--panel-bg);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    border: 1.5px solid var(--panel-line);
+    border: 1px solid var(--panel-line);
     border-radius: 12px;
     box-shadow: var(--panel-glow);
   }
