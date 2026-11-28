@@ -350,7 +350,6 @@ const UI = {
       + " հավելումով, կամ git-ով. պատճենեք շտեմարանը,"
       + " ավելացրեք ձեր ֆայլը և բացեք pull request։",
     "co.w.pc.go": "Ձեռնարկ՝ CONTRIBUTING.md",
-    "co.start": "Ինչպես սկսել",
     "co.gh": "Նախագիծը GitHub-ում",
     "co.lic1": "Թարգմանությունները տարածվում են ",
     "co.lic2": " լիցենզիայով. թարգմանություն ուղարկելով՝"
@@ -881,7 +880,6 @@ const UI = {
       + " GitHub plugin, or git: copy the repository, add"
       + " your file and open a pull request.",
     "co.w.pc.go": "Guide: CONTRIBUTING.md",
-    "co.start": "How to start",
     "co.gh": "The project on GitHub",
     "co.lic1": "Translations are under ",
     "co.lic2": "; by sending one you agree to publish it"
@@ -1415,7 +1413,6 @@ const UI = {
       + " GitHub или git: сделайте копию репозитория,"
       + " добавьте файл и откройте pull request.",
     "co.w.pc.go": "Руководство: CONTRIBUTING.md",
-    "co.start": "Как начать",
     "co.gh": "Проект на GitHub",
     "co.lic1": "Переводы распространяются по лицензии ",
     "co.lic2": "; отправляя перевод, вы соглашаетесь"

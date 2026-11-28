@@ -4178,8 +4178,6 @@ function contributePage() {
     list,
     waysTable(),
     h("p", { class: "cta" },
-      h("a", { class: "cta-main", href: HOWTO },
-        t("co.start")),
       h("a", { href: REPO }, t("co.gh"))),
     h("p", { class: "sub" }, t("co.lic1"),
       h("a", { href: BY_SA, rel: "license" },
