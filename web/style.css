@@ -914,12 +914,6 @@ h1 {
 .menu-more[aria-expanded="true"] {
   background: var(--hover);
 }
-/* only on the top page: the other pages reach it by
-   the logo, and the main pages by the footer */
-body:not(.home) .menu-more,
-body:not(.home) .menu-panel {
-  display: none;
-}
 .menu-panel {
   position: absolute;
   top: 100%;
