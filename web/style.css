@@ -5239,10 +5239,13 @@ body.home .search-wrap {
     z-index: 24;
     display: block;
     padding: 0.4rem;
-    border: 1px solid var(--panel-rule);
-    border-radius: 14px;
-    background: var(--panel);
-    box-shadow: 0 10px 28px var(--panel-shadow);
+    /* as the floating bars (--panel-*, below) */
+    border: 1px solid var(--panel-line);
+    border-radius: 12px;
+    background: var(--panel-bg);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--panel-glow);
     max-height: calc(100dvh - var(--tabbar) - 24px);
     overflow-y: auto;
   }
