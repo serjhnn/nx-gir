@@ -2576,6 +2576,9 @@ async function libraryPage(who) {
       h("p", { class: "sub" }, t("lib.sub", n),
         h("a", { href: "#/reference" },
           t("nav.reference") + " →")),
+      h("p", { class: "lib-tip" }, t("lib.tip") + " ",
+        h("a", { class: "lib-tip-go",
+          href: "#/search" }, t("lib.tipgo") + " →")),
       tabs, body));
   drawStars();
   // the lists at least a screen high: a short one

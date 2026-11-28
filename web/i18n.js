@@ -293,6 +293,9 @@ const UI = {
     "star.on": "Աստղանշել",
     "lib.sub": (n) => "Գրաբար գրքեր · " + n + " · ",
     "lib.find": "Գտնել հեղինակ կամ գիրք",
+    "lib.tip": "Գրքերի ներսում տեքստ փնտրելու համար"
+      + " օգտվեք ամբողջական որոնումից։",
+    "lib.tipgo": "Բացել որոնումը",
     "prev": "Նախորդը",
     "next": "Հաջորդը",
     "clear": "Մաքրել",
@@ -822,6 +825,9 @@ const UI = {
     "star.on": "Star",
     "lib.sub": (n) => "Grabar books · " + n + " · ",
     "lib.find": "Find an author or a book",
+    "lib.tip": "To search for text inside the books,"
+      + " use the full search.",
+    "lib.tipgo": "Open search",
     "prev": "Previous",
     "next": "Next",
     "clear": "Clear",
@@ -1355,6 +1361,9 @@ const UI = {
     "star.on": "В избранное",
     "lib.sub": (n) => "Книги на грабаре · " + n + " · ",
     "lib.find": "Найти автора или книгу",
+    "lib.tip": "Чтобы искать текст внутри книг,"
+      + " используйте полный поиск.",
+    "lib.tipgo": "Открыть поиск",
     "prev": "Предыдущее",
     "next": "Следующее",
     "clear": "Очистить",

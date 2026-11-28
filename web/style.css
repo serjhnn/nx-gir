@@ -6173,3 +6173,18 @@ button.cta-main {
 .contact {
   scroll-margin-top: 4rem;
 }
+.lib-tip {
+  margin: 0.4rem 0 0.8rem;
+  font-size: 0.9rem;
+  color: var(--muted, inherit);
+}
+.lib-tip-go {
+  display: inline-block;
+  margin-top: 0.3rem;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  color: var(--accent-ink, inherit);
+  text-decoration: none;
+  white-space: nowrap;
+}
