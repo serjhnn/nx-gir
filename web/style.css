@@ -5376,6 +5376,14 @@ body.home .search-wrap {
   .search-wrap {
     background: none;
   }
+  /* the round home button beside the search box */
+  .box-home {
+    border-color: var(--panel-line);
+    background: var(--panel-bg);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--panel-glow);
+  }
   /* each panel above the one over it, so that its
      shadow does not fall on the next (bar, search
      box, Library tabs, top to bottom) */
