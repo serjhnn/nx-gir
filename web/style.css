@@ -5285,7 +5285,8 @@ body.home .search-wrap {
     height: 18px;
     color: var(--accent-ink);
   }
-  body:not(.reading):not(:has(input:focus,
+  body:not(.reading):not(:has(
+      input:not([type="search"]):focus,
       textarea:focus)) {
     padding-bottom: var(--tabbar);
   }
@@ -5315,13 +5316,15 @@ body.home .search-wrap {
   body.reading:is(.peek, .bars-fixed) .sel-search {
     bottom: calc(var(--tabbar) + 16px);
   }
-  body.reading.bars-fixed:not(:has(input:focus,
+  body.reading.bars-fixed:not(:has(
+      input:not([type="search"]):focus,
       textarea:focus)) {
     padding-bottom: var(--tabbar);
   }
   body.panel-open .tabbar,
   body.panel-open .more-sheet,
-  body:has(input:focus, textarea:focus) .tabbar {
+  body:has(input:not([type="search"]):focus,
+      textarea:focus) .tabbar {
     display: none;
   }
 }
