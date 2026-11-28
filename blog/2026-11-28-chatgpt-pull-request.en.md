@@ -48,10 +48,11 @@ After a moment you get a card: the number of the pull request, the repository, t
 
 When the test works, you can go on the same way with a real translation.
 
-Tell ChatGPT which part of which book you want to translate, and ask it to follow the guide in the repository, "TRANSLATION_GUIDE.md". The main rules: write the modern Armenian for each Grabar line on one line, and leave the chapter headings and lines as they are.
+Tell ChatGPT which part of which book you want to translate.
 
 Ask ChatGPT to:
 
+- Follow the guide in the repository, "TRANSLATION_GUIDE.md". The main rules: write the modern Armenian for each Grabar line on one line, and leave the chapter headings and lines as they are.
 - Put the translated file next to the other translations, in the "books/ashkharhabar/" folder.
 - Add a new line to "books/TRANSLATIONS.tsv" with the status "machine".
 - Create a pull request.
